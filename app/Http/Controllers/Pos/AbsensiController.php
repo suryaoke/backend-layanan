@@ -17,30 +17,29 @@ class AbsensiController extends Controller
 {
     public function AbsensiAll(Request $request)
     {
-        // $absensi = Absensi::latest()->get();
-        $todayDate = Carbon::now()->format('d/m/Y');
-        $kelas = Kelas::first();
+
+
         $absensi =
             Absensi::when(
                 $request->tanggal != null,
                 function ($q) use ($request) {
                     return $q->where('tanggal', $request->tanggal);
                 },
-                function ($q) use ($todayDate) {
-                    return $q->where('tanggal', $todayDate);
-                }
+
             )
             ->when($request->mapel != null, function ($q) use ($request) {
                 return $q->where('mata_pelajaran', $request->mapel);
             })
-            ->when($request->kelas != null, function ($q) use ($request) {
-                return $q->whereHas('siswa1', function ($subQ) use ($request) {
-                    $subQ->where('kelas', $request->kelas);
-                });
-            })->paginate(perPage: 50);
+            ->when(
+                $request->kelas != null,
+                function ($q) use ($request) {
+                    return $q->whereHas('siswa1', function ($subQ) use ($request) {
+                        $subQ->where('kelas', $request->kelas);
+                    });
+                },
+            )->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
+            ->paginate(perPage: 50);
 
-
-        // $absensi =Absensi::where('')->paginate(perPage: 50);
 
         $siswa1 = Siswa::latest()->get();
         $kelas = Kelas::orderBy('nama', 'asc')->get();
@@ -98,7 +97,11 @@ class AbsensiController extends Controller
             'message' => ' Data Absensi SuccessFully',
             'alert-type' => 'success'
         );
-        return redirect()->route('absensi.all')->with($notification);
+        return redirect()->route('absensi.siswa', [
+            'tanggal' => $request->tanggal,
+            'kelas' => $request->search,
+            'mapel' => $request->mata_pelajaran,
+        ])->with($notification);
     }
 
     public function searchAbsensi(Request $request)

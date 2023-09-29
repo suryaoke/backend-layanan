@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Pos\AbsensiController;
 use App\Http\Controllers\Pos\GuruController;
+use App\Http\Controllers\Pos\HariController;
 use App\Http\Controllers\Pos\JabatanController;
 use App\Http\Controllers\Pos\KelasController;
 use App\Http\Controllers\Pos\MapelController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Pos\SuratKeluarController;
 use App\Http\Controllers\Pos\SuratMasukController;
 use App\Http\Controllers\Pos\TamuController;
 use App\Http\Controllers\Pos\UserController;
+use App\Http\Controllers\Pos\WaktuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\vendor\Chatify\MessagesController;
 use App\Models\SuratMasuk;
@@ -180,6 +182,27 @@ Route::controller(KelasController::class)->middleware(['auth'])->group(function 
     Route::post('/kelas/update', 'KelasUpdate')->name('kelas.update');
 });
 
+
+// Waktu All Route
+Route::controller(WaktuController::class)->middleware(['auth'])->group(function () {
+    Route::get('/waktu/all', 'WaktuAll')->name('waktu.all');
+    Route::get('/waktu/add', 'waktuAdd')->name('waktu.add');
+    Route::post('/waktu/store', 'WaktuStore')->name('waktu.store');
+    Route::get('/waktu/delete{id}', 'WaktuDelete')->name('waktu.delete');
+    Route::get('/waktu/edit/{id}', 'WaktuEdit')->name('waktu.edit');
+    Route::post('/waktu/update', 'WaktuUpdate')->name('waktu.update');
+});
+
+// Hari All Route
+Route::controller(HariController::class)->middleware(['auth'])->group(function () {
+    Route::get('/hari/all', 'HariAll')->name('hari.all');
+    Route::get('/hari/add', 'HariAdd')->name('hari.add');
+    Route::post('/hari/store', 'HariStore')->name('hari.store');
+    Route::get('/hari/delete{id}', 'HariDelete')->name('hari.delete');
+    Route::get('/hari/edit/{id}', 'HariEdit')->name('hari.edit');
+    Route::post('/hari/update', 'HariUpdate')->name('hari.update');
+});
+
 // Abensi All Route
 Route::controller(AbsensiController::class)->middleware(['auth'])->group(function () {
     Route::get('/absensi/all', 'AbsensiAll')->name('absensi.all');
@@ -250,5 +273,3 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/messages/updateSettings', [MessagesController::class, 'updateSettings'])->name('messages.updateSettings');
     Route::post('/messages/setActiveStatus', [MessagesController::class, 'setActiveStatus'])->name('messages.setActiveStatus');
 });
-
-

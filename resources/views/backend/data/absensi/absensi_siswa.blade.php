@@ -116,20 +116,26 @@
                                         <div class="flex flex-col sm:flex-row mt-2">
                                             <div class="form-check mr-2">
                                                 <input class="form-check-input" type="radio"
-                                                    name="status[{{ $item->id }}]" value="Hadir"
-                                                    @if ($item->status == 'Hadir') checked @endif>
+                                                    name="status[{{ $item->id }}]" value="0"
+                                                    @if ($item->status == '0') checked @endif>
+                                                <label class="form-check-label" for="status_hadir">A</label>
+                                            </div>
+                                            <div class="form-check mr-2">
+                                                <input class="form-check-input" type="radio"
+                                                    name="status[{{ $item->id }}]" value="1"
+                                                    @if ($item->status == '1') checked @endif>
                                                 <label class="form-check-label" for="status_hadir">H</label>
                                             </div>
                                             <div class="form-check mr-2">
                                                 <input class="form-check-input" type="radio"
-                                                    name="status[{{ $item->id }}]" value="Izin"
-                                                    @if ($item->status == 'Izin') checked @endif>
+                                                    name="status[{{ $item->id }}]" value="2"
+                                                    @if ($item->status == '2') checked @endif>
                                                 <label class="form-check-label" for="status_izin">I</label>
                                             </div>
                                             <div class="form-check mr-2">
                                                 <input class="form-check-input" type="radio"
-                                                    name="status[{{ $item->id }}]" value="Sakit"
-                                                    @if ($item->status == 'Sakit') checked @endif>
+                                                    name="status[{{ $item->id }}]" value="3"
+                                                    @if ($item->status == '3') checked @endif>
                                                 <label class="form-check-label" for="status_sakit">S</label>
                                             </div>
                                         </div>

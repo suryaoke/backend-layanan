@@ -7,9 +7,6 @@
         
     @endphp
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
-
-
-
         <h1 class="text-lg font-medium mr-auto">
             @php
                 $currentUrl1 = request()->fullUrl(); // Pastikan Anda telah mendefinisikan $absensii dan $tanggalParam
@@ -91,6 +88,7 @@
 
 
     <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+
         <table class="table table-report -mt-2">
             <thead>
                 <tr>
@@ -122,14 +120,43 @@
 
                         <td>{{ $item->tanggal }}</td>
                         <td>{{ $item->mata_pelajaran }}</td>
-                        <td>{{ $item->status }}</td>
-                        <td>{{ $item->ket }}</td>
+                        <td>
+
+                            @if ($item->status == '0')
+                                <span class="text-danger">
+                                    Alfa</span>
+                            @elseif($item->status == '1')
+                                <span class="text-success">
+                                    Hadir</span>
+                            @elseif($item->status == '2')
+                                <span class="text-primary">
+                                    Izin</span>
+                            @elseif($item->status == '3')
+                                <span class="text-warning">
+                                    Sakit</span @endif
+                        </td>
+                        <td>
+                            @if ($item->ket == null)
+                                -
+                            @else
+                                {{ $item->ket }}
+                            @endif
+
+                        </td>
                     </tr>
                 @endforeach
 
             </tbody>
         </table>
+        <div class="mt-4 float-right">
+
+            {{ $absensi->links() }}
+
+        </div>
+
     </div>
+
+
     <!-- END: Data List -->
 
 
