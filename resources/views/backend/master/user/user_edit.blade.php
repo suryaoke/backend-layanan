@@ -18,26 +18,7 @@
                 id="regular-form-1" type="text" class="form-control" value="{{ $editData->email }}"> </div>
         <div class="mt-3"> <label for="regular-form-1" class="form-label">User Name</label> <input name="username"
                 id="regular-form-1" type="text" class="form-control" value="{{ $editData->username }}"> </div>
-        <div class="mt-3"> <label for="regular-form-1" class="form-label">Jabatan</label>
-
-            <select name="jabatan" data-placeholder="Select Jabatan" id="jabatan" class="tom-select w-full  mt-2 "
-                aria-label="Default select example">
-                <option value="{{ $editData->jabatan }}">
-                    @php
-                        $jabatans = App\Models\Jabatan::where('id', $editData->jabatan)->get();
-                    @endphp
-                    @foreach ($jabatans as $jbts)
-                    @endforeach
-
-                    {{ $jbts->name }}
-
-                </option>
-                @foreach ($jabatan as $jbt)
-                    <option value=" {{ $jbt->id }} ">{{ $jbt->name }} </option>
-                @endforeach
-            </select>
-
-        </div>
+    
         <div class="mt-3">
             <label for="regular-form-1" class="form-control">Role</label>
             <select name="role" id="role" data-placeholder="Select Role" class="tom-select w-full  mt-2 ">

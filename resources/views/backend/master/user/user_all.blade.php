@@ -23,8 +23,8 @@
                                         <th>Name</th>
                                         <th>User Image </th>
                                         <th>Email</th>
-                                        <th>Jabatan</th>
                                         <th>Role</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
@@ -38,43 +38,43 @@
                                                     alt="">
                                             </td>
                                             <td> {{ $item->email }} </td>
+                                          
                                             <td>
-                                                @if ($item->jabatan == '0')
-                                                    Belum di Pilih
-                                                @else
-                                                    {{ $item['jabatans']['name'] }}
+                                                @if ($item->role == '1')
+                                                    <span class="btn btn-outline-dark">Admin</span>
+                                                @elseif($item->role == '2')
+                                                    <span class="btn btn-outline-danger">Kepala Sekolah</span>
+                                                @elseif($item->role == '3')
+                                                    <span class="btn btn-outline-warning">Waka Kurikulum</span>
+                                                @elseif($item->role == '4')
+                                                    <span class="btn btn-outline-success">Jurusan</span>
+                                                @elseif($item->role == '5')
+                                                    <span class="btn btn-outline-primary">Guru</span>
                                                 @endif
                                             </td>
+
                                             <td>
-                                                @if ($item->role == '0')
-                                                    <span class="btn btn-outline-pending">Belum di Pilih</span>
-                                                @elseif ($item->role == '-')
-                                                    <span class="btn btn-outline-secondary">Tidak Aktif</span>
-                                                @elseif($item->role == '1')
-                                                    <span class="btn btn-outline-pending">Kepsek</span>
-                                                @elseif($item->role == '2')
-                                                    <span class="btn btn-outline-primary">Wakil Kepsek</span>
-                                                @elseif($item->role == '3')
-                                                    <span class="btn btn-outline-warning">Verifikator</span>
-                                                @elseif($item->role == '4')
-                                                    <span class="btn btn-outline-dark"> Admin</span>
+                                                @if ($item->status == '0')
+                                                    <span class="btn btn-outline-danger">Tidak Aktif</span>
+                                                @elseif($item->status == '1')
+                                                    <span class="btn btn-outline-success">Aktif</span>
                                                 @endif
                                             </td>
                                             <td>
                                                 @if ($item->role != '-')
                                                     <a href="{{ route('user.tidak.aktif', $item->id) }}"
                                                         class="btn btn-danger mr-1 mb-2" title="Inactive">
-                                                        <i data-lucide="x-circle" class="w-5 h-5"></i> </a>
+                                                        <i data-lucide="x-circle" class="w-4 h-4"></i> </a>
                                                 @elseif($item->role == '-')
                                                     <a href="{{ route('user.aktif', $item->id) }}"
                                                         class="btn btn-success mr-1 mb-2" title="Active">
-                                                        <i data-lucide="check-circle" class="w-5 h-5"></i> </a>
+                                                        <i data-lucide="check-circle" class="w-4 h-4"></i> </a>
                                                 @endif
 
 
                                                 <a href="{{ route('user.view', $item->id) }}"
                                                     class="btn btn-primary mr-1 mb-2" title="Edit Profile">
-                                                    <i data-lucide="edit" class="w-5 h-5"></i>
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </td>
 

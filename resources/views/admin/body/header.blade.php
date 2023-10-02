@@ -8,15 +8,7 @@
      </nav>
      <!-- END: Breadcrumb -->
 
-     @php
-         $id = Auth::user()->id;
-         $adminData = App\Models\User::find($id);
-         $jabatan = App\Models\Jabatan::latest()
-             ->where('id', $adminData->jabatan)
-             ->get();
-     @endphp
-     @foreach ($jabatan as $key => $items)
-     @endforeach
+ 
      <div class="intro-x dropdown w-8 h-8">
          <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in" role="button"
              aria-expanded="false" data-tw-toggle="dropdown">
@@ -26,9 +18,9 @@
          <div class="dropdown-menu w-56">
              <ul class="dropdown-content bg-primary text-white">
                  <li class="p-2">
-                     <div class="font-medium">{{ $adminData->name }} </div>
+               
                      <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-                         {{ $items->name }}
+                      
                      </div>
                  </li>
                  <li>

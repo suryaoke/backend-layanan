@@ -9,4 +9,9 @@ class Guru extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function pengampu()
+    {
+        return $this->hasMany(Pengampu::class, 'id_guru');
+    }
 }

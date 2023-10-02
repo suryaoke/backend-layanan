@@ -200,32 +200,8 @@
     </script>
 
 
-    <script src="{{ asset('backend/dist/ckeditor/ckeditor.js') }}"></script>
-    <script>
-        CKEDITOR.replace('editor', {
-            width: 832,
-            height: 1060,
-            filebrowserUploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
-            filebrowserUploadMethod: 'form',
-
-            fullPage: true,
-            allowedContent: true,
-
-        });
-        CKEDITOR.replace('editor2', {
-            width: 832,
-            height: 1060,
-            filebrowserUploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
-            filebrowserUploadMethod: 'form',
-            toolbarCanCollapse: true, //Button to toggle toolbar (show/hide) 
-            toolbarStartupExpanded: false, //This will hide toolbar by default.
-
-            fullPage: true,
-            allowedContent: true,
-
-        });
-    </script>
-
+   
+  
 
     {{--  // script ttd signature //  --}}
 

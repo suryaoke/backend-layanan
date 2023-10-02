@@ -13,10 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('jabatans', function (Blueprint $table) {
+        Schema::create('mapels', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-          
+            $table->string('kode_mapel')->nullable();
+            $table->string('nama')->nullable();
+            $table->integer('id_jurusan')->nullable();
+            $table->string('jenis')->nullable();
+            $table->string('semester')->nullable();
+            $table->string('jp')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
@@ -30,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jabatans');
+        Schema::dropIfExists('mapels');
     }
 };

@@ -13,45 +13,31 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> <!-- Include jQuery Validation plugin -->
     <div class="intro-y flex items-center mt-8 mb-4">
         <h1 class="text-lg font-medium mr-auto">
-            Add Mapel
+            Add Data Ruangan
         </h1>
     </div>
 
-    <form method="post" action="{{ route('mapel.store') }}" enctype="multipart/form-data" id="myForm">
+    <form method="post" action="{{ route('ruangan.store') }}" enctype="multipart/form-data" id="myForm">
         @csrf
         <div class="mt-4">
-            <label for=""> Kode Mapel</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Masukkan Kode Mapel" name="kode_mapel" id="kode_mapel">
+            <label>
+                Kode Ruangan
+            </label>
+            <input class="intro-x login__input form-control py-3 px-4 block" type="text"
+                placeholder="Masukkan Kode Ruangan" name="kode_ruangan" id="kode_ruangan" required>
         </div>
 
         <div class="mt-4">
-            <label for=""> Nama Mapel</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Masukkan Nama Mapel" name="nama" id="nama">
+            <label for=""> Nama Ruangan</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block"
+                placeholder="Masukkan Nama Ruangan" name="nama" id="nama" required>
         </div>
 
         <div class="mt-4">
-            <label for=""> Jam Pelajaran</label>
-            <select name="jp" id="jp" class="form-control w-full " required>
-                <option value="">Select JP</option>
-                <option value="1">1 JP</option>
-                <option value="2">2 JP</option>
-                <option value="3">3 JP</option>
-                <option value="4">4 JP</option>
-
-            </select>
+            <label for=""> Kapasitas</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Masukkan Kapasitas"
+                name="kapasitas" id="kapasitas" required>
         </div>
-
-        <div class="mt-4">
-            <label for="">Semester</label>
-            <select name="semester" id="semester" class="form-control w-full " required>
-                <option value="">Pilih Semester</option>
-                <option value="Ganjil">Ganjil</option>
-                <option value="Genap">Genap</option>
-            </select>
-        </div>
-
 
         <div class="mt-4">
             <label for=""> Jurusan</label>
@@ -64,9 +50,9 @@
         </div>
 
         <div class="mt-4">
-            <label for=""> Jenis</label>
-            <select name="jenis" id="jenis" class="form-control w-full " required>
-                <option value="">Pilih jenis</option>
+            <label for=""> Type</label>
+            <select name="type" id="type" class="form-control w-full " required>
+                <option value="">Pilih Type</option>
                 <option value="Teori">Teori</option>
                 <option value="Pratikum">Pratikum</option>
             </select>
@@ -74,58 +60,48 @@
 
 
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
-            <a href="{{ route('mapel.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top"
+            <button class="btn btn-primary  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
+            <a href="{{ route('ruangan.all') }}" class="btn btn-danger  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
                 type="submit">Cancel</a>
         </div>
 
     </form>
-
     <script type="text/javascript">
-        jQuery(document).ready(function() {
+        $(document).ready(function() {
             $('#myForm').validate({
                 rules: {
-                    kode_mapel: {
+                    kode_ruangan: {
                         required: true,
                     },
                     nama: {
                         required: true,
                     },
-                    jp: {
-                        required: true,
-                    },
-                    semester: {
+                    kapasitas: {
                         required: true,
                     },
                     id_jurusan: {
                         required: true,
                     },
-                    jenis: {
+                    type: {
                         required: true,
                     },
-
-
                 },
                 messages: {
-                    kode_mapel: {
-                        required: 'Please Enter Your Kode Mapel',
+                    kode_ruangan: {
+                        required: 'Please Enter Your Kode Ruangan',
                     },
                     nama: {
-                        required: 'Please Enter Your Nama Mapel',
+                        required: 'Please Enter Your Nama Ruangan',
                     },
-                    jp: {
-                        required: 'Please Enter Your JP',
-                    },
-                    semester: {
-                        required: 'Please Enter Your Semester',
+                    kapasitas: {
+                        required: 'Please Enter Your Kapasitas',
                     },
                     id_jurusan: {
                         required: 'Please Enter Your Jurusan',
                     },
-                    jenis: {
-                        required: 'Please Enter Your Jenis',
+                    type: {
+                        required: 'Please Enter Your Type',
                     },
-
                 },
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',

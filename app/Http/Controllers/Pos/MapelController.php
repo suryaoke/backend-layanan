@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
+use App\Models\Jurusan;
 use App\Models\Mapel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,18 +22,20 @@ class MapelController extends Controller
 
     public function MapelAdd()
     {
-
-        return view('backend.data.mapel.mapel_add');
+        $jurusan = Jurusan::orderBy('kode_jurusan', 'asc')->get();
+        return view('backend.data.mapel.mapel_add', compact('jurusan'));
     } // end method
     public function MapelStore(Request $request)
     {
 
-       
+
         Mapel::insert([
+            'kode_mapel' => $request->kode_mapel,
             'nama' => $request->nama,
+            'id_jurusan' => $request->id_jurusan,
             'jenis' => $request->jenis,
             'jp' => $request->jp,
-            'kode_ruangan' => $request->kode_ruangan,
+            'semester' => $request->semester,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
 
@@ -48,16 +51,21 @@ class MapelController extends Controller
     public function MapelEdit($id)
     {
         $mapel = Mapel::findOrFail($id);
-        return view('backend.data.mapel.mapel_edit', compact('mapel'));
+        $jurusan = Jurusan::orderBy('kode_jurusan', 'asc')->get();
+        return view('backend.data.mapel.mapel_edit', compact('mapel', 'jurusan'));
     }
     public function MapelUpdate(Request $request)
     {
 
         $mapel_id = $request->id;
-        Mapel::findOrFail($mapel_id)->update(['nama' => $request->nama,
+        Mapel::findOrFail($mapel_id)->update([
+            'nama' => $request->nama,
+            'kode_mapel' => $request->kode_mapel,
+            'nama' => $request->nama,
+            'id_jurusan' => $request->id_jurusan,
             'jenis' => $request->jenis,
             'jp' => $request->jp,
-            'kode_ruangan' => $request->kode_ruangan,
+            'semester' => $request->semester,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 

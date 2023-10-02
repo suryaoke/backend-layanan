@@ -11,6 +11,10 @@
          $userview = URL::route('user.view', ['id' => $id]);
          $hariedit = URL::route('hari.edit', ['id' => $id]);
          $waktuedit = URL::route('waktu.edit', ['id' => $id]);
+         $ruanganedit = URL::route('ruangan.edit', ['id' => $id]);
+         $jurusanedit = URL::route('jurusan.edit', ['id' => $id]);
+         $mapeledit = URL::route('mapel.edit', ['id' => $id]);
+         $pengampuedit = URL::route('pengampu.edit', ['id' => $id]);
      } else {
          $guruedit = 1; // Handle jika parameter id tidak ditemukan dalam URL
          $orangtuaedit = 1;
@@ -20,6 +24,10 @@
          $userview = 1;
          $hariedit = 1;
          $waktuedit = 1;
+         $ruanganedit = 1;
+         $jurusanedit = 1;
+         $mapeledit = 1;
+         $pengampuedit = 1;
      }
      
      $url = url()->current();
@@ -29,22 +37,28 @@
      $absensisiswa = URL::route('absensi.siswa');
      $user = URL::route('user.all');
      $useradd = URL::route('user.add');
-     $jabatan = URL::route('jabatan.all');
-     $jabatanadd = URL::route('jabatan.add');
+   
      $siswa = URL::route('siswa.all');
      $siswaadd = URL::route('siswa.add');
      $guru = URL::route('guru.all');
      $guruadd = URL::route('guru.add');
      $orangtua = URL::route('orangtua.all');
      $orangtuaadd = URL::route('orangtua.add');
-     $suratmasukadd = URL::route('surat.masuk.add');
      $kelas = URL::route('kelas.all');
      $kelasadd = URL::route('kelas.add');
      $waktu = URL::route('waktu.all');
      $waktuadd = URL::route('waktu.add');
      $hari = URL::route('hari.all');
      $hariadd = URL::route('hari.add');
-     
+     $ruangan = URL::route('ruangan.all');
+     $ruanganadd = URL::route('ruangan.add');
+     $jurusan = URL::route('jurusan.all');
+     $jurusanadd = URL::route('jurusan.add');
+     $mapel = URL::route('mapel.all');
+     $mapeladd = URL::route('mapel.add');
+     $pengampu = URL::route('pengampu.all');
+     $pengampuadd = URL::route('pengampu.add');
+       $jadwalmapel = URL::route('jadwalmapel.all');
      $routes = [
          'pusherAuth' => URL::route('pusher.auth'),
          'messagesIndex' => URL::route('messages.index'),
@@ -125,22 +139,44 @@
 
 
          <li>
-             <a href="javascript:;" class="side-menu ">
-                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
-                 <div class="side-menu__title">
-                     Jadwal Mata Pelajaran
-                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
-                 </div>
+             @if ($mapel == $url)
+                 <a href="javascript:;" class="side-menu side-menu--active">
+                 @elseif ($mapeladd == $url)
+                     <a href="javascript:;" class="side-menu side-menu--active">
+                     @elseif ($mapeledit == $url)
+                         <a href="javascript:;" class="side-menu side-menu--active">
+                         @elseif ($pengampu == $url)
+                             <a href="javascript:;" class="side-menu side-menu--active">
+                             @elseif ($pengampuadd == $url)
+                                 <a href="javascript:;" class="side-menu side-menu--active">
+                                 @elseif ($pengampuedit == $url)
+                                     <a href="javascript:;" class="side-menu side-menu--active">
+                                     @elseif ($jadwalmapel == $url)
+                                         <a href="javascript:;" class="side-menu side-menu--active">
+                                         @else
+                                             <a href="javascript:;" class="side-menu ">
+             @endif
+             <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+             <div class="side-menu__title">
+                 Jadwal Mapel
+                 <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+             </div>
              </a>
              <ul class="">
                  <li>
-                     <a href="{{ route('waktu.all') }}" class="side-menu">
-                         <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                         <div class="side-menu__title">Jadwal</div>
+                     <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                         <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
+                         <div class="side-menu__title">Jadwal Mapel</div>
                      </a>
                  </li>
                  <li>
-                     <a href="{{ route('waktu.all') }}" class="side-menu">
+                     <a href="{{ route('mapel.all') }}" class="side-menu">
+                         <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                         <div class="side-menu__title">Mata Pelajaran</div>
+                     </a>
+                 </li>
+                 <li>
+                     <a href="{{ route('pengampu.all') }}" class="side-menu">
                          <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
                          <div class="side-menu__title">Pengampu</div>
                      </a>
@@ -199,12 +235,14 @@
          </li>
 
          <li>
-             @if ($url == $a)
-                 <a href="{{ route('messages.index') }}" class="side-menu  side-menu--active">
-                 @elseif ($url == $routes)
-                     <a href="{{ route('messages.index') }}" class="side-menu  side-menu--active">
-                     @else
-                         <a href="{{ route('messages.index') }}" class="side-menu ">
+             @if ($ruangan == $url)
+                 <a href="{{ route('ruangan.all') }}" class="side-menu  side-menu--active">
+                 @elseif ($ruanganadd == $url)
+                     <a href="{{ route('ruangan.all') }}" class="side-menu  side-menu--active">
+                     @elseif ($ruanganedit == $url)
+                         <a href="{{ route('ruangan.all') }}" class="side-menu  side-menu--active">
+                         @else
+                             <a href="{{ route('ruangan.all') }}" class="side-menu ">
              @endif
              <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                      viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -218,6 +256,26 @@
                  </svg> </div>
              <div class="side-menu__title">
                  Ruangan
+             </div>
+             </a>
+
+         </li>
+
+
+
+         <li>
+             @if ($jurusan == $url)
+                 <a href="{{ route('jurusan.all') }}" class="side-menu  side-menu--active">
+                 @elseif ($jurusanadd == $url)
+                     <a href="{{ route('jurusan.all') }}" class="side-menu  side-menu--active">
+                     @elseif ($jurusanedit == $url)
+                         <a href="{{ route('jurusan.all') }}" class="side-menu  side-menu--active">
+                         @else
+                             <a href="{{ route('jurusan.all') }}" class="side-menu ">
+             @endif
+             <div class="side-menu__icon"><i data-lucide="file-text"></i> </div>
+             <div class="side-menu__title">
+                 Jurusan
              </div>
              </a>
 
@@ -290,25 +348,8 @@
                  @endif
 
 
-                 @if (Auth::user()->role == '1')
-                     <li>
-                         <a href="{{ route('surat.keluar.tandatangan') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="minus"></i> </div>
-                             <div class="side-menu__title">
-                                 Surat Tandatangan </div>
-                         </a>
-                     </li>
-                 @endif
 
-                 @if (Auth::user()->role == '3')
-                     <li>
-                         <a href="{{ route('surat.keluar.verifikasi') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="minus"></i> </div>
-                             <div class="side-menu__title">
-                                 Surat Verifivikasi </div>
-                         </a>
-                     </li>
-                 @endif
+
 
 
              </ul>
@@ -324,10 +365,7 @@
                              <a href="javascript:;" class="side-menu side-menu--active">
                              @elseif ($userview == $url)
                                  <a href="javascript:;" class="side-menu side-menu--active">
-                                 @elseif ($jabatan == $url)
-                                     <a href="javascript:;" class="side-menu side-menu--active">
-                                     @elseif ($jabatanadd == $url)
-                                         <a href="javascript:;" class="side-menu side-menu--active">
+                                
                                          @else
                                              <a href="javascript:;" class="side-menu ">
                  @endif
@@ -344,12 +382,7 @@
                              <div class="side-menu__title"> User </div>
                          </a>
                      </li>
-                     <li>
-                         <a href="{{ route('jabatan.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="minus"></i> </div>
-                             <div class="side-menu__title"> Jabatan</div>
-                         </a>
-                     </li>
+                   
 
                  </ul>
              </li>
@@ -368,24 +401,8 @@
                      </div>
                  </a>
                  <ul class="">
-                     <li>
-                         <a href="{{ route('tamu.report') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="minus"></i> </div>
-                             <div class="side-menu__title"> Tamu </div>
-                         </a>
-                     </li>
-                     <li>
-                         <a href="{{ route('surat.masuk.report') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="minus"></i> </div>
-                             <div class="side-menu__title"> Surat Masuk </div>
-                         </a>
-                     </li>
-                     <li>
-                         <a href="{{ route('surat.keluar.report') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="minus"></i> </div>
-                             <div class="side-menu__title"> Surat Keluar </div>
-                         </a>
-                     </li>
+
+
 
                  </ul>
              </li>

@@ -4,11 +4,14 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Pos\AbsensiController;
 use App\Http\Controllers\Pos\GuruController;
 use App\Http\Controllers\Pos\HariController;
-use App\Http\Controllers\Pos\JabatanController;
+use App\Http\Controllers\Pos\JadwalmapelController;
+use App\Http\Controllers\Pos\JurusanController;
 use App\Http\Controllers\Pos\KelasController;
 use App\Http\Controllers\Pos\MapelController;
 use App\Http\Controllers\Pos\NaskahController;
 use App\Http\Controllers\Pos\OrangTuaController;
+use App\Http\Controllers\Pos\PengampuController;
+use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SiswaController;
 use App\Http\Controllers\Pos\SuratKeluarController;
 use App\Http\Controllers\Pos\SuratMasukController;
@@ -44,7 +47,6 @@ Route::controller(AdminController::class)->middleware(['auth'])->group(function 
 
 
 // All user
-
 Route::controller(UserController::class)->middleware(['auth'])->group(function () {
     Route::get('/user/all', 'UserAll')->name('user.all');
     Route::get('/user/add', 'UserAdd')->name('user.add');
@@ -58,15 +60,6 @@ Route::controller(UserController::class)->middleware(['auth'])->group(function (
     Route::get('/user/aktif{id}', 'UserAktif')->name('user.aktif');
 });
 
-// Jabatan All Route
-Route::controller(JabatanController::class)->middleware(['auth'])->group(function () {
-    Route::get('/jabatan/all', 'JabatanAll')->name('jabatan.all');
-    Route::get('/jabatan/add', 'JabatanAdd')->name('jabatan.add');
-    Route::post('/jabatan/store', 'JabatanStore')->name('jabatan.store');
-    Route::get('/jabatan/edit/{id}', 'JabatanEdit')->name('jabatan.edit');
-    Route::post('/jabatan/update', 'JabatanUpdate')->name('jabatan.update');
-    Route::get('/jabatan/delete{id}', 'JabatanDelete')->name('jabatan.delete');
-});
 
 // Guru All Route
 Route::controller(GuruController::class)->middleware(['auth'])->group(function () {
@@ -88,79 +81,6 @@ Route::controller(MapelController::class)->middleware(['auth'])->group(function 
     Route::get('/mapel/delete{id}', 'MapelDelete')->name('mapel.delete');
 });
 
-// Surat Masuk All Route
-Route::controller(SuratMasukController::class)->middleware(['auth'])->group(function () {
-    Route::get('/suratmasuk/all', 'SuratMasukAll')->name('surat.masuk.all');
-    Route::get('/suratmasuk/add', 'SuratMasukAdd')->name('surat.masuk.add');
-    Route::post('/suratmasuk/store', 'SuratMasukStore')->name('surat.masuk.store');
-    Route::get('/suratmasuk/delete{id}', 'SuratMasukDelete')->name('surat.masuk.delete');
-    Route::get('/suratmasuk/view/{id}', 'SuratMasukView')->name('surat.masuk.view');
-    Route::get('/suratmasukterkirim/all', 'SuratMasukTerkirimAll')->name('surat.masuk.terkirim.all');
-    Route::get('/suratmasukterkirim/view/{id}', 'SuratMasukTerkirimView')->name('surat.masuk.terkirim.view');
-    Route::get('/suratmasukterkirim/delete{id}', 'SuratMasukTerkirimDelete')->name('surat.masuk.terkirim.delete');
-    Route::post('/suratmasukdisposisi/store', 'SuratMasukDisposisiStore')->name('surat.masuk.disposisi.store');
-    Route::get('/suratmasukdisposisi/delete{id}', 'SuratMasukDisposisiDelete')->name('surat.masuk.disposisi.delete');
-    Route::get('/suratmasuk/approve/{id}', 'SuratMasukDisposisiApprove')->name('surat.masuk.disposisi.approve');
-    Route::post('/suratmasuk/tujuan/store', 'SuratMasukTujuanStore')->name('surat.masuk.tujuan.store');
-    Route::get('/suratmasuk/report', 'SuratMasukReport')->name('surat.masuk.report');
-});
-
-// Naskah All Route
-Route::controller(NaskahController::class)->middleware(['auth'])->group(function () {
-    Route::get('/naskah/all', 'NaskahAll')->name('naskah.all');
-    Route::get('/naskah/add', 'NaskahAdd')->name('naskah.add');
-    Route::post('/naskah/store', 'NaskahStore')->name('naskah.store');
-    Route::get('/naskah/edit/{id}', 'NaskahEdit')->name('naskah.edit');
-    Route::post('/naskah/update', 'NaskahUpdate')->name('naskah.update');
-    Route::get('/naskah/delete{id}', 'NaskahDelete')->name('naskah.delete');
-});
-
-// Ckeditor Route
-Route::post('/upload', [\App\Http\Controllers\EditorController::class, 'uploadimage'])->name('ckeditor.upload');
-
-
-
-// Surat Masuk All Route
-Route::controller(SuratKeluarController::class)->middleware(['auth'])->group(function () {
-    Route::get('/suratkeluar/informasi', 'SuratKeluarInformasi')->name('surat.keluar.informasi');
-    Route::post('/suratkeluarinformasi/store', 'SuratKeluarInformasiStore')->name('surat.keluar.informasi.store');
-    Route::get('/suratkeluar/tujuan/{id}', 'SuratKeluarTujuan')->name('surat.keluar.tujuan');
-    Route::post('/suratkeluartujuan/store', 'SuratKeluarTujuanStore')->name('surat.keluar.tujuan.store');
-    Route::get('/suratkeluar/isi/{id}', 'SuratKeluarIsi')->name('surat.keluar.isi');
-    Route::post('/suratkeluartujuan/update', 'SuratKeluarTujuanUpdate')->name('surat.keluar.tujuan.update');
-    Route::get('/suratkeluartujuan/delete{id}', 'SuratKeluarTujuanDelete')->name('surat.keluar.tujuan.delete');
-    Route::post('/suratkeluartembusan/store', 'SuratKeluarTembusanStore')->name('surat.keluar.tembusan.store');
-    Route::get('/suratkeluartembusan/delete{id}', 'SuratKeluarTembusanDelete')->name('surat.keluar.tembusan.delete');
-    Route::post('/suratkeluarlampiran/store', 'SuratKeluarLampiranStore')->name('surat.keluar.lampiran.store');
-    Route::get('/suratkeluarlampiran/delete{id}', 'SuratKeluarLampiranDelete')->name('surat.keluar.lampiran.delete');
-    Route::post('/suratkeluarTerkirim/store', 'SuratKeluarTerkirimStore')->name('surat.keluar.terkirim.store');
-    Route::get('/suratkeluar/all', 'SuratKeluarAll')->name('surat.keluar.all');
-    Route::get('/suratkeluar/verifikasi', 'SuratKeluarVerifikasi')->name('surat.keluar.verifikasi');
-    Route::post('/suratkeluarverifikasi/store', 'SuratKeluarVerifikasiStore')->name('surat.keluar.verifikasi.store');
-    Route::post('/suratkeluarverifikasi/tolak', 'SuratKeluarVerifikasiTolak')->name('surat.keluar.verifikasi.tolak');
-    Route::get('/suratkeluar/tandatangan', 'SuratKeluarTandatangan')->name('surat.keluar.tandatangan');
-    Route::post('/suratkeluartandatangan/cetak', 'SuratKeluarTandatanganCetak')->name('surat.keluar.tandatangan.cetak');
-    Route::post('/suratkeluartandatangan/gambar', 'SuratKeluarTandatanganGambar')->name('surat.keluar.tandatangan.gambar');
-    //   Route::post('/suratkeluartandatangan/langsung', 'SuratKeluarTandatanganLangsung')->name('surat.keluar.tandatangan.langsung');
-    Route::get('/suratkeluar/report', 'SuratKeluarReport')->name('surat.keluar.report');
-    Route::get('/suratkeluar/delete{id}', 'SuratKeluarDelete')->name('surat.keluar.delete');
-});
-
-
-
-// Tamu All Route
-Route::controller(TamuController::class)->middleware(['auth'])->group(function () {
-    Route::get('/tamu/all', 'TamuAll')->name('tamu.all');
-    Route::get('/tamu/add', 'TamuAdd')->name('tamu.add');
-    Route::post('/tamu/store', 'TamuStore')->name('tamu.store');
-    Route::get('/tamu/delete{id}', 'TamuDelete')->name('tamu.delete');
-    Route::get('/tamu/selesai{id}', 'TamuSelesai')->name('tamu.selesai');
-    Route::post('/tamu/store/frontend', 'TamuStoreFrontend')->name('tamu.store.frontend');
-    Route::get('/tamu/report', 'TamuReport')->name('tamu.report');
-    Route::get('/tamu/report/pdf', 'TamuReportPdf')->name('tamu.report.pdf');
-});
-
-
 // Siswa All Route
 Route::controller(SiswaController::class)->middleware(['auth'])->group(function () {
     Route::get('/siswa/all', 'SiswaAll')->name('siswa.all');
@@ -172,6 +92,7 @@ Route::controller(SiswaController::class)->middleware(['auth'])->group(function 
     Route::get('/siswa/search', 'search')->name('siswa.search');
     Route::get('/siswa/profile', 'SiswaProfile')->name('siswa.profile');
 });
+
 // Kelas All Route
 Route::controller(KelasController::class)->middleware(['auth'])->group(function () {
     Route::get('/kelas/all', 'KelasAll')->name('kelas.all');
@@ -181,7 +102,6 @@ Route::controller(KelasController::class)->middleware(['auth'])->group(function 
     Route::get('/kelas/edit/{id}', 'KelasEdit')->name('kelas.edit');
     Route::post('/kelas/update', 'KelasUpdate')->name('kelas.update');
 });
-
 
 // Waktu All Route
 Route::controller(WaktuController::class)->middleware(['auth'])->group(function () {
@@ -203,6 +123,49 @@ Route::controller(HariController::class)->middleware(['auth'])->group(function (
     Route::post('/hari/update', 'HariUpdate')->name('hari.update');
 });
 
+// Ruangan All Route
+Route::controller(RuanganController::class)->middleware(['auth'])->group(function () {
+    Route::get('/ruangan/all', 'RuanganAll')->name('ruangan.all');
+    Route::get('/ruangan/add', 'RuanganAdd')->name('ruangan.add');
+    Route::post('/ruangan/store', 'RuanganStore')->name('ruangan.store');
+    Route::get('/ruangan/delete{id}', 'RuanganDelete')->name('ruangan.delete');
+    Route::get('/ruangan/edit/{id}', 'RuanganEdit')->name('ruangan.edit');
+    Route::post('/ruangan/update', 'RuanganUpdate')->name('ruangan.update');
+});
+
+// Jurusan All Route
+Route::controller(JurusanController::class)->middleware(['auth'])->group(function () {
+    Route::get('/jurusan/all', 'JurusanAll')->name('jurusan.all');
+    Route::get('/jurusan/add', 'JurusanAdd')->name('jurusan.add');
+    Route::post('/jurusan/store', 'JurusanStore')->name('jurusan.store');
+    Route::get('/jurusan/delete{id}', 'JurusanDelete')->name('jurusan.delete');
+    Route::get('/jurusan/edit/{id}', 'JurusanEdit')->name('jurusan.edit');
+    Route::post('/jurusan/update', 'JurusanUpdate')->name('jurusan.update');
+});
+
+
+// Pengampu All Route
+Route::controller(PengampuController::class)->middleware(['auth'])->group(function () {
+    Route::get('/pengampu/all', 'PengampuAll')->name('pengampu.all');
+    Route::get('/pengampu/add', 'PengampuAdd')->name('pengampu.add');
+    Route::post('/pengampu/store', 'PengampuStore')->name('pengampu.store');
+    Route::get('/pengampu/delete{id}', 'PengampuDelete')->name('pengampu.delete');
+    Route::get('/pengampu/edit/{id}', 'PengampuEdit')->name('pengampu.edit');
+    Route::post('/pengampu/update', 'PengampuUpdate')->name('pengampu.update');
+});
+
+// Jadwal Mapel All Route
+Route::controller(JadwalmapelController::class)->middleware(['auth'])->group(function () {
+    Route::get('/jadwalmapel/all', 'JadwalmapelAll')->name('jadwalmapel.all');
+    Route::post('/jadwalmapel/store', 'JadwalmapelStore')->name('jadwalmapel.store');
+    Route::get('/jadwalmapel/delete{id}', 'JadwalmapelDelete')->name('jadwalmapel.delete');
+    Route::post('/jadwalmapel/update/{id}', 'JadwalmapelUpdate')->name('jadwalmapel.update');
+    Route::post('/jadwalmapel/status/one/{id}', 'JadwalmapelstatusOne')->name('jadwalmapelstatusone.update');
+    Route::post('jadwal/upadate/status/all', 'JadwalmapelstatusAll')->name('jadwalmapelstatusall.update');
+});
+
+
+
 // Abensi All Route
 Route::controller(AbsensiController::class)->middleware(['auth'])->group(function () {
     Route::get('/absensi/all', 'AbsensiAll')->name('absensi.all');
@@ -223,8 +186,11 @@ Route::controller(OrangTuaController::class)->middleware(['auth'])->group(functi
     Route::get('/ortu/edit/{id}', 'OrtuEdit')->name('orangtua.edit');
     Route::post('/ortu/update', 'OrtuUpdate')->name('orangtua.update');
     Route::get('/ortu/delete{id}', 'OrtuDelete')->name('orangtua.delete');
+    Route::get('/ambil-mata-pelajaran/{id_pengampu}', 'ambilMataPelajaran');
 });
 
+
+// routes/web.php
 
 
 

@@ -11,37 +11,54 @@
     <form method="POST" id="myForm" action="{{ route('user.store') }}" enctype="multipart/form-data">
         @csrf
 
+        <div class="mt-4">
+            <label for="">Nama </label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1" placeholder="Masukkan Nama"
+                name="name" id="name">
+        </div>
 
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder=" Name" name="name"
-            id="name">
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="UserName"
-            name="username" id="username">
-        <input type="email" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Email"
-            name="email" id="email">
-        <select name="jabatan" id="jabatan" class="tom-select w-full  mt-4 " aria-label="Default select example">
+        <div class="mt-4">
+            <label for=""> Username</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1 "
+                placeholder="Masukkan UserName" name="username" id="username">
+        </div>
 
-            @foreach ($jabatan as $jbt)
-                <option value=" {{ $jbt->id }} ">Select Jabatan : {{ $jbt->name }} </option>
-            @endforeach
-        </select>
-        <input type="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password"
-            name="password" id="password">
-        <input type="password" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password"
-            name="password_confirmation" id="password_confirmation">
+        <div class="mt-4">
+            <label for=""> Email</label>
+            <input type="email" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                placeholder="Masukkan Email" name="email" id="email">
+        </div>
+
+        <div class="mt-4">
+            <label for=""> Password</label>
+            <input type="password" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                placeholder="Masukkan Password" name="password" id="password">
+        </div>
+
+        <div class="mt-4">
+            <label for=""> Password</label>
+            <input type="password" class="intro-x login__input form-control py-3 px-4 block mt-4"
+                placeholder="Masukkan Password" name="password_confirmation" id="password_confirmation">
+        </div>
+
         <input type="hidden" class="intro-x login__input form-control py-3 px-4 block mt-4" value="0"
             name="profile_image" id="profile_image">
-
+        <input type="hidden" name="status" value="1">
         <select name="role" id="role" data-placeholder="Select Role" class="tom-select w-full  mt-4 ">
-            <option value="0">Select Role</option>
-            <option value="-">Tidak Aktif</option>
-            <option value="1">Kepsek</option>
-            <option value="2">Wakil Kepsek</option>
-            <option value="3">Verifikator</option>
-            <option value="4">Admin</option>
 
+            <option value="1">Admin</option>
+            <option value="2">Kepsek</option>
+            <option value="3">Wakil Kurikulum</option>
+            <option value="4">Guru</option>
+            <option value="5">Orang Tua</option>
+            <option value="6">Siswa</option>
         </select>
+        <div class="mt-4">
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
+            <a href="{{ route('user.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top"
+                type="submit">Cancel</a>
+        </div>
 
-        <button class="btn btn-primary mt-3 py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Create User</button>
     </form>
 
 

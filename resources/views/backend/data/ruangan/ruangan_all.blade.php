@@ -1,23 +1,11 @@
 @extends('admin.admin_master')
 @section('admin')
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-            Mapel All
+            Data Ruangan All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('mapel.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
+            <a href="{{ route('ruangan.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
 
         </div>
     </div>
@@ -32,32 +20,28 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Mapel</th>
-                                        <th>Nama Mapel</th>
-                                        <th>JP</th>
-                                        <th>Semester</th>
+                                        <th>Kode Ruangan</th>
+                                        <th>Nama Ruangan</th>
+                                        <th>Kapasitas</th>
                                         <th>Jurusan</th>
                                         <th>Type</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
-
-                                    @foreach ($mapel as $key => $item)
+                                    @foreach ($ruangan as $key => $item)
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-
-                                            <td> {{ $item->kode_mapel }} </td>
+                                            <td> {{ $item->kode_ruangan }} </td>
                                             <td> {{ $item->nama }} </td>
-                                            <td> {{ $item->jp }} </td>
-                                            <td> {{ $item->semester }} </td>
-                                            <td> {{ $item['jurusans']['nama']}}</td>
-                                            <td> {{ $item->jenis }} </td>
+                                            <td> {{ $item->kapasitas }} </td>
+                                            <td> {{ $item['jurusans']['nama'] }} </td>
+                                            <td>{{ $item->type }} </td>
 
                                             <td>
-                                                <a id="delete" href="{{ route('mapel.delete', $item->id) }}"
+                                                <a id="delete" href="{{ route('ruangan.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
                                                     <i data-lucide="trash" class="w-4 h-4"></i> </a>
-                                                <a href="{{ route('mapel.edit', $item->id) }}"
+                                                <a href="{{ route('ruangan.edit', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
                                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
