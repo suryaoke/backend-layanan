@@ -15,14 +15,17 @@
 
         <div class="form-group mt-3">
             <label for="username">Nama</label>
-            <input type="text" value="{{ $siswa->nama }}" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Nama siswa" name="nama" id="nama">
+            <input type="text" value="{{ $siswa->nama }}"
+                class="intro-x login__input form-control py-3 px-4 block mt-1 " placeholder="Masukkan Nama " name="nama"
+                id="nama">
         </div>
         <div class="form-group mt-3">
             <label for="username">Nisn</label>
-            <input type="text" value="{{ $siswa->nisn }}" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Nisn" name="nisn" id="nisn">
+            <input type="text" value="{{ $siswa->nisn }}" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                placeholder="Masukkan Nisn" name="nisn" id="nisn">
         </div>
+
+
         <div class="mt-3">
             <label>Jenis Kelamin</label>
             <div class="flex flex-col sm:flex-row mt-2">
@@ -38,19 +41,32 @@
                 </div>
             </div>
         </div>
-        <div class="form-group mt-3">
-            <label for="username">Kelas</label>
-            <select name="kelas" id="kelas" class="tom-select w-full " aria-label="Default select example">
-                <option value="{{ $siswa->kelass->id }}">{{ $siswa->kelass->nama }}</option>
+
+        <div class="mt-4">
+            <label for=""> Kelas</label>
+            <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
+                <option value="{{ $siswa->kelas }}">{{ $siswa['kelass']['nama'] }}</option>
                 @foreach ($kelas as $item)
                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                 @endforeach
             </select>
         </div>
+
         <div class="mt-4">
-            <button class="btn btn-primary  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Update</button>
-            <a class="btn btn-danger  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
-                href="{{ route('siswa.all') }}">Cancel</a>
+            <label for=""> Username</label>
+            <select name="id_user" id="id_user" class="tom-select w-full mt-1"required>
+                <option value="{{ $siswa->id_user }}">{{ $siswa['users']['name'] }}</option>
+                @foreach ($user as $item)
+                    <option value="{{ $item->id }}">{{ $item->username }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
+            <a href="{{ route('siswa.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "
+                type="submit">Cancel</a>
+
         </div>
 
     </form>
@@ -74,6 +90,9 @@
                     jk: {
                         required: true,
                     },
+                    id_user: {
+                        required: true,
+                    },
                 },
                 messages: {
                     nama: {
@@ -87,6 +106,9 @@
                     },
                     jk: {
                         required: 'Please Select Your Jenis Kelamin',
+                    },
+                    id_user: {
+                        required: 'Please Select Your Username',
                     },
                 },
                 errorElement: 'span',

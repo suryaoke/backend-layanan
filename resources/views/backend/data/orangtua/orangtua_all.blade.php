@@ -5,7 +5,7 @@
             Orang Tua All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('orangtua.add') }}" class="btn btn-primary shadow-md mr-2">Add New Orang</a>
+            <a href="{{ route('orangtua.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
 
         </div>
     </div>
@@ -20,7 +20,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode</th>
+                                        <th>Kode Orang Tua</th>
                                         <th>Nama</th>
                                         <th>No HP</th>
                                         <th>Username</th>
@@ -35,15 +35,15 @@
                                             <td> {{ $item->kode_ortu }} </td>
                                             <td> {{ $item->nama }} </td>
                                             <td> {{ $item->no_hp }} </td>
-                                            <td> {{ $item->username }} </td>
-                                            <td> {{ $item->nama_siswa }} </td>
+                                            <td> {{ $item['users']['name'] }} </td>
+                                            <td> {{ $item['siswas']['nama'] }} </td>
                                             <td>
                                                 <a id="delete" href="{{ route('orangtua.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
-                                                    <i data-lucide="trash" class="w-5 h-5"></i> </a>
+                                                    <i data-lucide="trash" class="w-4 h-4"></i> </a>
                                                 <a href="{{ route('orangtua.edit', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
-                                                    <i data-lucide="edit" class="w-5 h-5"></i>
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </td>
 

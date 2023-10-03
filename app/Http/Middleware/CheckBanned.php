@@ -18,14 +18,18 @@ class CheckBanned
     public function handle(Request $request, Closure $next)
     {
 
-        if (auth()->check() && (auth()->user()->role == '-')) {
+        if (auth()->check() && (auth()->user()->status == '0')) {
             Auth::logout();
 
             $request->session()->invalidate();
 
             $request->session()->regenerateToken();
+            $notification = array(
+                'message' => 'Akun User Tidak Aktif ',
+                'alert-type' => 'warning'
+            );
 
-            return redirect()->route('login')->with('error', 'Your Account is suspended, please contact Admin.');
+            return redirect()->route('login')->with($notification);
         }
 
         return $next($request);

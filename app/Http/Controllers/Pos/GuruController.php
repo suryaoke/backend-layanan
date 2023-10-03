@@ -21,7 +21,10 @@ class GuruController extends Controller
     public function GuruAdd()
     {
 
-        $user = User::latest()->get();
+        $guruIds = Guru::pluck('id_user')->toArray();
+        $user = User::where('role', '4')
+            ->whereNotIn('id', $guruIds)
+            ->get();
         return view('backend.data.guru.guru_add', compact('user'));
     } // end method
     public function GuruStore(Request $request)
@@ -29,14 +32,14 @@ class GuruController extends Controller
 
         $this->validate($request, [
             'kode_gr' => 'required|max:50|unique:gurus,kode_gr',
-            'nip' => 'required|max:50|unique:gurus,nip',
+            'id_user' => 'required|max:50|unique:gurus,id_user',
         ]);
 
         Guru::insert([
             'kode_gr' => $request->kode_gr,
             'nama' => $request->nama,
-            'username' => $request->username,
-            'nip' => $request->nip,
+            'no_hp' => $request->no_hp,
+            'id_user' => $request->id_user,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
 
@@ -52,18 +55,22 @@ class GuruController extends Controller
     public function GuruEdit($id)
     {
         $guru = Guru::findOrFail($id);
-        return view('backend.data.guru.guru_edit', compact('guru'));
+        $guruIds = Guru::pluck('id_user')->toArray();
+        $user = User::where('role', '4')
+        ->whereNotIn('id', $guruIds)
+            ->get();
+        return view('backend.data.guru.guru_edit', compact('guru','user'));
     }
     public function GuruUpdate(Request $request)
     {
 
-     
+
         $guru_id = $request->id;
         Guru::findOrFail($guru_id)->update([
             'kode_gr' => $request->kode_gr,
             'nama' => $request->nama,
-            'username' => $request->username,
-            'nip' => $request->nip,
+            'no_hp' => $request->no_hp,
+            'id_user' => $request->id_user,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 

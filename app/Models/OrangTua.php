@@ -9,4 +9,12 @@ class OrangTua extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
+    public function siswas()
+    {
+        return $this->belongsTo(Siswa::class, 'id_siswa', 'id');
+    }
 }

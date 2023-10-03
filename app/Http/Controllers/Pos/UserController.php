@@ -20,9 +20,7 @@ class UserController extends Controller
 
     public function UserAll()
     {
-
-        $users = User::latest()->get();
-
+        $users = User::orderBy('role')->get();
 
         return view('backend.master.user.user_all', compact('users',));
     } // End Method
@@ -40,7 +38,7 @@ class UserController extends Controller
     }
 
 
-    public function  UserStore(Request $request): RedirectResponse
+    public function UserStore(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -51,20 +49,32 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $existingUser = User::whereIn('role', [1, 2, 3])->first();
+
+        if ($existingUser && !in_array($request->role, [4, 5, 6])) {
+            // If a user with role 1, 2, or 3 already exists, and the new user's role is not 4, 5, or 6, show an alert and redirect
+            $notification = [
+                'message' => 'Data Role Admin/Kepsek/Wakil Kurikulum Sudah Ada',
+                'alert-type' => 'error'
+            ];
+            return redirect()->back()->withInput()->with($notification);
+        }
+
+        // If no user with role 1, 2, or 3 exists, create the user
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
             'profile_image' => $request->profile_image,
             'role' => $request->role,
             'email' => $request->email,
-            'status' =>$request->status,
+            'status' => $request->status,
             'password' => Hash::make($request->password),
         ]);
 
-        $notification = array(
+        $notification = [
             'message' => 'Create User Successfully',
             'alert-type' => 'success'
-        );
+        ];
         return redirect()->route('user.all')->with($notification);
     }
 
@@ -139,10 +149,8 @@ class UserController extends Controller
     public function UserTidakAktif($id)
     {
 
-
-
         $user = User::findOrFail($id);
-        $user->role = '-';
+        $user->status = '0';
         $user->save();
 
         $notification = array(
@@ -156,10 +164,8 @@ class UserController extends Controller
     public function UserAktif($id)
     {
 
-
-
         $user = User::findOrFail($id);
-        $user->role = '0';
+        $user->status = '1';
         $user->save();
 
         $notification = array(

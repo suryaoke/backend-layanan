@@ -5,7 +5,7 @@
             User All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('user.add') }}" class="btn btn-primary shadow-md mr-2">Add New User</a>
+            <a href="{{ route('user.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
 
         </div>
     </div>
@@ -21,6 +21,7 @@
                                     <tr>
                                         <th>Sl</th>
                                         <th>Name</th>
+                                        <th>Username</th>
                                         <th>User Image </th>
                                         <th>Email</th>
                                         <th>Role</th>
@@ -32,25 +33,29 @@
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
                                             <td> {{ $item->name }} </td>
+                                            <td> {{ $item->username }} </td>
                                             <td>
                                                 <img style="width:80px; height:60px"
                                                     src=" {{ !empty($item->profile_image) ? url('uploads/admin_images/' . $item->profile_image) : url('uploads/no_image.jpg') }}"
                                                     alt="">
                                             </td>
                                             <td> {{ $item->email }} </td>
-                                          
+
                                             <td>
                                                 @if ($item->role == '1')
-                                                    <span class="btn btn-outline-dark">Admin</span>
+                                                    <span class="text-dark">Admin</span>
                                                 @elseif($item->role == '2')
-                                                    <span class="btn btn-outline-danger">Kepala Sekolah</span>
+                                                    <span class="text-danger">Kepala Sekolah</span>
                                                 @elseif($item->role == '3')
-                                                    <span class="btn btn-outline-warning">Waka Kurikulum</span>
+                                                    <span class="text-warning">Wakil Kurikulum</span>
                                                 @elseif($item->role == '4')
-                                                    <span class="btn btn-outline-success">Jurusan</span>
+                                                    <span class="text-success">Guru</span>
                                                 @elseif($item->role == '5')
-                                                    <span class="btn btn-outline-primary">Guru</span>
+                                                    <span class="text-primary">Orang Tua</span>
+                                                @elseif($item->role == '6')
+                                                    <span class="text-primary">Siswa</span>
                                                 @endif
+
                                             </td>
 
                                             <td>
@@ -61,11 +66,11 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                @if ($item->role != '-')
+                                                @if ($item->status == '1')
                                                     <a href="{{ route('user.tidak.aktif', $item->id) }}"
                                                         class="btn btn-danger mr-1 mb-2" title="Inactive">
                                                         <i data-lucide="x-circle" class="w-4 h-4"></i> </a>
-                                                @elseif($item->role == '-')
+                                                @elseif($item->status == '0')
                                                     <a href="{{ route('user.aktif', $item->id) }}"
                                                         class="btn btn-success mr-1 mb-2" title="Active">
                                                         <i data-lucide="check-circle" class="w-4 h-4"></i> </a>

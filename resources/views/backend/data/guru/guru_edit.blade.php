@@ -14,25 +14,28 @@
         <div class="mt-3">
             <Kode>Kode Guru</label>
                 <input type="text" value="{{ $guru->kode_gr }}" class="intro-x login__input form-control py-3 px-4 block"
-                    placeholder="Kode Guru" name="kode_gr" id="kode_gr">
+                    placeholder="Masukkan Kode Guru" name="kode_gr" id="kode_gr">
         </div>
         <div class="mt-3">
             <label>Nama Guru</label>
             <input type="text" value="{{ $guru->nama }}" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Nama Guru" name="nama" id="nama">
+                placeholder="Nasukkan Nama " name="nama" id="nama">
         </div>
-        <div class="mt-3"> <label>NIP</label>
-            <input type="text" value="{{ $guru->nip }}" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="NIP" name="nip" id="nip">
+        <div class="mt-3"> <label>No HP</label>
+            <input type="text" value="{{ $guru->no_hp }}" class="intro-x login__input form-control py-3 px-4 block "
+                placeholder="Masukkan No Hp" name="no_hp" id="no_hp">
         </div>
         <div class="mt-3"> <label>Username Guru</label>
-            <select name="username" id="username" class="form-control w-full " required>
-                <option value="{{ $guru->username }}">{{ $guru->username }}</option>
+            <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
+                <option value="{{ $guru->id_user }}">{{ $guru['users']['username'] }}</option>
+                @foreach ($user as $item)
+                    <option value="{{ $item->id }}">{{ $item->username }}</option>
+                @endforeach
             </select>
         </div>
         <div class="mt-4">
-            <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Update</button>
-            <a href="{{ route('guru.all') }}" class="btn btn-danger py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
+            <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+            <a href="{{ route('guru.all') }}" class="btn btn-danger h-10 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
         </div>
     </form>
 
@@ -49,11 +52,11 @@
                     nama: {
                         required: true,
                     },
-                    nip: {
+                    no_hp: {
                         required: true,
                         digits: true,
                     },
-                    username: {
+                    id_user: {
                         required: true,
                     },
                 },
@@ -64,11 +67,11 @@
                     nama: {
                         required: 'Please Enter Your Nama',
                     },
-                    nip: {
-                        required: 'Please Enter Your NIP',
+                    no_hp: {
+                        required: 'Please Enter Your No Hp',
                         digits: 'Please enter only numbers',
                     },
-                    username: {
+                    id_user: {
                         required: 'Please Enter Your Username',
                     },
                 },

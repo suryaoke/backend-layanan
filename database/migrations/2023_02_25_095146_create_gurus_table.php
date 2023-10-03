@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('gurus', function (Blueprint $table) {
             $table->id();
             $table->string('kode_gr')->nullable();
-            $table->string('nip')->nullable();
-            $table->string('username')->nullable();
             $table->string('nama')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->integer('id_user')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

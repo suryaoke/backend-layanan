@@ -21,12 +21,6 @@
 
         <div class="mt-3 flex"> <label for="regular-form-1" class="mr-2">Profile Image</label> <input name="profile_image"
                 type="file" id="image">
-
-            @if ($editData->role == '1')
-                <label for="regular-form-1" class="mr-2">Ttd Image</label> <input name="ttd" type="file"
-                    id="ttd">
-            @endif
-
         </div>
 
 
@@ -34,17 +28,14 @@
             <img width="130px auto" id="showImage"
                 src="{{ !empty($editData->profile_image) ? url('uploads/admin_images/' . $editData->profile_image) : url('uploads/no_image.jpg') }}"
                 alt="Card image cap">
-            @if ($editData->role == '1')
-                <div class="ml-8">
-                    <img width="130px auto" id="showImage1"
-                        src="{{ !empty($editData->ttd) ? url('uploads/ttd/' . $editData->ttd) : url('uploads/no_image.jpg') }}"
-                        alt="Card image cap">
-                </div>
-            @endif
         </div>
 
-        <input type="submit" name="profile_image" class="btn btn-primary waves-effect waves-light mt-6"
-            value="Update Profile">
+
+        <div class="mt-8">
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
+            <a href="{{ route('admin.profile') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top"
+                type="submit">Cancel</a>
+        </div>
     </form>
 
 

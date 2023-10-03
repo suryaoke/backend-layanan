@@ -187,7 +187,7 @@
                                     <div class="mb-2">
                                         <label for="id_pengampu">KODE PENGAMPU</label>
                                     </div>
-                                    <select name="id_pengampu" id="id_pengampu" class="form tom-select w-full" required>
+                                    <select name="id_pengampu" id="id_pengampu" class="tom-select w-full" required>
                                         <optgroup>
                                             <option value="">Pilih Kode Pengampu</option>
                                             @foreach ($pengampu as $item)
@@ -374,8 +374,7 @@
                     <div class="modal-header">
                         <h2 class="font-medium text-base mr-auto">Edit Jadwal Mapel</h2>
                     </div>
-                    <form method="post" action="{{ route('jadwalmapel.update', $item->id) }}"
-                        enctype="multipart/form-data" id="myForm1">
+                    <form method="post" action="{{ route('jadwalmapel.update', $item->id) }}">
                         @csrf
                         <div class="modal-body">
                             <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
@@ -384,7 +383,7 @@
                                 <div class="col-span-12">
                                     <div class="card overflow-x-auto">
                                         <div class="card-body table-responsive">
-                                            <table id="data-table" class="table table-sm" style="width: 100%;">
+                                            <table id="data-table1" class="table table-sm" style="width: 100%;">
                                                 <thead>
                                                     <tr>
 

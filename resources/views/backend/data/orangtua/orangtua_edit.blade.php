@@ -13,88 +13,96 @@
         <input type="hidden" name="id" value="{{ $ortu->id }}">
 
         <div class="form-group">
-            <label for="kode_gr">Kode Orang Tua:</label>
+            <label for="kode_gr">Kode Orang Tua</label>
             <input type="text" value="{{ $ortu->kode_ortu }}" class="intro-x login__input form-control py-3 px-4 block"
-                placeholder="Kode Orang Tua" name="kode_gr" id="kode_gr">
+                placeholder="Kode Orang Tua" name="kode_ortu" id="kode_ortu">
         </div>
 
-        <div class="form-group mt-3">
-            <label for="nama">Nama Orang Tua:</label>
+        <div class="form-group mt-4">
+            <label for="nama">Nama Orang Tua</label>
             <input type="text" value="{{ $ortu->nama }}" class="intro-x login__input form-control py-3 px-4 block "
                 placeholder="Nama Orang Tua" name="nama" id="nama">
         </div>
 
-        <div class="form-group mt-3">
-            <label for="username">Username:</label>
-            <input type="text" value="{{ $ortu->username }}" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Username" name="username" id="username">
-        </div>
-
-        <div class="form-group mt-3">
-            <label for="nama_siswa">Nama Siswa:</label>
-            <input type="text" value="{{ $ortu->nama_siswa }}" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Nama Siswa" name="nama_siswa" id="nama_siswa">
-        </div>
-
-        <div class="form-group mt-3">
+        <div class="form-group mt-4">
             <label for="no_hp">Nomor HP:</label>
             <input type="text" value="{{ $ortu->no_hp }}" class="intro-x login__input form-control py-3 px-4 block "
                 placeholder="Nomor HP" name="no_hp" id="no_hp">
         </div>
 
+        <div class="mt-4">
+            <label for=""> Username</label>
+            <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
+                <option value="{{ $ortu->id_user }}">{{ $ortu['users']['name'] }}</option>
+                @foreach ($user as $item)
+                    <option value="{{ $item->id }}">{{ $item->username }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <label for=""> Siswa</label>
+            <select name="id_siswa" id="id_siswa" class="tom-select w-full mt-1" required>
+                <option value="{{ $ortu->id_siswa }}">{{ $ortu['siswas']['nama'] }}</option>
+                @foreach ($siswa as $item)
+                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                @endforeach
+            </select>
+        </div>
+
         <!-- Add other input fields as needed -->
         <div class="mt-4">
-            <button class="btn btn-primary  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Update</button>
-            <a href="{{ route('orangtua.all') }}"
-                class="btn btn-danger py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
+            <a href="{{ route('orangtua.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "
+                type="submit">Cancel</a>
+
         </div>
 
     </form>
 
-
     <script type="text/javascript">
-        jQuery(document).ready(function() {
+        $(document).ready(function() {
             $('#myForm').validate({
                 rules: {
-                    kode_gr: {
+                    kode_ortu: {
                         required: true,
                     },
                     nama: {
                         required: true,
                     },
-                    username: {
-                        required: true,
-                    },
-                    nama_siswa: {
-                        required: true,
-                    },
                     no_hp: {
                         required: true,
+                        digits: true,
                     },
-                    // Add rules for other fields
+                    id_user: {
+                        required: true,
+                    },
+                    id_siswa: {
+                        required: true,
+                    },
                 },
                 messages: {
-                    kode_gr: {
-                        required: 'Please Enter Kode',
+                    kode_ortu: {
+                        required: 'Please Enter Your Kode',
                     },
                     nama: {
-                        required: 'Please Enter Name',
-                    },
-                    username: {
-                        required: 'Please Enter Username',
-                    },
-                    nama_siswa: {
-                        required: 'Please Enter Nama Siswa',
+                        required: 'Please Enter Your Nama',
                     },
                     no_hp: {
-                        required: 'Please Enter Nomor HP',
+                        required: 'Please Enter Your No HP',
+                        digits: 'Please enter only numbers',
                     },
-                    // Add messages for other fields
+                    id_user: {
+                        required: 'Please Enter Your Username',
+                    },
+                    id_siswa: {
+                        required: 'Please Enter Your Nama Siswa',
+                    },
                 },
                 errorElement: 'span',
+                errorClass: 'invalid-feedback',
                 errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
+                    error.insertAfter(element);
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');

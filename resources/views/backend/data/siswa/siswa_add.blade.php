@@ -19,11 +19,16 @@
 
     <form method="post" action="{{ route('siswa.store') }}" enctype="multipart/form-data" id="myForm">
         @csrf
-
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Nama Siswa" name="nama"
-            id="nama">
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Nisn"
-            name="nisn" id="nisn">
+        <div class="mt-4">
+            <label for=""> Nama </label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1" placeholder="Masukkan Nama"
+                name="nama" id="nama">
+        </div>
+        <div class="mt-4">
+            <label for=""> Nisn</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1" placeholder="Masukkan Nisn"
+                name="nisn" id="nisn">
+        </div>
 
         <div class="mt-3">
             <label>Jenis Kelamin</label>
@@ -39,19 +44,32 @@
             </div>
         </div>
 
-
-
-        <select name="kelas" id="kelas" class="form-control w-full mt-4" required>
-            <option value="">Pilih Kelas</option>
-            @foreach ($kelas as $item)
-                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-            @endforeach
-        </select>
         <div class="mt-4">
-            <button class="btn btn-primary  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a class="btn btn-danger py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" href="{{ route('siswa.all') }}">Cancel</a>
+            <label for=""> Kelas</label>
+            <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
+                <option value="">Pilih Kelas</option>
+                @foreach ($kelas as $item)
+                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                @endforeach
+            </select>
         </div>
 
+        <div class="mt-4">
+            <label for=""> Username</label>
+            <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
+                <option value="">Pilih Username</option>
+                @foreach ($user as $item)
+                    <option value="{{ $item->id }}">{{ $item->username }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
+            <a href="{{ route('siswa.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "
+                type="submit">Cancel</a>
+
+        </div>
     </form>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -73,6 +91,9 @@
                     jk: {
                         required: true,
                     },
+                    id_user: {
+                        required: true,
+                    },
                 },
                 messages: {
                     nama: {
@@ -86,6 +107,9 @@
                     },
                     jk: {
                         required: 'Please Select Your Jenis Kelamin',
+                    },
+                    id_user: {
+                        required: 'Please Select Your Username',
                     },
                 },
                 errorElement: 'span',

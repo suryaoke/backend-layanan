@@ -22,25 +22,36 @@
 
     <form method="post" action="{{ route('guru.store') }}" enctype="multipart/form-data" id="myForm">
         @csrf
+        <div class="mt-3">
+            <label>Kode Guru</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                placeholder="Masukkan Kode Guru" name="kode_gr" id="kode_gr" required>
+        </div>
+        <div class="mt-3">
+            <label>Nama</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1" placeholder="Masukkan Nama"
+                name="nama" id="nama" required>
+        </div>
 
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Kode Guru" name="kode_gr"
-            id="kode_gr" required>
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Nama"
-            name="nama" id="nama" required>
-
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Nip"
-            name="nip" id="nip" pattern="[0-9]+" title="Please enter only numbers" required>
-
-        <select name="username" id="username" class="form-control w-full mt-4" required>
-            <option value="">Pilih Username</option>
-            @foreach ($user as $item)
-                <option value="{{ $item->id }}">{{ $item->username }}</option>
-            @endforeach
-        </select>
+        <div class="mt-3">
+            <label>Kode Guru</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                placeholder="Masukkan No HP" name="no_hp" id="no_hp" pattern="[0-9]+"
+                title="Please enter only numbers" required>
+        </div>
+        <div class="mt-3">
+            <label>Username</label>
+            <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
+                <option value="">Pilih Username</option>
+                @foreach ($user as $item)
+                    <option value="{{ $item->id }}">{{ $item->username }}</option>
+                @endforeach
+            </select>
+        </div>
 
         <div class="mt-4">
-            <button class="btn btn-primary  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a href="{{ route('guru.all') }}" class="btn btn-danger py-3 px-4 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
+            <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+            <a href="{{ route('guru.all') }}" class="btn btn-danger h-10 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
         </div>
 
     </form>
@@ -55,11 +66,11 @@
                     nama: {
                         required: true,
                     },
-                    nip: {
+                    no_hp: {
                         required: true,
                         digits: true,
                     },
-                    username: {
+                    id_user: {
                         required: true,
                     },
                 },
@@ -70,11 +81,11 @@
                     nama: {
                         required: 'Please Enter Your Nama',
                     },
-                    nip: {
-                        required: 'Please Enter Your NIP',
+                    no_hp: {
+                        required: 'Please Enter Your No Hp',
                         digits: 'Please enter only numbers',
                     },
-                    username: {
+                    id_user: {
                         required: 'Please Enter Your Username',
                     },
                 },

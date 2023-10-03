@@ -16,9 +16,9 @@ return new class extends Migration
         Schema::create('orang_tuas', function (Blueprint $table) {
             $table->id();
             $table->string('kode_ortu')->nullable();
-            $table->string('username')->nullable();
+            $table->integer('id_user')->nullable();
             $table->string('nama')->nullable();
-            $table->string('nama_siswa')->nullable();
+            $table->integer('id_siswa')->nullable();
             $table->string('no_hp')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

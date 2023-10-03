@@ -21,7 +21,7 @@
 
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('siswa.add') }}" class="btn btn-primary mr-2"> Add New Siswa</a>
+            <a href="{{ route('siswa.add') }}" class="btn btn-primary mr-2"> Tambah Data</a>
             <form method="get" action="{{ route('siswa.search') }}">
 
                 <select name="search">
@@ -51,7 +51,7 @@
                 <div class="col-12">
                     <div class="card overflow-x-auto">
                         <div class="card-body">
-                            <table class="table table-sm"
+                            <table id="datatable" class="table table-sm"
                                 style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                 <thead>
                                     <tr>
@@ -60,6 +60,7 @@
                                         <th>Nisn</th>
                                         <th>JK</th>
                                         <th>Kelas</th>
+                                        <th>Username</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
@@ -70,14 +71,15 @@
                                             <td> {{ $item->nisn }} </td>
                                             <td> {{ $item->jk }} </td>
                                             <td> {{ $item['kelass']['nama'] }} </td>
+                                            <td> {{ $item['users']['name'] }} </td>
 
                                             <td>
                                                 <a id="delete" href="{{ route('siswa.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
-                                                    <i data-lucide="trash" class="w-5 h-5"></i> </a>
+                                                    <i data-lucide="trash" class="w-4 h-4"></i> </a>
                                                 <a href="{{ route('siswa.edit', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
-                                                    <i data-lucide="edit" class="w-5 h-5"></i>
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </td>
 

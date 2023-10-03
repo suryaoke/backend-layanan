@@ -28,10 +28,7 @@
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center"> <i data-lucide="mail"
                             class="w-4 h-4 mr-2"></i> {{ $adminData->email }} </div>
-                    <div class="truncate sm:whitespace-normal flex items-center mt-3"> <i data-lucide="instagram"
-                            class="w-4 h-4 mr-2"></i> {{ $adminData->email }} </div>
-                    <div class="truncate sm:whitespace-normal flex items-center mt-3"> <i data-lucide="twitter"
-                            class="w-4 h-4 mr-2"></i> {{ $adminData->email }} </div>
+                  
                 </div>
             </div>
 

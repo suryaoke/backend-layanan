@@ -28,17 +28,18 @@
                 <a href="{{ url('/') }}" class="-intro-x flex items-center pt-5">
                     <img alt="Midone - HTML Admin Template" class="w-12"
                         src="{{ asset('backend/dist/images/man1.png') }}">
-                    <span class="text-white text-lg ml-3"> PTSP MAN 1 Kota Padang </span>
+                    <span class="text-white text-lg ml-3">MAN 1 Kota Padang </span>
                 </a>
                 <div class="my-auto ">
                     <img width="370px" alt="Midone - HTML Admin Template" class="-intro-x -mt-16"
                         src="{{ asset('backend/dist/images/layanan.png') }}">
                     <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">
-                        PTSP MAN 1 Kota Padang.
+                        Layanan Informasi Akademik
                         <br>
-                        Menuju Sistem Digital 2023
+                        MAN 1 Kota Padang.
                     </div>
-                    <div class="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400">Manage all your services in one place</div>
+                    <div class="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400"> Menuju Sistem
+                        Digital 2023</div>
                 </div>
             </div>
             <!-- END: Login Info -->
@@ -51,7 +52,7 @@
                         Sign In
                     </h2>
                     <div class="intro-x mt-2 text-slate-400 xl:hidden text-center">
-                     Manage all your services in one place</div>
+                        Manage all your services in one place</div>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="intro-x mt-8">
@@ -60,20 +61,19 @@
                             <input id="password" name="password" type="password"
                                 class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password">
                         </div>
-                        <div class="intro-x flex text-slate-600 dark:text-slate-500 text-xs sm:text-sm mt-4">
-                            <div class="flex items-center mr-auto">
-                                <input id="remember-me" type="checkbox" class="form-check-input border mr-2">
-                                <label class="cursor-pointer select-none" for="remember-me">Remember me</label>
-                            </div>
+
+
+                        <div class=" intro-x float-right mt-4 text-primary">
                             <a href="{{ route('password.request') }}">Forgot Password?</a>
                         </div>
+
                         <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                             <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
                                 type="submit">Login</button>
 
-                            <a href="{{ route('register') }}"
+                            {{--  <a href="{{ route('register') }}"
                                 class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
-                                Register</a>
+                                Register</a>  --}}
 
                         </div>
                     </form>
@@ -85,7 +85,7 @@
 
         </div>
     </div>
-   
+
 
     <!-- BEGIN: JS Assets-->
     <script src="{{ asset('backend/dist/js/app.js') }}"></script>
@@ -124,6 +124,46 @@
             }
         @endif
     </script>
+
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            $('#myForm').validate({
+                rules: {
+                    kode_mapel: {
+                        required: true,
+                    },
+                    nama: {
+                        required: true,
+                    },
+
+
+
+                },
+                messages: {
+                    kode_mapel: {
+                        required: 'Please Enter Your Username',
+                    },
+                    nama: {
+                        required: 'Please Enter Your Password',
+                    },
+
+                },
+                errorElement: 'span',
+                errorClass: 'invalid-feedback',
+                errorPlacement: function(error, element) {
+                    error.insertAfter(element);
+                },
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass('is-invalid');
+                },
+            });
+        });
+    </script>
+
 </body>
 
 </html>

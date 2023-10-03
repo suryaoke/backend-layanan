@@ -18,60 +18,47 @@
                 id="regular-form-1" type="text" class="form-control" value="{{ $editData->email }}"> </div>
         <div class="mt-3"> <label for="regular-form-1" class="form-label">User Name</label> <input name="username"
                 id="regular-form-1" type="text" class="form-control" value="{{ $editData->username }}"> </div>
-    
+
         <div class="mt-3">
             <label for="regular-form-1" class="form-control">Role</label>
             <select name="role" id="role" data-placeholder="Select Role" class="tom-select w-full  mt-2 ">
                 <option value="{{ $editData->role }}">
 
-                    @if ($editData->role == '-')
-                        Tidak Aktif
-                    @elseif($editData->role == '0')
-                        Belum Dipilih
-                    @elseif($editData->role == '1')
-                        Kepsek
-                    @elseif($editData->role == '2')
-                        Wakil Kepsek
-                    @elseif($editData->role == '3')
-                        Verifikator
-                    @elseif($editData->role == '4')
+                    @if ($editData->role == '1')
                         Admin
+                    @elseif($editData->role == '2')
+                        Kepsek
+                    @elseif($editData->role == '3')
+                        Wakil Kurikulum
+                    @elseif($editData->role == '4')
+                        Guru
+                    @elseif($editData->role == '5')
+                        Orang Tua
+                    @elseif($editData->role == '6')
+                        Siswa
                     @endif
                 </option>
 
-                <option value="-">Tidak Aktif</option>
-                <option value="1">Kepsek</option>
-                <option value="2">Wakil Kepsek</option>
-                <option value="3">Verifikator</option>
-                <option value="4">Admin</option>
+                <option value="1">Admin</option>
+                <option value="2">Kepsek</option>
+                <option value="3">Wakil Kurikulum</option>
+                <option value="4">Guru</option>
+                <option value="5">Orang Tua</option>
+                <option value="6">Siswa</option>
             </select>
         </div>
 
 
         <div class="mt-3 flex">
-
             <label for="regular-form-1" class="mr-2">Profile Image</label> <input name="profile_image" type="file"
                 id="image">
-
-            @if ($editData->role == '1')
-                <label for="regular-form-1" class="mr-2">Ttd Image</label> <input name="ttd" type="file"
-                    id="ttd">
-            @endif
-
         </div>
 
         <div class="mt-3 flex ">
             <img width="130px auto" id="showImage"
                 src="{{ !empty($editData->profile_image) ? url('uploads/admin_images/' . $editData->profile_image) : url('uploads/no_image.jpg') }}"
                 alt="Card image cap">
-            @if ($editData->role == '1')
-                <div class="ml-8">
-
-                    <img width="130px auto" id="showImage1"
-                        src="{{ !empty($editData->ttd) ? url('uploads/ttd/' . $editData->ttd) : url('uploads/no_image.jpg') }}"
-                        alt="Card image cap">
-                </div>
-            @endif
+           
         </div>
 
         <input type="submit" name="profile_image" class="btn btn-primary waves-effect waves-light mt-6"
@@ -161,15 +148,4 @@
     </script>
 
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#ttd').change(function(e) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#showImage1').attr('src', e.target.result);
-                }
-                reader.readAsDataURL(e.target.files['0']);
-            });
-        });
-    </script>
 @endsection

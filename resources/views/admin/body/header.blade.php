@@ -1,14 +1,35 @@
+ @php
+     $id = Auth::user()->id;
+     $adminData = App\Models\User::find($id);
+ @endphp
  <div class="top-bar">
      <!-- BEGIN: Breadcrumb -->
      <nav aria-label="breadcrumb" class="-intro-x mr-auto hidden sm:flex">
          <ol class="breadcrumb">
              <li class="breadcrumb-item"><a href="#">Application</a></li>
              <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+             <li class="breadcrumb-item active" aria-current="page">
+
+                 @if (Auth::user()->role == '1')
+                     Admin
+                 @elseif (Auth::user()->role == '2')
+                     Kepala Sekolah
+                 @elseif (Auth::user()->role == '3')
+                     Wakil Kurikulum
+                 @elseif (Auth::user()->role == '4')
+                     Guru
+                 @elseif (Auth::user()->role == '5')
+                     Orang Tua
+                 @elseif (Auth::user()->role == '6')
+                     Siswa
+                 @endif
+             </li>
          </ol>
      </nav>
      <!-- END: Breadcrumb -->
 
- 
+
+
      <div class="intro-x dropdown w-8 h-8">
          <div class="dropdown-toggle w-8 h-8 rounded-full overflow-hidden shadow-lg image-fit zoom-in" role="button"
              aria-expanded="false" data-tw-toggle="dropdown">
@@ -18,10 +39,9 @@
          <div class="dropdown-menu w-56">
              <ul class="dropdown-content bg-primary text-white">
                  <li class="p-2">
-               
-                     <div class="text-xs text-white/70 mt-0.5 dark:text-slate-500">
-                      
-                     </div>
+                     <a class="dropdown-item hover:bg-white/5">
+                         {{ $adminData->name }}
+                     </a>
                  </li>
                  <li>
                      <hr class="dropdown-divider border-white/[0.08]">

@@ -23,7 +23,11 @@ class OrangTuaController extends Controller
     {
 
         $siswa = Siswa::latest()->get();
-        $user = User::latest()->get();
+        $orangtuaIds = OrangTua::pluck('id_user')->toArray();
+        $user = User::where('role', '5')
+            ->whereNotIn('id', $orangtuaIds)
+            ->get();
+
         return view('backend.data.orangtua.orangtua_add', compact('user', 'siswa'));
     } // end method
     public function OrtuStore(Request $request)
@@ -34,10 +38,10 @@ class OrangTuaController extends Controller
         // ]);
 
         OrangTua::insert([
-            'kode_ortu' => $request->kode_gr,
+            'kode_ortu' => $request->kode_ortu,
             'nama' => $request->nama,
-            'username' => $request->username,
-            'nama_siswa' => $request->nama_siswa,
+            'id_user' => $request->id_user,
+            'id_siswa' => $request->id_siswa,
             'no_hp' => $request->no_hp,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
@@ -53,8 +57,13 @@ class OrangTuaController extends Controller
 
     public function OrtuEdit($id)
     {
+        $siswa = Siswa::latest()->get();
         $ortu  = OrangTua::findOrFail($id);
-        return view('backend.data.orangtua.orangtua_edit', compact('ortu'));
+        $orangtuaIds = OrangTua::pluck('id_user')->toArray();
+        $user = User::where('role', '5')
+            ->whereNotIn('id',$orangtuaIds)
+            ->get();
+        return view('backend.data.orangtua.orangtua_edit', compact('ortu', 'user', 'siswa'));
     }
     public function OrtuUpdate(Request $request)
     {
@@ -66,10 +75,10 @@ class OrangTuaController extends Controller
 
         $ortu_id = $request->id;
         OrangTua::findOrFail($ortu_id)->update([
-            'kode_ortu' => $request->kode_gr,
+            'kode_ortu' => $request->kode_ortu,
             'nama' => $request->nama,
-            'username' => $request->username,
-            'nama_siswa' => $request->nama_siswa,
+            'id_user' => $request->id_user,
+            'id_siswa' => $request->id_siswa,
             'no_hp' => $request->no_hp,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),

@@ -21,4 +21,9 @@ class Siswa extends Model
     {
         return $this->hasMany(Absensi::class, 'siswa');
     }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
 }

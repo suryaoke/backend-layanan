@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\Kelas;
 use App\Models\Siswa;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
@@ -28,7 +29,11 @@ class SiswaController extends Controller
     {
 
         $kelas = Kelas::orderBy('nama')->get();
-        return view('backend.data.siswa.siswa_add', compact('kelas'));
+        $orangtuaIds = Siswa::pluck('id_user')->toArray();
+        $user = User::where('role', '6')
+            ->whereNotIn('id', $orangtuaIds)
+            ->get();
+        return view('backend.data.siswa.siswa_add', compact('kelas', 'user'));
     } // end method
     public function SiswaStore(Request $request)
     {
@@ -42,6 +47,7 @@ class SiswaController extends Controller
             'nisn' => $request->nisn,
             'kelas' => $request->kelas,
             'jk' => $request->jk,
+            'id_user' => $request->id_user,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
 
@@ -58,7 +64,11 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::findOrFail($id);
         $kelas = Kelas::all();
-        return view('backend.data.siswa.siswa_edit', compact('siswa', 'kelas'));
+        $orangtuaIds = Siswa::pluck('id_user')->toArray();
+        $user = User::where('role', '6')
+            ->whereNotIn('id', $orangtuaIds)
+            ->get();
+        return view('backend.data.siswa.siswa_edit', compact('siswa', 'kelas', 'user'));
     }
     public function SiswaUpdate(Request $request)
     {
@@ -70,6 +80,7 @@ class SiswaController extends Controller
             'nisn' => $request->nisn,
             'kelas' => $request->kelas,
             'jk' => $request->jk,
+            'id_user' => $request->id_user,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 

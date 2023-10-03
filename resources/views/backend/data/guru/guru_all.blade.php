@@ -5,7 +5,7 @@
             Guru All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('guru.add') }}" class="btn btn-primary shadow-md mr-2">Add New Guru</a>
+            <a href="{{ route('guru.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
 
         </div>
     </div>
@@ -20,9 +20,9 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode</th>
+                                        <th>Kode Guru</th>
                                         <th>Nama</th>
-                                        <th>Nip</th>
+                                        <th>No HP</th>
                                         <th>Username</th>
                                         <th>Action</th>
                                 </thead>
@@ -33,16 +33,16 @@
                                             <td> {{ $key + 1 }} </td>
                                             <td> {{ $item->kode_gr }} </td>
                                             <td> {{ $item->nama }} </td>
-                                            <td> {{ $item->nip }} </td>
-                                            <td> {{ $item->username }} </td>
+                                            <td> {{ $item->no_hp }} </td>
+                                            <td> {{ $item['users']['username'] }} </td>
 
                                             <td>
                                                 <a id="delete" href="{{ route('guru.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
-                                                    <i data-lucide="trash" class="w-5 h-5"></i> </a>
+                                                    <i data-lucide="trash" class="w-4 h-4"></i> </a>
                                                 <a href="{{ route('guru.edit', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
-                                                    <i data-lucide="edit" class="w-5 h-5"></i>
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </td>
 
