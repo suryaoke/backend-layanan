@@ -58,6 +58,7 @@
             <label for=""> Username</label>
             <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
                 <option value="">Pilih Username</option>
+                <option value="0">Kosong</option>
                 @foreach ($user as $item)
                     <option value="{{ $item->id }}">{{ $item->username }}</option>
                 @endforeach

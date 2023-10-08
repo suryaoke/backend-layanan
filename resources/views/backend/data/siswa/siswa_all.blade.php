@@ -71,7 +71,13 @@
                                             <td> {{ $item->nisn }} </td>
                                             <td> {{ $item->jk }} </td>
                                             <td> {{ $item['kelass']['nama'] }} </td>
-                                            <td> {{ $item['users']['name'] }} </td>
+                                            <td>
+                                                @if ($item->id_user == 0)
+                                                    <span class="text-danger">Kosong</span>
+                                                @else
+                                                    {{ $item['users']['username'] }}
+                                                @endif
+                                            </td>
 
                                             <td>
                                                 <a id="delete" href="{{ route('siswa.delete', $item->id) }}"

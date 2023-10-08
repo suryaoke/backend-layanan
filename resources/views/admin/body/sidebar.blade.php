@@ -15,6 +15,7 @@
          $jurusanedit = URL::route('jurusan.edit', ['id' => $id]);
          $mapeledit = URL::route('mapel.edit', ['id' => $id]);
          $pengampuedit = URL::route('pengampu.edit', ['id' => $id]);
+         $kelasedit = URL::route('kelas.edit', ['id' => $id]);
      } else {
          $guruedit = 1; // Handle jika parameter id tidak ditemukan dalam URL
          $orangtuaedit = 1;
@@ -28,6 +29,7 @@
          $jurusanedit = 1;
          $mapeledit = 1;
          $pengampuedit = 1;
+         $kelasedit = 1;
      }
      
      $url = url()->current();
@@ -37,7 +39,8 @@
      $absensisiswa = URL::route('absensi.siswa');
      $user = URL::route('user.all');
      $useradd = URL::route('user.add');
-     
+     $kelas = URL::route('kelas.all');
+     $kelasadd = URL::route('kelas.add');
      $siswa = URL::route('siswa.all');
      $siswaadd = URL::route('siswa.add');
      $guru = URL::route('guru.all');
@@ -62,6 +65,8 @@
      $adminprofile = URL::route('admin.profile');
      $editprofile = URL::route('edit.profile');
      $change = URL::route('change.password');
+     $jadwalmapelkepsek = URL::route('jadwalmapel.kepsek');
+     $jadwalmapelguru = URL::route('jadwalmapel.guru');
      
      $routes = [
          'pusherAuth' => URL::route('pusher.auth'),
@@ -89,7 +94,7 @@
  <nav class="side-nav">
      <a href="{{ route('dashboard') }}" class="intro-x flex items-center pl-5 pt-4">
          <img alt="Midone - HTML Admin Template" class="w-12" src="{{ asset('backend/dist/images/man1_copy.png') }}">
-         <span class="hidden xl:block text-white text-lg ml-3">PTSP MAN 1 Kota Padang</span>
+         <span class="hidden xl:block text-white text-lg ml-3">SIAKAD MAN 1 Kota Padang</span>
      </a>
      <div class="side-nav__devider my-6"></div>
      <ul>
@@ -113,29 +118,108 @@
 
          </li>
 
-         {{--  // bagian selain admin //  --}}
-         @if (Auth::user()->role != '1')
+         {{--  // bagian  admin //  --}}
+         @if (Auth::user()->role == '1')
+
              <li>
-                 @if ($url == $absensi)
-                     <a href="{{ route('absensi.all') }}" class="side-menu  side-menu--active">
-                     @elseif ($url == $absensiadd)
-                         <a href="{{ route('absensi.all') }}" class="side-menu  side-menu--active">
-                         @elseif ($url == $absensisiswa)
-                             <a href="{{ route('absensi.all') }}" class="side-menu  side-menu--active">
-                             @else
-                                 <a href="{{ route('absensi.all') }}" class="side-menu ">
+                 @if ($user == $url)
+                     <a href="javascript:;" class="side-menu side-menu--active">
+                     @elseif ($useradd == $url)
+                         <a href="javascript:;" class="side-menu side-menu--active">
+                         @elseif ($useredit == $url)
+                             <a href="javascript:;" class="side-menu side-menu--active">
+                             @elseif ($userview == $url)
+                                 <a href="javascript:;" class="side-menu side-menu--active">
+                                 @elseif ($siswa == $url)
+                                     <a href="javascript:;" class="side-menu side-menu--active">
+                                     @elseif ($siswaadd == $url)
+                                         <a href="javascript:;" class="side-menu side-menu--active">
+                                         @elseif ($siswaedit == $url)
+                                             <a href="javascript:;" class="side-menu side-menu--active">
+                                             @elseif ($guru == $url)
+                                                 <a href="javascript:;" class="side-menu side-menu--active">
+                                                 @elseif ($guruadd == $url)
+                                                     <a href="javascript:;" class="side-menu side-menu--active">
+                                                     @elseif ($guruedit == $url)
+                                                         <a href="javascript:;"class="side-menu side-menu--active">
+                                                         @elseif ($orangtua == $url)
+                                                             <a href="javascript:;" class="side-menu side-menu--active">
+                                                             @elseif ($orangtuaadd == $url)
+                                                                 <a href="javascript:;"
+                                                                     class="side-menu side-menu--active">
+                                                                 @elseif ($orangtuaedit == $url)
+                                                                     <a
+                                                                         href="javascript:;"class="side-menu side-menu--active">
+                                                                     @else
+                                                                         <a href="javascript:;" class="side-menu ">
                  @endif
-                 <div class="side-menu__icon"> <i data-lucide="user-check"></i> </div>
+                 <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-cog">
+                         <circle cx="18" cy="15" r="3" />
+                         <circle cx="9" cy="7" r="4" />
+                         <path d="M10 15H6a4 4 0 0 0-4 4v2" />
+                         <path d="m21.7 16.4-.9-.3" />
+                         <path d="m15.2 13.9-.9-.3" />
+                         <path d="m16.6 18.7.3-.9" />
+                         <path d="m19.1 12.2.3-.9" />
+                         <path d="m19.6 18.7-.4-1" />
+                         <path d="m16.8 12.3-.4-1" />
+                         <path d="m14.3 16.6 1-.4" />
+                         <path d="m20.7 13.8 1-.4" />
+                     </svg></div>
                  <div class="side-menu__title">
-                     Absensi
+                     MENU MASTER
+                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                 </div>
+                 </a>
+                 <ul class="">
+                     <li>
+                         <a href="{{ route('user.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
+                             <div class="side-menu__title"> Akun User </div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('guru.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
+                             <div class="side-menu__title"> Guru </div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('orangtua.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
+                             <div class="side-menu__title"> Orang Tua </div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('siswa.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
+                             <div class="side-menu__title"> Siswa </div>
+                         </a>
+                     </li>
+
+                 </ul>
+             </li>
+
+         @endif
+         {{--  // end bagian  admin //  --}}
+
+         {{--  // bagian Kepsek //  --}}
+         @if (Auth::user()->role == '2')
+             <li>
+                 @if ($url == $jadwalmapelkepsek)
+                     <a href="{{ route('jadwalmapel.kepsek') }}" class="side-menu  side-menu--active">
+                     @else
+                         <a href="{{ route('jadwalmapel.kepsek') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+                 <div class="side-menu__title">
+                     Jadwal Mata Pelajaran
                  </div>
                  </a>
 
              </li>
-             {{--  // end bagian selain admin //  --}}
-         @endif
-         {{--  // bagian selain admin //  --}}
-         @if (Auth::user()->role != '1')
              <li>
                  @if ($url == $a)
                      <a href="{{ route('messages.index') }}" class="side-menu  side-menu--active">
@@ -151,8 +235,9 @@
                  </a>
 
              </li>
+
          @endif
-         {{--  // end bagian selain admin //  --}}
+         {{--  // end bagian kepsek//  --}}
 
 
          {{--  // bagian wakil kurikulum //  --}}
@@ -254,50 +339,89 @@
                  </ul>
              </li>
 
+
+
+
+
+
              <li>
                  @if ($ruangan == $url)
-                     <a href="{{ route('ruangan.all') }}" class="side-menu  side-menu--active">
+                     <a href="javascript:;" class="side-menu  side-menu--active">
                      @elseif ($ruanganadd == $url)
-                         <a href="{{ route('ruangan.all') }}" class="side-menu  side-menu--active">
+                         <a href="javascript:;" class="side-menu  side-menu--active">
                          @elseif ($ruanganedit == $url)
-                             <a href="{{ route('ruangan.all') }}" class="side-menu  side-menu--active">
-                             @else
-                                 <a href="{{ route('ruangan.all') }}" class="side-menu ">
+                             <a href="javascript:;" class="side-menu  side-menu--active">
+                             @elseif ($jurusan == $url)
+                                 <a href="javascript:;" class="side-menu  side-menu--active">
+                                 @elseif ($jurusanadd == $url)
+                                     <a href="javascript:;" class="side-menu  side-menu--active">
+                                     @elseif ($jurusanedit == $url)
+                                         <a href="javascript:;" class="side-menu  side-menu--active">
+                                         @elseif ($kelas == $url)
+                                             <a href="javascript:;" class="side-menu  side-menu--active">
+                                             @elseif ($kelasadd == $url)
+                                                 <a href="javascript:;" class="side-menu  side-menu--active">
+                                                 @elseif ($kelasedit == $url)
+                                                     <a href="javascript:;" class="side-menu  side-menu--active">
+                                                     @elseif ($guru == $url)
+                                                         <a href="javascript:;" class="side-menu side-menu--active">
+                                                         @elseif ($guruadd == $url)
+                                                             <a href="javascript:;"
+                                                                 class="side-menu side-menu--active">
+                                                             @elseif ($guruedit == $url)
+                                                                 <a
+                                                                     href="javascript:;"class="side-menu side-menu--active">
+                                                                 @else
+                                                                     <a href="javascript:;"
+                                                                         class="side-menu side-menu">
                  @endif
-                 <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-school">
-                         <path d="m4 6 8-4 8 4" />
-                         <path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2" />
-                         <path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4" />
-                         <path d="M18 5v17" />
-                         <path d="M6 5v17" />
-                         <circle cx="12" cy="9" r="2" />
-                     </svg> </div>
+
+                 <div class="side-menu__icon">
+                     <i data-lucide="edit"></i>
+                 </div>
                  <div class="side-menu__title">
-                     Ruangan
+                     Data
+                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                  </div>
                  </a>
-
+                 <ul class="">
+                     <li>
+                         <a href="{{ route('guru.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
+                             <div class="side-menu__title"> Guru</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('ruangan.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                     class="lucide lucide-school">
+                                     <path d="m4 6 8-4 8 4" />
+                                     <path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2" />
+                                     <path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4" />
+                                     <path d="M18 5v17" />
+                                     <path d="M6 5v17" />
+                                     <circle cx="12" cy="9" r="2" />
+                                 </svg> </div>
+                             <div class="side-menu__title"> Ruangan</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jurusan.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title"> Jurusan</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('kelas.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title"> Kelas</div>
+                         </a>
+                     </li>
+                 </ul>
              </li>
 
-             <li>
-                 @if ($jurusan == $url)
-                     <a href="{{ route('jurusan.all') }}" class="side-menu  side-menu--active">
-                     @elseif ($jurusanadd == $url)
-                         <a href="{{ route('jurusan.all') }}" class="side-menu  side-menu--active">
-                         @elseif ($jurusanedit == $url)
-                             <a href="{{ route('jurusan.all') }}" class="side-menu  side-menu--active">
-                             @else
-                                 <a href="{{ route('jurusan.all') }}" class="side-menu ">
-                 @endif
-                 <div class="side-menu__icon"><i data-lucide="file-text"></i> </div>
-                 <div class="side-menu__title">
-                     Jurusan
-                 </div>
-                 </a>
-
-             </li>
 
 
 
@@ -305,78 +429,63 @@
          {{--  // end bagian wakil kurikulum //  --}}
 
 
-         {{--  // bagian  admin //  --}}
-         @if (Auth::user()->role == '1')
-         
-         <li>
-             @if ($user == $url)
-                 <a href="javascript:;" class="side-menu side-menu--active">
-                 @elseif ($useradd == $url)
-                     <a href="javascript:;" class="side-menu side-menu--active">
-                     @elseif ($useredit == $url)
-                         <a href="javascript:;" class="side-menu side-menu--active">
-                         @elseif ($userview == $url)
-                             <a href="javascript:;" class="side-menu side-menu--active">
-                             @elseif ($siswa == $url)
-                                 <a href="javascript:;" class="side-menu side-menu--active">
-                                 @elseif ($siswaadd == $url)
-                                     <a href="javascript:;" class="side-menu side-menu--active">
-                                     @elseif ($siswaedit == $url)
-                                         <a href="javascript:;" class="side-menu side-menu--active">
-                                         @elseif ($guru == $url)
-                                             <a href="javascript:;" class="side-menu side-menu--active">
-                                             @elseif ($guruadd == $url)
-                                                 <a href="javascript:;" class="side-menu side-menu--active">
-                                                 @elseif ($guruedit == $url)
-                                                     <a href="javascript:;"class="side-menu side-menu--active">
-                                                     @elseif ($orangtua == $url)
-                                                         <a href="javascript:;" class="side-menu side-menu--active">
-                                                         @elseif ($orangtuaadd == $url)
-                                                             <a href="javascript:;"
-                                                                 class="side-menu side-menu--active">
-                                                             @elseif ($orangtuaedit == $url)
-                                                                 <a
-                                                                     href="javascript:;"class="side-menu side-menu--active">
-                                                                 @else
-                                                                     <a href="javascript:;" class="side-menu ">
-             @endif
-             <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
-             <div class="side-menu__title">
-                 Menu Master
-                 <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
-             </div>
-             </a>
-             <ul class="">
-                 <li>
-                     <a href="{{ route('user.all') }}" class="side-menu">
-                         <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
-                         <div class="side-menu__title"> User </div>
-                     </a>
-                 </li>
-                 <li>
-                     <a href="{{ route('guru.all') }}" class="side-menu">
-                         <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
-                         <div class="side-menu__title"> Guru </div>
-                     </a>
-                 </li>
-                 <li>
-                     <a href="{{ route('orangtua.all') }}" class="side-menu">
-                         <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
-                         <div class="side-menu__title"> Orang Tua </div>
-                     </a>
-                 </li>
-                 <li>
-                     <a href="{{ route('siswa.all') }}" class="side-menu">
-                         <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
-                         <div class="side-menu__title"> Siswa </div>
-                     </a>
-                 </li>
+         {{--  // bagian Guru  //  --}}
+         @if (Auth::user()->role == '4')
+             <li>
+                 @if ($url == $jadwalmapelguru)
+                     <a href="{{ route('jadwalmapel.guru') }}" class="side-menu  side-menu--active">
+                     @else
+                         <a href="{{ route('jadwalmapel.guru') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+                 <div class="side-menu__title">
+                     Jadwal Mata Pelajaran
+                 </div>
+                 </a>
 
-             </ul>
-         </li>
+             </li>
+             
+             <li>
+                 @if ($url == $absensi)
+                     <a href="{{ route('absensi.all') }}" class="side-menu  side-menu--active">
+                     @elseif ($url == $absensiadd)
+                         <a href="{{ route('absensi.all') }}" class="side-menu  side-menu--active">
+                         @elseif ($url == $absensisiswa)
+                             <a href="{{ route('absensi.all') }}" class="side-menu  side-menu--active">
+                             @else
+                                 <a href="{{ route('absensi.all') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="user-check"></i> </div>
+                 <div class="side-menu__title">
+                     Absensi
+                 </div>
+                 </a>
 
+             </li>
+
+             <li>
+                 @if ($url == $a)
+                     <a href="{{ route('messages.index') }}" class="side-menu  side-menu--active">
+                     @elseif ($url == $routes)
+                         <a href="{{ route('messages.index') }}" class="side-menu  side-menu--active">
+                         @else
+                             <a href="{{ route('messages.index') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="message-square"></i> </div>
+                 <div class="side-menu__title">
+                     Pesan
+                 </div>
+                 </a>
+
+             </li>
+             {{--  // end bagian guru //  --}}
          @endif
-         {{--  // end bagian  admin //  --}}
+
+
+
+
+
+
 
 
          {{--  // bagian selain admin //  --}}
@@ -384,15 +493,43 @@
              <li>
 
                  <a href="javascript:;" class="side-menu ">
-                     <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                     <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
                      <div class="side-menu__title">
-                         Report Data
+                         REPORT
                          <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                      </div>
                  </a>
                  <ul class="">
-
-
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Jadwal Mapel</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Absensi Siswa</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Guru</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Orang Tua</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Siswa</div>
+                         </a>
+                     </li>
 
                  </ul>
              </li>

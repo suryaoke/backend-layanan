@@ -58,7 +58,7 @@
             <img width="130px auto" id="showImage"
                 src="{{ !empty($editData->profile_image) ? url('uploads/admin_images/' . $editData->profile_image) : url('uploads/no_image.jpg') }}"
                 alt="Card image cap">
-           
+
         </div>
 
         <input type="submit" name="profile_image" class="btn btn-primary waves-effect waves-light mt-6"
@@ -146,6 +146,4 @@
             });
         });
     </script>
-
-
 @endsection

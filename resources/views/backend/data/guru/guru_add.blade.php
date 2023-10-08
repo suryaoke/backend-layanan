@@ -34,7 +34,7 @@
         </div>
 
         <div class="mt-3">
-            <label>Kode Guru</label>
+            <label>No Hp</label>
             <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1"
                 placeholder="Masukkan No HP" name="no_hp" id="no_hp" pattern="[0-9]+"
                 title="Please enter only numbers" required>
@@ -43,6 +43,7 @@
             <label>Username</label>
             <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
                 <option value="">Pilih Username</option>
+                <option value="0">Kosong</option>
                 @foreach ($user as $item)
                     <option value="{{ $item->id }}">{{ $item->username }}</option>
                 @endforeach

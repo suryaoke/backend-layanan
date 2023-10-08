@@ -28,13 +28,13 @@
                 <a href="{{ url('/') }}" class="-intro-x flex items-center pt-5">
                     <img alt="Midone - HTML Admin Template" class="w-12"
                         src="{{ asset('backend/dist/images/man1.png') }}">
-                    <span class="text-white text-lg ml-3">MAN 1 Kota Padang </span>
+                    <span class="text-white text-lg ml-3">SIAKAD MAN 1 Kota Padang </span>
                 </a>
                 <div class="my-auto ">
                     <img width="370px" alt="Midone - HTML Admin Template" class="-intro-x -mt-16"
                         src="{{ asset('backend/dist/images/layanan.png') }}">
                     <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">
-                        Layanan Informasi Akademik
+                        Sistem Informasi Akademik
                         <br>
                         MAN 1 Kota Padang.
                     </div>

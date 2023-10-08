@@ -8,7 +8,6 @@
 
     <form method="post" action="{{ route('guru.update') }}" enctype="multipart/form-data" id="myForm">
         @csrf
-        @method('PUT') <!-- Adding this line for RESTful update -->
 
         <input type="hidden" name="id" value="{{ $guru->id }}">
         <div class="mt-3">
@@ -27,7 +26,11 @@
         </div>
         <div class="mt-3"> <label>Username Guru</label>
             <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
-                <option value="{{ $guru->id_user }}">{{ $guru['users']['username'] }}</option>
+                @if ($guru->id_user == '0')
+                    <option value="0">Kosong</option>
+                @else
+                    <option value="{{ $guru->id_user }}">{{ $guru['users']['username'] }}</option>
+                @endif
                 @foreach ($user as $item)
                     <option value="{{ $item->id }}">{{ $item->username }}</option>
                 @endforeach

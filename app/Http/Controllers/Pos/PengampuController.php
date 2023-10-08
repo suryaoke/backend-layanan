@@ -25,11 +25,13 @@ class PengampuController extends Controller
 
     public function PengampuAdd()
     {
-        $guru = Guru::whereIn('username', function ($query) {
+        $guru = Guru::whereIn('id_user', function ($query) {
             $query->select('id')
                 ->from('users')
-                ->where('role', 2);
-        })->orderBy('kode_gr', 'asc')->get();
+                ->where('role', 4);
+        })
+            ->orWhere('id_user', 0)
+            ->orderBy('kode_gr', 'asc')->get();
 
         $mapel = Mapel::orderBy('kode_mapel', 'asc')->get();
         return view('backend.data.pengampu.pengampu_add', compact('mapel', 'guru'));
@@ -74,7 +76,7 @@ class PengampuController extends Controller
     public function PengampuEdit($id)
     {
         $pengampu = Pengampu::findOrFail($id);
-        $guru = Guru::whereIn('username', function ($query) {
+        $guru = Guru::whereIn('id_user', function ($query) {
             $query->select('id')
                 ->from('users')
                 ->where('role', 2);

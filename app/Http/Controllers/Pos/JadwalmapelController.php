@@ -169,7 +169,10 @@ class JadwalmapelController extends Controller
     public function JadwalmapelstatusAll()
     {
 
-        Jadwalmapel::query()->update(['status' => 1]);
+        Jadwalmapel::where('status', '=', 0)
+            ->orWhere('status', '=', 3)
+            ->update(['status' => 1]);
+
 
         $notification = array(
             'message' => 'Jadwal Berhasil Di Kirim SuccessFully',
@@ -177,4 +180,167 @@ class JadwalmapelController extends Controller
         );
         return redirect()->back()->with($notification);
     } // end method
+
+
+    public function JadwalmapelKepsek(Request $request)
+    {
+
+        // Bagian search Data //
+        $searchHari = $request->input('searchhari');
+        $searchGuru = $request->input('searchguru');
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
+
+        $query = Jadwalmapel::query();
+
+        // Filter berdasarkan nama hari 
+        if (!empty($searchHari)) {
+            $query->whereHas('haris', function ($lecturerQuery) use ($searchHari) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchHari . '%');
+            });
+        }
+
+        // Filter berdasarkan nama guru 
+        if (!empty($searchGuru)) {
+            $query->whereHas('pengampus', function ($teachQuery) use ($searchGuru) {
+                $teachQuery->whereHas('gurus', function ($courseQuery) use ($searchGuru) {
+                    $courseQuery->where('nama', 'LIKE', '%' .   $searchGuru . '%');
+                });
+            });
+        }
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('pengampus', function ($teachQuery) use ($searchMapel) {
+                $teachQuery->whereHas('mapels', function ($courseQuery) use ($searchMapel) {
+                    $courseQuery->where('nama', 'LIKE', '%' .   $searchMapel . '%');
+                });
+            });
+        }
+
+        // Filter berdasarkan nama kelas jika searchclass tidak kosong
+        if (!empty($searchKelas)) {
+            $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->where('kelas', 'LIKE', '%' .  $searchKelas . '%');
+            });
+        }
+        // End Bagian search Data //
+
+
+        $jadwalmapel = $query->orderBy('id_hari', 'asc')
+            ->orderBy('id_waktu', 'asc')
+            ->whereIn('status', [1, 2, 3])
+            ->get();
+        $hari = Hari::all();
+
+        $waktu = Waktu::all();
+        $ruangan = Ruangan::all();
+
+        $mapel = Mapel::all();
+
+        $pengampu = Pengampu::all();
+        return view('backend.data.jadwalmapel.jadwalmapel_kepsek', compact('pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
+    } // end method
+
+
+
+    public function JadwalmapelverifikasiOne($id)
+    {
+        $jadwalmapel = Jadwalmapel::find($id);
+        $jadwalmapel->status = '2';
+        $jadwalmapel->save();
+        $notification = array(
+            'message' => 'Jadwal Berhasil Di Verifikasi SuccessFully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    } // end method
+
+
+
+    public function JadwalmapelverifikasiAll()
+    {
+
+        Jadwalmapel::where('status', '=', 1)
+            ->update(['status' => 2]);
+
+        $notification = array(
+            'message' => 'Jadwal Berhasil Di Verifikasi SuccessFully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    } // end method
+
+
+    public function JadwalmapeltolakOne($id)
+    {
+        $jadwalmapel = Jadwalmapel::find($id);
+        $jadwalmapel->status = '3';
+        $jadwalmapel->save();
+        $notification = array(
+            'message' => 'Jadwal Berhasil Di Verifikasi SuccessFully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    } // end method
+
+
+    public function JadwalmapelGuru(Request $request)
+    {
+
+        // Bagian search Data //
+        $searchHari = $request->input('searchhari');
+        $searchGuru = $request->input('searchguru');
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
+
+        $query = Jadwalmapel::query();
+
+        // Filter berdasarkan nama hari 
+        if (!empty($searchHari)) {
+            $query->whereHas('haris', function ($lecturerQuery) use ($searchHari) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchHari . '%');
+            });
+        }
+
+        // Filter berdasarkan nama guru 
+        if (!empty($searchGuru)) {
+            $query->whereHas('pengampus', function ($teachQuery) use ($searchGuru) {
+                $teachQuery->whereHas('gurus', function ($courseQuery) use ($searchGuru) {
+                    $courseQuery->where('nama', 'LIKE', '%' .   $searchGuru . '%');
+                });
+            });
+        }
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('pengampus', function ($teachQuery) use ($searchMapel) {
+                $teachQuery->whereHas('mapels', function ($courseQuery) use ($searchMapel) {
+                    $courseQuery->where('nama', 'LIKE', '%' .   $searchMapel . '%');
+                });
+            });
+        }
+
+        // Filter berdasarkan nama kelas jika searchclass tidak kosong
+        if (!empty($searchKelas)) {
+            $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->where('kelas', 'LIKE', '%' .  $searchKelas . '%');
+            });
+        }
+        // End Bagian search Data //
+
+        $userId = Auth::user()->id;
+
+        $jadwalmapel = $query
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+            ->where('status', '=', '2')
+            ->where('gurus.id_user', '=', $userId)
+            ->orderBy('id_hari', 'asc')
+            ->orderBy('id_waktu', 'asc')
+            ->get();
+        return view('backend.data.jadwalmapel.jadwalmapel_guru', compact('jadwalmapel'));
+    } // end method
+
+
 }

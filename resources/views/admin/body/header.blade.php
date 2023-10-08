@@ -11,7 +11,7 @@
              <li class="breadcrumb-item active" aria-current="page">
 
                  @if (Auth::user()->role == '1')
-                     Admin
+                     Admin Sistem
                  @elseif (Auth::user()->role == '2')
                      Kepala Sekolah
                  @elseif (Auth::user()->role == '3')

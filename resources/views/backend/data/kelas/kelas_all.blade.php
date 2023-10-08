@@ -5,7 +5,7 @@
            Data Kelas All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('kelas.add') }}" class="btn btn-primary shadow-md mr-2">Add New Kelas</a>
+            <a href="{{ route('kelas.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
           
         </div>
     </div>
@@ -32,10 +32,10 @@
                                             <td>
                                                 <a id="delete" href="{{ route('kelas.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
-                                                    <i data-lucide="trash" class="w-5 h-5"></i> </a>
+                                                    <i data-lucide="trash" class="w-4 h-4"></i> </a>
                                                 <a href="{{ route('kelas.edit', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
-                                                    <i data-lucide="edit" class="w-5 h-5"></i>
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </td>
 

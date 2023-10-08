@@ -18,9 +18,8 @@
                 class="intro-x login__input form-control py-3 px-4 block ">
         </div>
         <div class="mt-4">
-            <button class="btn btn-primary  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Update</button>
-            <a class="btn btn-danger  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" href="{{ route('kelas.all') }}">Cancel
-            </a>
+            <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+            <a href="{{ route('kelas.all') }}" class="btn btn-danger h-10 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
         </div>
 
     </form>

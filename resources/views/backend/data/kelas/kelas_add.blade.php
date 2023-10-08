@@ -21,13 +21,14 @@
 
     <form method="post" action="{{ route('kelas.store') }}" enctype="multipart/form-data" id="myForm">
         @csrf
-
-        <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Nama " name="nama"
-            id="nama" required>
         <div class="mt-4">
-            <button class="btn btn-primary  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
-            <a href="{{ route('kelas.all') }}" class="btn btn-danger  py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
-                type="submit">Cancel</a>
+            <label for=""> Nama</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Masukkan Nama "
+                name="nama" id="nama" required>
+        </div>
+        <div class="mt-4">
+            <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+            <a href="{{ route('kelas.all') }}" class="btn btn-danger h-10 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
         </div>
 
     </form>

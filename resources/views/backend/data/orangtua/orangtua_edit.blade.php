@@ -43,7 +43,12 @@
         <div class="mt-4">
             <label for=""> Siswa</label>
             <select name="id_siswa" id="id_siswa" class="tom-select w-full mt-1" required>
-                <option value="{{ $ortu->id_siswa }}">{{ $ortu['siswas']['nama'] }}</option>
+
+                @if ($ortu->id_user)
+                    <option value="0">Kosong</option>
+                @else
+                    <option value="{{ $ortu->id_siswa }}">{{ $ortu['siswas']['nama'] }}</option>
+                @endif
                 @foreach ($siswa as $item)
                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                 @endforeach

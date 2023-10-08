@@ -161,7 +161,12 @@ Route::controller(JadwalmapelController::class)->middleware(['auth'])->group(fun
     Route::get('/jadwalmapel/delete{id}', 'JadwalmapelDelete')->name('jadwalmapel.delete');
     Route::post('/jadwalmapel/update/{id}', 'JadwalmapelUpdate')->name('jadwalmapel.update');
     Route::post('/jadwalmapel/status/one/{id}', 'JadwalmapelstatusOne')->name('jadwalmapelstatusone.update');
-    Route::post('jadwal/upadate/status/all', 'JadwalmapelstatusAll')->name('jadwalmapelstatusall.update');
+    Route::post('/jadwal/upadate/status/all', 'JadwalmapelstatusAll')->name('jadwalmapelstatusall.update');
+    Route::get('/jadwalmapel/kepsek', 'JadwalmapelKepsek')->name('jadwalmapel.kepsek');
+    Route::post('/jadwalmapel/verifikasi/one/{id}', 'JadwalmapelverifikasiOne')->name('jadwalmapelverifikasione.update');
+    Route::post('/jadwal/upadate/verifikasi/all', 'JadwalmapelverifikasiAll')->name('jadwalmapelverifikasiall.update');
+    Route::post('/jadwalmapel/tolak/one/{id}', 'JadwalmapeltolakOne')->name('jadwalmapeltolakone.update');
+    Route::get('/jadwalmapel/guru', 'JadwalmapelGuru')->name('jadwalmapel.guru');
 });
 
 

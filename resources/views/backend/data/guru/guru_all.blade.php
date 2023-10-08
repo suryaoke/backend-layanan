@@ -34,7 +34,13 @@
                                             <td> {{ $item->kode_gr }} </td>
                                             <td> {{ $item->nama }} </td>
                                             <td> {{ $item->no_hp }} </td>
-                                            <td> {{ $item['users']['username'] }} </td>
+                                            <td>
+                                                @if ($item->id_user == 0)
+                                                <span class="text-danger">Kosong</span>
+                                                @else
+                                                    {{ $item['users']['username'] }}
+                                                @endif
+                                            </td>
 
                                             <td>
                                                 <a id="delete" href="{{ route('guru.delete', $item->id) }}"
