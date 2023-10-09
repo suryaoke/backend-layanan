@@ -8,6 +8,7 @@ use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Pengampu;
+use App\Models\Siswa;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ class PengampuController extends Controller
 
     public function PengampuAdd()
     {
-        $kelas = Kelas::orderBy('nama')->get();
+         $kelas = Kelas::orderBy('nama')->get();
+     
         $guru = Guru::whereIn('id_user', function ($query) {
             $query->select('id')
                 ->from('users')

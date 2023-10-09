@@ -37,11 +37,10 @@
                 <option value="">Pilih Mata Pelajaran</option>
                 @foreach ($jadwal as $item)
                     @php
-                      
                         $pengampu = App\Models\Pengampu::where('id', $item->id_pengampu)->first();
                         $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
                     @endphp
-                    <option value="{{ $item->id }}">{{ $mapel->nama }} {{ $item->id }}</option>
+                    <option value="{{ $item->id }}">{{ $mapel->nama }} / {{ $item->kode_jadwalmapel }}</option>
                 @endforeach
             </select>
         </div>
@@ -53,11 +52,11 @@
                 <option value="">Pilih Kelas</option>
                 @foreach ($kelas as $item)
                     @php
-                        $siswadata = app\Models\Siswa::where('kelas', $item->id)->first();
+                        $siswadata = App\Models\Siswa::where('kelas', $item->id)->first();
                     @endphp
                     @if ($siswadata != null)
                         <option value="{{ isset($search) ? $search : "$item->id" }}">
-                            {{ $item->nama }} <type="hidden" {{ $item->id }}>
+                            {{ $item->nama }} 
                         </option>
                     @endif
                 @endforeach

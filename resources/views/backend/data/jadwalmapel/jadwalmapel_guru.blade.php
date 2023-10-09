@@ -73,6 +73,7 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
+                                    <th style="white-space: nowrap;">Kode Jadwal Mapel</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
                                     <th>Nama Ruangan</th>
@@ -97,6 +98,7 @@
 
                                     <tr>
                                         <td align="center">{{ $key + 1 }}</td>
+                                        <td > {{ $item->kode_jadwalmapel }} </td>
                                         <td> {{ $item['haris']['nama'] }} </td>
                                         <td> {{ $item['waktus']['range'] }} </td>
                                         <td> {{ $item['ruangans']['nama'] }} </td>

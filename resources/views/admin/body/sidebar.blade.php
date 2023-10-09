@@ -67,7 +67,7 @@
      $change = URL::route('change.password');
      $jadwalmapelkepsek = URL::route('jadwalmapel.kepsek');
      $jadwalmapelguru = URL::route('jadwalmapel.guru');
-     
+     $siswaguru = URL::route('siswa.guru');
      $routes = [
          'pusherAuth' => URL::route('pusher.auth'),
          'messagesIndex' => URL::route('messages.index'),
@@ -444,7 +444,7 @@
                  </a>
 
              </li>
-             
+
              <li>
                  @if ($url == $absensi)
                      <a href="{{ route('absensi.all') }}" class="side-menu  side-menu--active">
@@ -478,6 +478,54 @@
                  </a>
 
              </li>
+
+
+             <li>
+                 @if ($siswaguru == $url)
+                     <a href="javascript:;" class="side-menu side-menu--active">
+                     @else
+                         <a href="javascript:;" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+                 <div class="side-menu__title">
+                     REPORT
+                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                 </div>
+                 </a>
+                 <ul class="">
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Jadwal Mapel</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Absensi Siswa</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Guru</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Orang Tua</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('siswa.guru') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Siswa</div>
+                         </a>
+                     </li>
+
+                 </ul>
+             </li>
              {{--  // end bagian guru //  --}}
          @endif
 
@@ -489,7 +537,7 @@
 
 
          {{--  // bagian selain admin //  --}}
-         @if (Auth::user()->role != '1')
+         {{--  @if (Auth::user()->role != '1')
              <li>
 
                  <a href="javascript:;" class="side-menu ">
@@ -533,7 +581,7 @@
 
                  </ul>
              </li>
-         @endif
+         @endif  --}}
          {{--  // end bagian selain admin //  --}}
 
      </ul>

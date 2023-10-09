@@ -46,6 +46,14 @@
             <label for=""> Kelas</label>
             <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
                 <option value="">Pilih Kelas</option>
+                {{--  @foreach ($kelas as $item)
+                    @php
+                        $siswa = App\Models\Siswa::where('kelas', $item->id)->first();
+                    @endphp
+                    @if ($siswa)
+                        <option value="{{ $siswa->kelas }}">{{ $siswa['kelass']['nama'] }}</option>
+                    @endif
+                @endforeach  --}}
                 @foreach ($kelas as $item)
                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                 @endforeach

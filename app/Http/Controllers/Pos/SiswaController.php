@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
+use App\Models\Guru;
+use App\Models\Jadwalmapel;
 use App\Models\Kelas;
+use App\Models\Pengampu;
 use App\Models\Siswa;
 use App\Models\User;
 use Carbon\Carbon;
@@ -120,4 +123,35 @@ class SiswaController extends Controller
 
         return view('backend.data.siswa.siswa_profile');
     } // end method
+
+    public function SiswaGuru()
+    {
+        $userId = Auth::user()->id;
+
+        // Ambil ID guru berdasarkan ID user yang aktif
+        $guruId = Guru::where('id_user', $userId)->value('id');
+
+        // Ambil ID pengampu yang berelasi dengan guru melalui jadwalmapels
+        $pengampuIds = Jadwalmapel::whereHas('pengampus', function ($query) use ($guruId) {
+            $query->where('id_guru', $guruId);
+        })->pluck('id_pengampu')->unique();
+
+        // Ambil data siswa dengan kelas yang sama dengan pengampu yang diambil dari jadwalmapels
+        $siswa = Siswa::whereIn('kelas', function ($query) use ($pengampuIds) {
+            $query->select('kelas')
+                ->from('pengampus')
+                ->whereIn('id', $pengampuIds);
+        })
+            ->orderBy('kelas', 'desc')
+            ->orderBy('nama', 'asc')
+            ->paginate(50);
+
+        // Sekarang $siswa akan berisi data siswa yang terkait dengan guru yang aktif melalui jadwalmapels
+
+
+        // Sekarang $siswa akan berisi data siswa dengan kelas yang diajar oleh guru yang aktif
+        $kelas = Kelas::orderBy('nama')->get();
+        return view('backend.data.siswa.siswa_guru', compact('siswa', 'kelas'));
+    } // end method
+
 }

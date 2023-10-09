@@ -91,6 +91,7 @@ Route::controller(SiswaController::class)->middleware(['auth'])->group(function 
     Route::post('/siswa/update', 'SiswaUpdate')->name('siswa.update');
     Route::get('/siswa/search', 'search')->name('siswa.search');
     Route::get('/siswa/profile', 'SiswaProfile')->name('siswa.profile');
+    Route::get('/siswa/guru', 'SiswaGuru')->name('siswa.guru');
 });
 
 // Kelas All Route

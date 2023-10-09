@@ -93,8 +93,22 @@ class JadwalmapelController extends Controller
             return redirect()->back()->withErrors($validator);
         }
 
+        // Dapatkan kode_gr dari guru yang sesuai dengan id_guru yang diambil dari $request
+        $pengampu = Pengampu::find($request->id_pengampu);
+
+        // Ambil kode_gr dari guru
+        $kode_jadwal = $pengampu->kode_pengampu;
+
+        // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
+        $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 3);
+
+        // Gabungkan kode_gr dengan kode_acak untuk mendapatkan kode_pengampu
+        $kode_jadwalmapel = $kode_jadwal . '-' . $kode_acak;
+
+
         // Jika validasi berhasil, simpan data ke dalam database
         Jadwalmapel::insert([
+            'kode_jadwalmapel' =>  $kode_jadwalmapel,
             'id_pengampu' => $request->id_pengampu,
             'id_hari' => $request->id_hari,
             'id_waktu' => $request->id_waktu,

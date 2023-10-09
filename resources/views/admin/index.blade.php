@@ -24,6 +24,23 @@
             ->orderBy('id_waktu', 'asc')
             ->count();
         
+        // Ambil ID guru berdasarkan ID user yang aktif
+        $guruId = App\Models\Guru::where('id_user', $userId)->value('id');
+        
+        // Ambil ID pengampu yang berelasi dengan guru melalui jadwalmapels
+        $pengampuIds = App\Models\Jadwalmapel::whereHas('pengampus', function ($query) use ($guruId) {
+            $query->where('id_guru', $guruId);
+        })
+            ->pluck('id_pengampu')
+            ->unique();
+        
+        // Ambil data siswa dengan kelas yang sama dengan pengampu yang diambil dari jadwalmapels
+        $siswaguru =  App\Models\Siswa::whereIn('kelas', function ($query) use ($pengampuIds) {
+            $query
+                ->select('kelas')
+                ->from('pengampus')
+                ->whereIn('id', $pengampuIds);
+        })->count();
     @endphp
 
     <div class="grid grid-cols-12 gap-6">
@@ -330,7 +347,7 @@
                                     </div>
                                 </div>
                             </div>
-        
+
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
@@ -338,7 +355,7 @@
                                             <i data-lucide="users" class="report-box__icon text-primary"></i>
 
                                         </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $pengampu }}</div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $siswaguru }}</div>
                                         <div class="text-base text-slate-500 mt-1">Siswa</div>
                                     </div>
                                 </div>

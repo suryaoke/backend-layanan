@@ -7,6 +7,7 @@ use App\Models\Absensi;
 use App\Models\Guru;
 use App\Models\Jadwalmapel;
 use App\Models\Kelas;
+use App\Models\Mapel;
 use App\Models\Pengampu;
 use App\Models\Siswa;
 use Carbon\Carbon;
@@ -72,11 +73,11 @@ class AbsensiController extends Controller
         $siswa1 = Siswa::latest()->get();
 
         return view('backend.data.absensi.absensi_all', compact('absensi', 'siswa1',));
-    }
+    } // end method
 
     public function AbsensiAdd()
     {
-        $siswa = Siswa::latest()->get();
+
         $kelas = Kelas::orderBy('nama', 'asc')->get();
         // Mendapatkan ID pengguna yang saat ini aktif
         $userId = Auth::user()->id;
@@ -90,8 +91,8 @@ class AbsensiController extends Controller
             ->select('jadwalmapels.*')
             ->get();
 
-        return view('backend.data.absensi.absensi_add', compact('jadwal', 'siswa', 'kelas'));
-    }
+        return view('backend.data.absensi.absensi_add', compact('jadwal',  'kelas'));
+    } // end method
 
 
     public function AbsensiStore(Request $request)
@@ -137,8 +138,10 @@ class AbsensiController extends Controller
         );
         return redirect()->route('absensi.siswa', [
             'tanggal' => $request->tanggal,
-            'kelas' => $request->search,
-            'mapel' => $request->id_jadwal,
+            'kelas' => Kelas::find($request->search)->nama,
+            'mapel' => Jadwalmapel::find($request->id_jadwal)->pengampus->mapels->nama,
+
+
         ])->with($notification);
     }
 
@@ -166,9 +169,6 @@ class AbsensiController extends Controller
         $todayDate = Carbon::now()->format('d/m/Y');
         $kelas = Kelas::first();
 
-
-
-
         $query =
             Absensi::when(
                 $request->tanggal != null,
@@ -180,7 +180,7 @@ class AbsensiController extends Controller
                 }
             )
             ->when($request->mapel != null, function ($q) use ($request) {
-               
+
                 return $q->whereHas('jadwalss', function ($subQ) use ($request) {
                     return $subQ->whereHas('pengampus', function ($subQ1) use ($request) {
                         return $subQ1->whereHas('mapels', function ($subQ2) use ($request) {
@@ -188,7 +188,6 @@ class AbsensiController extends Controller
                         });
                     });
                 });
-
             })
 
             ->when($request->kelas != null, function ($q) use ($request) {
@@ -200,7 +199,6 @@ class AbsensiController extends Controller
                     });
                 });
             });
-
 
 
 
