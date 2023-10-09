@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
+use App\Models\Guru;
+use App\Models\Jadwalmapel;
 use App\Models\Kelas;
+use App\Models\Pengampu;
 use App\Models\Siswa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,41 +21,76 @@ class AbsensiController extends Controller
     public function AbsensiAll(Request $request)
     {
 
+        // Bagian search Data //
+        $searchHari = $request->input('searchhari');
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
 
-        $absensi =
-            Absensi::when(
-                $request->tanggal != null,
-                function ($q) use ($request) {
-                    return $q->where('tanggal', $request->tanggal);
-                },
 
-            )
-            ->when($request->mapel != null, function ($q) use ($request) {
-                return $q->where('mata_pelajaran', $request->mapel);
-            })
-            ->when(
-                $request->kelas != null,
-                function ($q) use ($request) {
-                    return $q->whereHas('siswa1', function ($subQ) use ($request) {
-                        $subQ->where('kelas', $request->kelas);
+        $query = Absensi::query();
+
+        // Filter berdasarkan nama hari
+        if (!empty($searchHari)) {
+            $query->where('tanggal', '=', $searchHari);
+        }
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('jadwalss', function ($lecturerQuery) use ($searchMapel) {
+                $lecturerQuery->whereHas('pengampus', function ($lecturerQuery1) use ($searchMapel) {
+                    $lecturerQuery1->whereHas('mapels', function ($courseQuery) use ($searchMapel) {
+                        $courseQuery->where('nama', 'LIKE', '%' . $searchMapel . '%');
                     });
-                },
-            )->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
+                });
+            });
+        }
+
+        // Filter berdasarkan nama kelas jika searchclass tidak kosong
+        if (!empty($searchKelas)) {
+            $query->whereHas('jadwalss', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->whereHas('pengampus', function ($lecturerQuery1) use ($searchKelas) {
+                    $lecturerQuery1->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
+                        $courseQuery->where('nama', 'LIKE', '%' . $searchKelas . '%');
+                    });
+                });
+            });
+        }
+        // End Bagian search Data //
+
+
+        $userId = Auth::user()->id;
+        $absensi = $query->join('jadwalmapels', 'absensis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+            ->join('users', 'gurus.id_user', '=', 'users.id')
+            ->where('users.id', $userId)
+            ->select('absensis.*')
+            ->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
             ->paginate(perPage: 50);
 
 
         $siswa1 = Siswa::latest()->get();
-        $kelas = Kelas::orderBy('nama', 'asc')->get();
-        return view('backend.data.absensi.absensi_all', compact('absensi', 'siswa1', 'kelas'));
+
+        return view('backend.data.absensi.absensi_all', compact('absensi', 'siswa1',));
     }
 
     public function AbsensiAdd()
     {
         $siswa = Siswa::latest()->get();
         $kelas = Kelas::orderBy('nama', 'asc')->get();
+        // Mendapatkan ID pengguna yang saat ini aktif
+        $userId = Auth::user()->id;
 
+        // Menjalankan query untuk mengambil data jadwalmapels yang sesuai
+        $jadwal = Jadwalmapel::join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+            ->join('users', 'gurus.id_user', '=', 'users.id')
+            ->where('users.id', $userId)
+            ->where('jadwalmapels.status', 2)
+            ->select('jadwalmapels.*')
+            ->get();
 
-        return view('backend.data.absensi.absensi_add', compact('siswa', 'kelas'));
+        return view('backend.data.absensi.absensi_add', compact('jadwal', 'siswa', 'kelas'));
     }
 
 
@@ -60,7 +98,7 @@ class AbsensiController extends Controller
     {
 
         // $request->validate([
-        //     'tanggal' => 'required|min:3|max:255|unique:absensis,tanggal,NULL,id,mata_pelajaran,' . $request->input('mata_pelajaran'),
+        //     'tanggal' => 'required|min:3|max:255|unique:absensis,tanggal,NULL,id,id_jadwal,' . $request->input('id_jadwal'),
 
         // ]);
         $search = $request->search;
@@ -71,16 +109,16 @@ class AbsensiController extends Controller
 
             $existingAbsensi = Absensi::where([
                 'tanggal' => $request->input('tanggal'),
-                'mata_pelajaran' => $request->input('mata_pelajaran'),
-                'siswa' => $row->id
+                'id_jadwal' => $request->input('id_jadwal'),
+                'id_siswa' => $row->id
             ])->first();
             if (!$existingAbsensi) {
                 $absensi = new Absensi();
-                $absensi->siswa = $row->id;
+                $absensi->id_siswa = $row->id;
                 $absensi->tanggal = $request->tanggal;
                 $absensi->status = $request->status;
                 $absensi->ket = $request->ket;
-                $absensi->mata_pelajaran = $request->mata_pelajaran;
+                $absensi->id_jadwal = $request->id_jadwal;
                 $absensi->created_by = Auth::user()->id;
                 $absensi->created_at = Carbon::now();
                 $absensi->save();
@@ -100,7 +138,7 @@ class AbsensiController extends Controller
         return redirect()->route('absensi.siswa', [
             'tanggal' => $request->tanggal,
             'kelas' => $request->search,
-            'mapel' => $request->mata_pelajaran,
+            'mapel' => $request->id_jadwal,
         ])->with($notification);
     }
 
@@ -127,7 +165,11 @@ class AbsensiController extends Controller
         // $absensi = Absensi::latest()->get();
         $todayDate = Carbon::now()->format('d/m/Y');
         $kelas = Kelas::first();
-        $absensi =
+
+
+
+
+        $query =
             Absensi::when(
                 $request->tanggal != null,
                 function ($q) use ($request) {
@@ -138,16 +180,40 @@ class AbsensiController extends Controller
                 }
             )
             ->when($request->mapel != null, function ($q) use ($request) {
-                return $q->where('mata_pelajaran', $request->mapel);
-            })
-            ->when($request->kelas != null, function ($q) use ($request) {
-                return $q->whereHas('siswa1', function ($subQ) use ($request) {
-                    $subQ->where('kelas', $request->kelas);
+               
+                return $q->whereHas('jadwalss', function ($subQ) use ($request) {
+                    return $subQ->whereHas('pengampus', function ($subQ1) use ($request) {
+                        return $subQ1->whereHas('mapels', function ($subQ2) use ($request) {
+                            $subQ2->where('nama', $request->mapel);
+                        });
+                    });
                 });
-            })->paginate(perPage: 50);
+
+            })
+
+            ->when($request->kelas != null, function ($q) use ($request) {
+                return $q->whereHas('jadwalss', function ($subQ) use ($request) {
+                    return $subQ->whereHas('pengampus', function ($subQ1) use ($request) {
+                        return $subQ1->whereHas('kelass', function ($subQ2) use ($request) {
+                            $subQ2->where('nama', $request->kelas);
+                        });
+                    });
+                });
+            });
 
 
-        // $absensi =Absensi::where('')->paginate(perPage: 50);
+
+
+        $userId = Auth::user()->id;
+        $absensi = $query->join('jadwalmapels', 'absensis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+            ->join('users', 'gurus.id_user', '=', 'users.id')
+            ->where('users.id', $userId)
+            ->select('absensis.*')
+            ->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
+            ->paginate(perPage: 50);
+
 
         $siswa1 = Siswa::latest()->get();
         $kelas = Kelas::orderBy('nama', 'asc')->get();

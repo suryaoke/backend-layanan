@@ -27,8 +27,6 @@ class MapelController extends Controller
     } // end method
     public function MapelStore(Request $request)
     {
-
-
         Mapel::insert([
             'kode_mapel' => $request->kode_mapel,
             'nama' => $request->nama,

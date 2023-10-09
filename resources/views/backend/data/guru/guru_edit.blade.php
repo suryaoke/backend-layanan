@@ -31,6 +31,7 @@
                 @else
                     <option value="{{ $guru->id_user }}">{{ $guru['users']['username'] }}</option>
                 @endif
+                <option value="0">Kosong</option>
                 @foreach ($user as $item)
                     <option value="{{ $item->id }}">{{ $item->username }}</option>
                 @endforeach

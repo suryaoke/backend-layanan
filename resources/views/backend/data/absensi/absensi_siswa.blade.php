@@ -18,13 +18,8 @@
             @endphp
 
             @if ($currentUrl1 != $absensii || $tanggalParam)
-                @php
-                    $kelas2 = app\Models\Kelas::find($kelas1);
-                @endphp
-
-                @if ($kelas2)
-                    Absensi Kelas &nbsp : {{ $kelas2->nama }} <br> Mata Pelajaran : {{ $mapel }}
-                @endif
+                Absensi Kelas &nbsp : {{ $kelas1 }}
+                <br> Mata Pelajaran : {{ $mapel }}
             @else
                 Pilih Data Absensi Siswa
             @endif
@@ -34,47 +29,51 @@
     </div>
     <div class="mb-4 intro-y flex flex-col sm:flex-row items-center ">
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
+            <form method="get" action="" class="sm:flex">
 
-            <form method="get" action="">
-                <div
-                    class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                </div> <input type="text" class="datepicker   pl-12" data-single-mode="true" placeholder="Tanggal"
-                    name="tanggal" id="tanggal" value="{{ Request::get('tanggal') ?? date('d/m/Y') }}">
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <div
+                            class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                        </div>
+                        <input type="text" class="datepicker   pl-12" data-single-mode="true" placeholder="Tanggal"
+                            name="tanggal" id="tanggal" value="{{ Request::get('tanggal') ?? date('d/m/Y') }}">
+                    </div>
+                </div>
 
-                <select name="kelas">
-                    <option value="" disabled selected>Pilih kelas</option>
-                    @foreach ($kelas as $item)
-                        @php
-                            $siswadata = app\Models\Siswa::where('kelas', $item->id)->first();
-                        @endphp
-                        @if ($siswadata != null)
-                            <option value="{{ $item->id }}" {{ Request::get('kelas') == $item->id ? 'selected' : '' }}>
-                                {{ $item->nama }}
-                            </option>
-                        @endif
-                    @endforeach
-                </select>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <input type="text" name="mapel" class="form-control" placeholder="Mata Pelajaran"
+                            value="{{ Request::get('mapel') }}">
+                    </div>
+                </div>
 
-                <select name="mapel">
-                    <option value="" disabled selected>Pilih Mata Pelajaran</option>
 
-                    <option value="fisika" {{ Request::get('mapel') == 'fisika' ? 'selected' : '' }}>
-                        fisika
-                    </option>
-                    <option value="bindo" {{ Request::get('mapel') == 'bindo' ? 'selected' : '' }}>
-                        bindo
-                    </option>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <input type="text" name="kelas" class="form-control" placeholder="Kelas"
+                            value="{{ Request::get('kelas') }}">
+                    </div>
+                </div>
 
-                </select>
-                <button type="submit" class="btn btn-primary">Search</button>
-                @if ($currentUrl != $absensii || $tanggalParam)
+
+
+                <div class="sm:ml-1">
+                    <button type="submit" class="btn btn-default">Search</button>
+                </div>
+                <div class="sm:ml-2">
                     <a href="{{ route('absensi.siswa') }}" class="btn btn-danger">Clear</a>
-                @endif
 
-
+                </div>
             </form>
 
+            <div class="ml-1 w-4 h-4">
+                <a href="{{ route('absensi.all') }}" class="btn btn-warning">
+                    <i data-lucide="skip-back" class="w-5 h-5"></i> Back
+                </a>
+
+            </div>
 
         </div>
     </div>
@@ -144,7 +143,7 @@
                                             placeholder="Keterangan" value="{{ $item->ket }}"></td>
                                     <td><a id="delete" href="{{ route('absensi.delete', $item->id) }}"
                                             class="btn btn-danger mr-1 mb-2">
-                                            <i data-lucide="trash" class="w-5 h-5"></i> </a></td>
+                                            <i data-lucide="trash" class="w-4 h-4"></i> </a></td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -155,7 +154,7 @@
                             &nbsp; Save </button>
                     </div>
                     <div style="float:right;" class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-4">
-                        <a href="{{ route('absensi.all') }}" class="btn btn-warning">Back </a>
+
                     </div>
                 </div>
                 <!-- END: Data List -->

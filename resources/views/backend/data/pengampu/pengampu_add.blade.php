@@ -41,10 +41,15 @@
             </select>
         </div>
 
+
         <div class="mt-4">
             <label for=""> Kelas</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block " placeholder="Masukkan Kelas"
-                name="kelas" id="kelas">
+            <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
+                <option value="">Pilih Kelas</option>
+                @foreach ($kelas as $item)
+                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mt-4">

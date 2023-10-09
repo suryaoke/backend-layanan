@@ -47,7 +47,7 @@
                                             <td> {{ $item->kode_pengampu}} </td>
                                             <td> {{ $item['gurus']['nama'] }} </td>
                                             <td> {{ $item['mapels']['nama'] }} </td>
-                                            <td> {{ $item->kelas }} </td>
+                                            <td> {{ $item['kelass']['nama'] }} </td>
                                             <td> {{ $item->kurikulum }} </td>
 
 

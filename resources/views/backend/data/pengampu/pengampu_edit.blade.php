@@ -4,7 +4,7 @@
 
     <div class="intro-y flex items-center mt-8 mb-4">
         <h1 class="text-lg font-medium mr-auto">
-            Add Pengampu
+            Edit Pengampu
         </h1>
     </div>
 
@@ -14,7 +14,7 @@
         <input type="hidden" name="id" value="{{ $pengampu->id }}">
         <div class="mt-4">
             <label for=""> Guru</label>
-            <select name="id_guru" id="id_guru" class="form-control w-full " required>
+            <select name="id_guru" id="id_guru" class="tom-select w-full" required>
                 <option value="{{ $pengampu->id_guru }}">{{ $pengampu['gurus']['nama'] }}</option>
                 @foreach ($guru as $item)
                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
@@ -34,8 +34,12 @@
 
         <div class="mt-4">
             <label for=""> Kelas</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block " placeholder="Masukkan Kelas"
-                value="{{ $pengampu->kelas }}" name="kelas" id="kelas">
+            <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
+                <option value="{{ $pengampu->kelas }}">{{ $pengampu['kelass']['nama'] }}</option>
+                @foreach ($kelas as $item)
+                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mt-4">

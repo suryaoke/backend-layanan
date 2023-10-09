@@ -20,5 +20,8 @@ class Pengampu extends Model
         return $this->belongsTo(Mapel::class, 'id_mapel', 'id');
     }
 
-   
+    public function kelass()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas', 'id');
+    }
 }

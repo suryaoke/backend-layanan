@@ -30,15 +30,27 @@
                     placeholder="Tanggal" name="tanggal" id="tanggal">
             </div>
         </div>
+
         <div class="mt-3">
             <label for="input-state-2" class="form-label">Mata Pelajaran</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Mata Pelajaran"
-                name="mata_pelajaran" id="mata_pelajaran">
+            <select placeholder="Pilih Mata Pelajaran" name="id_jadwal" id="id_jadwal" class="tom-select w-full ">
+                <option value="">Pilih Mata Pelajaran</option>
+                @foreach ($jadwal as $item)
+                    @php
+                      
+                        $pengampu = App\Models\Pengampu::where('id', $item->id_pengampu)->first();
+                        $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
+                    @endphp
+                    <option value="{{ $item->id }}">{{ $mapel->nama }} {{ $item->id }}</option>
+                @endforeach
+            </select>
         </div>
-        <div class="mt-3">
-            <label for="input-state-2" class="form-label">Pilih Kelas</label>
-            <select placeholder="kelas" id="kelas" name="search" class="tom-select w-full  ">
 
+
+        <div class="mt-3">
+            <label for="input-state-2" class="form-label">Kelas</label>
+            <select placeholder="kelas" id="kelas" name="search" class="tom-select w-full  ">
+                <option value="">Pilih Kelas</option>
                 @foreach ($kelas as $item)
                     @php
                         $siswadata = app\Models\Siswa::where('kelas', $item->id)->first();
@@ -53,9 +65,11 @@
         </div>
 
 
-        <button class="btn btn-primary mt-3 py-3 px-4 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
-        <a href="{{ route('absensi.all') }}" class="btn btn-danger mt-3 py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
-            type="submit">Cancel</a>
+
+        <div class="mt-4">
+            <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+            <a href="{{ route('absensi.all') }}" class="btn btn-danger h-10 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
+        </div>
     </form>
 
     <script type="text/javascript">
@@ -65,7 +79,7 @@
                     tanggal: {
                         required: true,
                     },
-                    mata_pelajaran: {
+                    id_jadwal: {
                         required: true,
                     },
                     kelas: {
@@ -77,10 +91,10 @@
                     tanggal: {
                         required: 'Please Enter Your Name',
                     },
-                    mata_pelajaran: {
+                    id_jadwal: {
                         required: 'Please Enter Your Email',
                     },
-                    kelas: {
+                    id_jadwal: {
                         required: 'Please Enter Your Username',
                     },
 

@@ -16,7 +16,7 @@
 
             @if ($currentUrl1 != $absensii || $tanggalParam)
                 @php
-                    $kelas2 = app\Models\Kelas::find($kelas1);
+                    $kelas2 = App\Models\Kelas::find($kelas1);
                 @endphp
 
                 @if ($kelas2)
@@ -39,49 +39,44 @@
                     class="w-5 h-5"></i> &nbsp Form Absensi</a>
 
         </div>
-
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
 
-            <form method="get" action="">
-                <div
-                    class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
-                    <i data-lucide="calendar" class="w-4 h-4"></i>
-                </div> <input type="text" class="datepicker   pl-12" data-single-mode="true" placeholder="Tanggal"
-                    name="tanggal" id="tanggal" value="{{ Request::get('tanggal') ?? date('d/m/Y') }}">
+            <form role="form" action="{{ route('absensi.all') }}" method="get" class="sm:flex">
 
-                <select name="kelas">
-                    <option value="" disabled selected>Pilih kelas</option>
-                    @foreach ($kelas as $item)
-                        @php
-                            $siswadata = app\Models\Siswa::where('kelas', $item->id)->first();
-                        @endphp
-                        @if ($siswadata != null)
-                            <option value="{{ $item->id }}" {{ Request::get('kelas') == $item->id ? 'selected' : '' }}>
-                                {{ $item->nama }}
-                            </option>
-                        @endif
-                    @endforeach
-                </select>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <div
+                            class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
+                            <i data-lucide="calendar" class="w-4 h-4"></i>
+                        </div>
+                        <input type="text" name="searchhari" class="datepicker pl-12" data-single-mode="true"
+                            placeholder="Hari" value="{{ request('searchhari') }}">
 
-                <select name="mapel">
-                    <option value="" disabled selected>Pilih Mata Pelajaran</option>
+                    </div>
+                </div>
 
-                    <option value="fisika" {{ Request::get('mapel') == 'fisika' ? 'selected' : '' }}>
-                        fisika
-                    </option>
-                    <option value="bindo" {{ Request::get('mapel') == 'bindo' ? 'selected' : '' }}>
-                        bindo
-                    </option>
 
-                </select>
-                <button type="submit" class="btn btn-primary">Search</button>
-                @if ($currentUrl != $absensii || $tanggalParam)
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <input type="text" name="searchmapel" class="form-control" placeholder="Mata Pelajaran"
+                            value="{{ request('searchmapel') }}">
+                    </div>
+                </div>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <input type="text" name="searchkelas" class="form-control" placeholder="Kelas"
+                            value="{{ request('searchkelas') }}">
+                    </div>
+                </div>
+                <div class="sm:ml-1">
+                    <button type="submit" class="btn btn-default">Search</button>
+                </div>
+                <div class="sm:ml-2">
+
                     <a href="{{ route('absensi.all') }}" class="btn btn-danger">Clear</a>
-                @endif
 
-
+                </div>
             </form>
-
 
         </div>
     </div>
@@ -119,7 +114,13 @@
                         @endif
 
                         <td>{{ $item->tanggal }}</td>
-                        <td>{{ $item->mata_pelajaran }}</td>
+                        <td>
+                            @php
+                                $jadwal = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
+                                $pengampu = App\Models\Pengampu::where('id', $jadwal->id_pengampu)->first();
+                                $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
+                            @endphp
+                            {{ $mapel->nama }}</td>
                         <td>
 
                             @if ($item->status == '0')

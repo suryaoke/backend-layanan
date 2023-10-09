@@ -105,6 +105,7 @@
                                         $pengampuid = App\Models\Pengampu::find($item->id_pengampu);
                                         $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
                                         $guruid = App\Models\Guru::find($pengampuid->id_guru);
+                                        $kelas = App\Models\Kelas::find($pengampuid->kelas);
                                     @endphp
 
                                     <tr>
@@ -117,7 +118,7 @@
                                         <td> {{ $guruid->nama }} </td>
                                         <td> {{ $mapelid->semester }} </td>
                                         <td> {{ $mapelid->jp }} </td>
-                                        <td> {{ $pengampuid->kelas }} </td>
+                                        <td> {{ $kelas->nama }} </td>
                                         <td> {{ $pengampuid->kurikulum }} </td>
                                         <td>
                                             @if ($item->status == '0')

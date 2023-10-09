@@ -13,7 +13,7 @@ class GuruController extends Controller
 {
     public function GuruAll()
     {
-        $guru = Guru::latest()->get();
+        $guru = Guru::OrderBy('kode_gr')->get();
 
         return view('backend.data.guru.guru_all', compact('guru'));
     } // end method

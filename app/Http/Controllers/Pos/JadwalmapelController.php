@@ -57,7 +57,9 @@ class JadwalmapelController extends Controller
         // Filter berdasarkan nama kelas jika searchclass tidak kosong
         if (!empty($searchKelas)) {
             $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
-                $lecturerQuery->where('kelas', 'LIKE', '%' .  $searchKelas . '%');
+                $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
+                    $courseQuery->where('nama', 'LIKE', '%' .  $searchKelas . '%');
+                });
             });
         }
         // End Bagian search Data //
@@ -221,7 +223,9 @@ class JadwalmapelController extends Controller
         // Filter berdasarkan nama kelas jika searchclass tidak kosong
         if (!empty($searchKelas)) {
             $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
-                $lecturerQuery->where('kelas', 'LIKE', '%' .  $searchKelas . '%');
+                $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
+                    $courseQuery->where('nama', 'LIKE', '%' .  $searchKelas . '%');
+                });
             });
         }
         // End Bagian search Data //
@@ -324,7 +328,9 @@ class JadwalmapelController extends Controller
         // Filter berdasarkan nama kelas jika searchclass tidak kosong
         if (!empty($searchKelas)) {
             $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
-                $lecturerQuery->where('kelas', 'LIKE', '%' .  $searchKelas . '%');
+                $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
+                    $courseQuery->where('nama', 'LIKE', '%' .  $searchKelas . '%');
+                });
             });
         }
         // End Bagian search Data //

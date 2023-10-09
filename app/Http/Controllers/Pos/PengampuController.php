@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
 use App\Models\Jurusan;
+use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Pengampu;
 use App\Models\User;
@@ -25,6 +26,7 @@ class PengampuController extends Controller
 
     public function PengampuAdd()
     {
+        $kelas = Kelas::orderBy('nama')->get();
         $guru = Guru::whereIn('id_user', function ($query) {
             $query->select('id')
                 ->from('users')
@@ -34,28 +36,22 @@ class PengampuController extends Controller
             ->orderBy('kode_gr', 'asc')->get();
 
         $mapel = Mapel::orderBy('kode_mapel', 'asc')->get();
-        return view('backend.data.pengampu.pengampu_add', compact('mapel', 'guru'));
+        return view('backend.data.pengampu.pengampu_add', compact('kelas', 'mapel', 'guru'));
     } // end method
     public function PengampuStore(Request $request)
     {
-
         // Dapatkan kode_gr dari guru yang sesuai dengan id_guru yang diambil dari $request
         $guru = Guru::find($request->id_guru);
 
-        if (!$guru) {
-            // Handle kasus jika guru tidak ditemukan
-        }
-
+        // Ambil kode_gr dari guru
         $kode_gr = $guru->kode_gr;
 
-        // Buat kode_pengampu dengan format "P" + kode_gr + informasi lainnya
-        $uniq_id = substr(
-            uniqid(),
-            0,
-            4
-        ); // Ambil 4 karakter pertama dari uniqid()
-        $kode_pengampu = 'P' . $kode_gr .  '-' . $uniq_id;
-        // Kemudian, gunakan kode_pengampu ini saat Anda menyisipkan data ke dalam tabel Pengampu
+        // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
+        $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 6);
+
+        // Gabungkan kode_gr dengan kode_acak untuk mendapatkan kode_pengampu
+        $kode_pengampu = $kode_gr . '-' . $kode_acak;
+
         Pengampu::insert([
             'kode_pengampu' => $kode_pengampu,
             'id_guru' => $request->id_guru,
@@ -67,23 +63,26 @@ class PengampuController extends Controller
         ]);
 
         $notification = array(
-            'message' => 'Pengampu Inserted SuccessFully',
+            'message' => 'Pengampu Inserted Successfully',
             'alert-type' => 'success'
         );
         return redirect()->route('pengampu.all')->with($notification);
     }
 
+
+
     public function PengampuEdit($id)
     {
+        $kelas = Kelas::orderBy('nama')->get();
         $pengampu = Pengampu::findOrFail($id);
         $guru = Guru::whereIn('id_user', function ($query) {
             $query->select('id')
                 ->from('users')
-                ->where('role', 2);
+                ->where('role', 4);
         })->orderBy('kode_gr', 'asc')->get();
 
         $mapel = Mapel::orderBy('kode_mapel', 'asc')->get();
-        return view('backend.data.pengampu.pengampu_edit', compact('pengampu', 'mapel', 'guru'));
+        return view('backend.data.pengampu.pengampu_edit', compact('kelas', 'pengampu', 'mapel', 'guru'));
     }
     public function PengampuUpdate(Request $request)
     {

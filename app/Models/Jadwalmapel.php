@@ -36,6 +36,11 @@ class Jadwalmapel extends Model
     }
     public function mapels()
     {
-        return $this->belongsTo(Mapel::class, 'id_mapels');
+        return $this->belongsTo(Mapel::class, 'id_mapel');
+    }
+
+    public function kelass()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas');
     }
 }

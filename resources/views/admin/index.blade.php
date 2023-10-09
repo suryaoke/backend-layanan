@@ -1,6 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
     @php
+        use Illuminate\Support\Facades\Auth;
         $user = App\Models\User::all()->count();
         $guru = App\Models\Guru::all()->count();
         $orangtua = App\Models\OrangTua::all()->count();
@@ -13,6 +14,16 @@
         $ruangan = App\Models\Ruangan::all()->count();
         $waktu = App\Models\Waktu::all()->count();
         $pengampu = App\Models\Pengampu::all()->count();
+        
+        $userId = Auth::user()->id;
+        $jadwalguru = App\Models\Jadwalmapel::join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+            ->where('status', '=', '2')
+            ->where('gurus.id_user', '=', $userId)
+            ->orderBy('id_hari', 'asc')
+            ->orderBy('id_waktu', 'asc')
+            ->count();
+        
     @endphp
 
     <div class="grid grid-cols-12 gap-6">
@@ -171,7 +182,7 @@
                                     </div>
                                 </div>
                             </div>
-                         
+
                         </div>
                     @endif
                     {{--  // end bagian  kepsek //  --}}
@@ -304,7 +315,7 @@
                     {{--  // end bagian  wakil //  --}}
 
 
-                    
+
                     {{--  // bagian  Guru//  --}}
                     @if (Auth::user()->role == '4')
                         <div class="grid grid-cols-12 gap-6 mt-5">
@@ -314,23 +325,12 @@
                                         <div class="flex">
                                             <i data-lucide="file-text" class="report-box__icon text-success"></i>
                                         </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwal }}</div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwalguru }}</div>
                                         <div class="text-base text-slate-500 mt-1">Jadwal Mata Pelajaran</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-                                <div class="report-box zoom-in">
-                                    <div class="box p-5">
-                                        <div class="flex">
-                                            <i data-lucide="file" class="report-box__icon text-success"></i>
-
-                                        </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $mapel }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Mata Pelajaran</div>
-                                    </div>
-                                </div>
-                            </div>
+        
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
@@ -356,8 +356,6 @@
                                 </div>
                             </div>
                         </div>
-
-                  
                     @endif
                     {{--  // end bagian  guru //  --}}
                 </div>

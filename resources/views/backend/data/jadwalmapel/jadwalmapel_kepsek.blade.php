@@ -25,7 +25,7 @@
 
     <div class="mb-4 intro-y flex flex-col sm:flex-row items-center mt-4">
 
-        <form role="form" action="{{ route('jadwalmapel.all') }}" method="get" class="sm:flex">
+        <form role="form" action="{{ route('jadwalmapel.kepsek') }}" method="get" class="sm:flex">
             <div class="flex-1 sm:mr-2">
                 <div class="form-group">
                     <input type="text" name="searchhari" class="form-control" placeholder="Hari"
@@ -104,6 +104,7 @@
                                         $pengampuid = App\Models\Pengampu::find($item->id_pengampu);
                                         $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
                                         $guruid = App\Models\Guru::find($pengampuid->id_guru);
+                                        $kelas = App\Models\Kelas::find($pengampuid->kelas);
                                     @endphp
 
                                     <tr>
@@ -116,7 +117,7 @@
                                         <td> {{ $guruid->nama }} </td>
                                         <td> {{ $mapelid->semester }} </td>
                                         <td> {{ $mapelid->jp }} </td>
-                                        <td> {{ $pengampuid->kelas }} </td>
+                                        <td> {{ $kelas->nama }} </td>
                                         <td> {{ $pengampuid->kurikulum }} </td>
                                         <td>
                                             @if ($item->status == '0')

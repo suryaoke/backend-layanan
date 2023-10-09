@@ -15,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('absensis', function (Blueprint $table) {
             $table->id();
-            $table->string('siswa')->nullable();
+            $table->integer('id_siswa')->nullable();
             $table->string('tanggal')->nullable();
             $table->string('status')->nullable();
             $table->string('ket')->nullable();
-            $table->string('mata_pelajaran')->nullable();
+            $table->integer('id_jadwal')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();
