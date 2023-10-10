@@ -31,22 +31,7 @@
             </div>
         </div>
 
-        <div class="mt-3">
-            <label for="input-state-2" class="form-label">Mata Pelajaran</label>
-            <select placeholder="Pilih Mata Pelajaran" name="id_jadwal" id="id_jadwal" class="tom-select w-full ">
-                <option value="">Pilih Mata Pelajaran</option>
-                @foreach ($jadwal as $item)
-                    @php
-                        $pengampu = App\Models\Pengampu::where('id', $item->id_pengampu)->first();
-                        $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
-                    @endphp
-                    <option value="{{ $item->id }}">{{ $mapel->nama }} / {{ $item->kode_jadwalmapel }}</option>
-                @endforeach
-            </select>
-        </div>
-
-
-        <div class="mt-3">
+        {{--  <div class="mt-3">
             <label for="input-state-2" class="form-label">Kelas</label>
             <select placeholder="kelas" id="kelas" name="search" class="tom-select w-full  ">
                 <option value="">Pilih Kelas</option>
@@ -61,7 +46,32 @@
                     @endif
                 @endforeach
             </select>
+        </div>  --}}
+
+        <div class="mt-3">
+            <label for="input-state-2" class="form-label">Mata Pelajaran</label>
+            <select placeholder="Pilih Mata Pelajaran" name="id_jadwal" id="id_jadwal" class="tom-select w-full">
+                <option value="">Pilih Mata Pelajaran</option>
+                @foreach ($jadwal as $item)
+                    @php
+                        $pengampu = App\Models\Pengampu::where('id', $item->id_pengampu)->first();
+                        $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
+                    @endphp
+                    <option value="{{ $item->id }}" data-kelas="{{ $item['pengampus']['kelass']['id'] }}"
+                        data-kelas1="{{ $item['pengampus']['kelass']['nama'] }}">
+                        {{ $mapel->nama }} /
+                        {{ $item->kode_jadwalmapel }}</option>
+                @endforeach
+            </select>
         </div>
+
+        <div class="mt-3">
+            <label for="input-state-2" class="form-label">Kelas</label>
+            <input type="hidden" class="form-control" name="search" id="kelas" value="">
+            <input type="text" class="form-control" id="kelas1" value="" readonly>
+        </div>
+
+
 
 
 
@@ -119,6 +129,21 @@
             $("#tanggal").datepicker({
                 dateFormat: "yy-mm-dd"
             });
+        });
+    </script>
+
+
+    <script>
+        // Menambahkan event listener ke dropdown mata pelajaran
+        document.getElementById("id_jadwal").addEventListener("change", function() {
+            // Mendapatkan nilai kelas dari data-kelas yang terkait dengan option yang dipilih
+            var selectedOption = this.options[this.selectedIndex];
+            var kelas = selectedOption.getAttribute("data-kelas");
+            var kelas1 = selectedOption.getAttribute("data-kelas1");
+
+            // Memasukkan nilai kelas ke input kelas
+            document.getElementById("kelas").value = kelas;
+            document.getElementById("kelas1").value = kelas1;
         });
     </script>
 @endsection
