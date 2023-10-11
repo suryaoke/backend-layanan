@@ -39,16 +39,18 @@
                 placeholder="Masukkan No HP" name="no_hp" id="no_hp" pattern="[0-9]+"
                 title="Please enter only numbers" required>
         </div>
-        <div class="mt-3">
-            <label>Username</label>
-            <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
-                <option value="">Pilih Username</option>
-                <option value="0">Kosong</option>
-                @foreach ($user as $item)
-                    <option value="{{ $item->id }}">{{ $item->username }}</option>
-                @endforeach
-            </select>
-        </div>
+        @if (Auth::user()->role == '1')
+            <div class="mt-3">
+                <label>Username</label>
+                <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
+                    <option value="">Pilih Username</option>
+                    <option value="0">Kosong</option>
+                    @foreach ($user as $item)
+                        <option value="{{ $item->id }}">{{ $item->username }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
 
         <div class="mt-4">
             <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>

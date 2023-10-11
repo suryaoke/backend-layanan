@@ -32,7 +32,7 @@ class GuruController extends Controller
 
         $this->validate($request, [
             'kode_gr' => 'required|max:50|unique:gurus,kode_gr',
-            'id_user' => 'required|max:50|unique:gurus,id_user',
+           
         ]);
 
         Guru::insert([

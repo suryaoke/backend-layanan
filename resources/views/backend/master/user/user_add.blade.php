@@ -51,7 +51,7 @@
                 <option value="">Pilih Role</option>
                 <option value="1">Admin</option>
                 <option value="2">Kepsek</option>
-                <option value="3">Wakil Kurikulum</option>
+                <option value="3">Operator</option>
                 <option value="4">Guru</option>
                 <option value="5">Orang Tua</option>
                 <option value="6">Siswa</option>

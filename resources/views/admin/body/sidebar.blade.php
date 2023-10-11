@@ -248,7 +248,7 @@
          {{--  // end bagian kepsek//  --}}
 
 
-         {{--  // bagian wakil kurikulum //  --}}
+         {{--  // bagian operator //  --}}
          @if (Auth::user()->role == '3')
 
              <li>
@@ -437,10 +437,23 @@
                  </div>
                  </a>
                  <ul class="">
+
                      <li>
                          <a href="{{ route('guru.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
                              <div class="side-menu__title"> Guru</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('siswa.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
+                             <div class="side-menu__title"> Siswa</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('orangtua.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
+                             <div class="side-menu__title"> Orang Tua</div>
                          </a>
                      </li>
                      <li>
@@ -481,7 +494,7 @@
              </li>
 
          @endif
-         {{--  // end bagian wakil kurikulum //  --}}
+         {{--  // end bagian operator //  --}}
 
 
          {{--  // bagian Guru  //  --}}

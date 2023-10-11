@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> <!-- Include jQuery Validation plugin -->
     <div class="intro-y flex items-center mt-8 mb-4">
         <h1 class="text-lg font-medium mr-auto">
-            Add Mapel
+            Add Mata Pelajaran
         </h1>
     </div>
 

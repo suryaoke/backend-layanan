@@ -14,7 +14,7 @@
 
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-            Pengampu All
+            Pengampu Mata Pelajaran All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
             <a href="{{ route('pengampu.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
@@ -44,7 +44,7 @@
                                     @foreach ($pengampu as $key => $item)
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-                                            <td> {{ $item->kode_pengampu }} </td>
+                                            <td class="text-primary"> {{ $item->kode_pengampu }} </td>
                                             <td> {{ $item['gurus']['kode_gr'] }} </td>                   
                                             <td> {{ $item['mapels']['kode_mapel'] }} </td>
                                             <td> {{ $item['kelass']['nama'] }} </td>

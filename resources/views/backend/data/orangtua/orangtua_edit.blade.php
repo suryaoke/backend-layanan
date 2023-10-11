@@ -29,23 +29,29 @@
             <input type="text" value="{{ $ortu->no_hp }}" class="intro-x login__input form-control py-3 px-4 block "
                 placeholder="Nomor HP" name="no_hp" id="no_hp">
         </div>
+        @if (Auth::user()->role == '1')
+            <div class="mt-4">
+                <label for=""> Username</label>
+                <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
 
-        <div class="mt-4">
-            <label for=""> Username</label>
-            <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
-                <option value="{{ $ortu->id_user }}">{{ $ortu['users']['name'] }}</option>
-                <option value="0">Kosong</option>
-                @foreach ($user as $item)
-                    <option value="{{ $item->id }}">{{ $item->username }}</option>
-                @endforeach
-            </select>
-        </div>
+                    @if ($ortu->id_user == '0')
+                        <option value="0">Kosong</option>
+                    @else
+                        <option value="{{ $ortu->id_user }}">{{ $ortu['users']['name'] }}</option>
+                    @endif
+
+                    @foreach ($user as $item)
+                        <option value="{{ $item->id }}">{{ $item->username }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
 
         <div class="mt-4">
             <label for=""> Siswa</label>
             <select name="id_siswa" id="id_siswa" class="tom-select w-full mt-1" required>
 
-                @if ($ortu->id_user)
+                @if ($ortu->id_siswa == '0')
                     <option value="0">Kosong</option>
                 @else
                     <option value="{{ $ortu->id_siswa }}">{{ $ortu['siswas']['nama'] }}</option>

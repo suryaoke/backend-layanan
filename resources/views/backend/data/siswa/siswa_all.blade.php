@@ -57,7 +57,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Nama</th>
-                                        <th>Nisn</th>
+                                        <th style="white-space: nowrap;">Nisn</th>
                                         <th>JK</th>
                                         <th>Kelas</th>
                                         <th>Username</th>
@@ -72,7 +72,7 @@
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
                                             <td> {{ $item->nama }} </td>
-                                            <td> {{ $item->nisn }} </td>
+                                            <td style="white-space: nowrap;" class="text-primary"> {{ $item->nisn }} </td>
                                             <td> {{ $item->jk }} </td>
                                             <td> {{ $item['kelass']['nama'] }} </td>
                                             <td>

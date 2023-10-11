@@ -53,18 +53,18 @@
                 @endforeach
             </select>
         </div>
-
-        <div class="mt-4">
-            <label for=""> Username</label>
-            <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
-                <option value="">Pilih Username</option>
-                <option value="0">Kosong</option>
-                @foreach ($user as $item)
-                    <option value="{{ $item->id }}">{{ $item->username }}</option>
-                @endforeach
-            </select>
-        </div>
-
+        @if (Auth::user()->role == '1')
+            <div class="mt-4">
+                <label for=""> Username</label>
+                <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
+                    <option value="">Pilih Username</option>
+                    <option value="0">Kosong</option>
+                    @foreach ($user as $item)
+                        <option value="{{ $item->id }}">{{ $item->username }}</option>
+                    @endforeach
+                </select>
+            </div>
+        @endif
         <div class="mt-4">
             <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
             <a href="{{ route('siswa.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "

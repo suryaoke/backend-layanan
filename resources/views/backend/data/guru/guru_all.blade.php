@@ -20,11 +20,12 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Guru</th>
+                                        <th style="white-space: nowrap;">Kode Guru</th>
                                         <th>Nama</th>
                                         <th>No HP</th>
                                         <th>Username</th>
                                         <th>Foto</th>
+                                        <th>Walas</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
@@ -32,10 +33,12 @@
                                     @foreach ($guru as $key => $item)
                                         @php
                                             $user = App\Models\User::where('id', $item->id_user)->first();
+                                            $walas = App\Models\Walas::where('id_guru', $item->id)->first();
                                         @endphp
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-                                            <td> {{ $item->kode_gr }} </td>
+                                            <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_gr }}
+                                            </td>
                                             <td> {{ $item->nama }} </td>
                                             <td> {{ $item->no_hp }} </td>
                                             <td>
@@ -52,7 +55,13 @@
                                                     alt="">
 
                                             </td>
-
+                                            <td>
+                                                @if ($walas)
+                                                    {{ $walas['kelass']['nama']}}
+                                                @else
+                                                    <span class="text-danger">Kosong</span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 <a id="delete" href="{{ route('guru.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">

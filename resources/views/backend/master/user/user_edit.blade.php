@@ -12,7 +12,7 @@
         @csrf
         <div> <input name="id" id="regular-form-1" type="hidden" class="form-control" value="{{ $editData->id }}"> </div>
 
-        <div> <label for="regular-form-1" class="form-label">Name</label> <input name="name" id="regular-form-1"
+        <div> <label for="regular-form-1" class="form-label">Nama</label> <input name="name" id="regular-form-1"
                 type="text" class="form-control" value="{{ $editData->name }}"> </div>
         <div class="mt-3"> <label for="regular-form-1" class="form-label">User Email</label> <input name="email"
                 id="regular-form-1" type="text" class="form-control" value="{{ $editData->email }}"> </div>
@@ -41,7 +41,7 @@
 
                 <option value="1">Admin</option>
                 <option value="2">Kepsek</option>
-                <option value="3">Wakil Kurikulum</option>
+                <option value="3">Operator</option>
                 <option value="4">Guru</option>
                 <option value="5">Orang Tua</option>
                 <option value="6">Siswa</option>
@@ -61,9 +61,11 @@
 
         </div>
 
-        <input type="submit" name="profile_image" class="btn btn-primary waves-effect waves-light mt-6"
-            value="Update User">
-
+        <div class="mt-2">
+            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('user.all') }}">Cancel
+            </a>
+        </div>
 
     </form>
 

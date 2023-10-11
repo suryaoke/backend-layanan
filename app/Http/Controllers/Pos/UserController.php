@@ -49,12 +49,12 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $existingUser = User::whereIn('role', [1, 2, 3])->first();
+        $existingUser = User::whereIn('role', [1, 2,])->first();
 
-        if ($existingUser && !in_array($request->role, [4, 5, 6])) {
+        if ($existingUser && !in_array($request->role, [3, 4, 5, 6])) {
             // If a user with role 1, 2, or 3 already exists, and the new user's role is not 4, 5, or 6, show an alert and redirect
             $notification = [
-                'message' => 'Data Role Admin/Kepsek/Wakil Kurikulum Sudah Ada',
+                'message' => 'Data Role Admin/Kepsek/Sudah Ada',
                 'alert-type' => 'error'
             ];
             return redirect()->back()->withInput()->with($notification);
@@ -99,6 +99,16 @@ class UserController extends Controller
     public function UserUpdate(Request $request)
     {
         $user_id = $request->id;
+        $existingUser = User::whereIn('role', [1, 2,])->first();
+
+        if ($existingUser && !in_array($request->role, [3, 4, 5, 6])) {
+            // If a user with role 1, 2, or 3 already exists, and the new user's role is not 4, 5, or 6, show an alert and redirect
+            $notification = [
+                'message' => 'Data Role Admin/Kepsek/Wakil Kurikulum Sudah Ada',
+                'alert-type' => 'error'
+            ];
+            return redirect()->back()->withInput()->with($notification);
+        }
 
         if ($request->file('profile_image')) {
 

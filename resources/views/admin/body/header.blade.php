@@ -15,7 +15,7 @@
                  @elseif (Auth::user()->role == '2')
                      Kepala Sekolah
                  @elseif (Auth::user()->role == '3')
-                     Wakil Kurikulum
+                     Operator
                  @elseif (Auth::user()->role == '4')
                      Guru
                  @elseif (Auth::user()->role == '5')

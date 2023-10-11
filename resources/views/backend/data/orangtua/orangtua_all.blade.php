@@ -20,19 +20,25 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Orang Tua</th>
+                                        <th style="white-space: nowrap;">Kode Orang Tua</th>
                                         <th>Nama</th>
                                         <th>No HP</th>
                                         <th>Username</th>
                                         <th>Nama Siswa</th>
+                                        <th>Foto</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
 
                                     @foreach ($ortu as $key => $item)
                                         <tr>
+
+                                            @php
+                                                $user = App\Models\User::where('id', $item->id_user)->first();
+                                            @endphp
                                             <td> {{ $key + 1 }} </td>
-                                            <td> {{ $item->kode_ortu }} </td>
+                                            <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_ortu }}
+                                            </td>
                                             <td> {{ $item->nama }} </td>
                                             <td> {{ $item->no_hp }} </td>
                                             <td>
@@ -42,7 +48,18 @@
                                                     {{ $item['users']['username'] }}
                                                 @endif
                                             </td>
-                                            <td> {{ $item['siswas']['nama'] }} </td>
+                                            <td>
+                                                @if ($item->id_siswa == 0)
+                                                    <span class="text-danger">Kosong</span>
+                                                @else
+                                                    {{ $item['siswas']['nama'] }}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <img style="width:70px; height:60px"
+                                                    src=" {{ !empty($user->profile_image) ? url('uploads/admin_images/' . $user->profile_image) : url('backend/dist/images/profile-user.png') }}"
+                                                    alt="">
+                                            </td>
                                             <td>
                                                 <a id="delete" href="{{ route('orangtua.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">

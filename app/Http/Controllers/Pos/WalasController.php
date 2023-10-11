@@ -15,7 +15,7 @@ class WalasController extends Controller
     public function WalasAll()
     {
 
-        $walas = Walas::orderBy('id_kelas', 'asc')->get();
+        $walas = Walas::orderBy('id_kelas', 'asc')->paginate(perPage: 12);
 
         return view('backend.data.walas.walas_all', compact('walas'));
     } // end method
@@ -32,6 +32,7 @@ class WalasController extends Controller
     {
         $request->validate([
             'id_guru' => ['required', 'string', 'max:255', 'unique:' . Walas::class],
+            'id_kelas' => ['required', 'string', 'max:255', 'unique:' . Walas::class],
         ]);
         Walas::insert([
             'id_guru' => $request->id_guru,

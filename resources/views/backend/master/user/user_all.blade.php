@@ -20,7 +20,7 @@
                                 <thead>
                                     <tr>
                                         <th>Sl</th>
-                                        <th>Name</th>
+                                        <th>Nama</th>
                                         <th>Username</th>
                                         <th>Foto</th>
                                         <th>Email</th>
@@ -47,7 +47,7 @@
                                                 @elseif($item->role == '2')
                                                     <span class="text-danger">Kepala Sekolah</span>
                                                 @elseif($item->role == '3')
-                                                    <span class="text-warning">Wakil Kurikulum</span>
+                                                    <span class="text-warning">Operator</span>
                                                 @elseif($item->role == '4')
                                                     <span class="text-success">Guru</span>
                                                 @elseif($item->role == '5')

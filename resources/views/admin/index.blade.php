@@ -49,15 +49,33 @@
             <div class="grid grid-cols-12 gap-6">
                 <!-- BEGIN: General Report -->
                 <div class="col-span-12 mt-8">
-                    <div class="ml-2 mb-8 intro-y flex items-center justify-between">
+                    <div class="ml-1 mb-2 intro-y flex items-center justify-between">
                         <h2 class="  text-primary">
-                            <span class="text-4xl "> Selamat Datang </span>
+                            <span class="text-4xl "> Selamat Datang, @if (Auth::user()->role == '1')
+                                    Admin Sistem
+                                @elseif (Auth::user()->role == '2')
+                                    Kepala Sekolah
+                                @elseif (Auth::user()->role == '3')
+                                    Operator
+                                @elseif (Auth::user()->role == '4')
+                                    Guru
+                                @elseif (Auth::user()->role == '5')
+                                    Orang Tua
+                                @elseif (Auth::user()->role == '6')
+                                    Siswa
+                                @endif </span>
                             <br>
-                            <div class="mt-2 text-3xl">
-                                Sistem Informasi Akademik
-                            </div>
+                          
                         </h2>
                     </div>
+
+                    <div class="bg-danger p-2 mb-2">
+                        <span class="text-white">
+                            Silahkan gunakan aplikasi dengan sebaik-baiknya, dan jaga kerahasiaan email, username, dan
+                            password Anda..!!!
+                        </span>
+                    </div>
+
                     <div class="intro-y flex items-center h-10">
                         <h2 class="text-lg font-medium truncate mr-5">
                             General Report
@@ -68,7 +86,7 @@
 
                     {{--  // bagian  admin //  --}}
                     @if (Auth::user()->role == '1')
-                        <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="grid grid-cols-12 gap-6 mt-3">
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
@@ -125,7 +143,7 @@
 
                     {{--  // bagian  kepsek //  --}}
                     @if (Auth::user()->role == '2')
-                        <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="grid grid-cols-12 gap-6 mt-3">
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
@@ -193,7 +211,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="grid grid-cols-12 gap-6 mt-3">
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
@@ -223,9 +241,9 @@
                     {{--  // end bagian  kepsek //  --}}
 
 
-                    {{--  // bagian  wakil//  --}}
+                    {{--  // bagian  operator//  --}}
                     @if (Auth::user()->role == '3')
-                        <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="grid grid-cols-12 gap-6 mt-3">
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
@@ -292,7 +310,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="grid grid-cols-12 gap-6 mt-3">
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
@@ -375,15 +393,36 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div class="report-box zoom-in">
+                                    <div class="box p-5">
+                                        <div class="flex">
+                                            <i class="report-box__icon text-success"><svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="lucide lucide-user-square-2">
+                                                    <path d="M18 21a6 6 0 0 0-12 0" />
+                                                    <circle cx="12" cy="11" r="4" />
+                                                    <rect width="18" height="18" x="3" y="3" rx="2" />
+                                                </svg></i>
+
+                                        </div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $tahunajar }}</div>
+                                        <div class="text-base text-slate-500 mt-1">Wali Kelas</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     @endif
-                    {{--  // end bagian  wakil //  --}}
+                    {{--  // end bagian  operator //  --}}
 
 
 
                     {{--  // bagian  Guru//  --}}
                     @if (Auth::user()->role == '4')
-                        <div class="grid grid-cols-12 gap-6 mt-5">
+                        <div class="grid grid-cols-12 gap-6 mt-3">
                             <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">

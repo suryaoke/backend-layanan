@@ -4,7 +4,7 @@
 
     <div class="intro-y flex items-center mt-8 mb-4">
         <h1 class="text-lg font-medium mr-auto">
-            Edit Pengampu
+            Edit Pengampu Mata Pelajaran
         </h1>
     </div>
 

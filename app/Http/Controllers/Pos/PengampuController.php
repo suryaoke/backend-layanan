@@ -42,18 +42,17 @@ class PengampuController extends Controller
     } // end method
     public function PengampuStore(Request $request)
     {
-        // Dapatkan kode_gr dari guru yang sesuai dengan id_guru yang diambil dari $request
-        $guru = Guru::find($request->id_guru);
+
         $mapel = Mapel::find($request->id_mapel);
-        // Ambil kode_gr dari guru
-        $kode_gr = $guru->kode_gr;
+  
+      
         $kode_mapel = $mapel->kode_mapel;
 
         // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
         $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 3);
 
         // Gabungkan kode_gr dengan kode_acak untuk mendapatkan kode_pengampu
-        $kode_pengampu = $kode_gr . '.' . $kode_mapel . '.' . $kode_acak;
+        $kode_pengampu =  $kode_mapel . '.' . $kode_acak;
 
         Pengampu::insert([
             'kode_pengampu' => $kode_pengampu,

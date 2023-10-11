@@ -84,7 +84,7 @@
                                 <tr>
 
                                     <th>No.</th>
-                                    <th style="white-space: nowrap;">Kode Jadwal Mapel</th>
+                                    <th style="white-space: nowrap;">Kode Seksi</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
                                     <th>Kode Guru</th>
@@ -111,7 +111,7 @@
 
                                     <tr>
                                         <td align="center">{{ $key + 1 }}</td>
-                                        <td> {{ $item->kode_jadwalmapel }} </td>
+                                        <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_jadwalmapel }} </td>
                                         <td> {{ $item['haris']['nama'] }} </td>
                                         <td> {{ $item['waktus']['range'] }} </td>
                                         <td> {{ $guruid->kode_gr }} </td>
