@@ -32,6 +32,8 @@
                 <option value="2">2 JP</option>
                 <option value="3">3 JP</option>
                 <option value="4">4 JP</option>
+                <option value="5">5 JP</option>
+                <option value="6">6 JP</option>
 
             </select>
         </div>
@@ -39,9 +41,12 @@
         <div class="mt-4">
             <label for="">Semester</label>
             <select name="semester" id="semester" class="form-control w-full " required>
-                <option value="{{ $mapel->semester }}">{{ $mapel->semester }}</option>
-                <option value="Ganjil">Ganjil</option>
-                <option value="Genap">Genap</option>
+                <option value="{{ $mapel->semester }}">{{ $mapel['tahunajars']['semester'] }} -
+                    {{ $mapel['tahunajars']['tahun'] }}
+                </option>
+                @foreach ($tahunajar as $item)
+                    <option value="{{ $item->id }}">{{ $item->semester }}-{{ $item->tahun }}</option>
+                @endforeach
             </select>
         </div>
 

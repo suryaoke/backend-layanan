@@ -4,7 +4,7 @@
         $absensii = route('absensi.all');
         $currentUrl = url()->current();
         $tanggalParam = request()->query('tanggal'); // Mengambil nilai parameter tanggal dari URL
-        
+
     @endphp
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
@@ -23,7 +23,7 @@
                     Absensi Kelas &nbsp : {{ $kelas2->nama }} <br> Mata Pelajaran : {{ $mapel }}
                 @endif
             @else
-                Absensi All
+                Absensi Siswa All
             @endif
         </h1>
         <div class="mr-8"> <a href="{{ route('absensi.siswa') }}" class="btn btn-success"><i data-lucide="user-check"
@@ -92,7 +92,8 @@
                     <th class="whitespace-nowrap">NISN</th>
                     <th class="whitespace-nowrap">Kelas</th>
                     <th class="whitespace-nowrap">Tanggal</th>
-                    <th class="whitespace-nowrap">Mapel</th>
+                    <th class="whitespace-nowrap">Kode Mapel</th>
+                    <th class="whitespace-nowrap">Nama Mapel</th>
                     <th class="whitespace-nowrap">Status</th>
                     <th class="whitespace-nowrap">Ket</th>
 
@@ -102,6 +103,11 @@
 
                 @foreach ($absensi as $key => $item)
                     <tr>
+                        @php
+                            $jadwal = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
+                            $pengampu = App\Models\Pengampu::where('id', $jadwal->id_pengampu)->first();
+                            $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
+                        @endphp
                         <td> {{ $key + 1 }} </td>
                         @if ($item['siswass'] != null)
                             <td>{{ $item['siswass']['nama'] }}</td>
@@ -114,14 +120,8 @@
                         @endif
 
                         <td>{{ $item->tanggal }}</td>
-                        <td>
-                            @php
-                                $jadwal = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
-                                $pengampu = App\Models\Pengampu::where('id', $jadwal->id_pengampu)->first();
-                                $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
-                            @endphp
-                            {{ $mapel->nama }}</td>
-                        <td>
+                        <td> {{ $mapel->kode_mapel }}</td>
+                        <td>  {{ $mapel->nama }}</td> <td>
 
                             @if ($item->status == '0')
                                 <span class="text-danger">

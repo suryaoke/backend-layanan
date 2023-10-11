@@ -103,7 +103,7 @@ class JadwalmapelController extends Controller
         $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 3);
 
         // Gabungkan kode_gr dengan kode_acak untuk mendapatkan kode_pengampu
-        $kode_jadwalmapel = $kode_jadwal . '-' . $kode_acak;
+        $kode_jadwalmapel = $kode_jadwal . '.' . $kode_acak;
 
 
         // Jika validasi berhasil, simpan data ke dalam database

@@ -39,6 +39,8 @@
                 <option value="2">2 JP</option>
                 <option value="3">3 JP</option>
                 <option value="4">4 JP</option>
+                <option value="5">5 JP</option>
+                <option value="6">6 JP</option>
 
             </select>
         </div>
@@ -47,8 +49,9 @@
             <label for="">Semester</label>
             <select name="semester" id="semester" class="form-control w-full " required>
                 <option value="">Pilih Semester</option>
-                <option value="Ganjil">Ganjil</option>
-                <option value="Genap">Genap</option>
+                @foreach ($tahunajar as $item)
+                    <option value="{{ $item->id }}">{{ $item->semester }}-{{ $item->tahun }}</option>
+                @endforeach
             </select>
         </div>
 

@@ -33,8 +33,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Kode Pengampu</th>
-                                        <th>Nama Guru</th>
-                                        <th>Mata Pelajaran</th>
+                                        <th>Kode Guru</th>
+                                        <th>Kode Mapel</th>
                                         <th>Kelas</th>
                                         <th>Kurikulum</th>
                                         <th>Action</th>
@@ -44,9 +44,9 @@
                                     @foreach ($pengampu as $key => $item)
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-                                            <td> {{ $item->kode_pengampu}} </td>
-                                            <td> {{ $item['gurus']['nama'] }} </td>
-                                            <td> {{ $item['mapels']['nama'] }} </td>
+                                            <td> {{ $item->kode_pengampu }} </td>
+                                            <td> {{ $item['gurus']['kode_gr'] }} </td>                   
+                                            <td> {{ $item['mapels']['kode_mapel'] }} </td>
                                             <td> {{ $item['kelass']['nama'] }} </td>
                                             <td> {{ $item->kurikulum }} </td>
 

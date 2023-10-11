@@ -15,6 +15,8 @@ use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SiswaController;
 use App\Http\Controllers\Pos\SuratKeluarController;
 use App\Http\Controllers\Pos\SuratMasukController;
+use App\Http\Controllers\Pos\TahunajarController;
+use App\Http\Controllers\Pos\WalasController;
 use App\Http\Controllers\Pos\TamuController;
 use App\Http\Controllers\Pos\UserController;
 use App\Http\Controllers\Pos\WaktuController;
@@ -143,6 +145,30 @@ Route::controller(JurusanController::class)->middleware(['auth'])->group(functio
     Route::get('/jurusan/edit/{id}', 'JurusanEdit')->name('jurusan.edit');
     Route::post('/jurusan/update', 'JurusanUpdate')->name('jurusan.update');
 });
+
+
+// Tahun Ajar All Route
+Route::controller(TahunajarController::class)->middleware(['auth'])->group(function () {
+    Route::get('/tahunajar/all', 'TahunajarAll')->name('tahunajar.all');
+    Route::get('/tahunajar/add', 'TahunajarAdd')->name('tahunajar.add');
+    Route::post('/tahunajar/store', 'TahunajarStore')->name('tahunajar.store');
+    Route::get('/tahunajar/delete{id}', 'TahunajarDelete')->name('tahunajar.delete');
+    Route::get('/tahunajar/edit/{id}', 'TahunajarEdit')->name('tahunajar.edit');
+    Route::post('/tahunajar/update', 'TahunajarUpdate')->name('tahunajar.update');
+});
+
+
+// Walas All Route
+Route::controller(WalasController::class)->middleware(['auth'])->group(function () {
+    Route::get('/walas/all', 'WalasAll')->name('walas.all');
+    Route::get('/walas/add', 'WalasAdd')->name('walas.add');
+    Route::post('/walas/store', 'WalasStore')->name('walas.store');
+    Route::get('/walas/delete{id}', 'WalasDelete')->name('walas.delete');
+    Route::get('/walas/edit/{id}', 'WalasEdit')->name('walas.edit');
+    Route::post('/walas/update', 'WalasUpdate')->name('walas.update');
+});
+
+
 
 
 // Pengampu All Route

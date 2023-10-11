@@ -13,4 +13,8 @@ class Mapel extends Model
     {
         return $this->belongsTo(Jurusan::class, 'id_jurusan', 'id');
     }
+    public function tahunajars()
+    {
+        return $this->belongsTo(Tahunajar::class, 'semester', 'id');
+    }
 }

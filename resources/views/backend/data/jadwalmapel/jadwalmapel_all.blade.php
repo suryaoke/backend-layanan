@@ -82,17 +82,17 @@
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
+
                                     <th>No.</th>
                                     <th style="white-space: nowrap;">Kode Jadwal Mapel</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
-                                    <th>Nama Ruangan</th>
-                                    <th>Kapasitas Ruangan</th>
-                                    <th>Mata Pelajaran</th>
-                                    <th>Guru</th>
-                                    <th>Semester</th>
-                                    <th>JP</th>
+                                    <th>Kode Guru</th>
+                                    <th>Kode Mapel</th>
                                     <th>Kelas</th>
+                                    <th>JP</th>
+                                    <th>Kode Ruangan</th>
+                                    <th>Semester</th>
                                     <th>Kurikulum</th>
                                     <th>Status</th>
                                     <th>Action</th>
@@ -114,13 +114,16 @@
                                         <td> {{ $item->kode_jadwalmapel }} </td>
                                         <td> {{ $item['haris']['nama'] }} </td>
                                         <td> {{ $item['waktus']['range'] }} </td>
-                                        <td> {{ $item['ruangans']['nama'] }} </td>
-                                        <td> {{ $item['ruangans']['kapasitas'] }} </td>
-                                        <td> {{ $mapelid->nama }} </td>
-                                        <td> {{ $guruid->nama }} </td>
-                                        <td> {{ $mapelid->semester }} </td>
-                                        <td> {{ $mapelid->jp }} </td>
+                                        <td> {{ $guruid->kode_gr }} </td>
+                                        <td> {{ $mapelid->kode_mapel }} </td>
                                         <td> {{ $kelas->nama }} </td>
+                                        <td> {{ $mapelid->jp }} </td>
+                                        <td> {{ $item['ruangans']['kode_ruangan'] }} </td>
+                                        <td>
+                                            {{ $mapelid['tahunajars']['semester'] }}-
+                                            {{ $mapelid['tahunajars']['tahun'] }}
+                                        </td>
+
                                         <td> {{ $pengampuid->kurikulum }} </td>
                                         <td>
                                             @if ($item->status == '0')
@@ -195,7 +198,7 @@
                                             <option value="">Pilih Kode Pengampu</option>
                                             @foreach ($pengampu as $item)
                                                 <option value="{{ $item->id }}">
-                                                    {{ $item->kode_pengampu }} - {{ $item['gurus']['nama'] }}
+                                                    {{ $item->kode_pengampu }} / {{ $item['gurus']['nama'] }}
                                                 </option>
                                             @endforeach
                                         </optgroup>

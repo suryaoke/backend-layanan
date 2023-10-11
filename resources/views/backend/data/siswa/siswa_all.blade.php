@@ -4,7 +4,7 @@
         <h1 class="text-lg font-medium mr-auto">
             @php
                 $siswa1 = URL::route('siswa.all');
-                
+
             @endphp
             @if (url()->current() == $siswa1)
                 Siswa All
@@ -61,10 +61,14 @@
                                         <th>JK</th>
                                         <th>Kelas</th>
                                         <th>Username</th>
+                                        <th>Foto</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($siswa as $key => $item)
+                                        @php
+                                            $user = App\Models\User::where('id', $item->id_user)->first();
+                                        @endphp
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
                                             <td> {{ $item->nama }} </td>
@@ -78,7 +82,12 @@
                                                     {{ $item['users']['username'] }}
                                                 @endif
                                             </td>
+                                            <td>
+                                                <img style="width:70px; height:60px"
+                                                    src=" {{ !empty($user->profile_image) ? url('uploads/admin_images/' . $user->profile_image) : url('backend/dist/images/profile-user.png') }}"
+                                                    alt="">
 
+                                            </td>
                                             <td>
                                                 <a id="delete" href="{{ route('siswa.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">

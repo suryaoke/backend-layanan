@@ -76,13 +76,14 @@
                                     <th style="white-space: nowrap;">Kode Jadwal Mapel</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
-                                    <th>Nama Ruangan</th>
-                                    <th>Kapasitas Ruangan</th>
-                                    <th>Mata Pelajaran</th>
-                                    <th>Guru</th>
-                                    <th>Semester</th>
-                                    <th>JP</th>
+                                    <th>Kode Guru</th>
+                                    <th>Nama Guru</th>
+                                    <th>Kode Mapel</th>
+                                    <th>Nama Mapel</th>
                                     <th>Kelas</th>
+                                    <th>JP</th>
+                                    <th>Kode Ruangan</th>
+                                    <th>Semester</th>
                                     <th>Kurikulum</th>
 
                                 </tr>
@@ -98,20 +99,22 @@
 
                                     <tr>
                                         <td align="center">{{ $key + 1 }}</td>
-                                        <td > {{ $item->kode_jadwalmapel }} </td>
+                                        <td> {{ $item->kode_jadwalmapel }} </td>
                                         <td> {{ $item['haris']['nama'] }} </td>
                                         <td> {{ $item['waktus']['range'] }} </td>
-                                        <td> {{ $item['ruangans']['nama'] }} </td>
-                                        <td> {{ $item['ruangans']['kapasitas'] }} </td>
-                                        <td> {{ $mapelid->nama }} </td>
+                                        <td> {{ $guruid->kode_gr }} </td>
                                         <td> {{ $guruid->nama }} </td>
-                                        <td> {{ $mapelid->semester }} </td>
-                                        <td> {{ $mapelid->jp }} </td>
+                                        <td> {{ $mapelid->kode_mapel }} </td>
+                                        <td> {{ $mapelid->nama }} </td>
                                         <td> {{ $kelas->nama }} </td>
+                                        <td> {{ $mapelid->jp }} </td>
+                                        <td> {{ $item['ruangans']['kode_ruangan'] }} </td>
+                                        <td>
+                                            {{ $mapelid['tahunajars']['semester'] }}-
+                                            {{ $mapelid['tahunajars']['tahun'] }}
+                                        </td>
+
                                         <td> {{ $pengampuid->kurikulum }} </td>
-
-
-
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\Jurusan;
 use App\Models\Mapel;
+use App\Models\Tahunajar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,10 +24,15 @@ class MapelController extends Controller
     public function MapelAdd()
     {
         $jurusan = Jurusan::orderBy('kode_jurusan', 'asc')->get();
-        return view('backend.data.mapel.mapel_add', compact('jurusan'));
+        $tahunajar = Tahunajar::orderBy('tahun', 'asc')->get();
+        return view('backend.data.mapel.mapel_add', compact('jurusan', 'tahunajar'));
     } // end method
     public function MapelStore(Request $request)
     {
+        $this->validate($request, [
+            'kode_mapel' => 'required|max:50|unique:mapels,kode_mapel',
+
+        ]);
         Mapel::insert([
             'kode_mapel' => $request->kode_mapel,
             'nama' => $request->nama,
@@ -50,7 +56,8 @@ class MapelController extends Controller
     {
         $mapel = Mapel::findOrFail($id);
         $jurusan = Jurusan::orderBy('kode_jurusan', 'asc')->get();
-        return view('backend.data.mapel.mapel_edit', compact('mapel', 'jurusan'));
+        $tahunajar = Tahunajar::orderBy('tahun', 'asc')->get();
+        return view('backend.data.mapel.mapel_edit', compact('mapel', 'tahunajar','jurusan'));
     }
     public function MapelUpdate(Request $request)
     {

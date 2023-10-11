@@ -22,7 +22,7 @@
                                         <th>Sl</th>
                                         <th>Name</th>
                                         <th>Username</th>
-                                        <th>User Image </th>
+                                        <th>Foto</th>
                                         <th>Email</th>
                                         <th>Role</th>
                                         <th>Status</th>
@@ -35,8 +35,8 @@
                                             <td> {{ $item->name }} </td>
                                             <td> {{ $item->username }} </td>
                                             <td>
-                                                <img style="width:80px; height:60px"
-                                                    src=" {{ !empty($item->profile_image) ? url('uploads/admin_images/' . $item->profile_image) : url('uploads/no_image.jpg') }}"
+                                                <img style="width:70px; height:60px"
+                                                    src=" {{ !empty($item->profile_image) ? url('uploads/admin_images/' . $item->profile_image) : url('backend/dist/images/profile-user.png') }}"
                                                     alt="">
                                             </td>
                                             <td> {{ $item->email }} </td>

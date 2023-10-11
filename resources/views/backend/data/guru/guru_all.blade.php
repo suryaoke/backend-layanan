@@ -24,11 +24,15 @@
                                         <th>Nama</th>
                                         <th>No HP</th>
                                         <th>Username</th>
+                                        <th>Foto</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
 
                                     @foreach ($guru as $key => $item)
+                                        @php
+                                            $user = App\Models\User::where('id', $item->id_user)->first();
+                                        @endphp
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
                                             <td> {{ $item->kode_gr }} </td>
@@ -36,10 +40,17 @@
                                             <td> {{ $item->no_hp }} </td>
                                             <td>
                                                 @if ($item->id_user == 0)
-                                                <span class="text-danger">Kosong</span>
+                                                    <span class="text-danger">Kosong</span>
                                                 @else
                                                     {{ $item['users']['username'] }}
                                                 @endif
+                                            </td>
+
+                                            <td>
+                                                <img style="width:70px; height:60px"
+                                                    src=" {{ !empty($user->profile_image) ? url('uploads/admin_images/' . $user->profile_image) : url('backend/dist/images/profile-user.png') }}"
+                                                    alt="">
+
                                             </td>
 
                                             <td>

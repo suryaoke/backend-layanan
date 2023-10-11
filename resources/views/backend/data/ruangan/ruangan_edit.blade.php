@@ -43,7 +43,7 @@
 
         <div class="mt-4">
             <label for=""> Jurusan</label>
-            <select name="id_jurusan" id="id_jurusan" class="form-control w-full " required>
+            <select name="id_jurusan" id="id_jurusan" class="tom-select  w-full " required>
                 <option value="{{ $ruangan->id_jurusan }}">{{ $ruangan['jurusans']['nama'] }} </option>
                 @foreach ($jurusan as $item)
                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
@@ -52,7 +52,7 @@
         </div>
         <div class="mt-4">
             <label for=""> Type</label>
-            <select name="type" id="type" class="form-control w-full " required>
+            <select name="type" id="type" class="tom-select  w-full " required>
                 <option value="{{ $ruangan->type }}">{{ $ruangan->type }}</option>
                 <option value="Teori">Teori</option>
                 <option value="Teori">Pratikum</option>

@@ -1,7 +1,7 @@
  @php
-     
+
      $id = Request::route('id');
-     
+
      if ($id !== null) {
          $guruedit = URL::route('guru.edit', ['id' => $id]);
          $orangtuaedit = URL::route('orangtua.edit', ['id' => $id]);
@@ -16,6 +16,8 @@
          $mapeledit = URL::route('mapel.edit', ['id' => $id]);
          $pengampuedit = URL::route('pengampu.edit', ['id' => $id]);
          $kelasedit = URL::route('kelas.edit', ['id' => $id]);
+         $tahunajaredit = URL::route('tahunajar.edit', ['id' => $id]);
+         $walasedit = URL::route('walas.edit', ['id' => $id]);
      } else {
          $guruedit = 1; // Handle jika parameter id tidak ditemukan dalam URL
          $orangtuaedit = 1;
@@ -30,8 +32,10 @@
          $mapeledit = 1;
          $pengampuedit = 1;
          $kelasedit = 1;
+         $tahunajaredit = 1;
+         $walasedit = 1;
      }
-     
+
      $url = url()->current();
      $dashboard = URL::route('dashboard');
      $absensi = URL::route('absensi.all');
@@ -68,6 +72,10 @@
      $jadwalmapelkepsek = URL::route('jadwalmapel.kepsek');
      $jadwalmapelguru = URL::route('jadwalmapel.guru');
      $siswaguru = URL::route('siswa.guru');
+     $tahunajar = URL::route('tahunajar.all');
+     $tahunajaradd = URL::route('tahunajar.add');
+     $walas = URL::route('walas.all');
+     $walasadd = URL::route('walas.add');
      $routes = [
          'pusherAuth' => URL::route('pusher.auth'),
          'messagesIndex' => URL::route('messages.index'),
@@ -88,7 +96,7 @@
          'setActiveStatus' => URL::route('messages.setActiveStatus'),
      ];
      $a = URL::route('messages.index');
-     
+
  @endphp
 
  <nav class="side-nav">
@@ -268,12 +276,7 @@
                  </div>
                  </a>
                  <ul class="">
-                     <li>
-                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
-                             <div class="side-menu__title">Jadwal Mapel</div>
-                         </a>
-                     </li>
+
                      <li>
                          <a href="{{ route('mapel.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
@@ -283,7 +286,28 @@
                      <li>
                          <a href="{{ route('pengampu.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="users"></i> </div>
-                             <div class="side-menu__title">Pengampu</div>
+                             <div class="side-menu__title">Pengampu Mapel</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                     class="lucide lucide-calendar-days">
+                                     <rect width="18" height="18" x="3" y="4" rx="2"
+                                         ry="2" />
+                                     <line x1="16" x2="16" y1="2" y2="6" />
+                                     <line x1="8" x2="8" y1="2" y2="6" />
+                                     <line x1="3" x2="21" y1="10" y2="10" />
+                                     <path d="M8 14h.01" />
+                                     <path d="M12 14h.01" />
+                                     <path d="M16 14h.01" />
+                                     <path d="M8 18h.01" />
+                                     <path d="M12 18h.01" />
+                                     <path d="M16 18h.01" />
+                                 </svg></div>
+                             <div class="side-menu__title">Jadwal Mapel</div>
                          </a>
                      </li>
                  </ul>
@@ -339,10 +363,29 @@
                  </ul>
              </li>
 
+             <li>
+                 @if ($url == $walas)
+                     <a href="{{ route('walas.all') }}" class="side-menu  side-menu--active">
+                     @elseif ($url == $walasadd)
+                         <a href="{{ route('walas.all') }}" class="side-menu  side-menu--active">
+                         @elseif ($url == $walasedit)
+                             <a href="{{ route('walas.all') }}" class="side-menu  side-menu--active">
+                             @else
+                                 <a href="{{ route('walas.all') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-square-2">
+                         <path d="M18 21a6 6 0 0 0-12 0" />
+                         <circle cx="12" cy="11" r="4" />
+                         <rect width="18" height="18" x="3" y="3" rx="2" />
+                     </svg> </div>
+                 <div class="side-menu__title">
+                     Set Wali Kelas
+                 </div>
+                 </a>
 
-
-
-
+             </li>
 
              <li>
                  @if ($ruangan == $url)
@@ -371,9 +414,18 @@
                                                              @elseif ($guruedit == $url)
                                                                  <a
                                                                      href="javascript:;"class="side-menu side-menu--active">
-                                                                 @else
+                                                                 @elseif ($tahunajar == $url)
                                                                      <a href="javascript:;"
-                                                                         class="side-menu side-menu">
+                                                                         class="side-menu  side-menu--active">
+                                                                     @elseif ($tahunajaradd == $url)
+                                                                         <a href="javascript:;"
+                                                                             class="side-menu  side-menu--active">
+                                                                         @elseif ($tahunajaredit == $url)
+                                                                             <a href="javascript:;"
+                                                                                 class="side-menu  side-menu--active">
+                                                                             @else
+                                                                                 <a href="javascript:;"
+                                                                                     class="side-menu side-menu">
                  @endif
 
                  <div class="side-menu__icon">
@@ -419,11 +471,14 @@
                              <div class="side-menu__title"> Kelas</div>
                          </a>
                      </li>
+                     <li>
+                         <a href="{{ route('tahunajar.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title"> Tahun Ajar</div>
+                         </a>
+                     </li>
                  </ul>
              </li>
-
-
-
 
          @endif
          {{--  // end bagian wakil kurikulum //  --}}
@@ -457,7 +512,7 @@
                  @endif
                  <div class="side-menu__icon"> <i data-lucide="user-check"></i> </div>
                  <div class="side-menu__title">
-                     Absensi
+                     Absensi Siswa
                  </div>
                  </a>
 

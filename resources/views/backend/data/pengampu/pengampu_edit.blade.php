@@ -15,9 +15,10 @@
         <div class="mt-4">
             <label for=""> Guru</label>
             <select name="id_guru" id="id_guru" class="tom-select w-full" required>
-                <option value="{{ $pengampu->id_guru }}">{{ $pengampu['gurus']['nama'] }}</option>
+                <option value="{{ $pengampu->id_guru }}">{{ $pengampu['gurus']['nama'] }} /
+                    {{ $pengampu['gurus']['kode_gr'] }}</option>
                 @foreach ($guru as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_gr }}</option>
                 @endforeach
             </select>
         </div>
@@ -25,9 +26,10 @@
         <div class="mt-4">
             <label for=""> Mata Pelajaran</label>
             <select name="id_mapel" id="id_mapel" class="tom-select w-full" required>
-                <option value="{{ $pengampu->id_mapel }}">{{ $pengampu['mapels']['nama'] }}</option>
+                <option value="{{ $pengampu->id_mapel }}">{{ $pengampu['mapels']['nama'] }} /
+                    {{ $pengampu['mapels']['kode_mapel'] }}</option>
                 @foreach ($mapel as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_mapel }}</option>
                 @endforeach
             </select>
         </div>
@@ -45,7 +47,8 @@
         <div class="mt-4">
             <label for=""> Kurikulum</label>
             <input type="text" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Masukkan Kurikulum" value="{{ $pengampu->kurikulum }}" name="kurikulum" id="kurikulum">
+                placeholder="Masukkan Kurikulum" value="{{ $pengampu->kurikulum }}" name="kurikulum" id="kurikulum"
+                readonly>
         </div>
 
 

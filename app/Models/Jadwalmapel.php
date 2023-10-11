@@ -43,4 +43,8 @@ class Jadwalmapel extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas');
     }
+    public function tahunajars()
+    {
+        return $this->belongsTo(Tahunajar::class, 'semester');
+    }
 }

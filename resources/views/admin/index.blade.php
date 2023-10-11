@@ -14,7 +14,8 @@
         $ruangan = App\Models\Ruangan::all()->count();
         $waktu = App\Models\Waktu::all()->count();
         $pengampu = App\Models\Pengampu::all()->count();
-        
+        $tahunajar = App\Models\Tahunajar::all()->count();
+
         $userId = Auth::user()->id;
         $jadwalguru = App\Models\Jadwalmapel::join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
             ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
@@ -23,19 +24,19 @@
             ->orderBy('id_hari', 'asc')
             ->orderBy('id_waktu', 'asc')
             ->count();
-        
+
         // Ambil ID guru berdasarkan ID user yang aktif
         $guruId = App\Models\Guru::where('id_user', $userId)->value('id');
-        
+
         // Ambil ID pengampu yang berelasi dengan guru melalui jadwalmapels
         $pengampuIds = App\Models\Jadwalmapel::whereHas('pengampus', function ($query) use ($guruId) {
             $query->where('id_guru', $guruId);
         })
             ->pluck('id_pengampu')
             ->unique();
-        
+
         // Ambil data siswa dengan kelas yang sama dengan pengampu yang diambil dari jadwalmapels
-        $siswaguru =  App\Models\Siswa::whereIn('kelas', function ($query) use ($pengampuIds) {
+        $siswaguru = App\Models\Siswa::whereIn('kelas', function ($query) use ($pengampuIds) {
             $query
                 ->select('kelas')
                 ->from('pengampus')
@@ -165,11 +166,28 @@
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
                                         <div class="flex">
-                                            <i data-lucide="file-text" class="report-box__icon text-success"></i>
+                                            <i class="report-box__icon text-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="lucide lucide-calendar-days">
+                                                    <rect width="18" height="18" x="3" y="4" rx="2"
+                                                        ry="2" />
+                                                    <line x1="16" x2="16" y1="2" y2="6" />
+                                                    <line x1="8" x2="8" y1="2" y2="6" />
+                                                    <line x1="3" x2="21" y1="10" y2="10" />
+                                                    <path d="M8 14h.01" />
+                                                    <path d="M12 14h.01" />
+                                                    <path d="M16 14h.01" />
+                                                    <path d="M8 18h.01" />
+                                                    <path d="M12 18h.01" />
+                                                    <path d="M16 18h.01" />
+                                                </svg>
+                                            </i>
 
                                         </div>
                                         <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwal }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Jadwal Mata Pelajaran</div>
+                                        <div class="text-base text-slate-500 mt-1">Jadwal Mapel</div>
                                     </div>
                                 </div>
                             </div>
@@ -212,10 +230,27 @@
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
                                         <div class="flex">
-                                            <i data-lucide="file-text" class="report-box__icon text-success"></i>
+                                            <i class="report-box__icon text-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="lucide lucide-calendar-days">
+                                                    <rect width="18" height="18" x="3" y="4" rx="2"
+                                                        ry="2" />
+                                                    <line x1="16" x2="16" y1="2" y2="6" />
+                                                    <line x1="8" x2="8" y1="2" y2="6" />
+                                                    <line x1="3" x2="21" y1="10" y2="10" />
+                                                    <path d="M8 14h.01" />
+                                                    <path d="M12 14h.01" />
+                                                    <path d="M16 14h.01" />
+                                                    <path d="M8 18h.01" />
+                                                    <path d="M12 18h.01" />
+                                                    <path d="M16 18h.01" />
+                                                </svg>
+                                            </i>
                                         </div>
                                         <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwal }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Jadwal Mata Pelajaran</div>
+                                        <div class="text-base text-slate-500 mt-1">Jadwal Mapel</div>
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +274,7 @@
 
                                         </div>
                                         <div class="text-3xl font-medium leading-8 mt-6">{{ $pengampu }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Pengampu</div>
+                                        <div class="text-base text-slate-500 mt-1">Pengampu Mapel</div>
                                     </div>
                                 </div>
                             </div>
@@ -327,6 +362,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div class="report-box zoom-in">
+                                    <div class="box p-5">
+                                        <div class="flex">
+                                            <i data-lucide="file" class="report-box__icon text-success"></i>
+
+                                        </div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $tahunajar }}</div>
+                                        <div class="text-base text-slate-500 mt-1">Tahun Ajar</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     @endif
                     {{--  // end bagian  wakil //  --}}
@@ -340,10 +388,27 @@
                                 <div class="report-box zoom-in">
                                     <div class="box p-5">
                                         <div class="flex">
-                                            <i data-lucide="file-text" class="report-box__icon text-success"></i>
+                                            <i class="report-box__icon text-success">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                    class="lucide lucide-calendar-days">
+                                                    <rect width="18" height="18" x="3" y="4" rx="2"
+                                                        ry="2" />
+                                                    <line x1="16" x2="16" y1="2" y2="6" />
+                                                    <line x1="8" x2="8" y1="2" y2="6" />
+                                                    <line x1="3" x2="21" y1="10" y2="10" />
+                                                    <path d="M8 14h.01" />
+                                                    <path d="M12 14h.01" />
+                                                    <path d="M16 14h.01" />
+                                                    <path d="M8 18h.01" />
+                                                    <path d="M12 18h.01" />
+                                                    <path d="M16 18h.01" />
+                                                </svg>
+                                            </i>
                                         </div>
                                         <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwalguru }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Jadwal Mata Pelajaran</div>
+                                        <div class="text-base text-slate-500 mt-1">Jadwal Mapel</div>
                                     </div>
                                 </div>
                             </div>

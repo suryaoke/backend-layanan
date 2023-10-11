@@ -26,7 +26,7 @@
             <select name="id_guru" id="id_guru" class="tom-select w-full" required>
                 <option value="">Pilih Guru</option>
                 @foreach ($guru as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    <option value="{{ $item->id }}">{{ $item->nama }} / {{$item->kode_gr }}</option>
                 @endforeach
             </select>
         </div>
@@ -36,7 +36,7 @@
             <select name="id_mapel" id="id_mapel" class="tom-select w-full" required>
                 <option value="">Pilih Mapel</option>
                 @foreach ($mapel as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_mapel }}</option>
                 @endforeach
             </select>
         </div>
@@ -62,8 +62,8 @@
 
         <div class="mt-4">
             <label for=""> Kurikulum</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Masukkan Kurikulum" name="kurikulum" id="kurikulum">
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block " name="kurikulum" id="kurikulum"
+                value="2013" readonly>
         </div>
 
         <div class="mt-4">
