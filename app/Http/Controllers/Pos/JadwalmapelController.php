@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Guru;
 use App\Models\Hari;
 use App\Models\Jadwalmapel;
+use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Pengampu;
 use App\Models\Ruangan;
@@ -58,7 +59,7 @@ class JadwalmapelController extends Controller
         if (!empty($searchKelas)) {
             $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
                 $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
-                    $courseQuery->where('nama', 'LIKE', '%' .  $searchKelas . '%');
+                    $courseQuery->where('id', 'LIKE', '%' .  $searchKelas . '%');
                 });
             });
         }
@@ -68,7 +69,7 @@ class JadwalmapelController extends Controller
         $jadwalmapel = $query->orderBy('id_hari', 'asc')
             ->orderBy('id_waktu', 'asc')
             ->get();
-        $hari = Hari::all();
+        $hari = Hari::orderby('kode_hari', 'asc')->get();
 
         $waktu = Waktu::all();
         $ruangan = Ruangan::all();
@@ -76,7 +77,9 @@ class JadwalmapelController extends Controller
         $mapel = Mapel::all();
 
         $pengampu = Pengampu::all();
-        return view('backend.data.jadwalmapel.jadwalmapel_all', compact('pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
+
+        $kelas = Kelas::orderBy('tingkat')->get();
+        return view('backend.data.jadwalmapel.jadwalmapel_all', compact('kelas', 'pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
     } // end method
 
 
@@ -240,7 +243,7 @@ class JadwalmapelController extends Controller
         if (!empty($searchKelas)) {
             $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
                 $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
-                    $courseQuery->where('nama', 'LIKE', '%' .  $searchKelas . '%');
+                    $courseQuery->where('id', 'LIKE', '%' .  $searchKelas . '%');
                 });
             });
         }
@@ -259,7 +262,8 @@ class JadwalmapelController extends Controller
         $mapel = Mapel::all();
 
         $pengampu = Pengampu::all();
-        return view('backend.data.jadwalmapel.jadwalmapel_kepsek', compact('pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
+        $kelas = Kelas::orderBy('tingkat')->get();
+        return view('backend.data.jadwalmapel.jadwalmapel_kepsek', compact('kelas', 'pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
     } // end method
 
 
@@ -345,7 +349,7 @@ class JadwalmapelController extends Controller
         if (!empty($searchKelas)) {
             $query->whereHas('pengampus', function ($lecturerQuery) use ($searchKelas) {
                 $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
-                    $courseQuery->where('nama', 'LIKE', '%' .  $searchKelas . '%');
+                    $courseQuery->where('id', 'LIKE', '%' .  $searchKelas . '%');
                 });
             });
         }
@@ -361,7 +365,9 @@ class JadwalmapelController extends Controller
             ->orderBy('id_hari', 'asc')
             ->orderBy('id_waktu', 'asc')
             ->get();
-        return view('backend.data.jadwalmapel.jadwalmapel_guru', compact('jadwalmapel'));
+
+        $kelas = Kelas::orderBy('tingkat')->get();
+        return view('backend.data.jadwalmapel.jadwalmapel_guru', compact('kelas', 'jadwalmapel'));
     } // end method
 
 

@@ -26,6 +26,11 @@
         </div>
 
         <div class="mt-4">
+            <label for=""> Induk</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
+                placeholder="Kosong Kalau Tidak Ada !!" name="induk">
+        </div>
+        <div class="mt-4">
             <label for=""> Nama Mapel</label>
             <input type="text" class="intro-x login__input form-control py-3 px-4 block "
                 placeholder="Masukkan Nama Mapel" name="nama" id="nama">
@@ -33,7 +38,7 @@
 
         <div class="mt-4">
             <label for=""> Jam Pelajaran</label>
-            <select name="jp" id="jp" class="form-control w-full " required>
+            <select name="jp" id="jp" class="tom-select w-full " required>
                 <option value="">Select JP</option>
                 <option value="1">1 JP</option>
                 <option value="2">2 JP</option>
@@ -47,7 +52,7 @@
 
         <div class="mt-4">
             <label for="">Semester</label>
-            <select name="semester" id="semester" class="form-control w-full " required>
+            <select name="semester" id="semester" class="tom-select w-full " required>
                 <option value="">Pilih Semester</option>
                 @foreach ($tahunajar as $item)
                     <option value="{{ $item->id }}">{{ $item->semester }}-{{ $item->tahun }}</option>
@@ -58,7 +63,7 @@
 
         <div class="mt-4">
             <label for=""> Jurusan</label>
-            <select name="id_jurusan" id="id_jurusan" class="form-control w-full " required>
+            <select name="id_jurusan" id="id_jurusan" class="tom-select w-full " required>
                 <option value="">Pilih Jurusan</option>
                 @foreach ($jurusan as $item)
                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
@@ -67,11 +72,12 @@
         </div>
 
         <div class="mt-4">
-            <label for=""> Jenis</label>
-            <select name="jenis" id="jenis" class="form-control w-full " required>
+            <label for=""> Kelompok</label>
+            <select name="jenis" id="jenis" class="tom-select w-full " required>
                 <option value="">Pilih jenis</option>
-                <option value="Teori">Teori</option>
-                <option value="Pratikum">Pratikum</option>
+                <option value="A">Kelompok A</option>
+                <option value="B">Kelompok B</option>
+                <option value="C">Kelompok C</option>
             </select>
         </div>
 

@@ -42,12 +42,19 @@
                 <div class="form-group">
                     <input type="text" name="searchmapel" class="form-control" placeholder="Mata Pelajaran"
                         value="{{ request('searchmapel') }}">
+
                 </div>
             </div>
             <div class="flex-1 sm:mr-2">
                 <div class="form-group">
-                    <input type="text" name="searchkelas" class="form-control" placeholder="Kelas"
-                        value="{{ request('searchkelas') }}">
+
+                    <select name="searchkelas" class="form-select w-full">
+                        <option value="">Kelas</option>
+                        @foreach ($kelas as $item)
+                            <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                                {{ $item->jurusans->nama }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="sm:ml-1">
@@ -87,8 +94,8 @@
                                     <th style="white-space: nowrap;">Kode Seksi</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
-                                    <th>Kode Guru</th>
-                                    <th>Kode Mapel</th>
+                                    <th style="white-space: nowrap;">Kode Guru</th>
+                                    <th style="white-space: nowrap;">Kode Mapel</th>
                                     <th>Kelas</th>
                                     <th>JP</th>
                                     <th>Kode Ruangan</th>
@@ -111,15 +118,19 @@
 
                                     <tr>
                                         <td align="center">{{ $key + 1 }}</td>
-                                        <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_jadwalmapel }} </td>
+                                        <td style="white-space: nowrap;" class="text-primary">
+                                            {{ $item->kode_jadwalmapel }}
+                                        </td>
                                         <td> {{ $item['haris']['nama'] }} </td>
                                         <td> {{ $item['waktus']['range'] }} </td>
-                                        <td> {{ $guruid->kode_gr }} </td>
-                                        <td> {{ $mapelid->kode_mapel }} </td>
-                                        <td> {{ $kelas->nama }} </td>
+                                        <td style="white-space: nowrap;"> {{ $guruid->kode_gr }} </td>
+                                        <td style="white-space: nowrap;"> {{ $mapelid->kode_mapel }} </td>
+                                        <td style="white-space: nowrap;"> {{ $kelas->tingkat }} {{ $kelas->nama }}
+                                            {{ $kelas['jurusans']['nama'] }}
+                                        </td>
                                         <td> {{ $mapelid->jp }} </td>
                                         <td> {{ $item['ruangans']['kode_ruangan'] }} </td>
-                                        <td>
+                                        <td style="white-space: nowrap;">
                                             {{ $mapelid['tahunajars']['semester'] }}-
                                             {{ $mapelid['tahunajars']['tahun'] }}
                                         </td>
@@ -218,6 +229,7 @@
                                                     <th>Nama Guru</th>
                                                     <th>Mata Pelajaran</th>
                                                     <th>Kelas</th>
+                                                    <th>Jp</th>
                                                     <th>Kurikulum</th>
                                                 </tr>
                                             </thead>
@@ -352,12 +364,15 @@
                     const cell3 = newRow.insertCell(2);
                     const cell4 = newRow.insertCell(3);
                     const cell5 = newRow.insertCell(4);
+                    const cell6 = newRow.insertCell(5);
 
                     cell1.textContent = "{{ $item->kode_pengampu }}"; // Kode Pengampu
                     cell2.textContent = "{{ $item->gurus->nama }}"; // Nama Guru (berdasarkan relasi)
                     cell3.textContent = "{{ $item->mapels->nama }}"; // Mata Pelajaran (berdasarkan relasi)
-                    cell4.textContent = "{{ $item->kelas }}"; // Kelas
-                    cell5.textContent = "{{ $item->kurikulum }}"; // Kurikulum
+                    cell4.textContent =
+                        "{{ $item->kelass->tingkat }} {{ $item->kelass->nama }} {{ $item->kelass->jurusans->nama }}"; // Kelas
+                    cell5.textContent = "{{ $item->mapels->jp }}"; // Jp
+                    cell6.textContent = "{{ $item->kurikulum }}"; // Kurikulum
                 }
             @endforeach
         });
@@ -412,7 +427,9 @@
                                                         <td> {{ $pengampuid->kode_pengampu }} </td>
                                                         <td> {{ $guruid->nama }} </td>
                                                         <td> {{ $mapelid->nama }} </td>
-                                                        <td> {{ $pengampuid->kelas }} </td>
+                                                        <td> {{ $pengampuid['kelass']['tingkat'] }}
+                                                            {{ $pengampuid['kelass']['nama'] }}
+                                                            {{ $pengampuid['kelass']['jurusans']['nama'] }} </td>
                                                         <td> {{ $pengampuid->kurikulum }} </td>
 
                                                 </tbody>

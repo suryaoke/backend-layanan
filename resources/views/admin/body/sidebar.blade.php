@@ -271,7 +271,7 @@
                  @endif
                  <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
                  <div class="side-menu__title">
-                     Jadwal Mapel
+                     Penjadwalan <br> Mata Pelajaran
                      <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                  </div>
                  </a>

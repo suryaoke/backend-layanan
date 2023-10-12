@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('kode_mapel')->nullable();
             $table->string('nama')->nullable();
-            $table->integer('id_jurusan')->nullable();
             $table->string('jenis')->nullable();
             $table->string('semester')->nullable();
             $table->string('jp')->nullable();

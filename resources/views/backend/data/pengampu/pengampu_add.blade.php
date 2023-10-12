@@ -55,7 +55,7 @@
                     @endif
                 @endforeach  --}}
                 @foreach ($kelas as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }} {{ $item['jurusans']['nama'] }}</option>
                 @endforeach
             </select>
         </div>

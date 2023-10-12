@@ -27,7 +27,7 @@ class PengampuController extends Controller
 
     public function PengampuAdd()
     {
-        $kelas = Kelas::orderBy('nama')->get();
+        $kelas = Kelas::orderBy('tingkat')->get();
 
         $guru = Guru::whereIn('id_user', function ($query) {
             $query->select('id')
@@ -75,7 +75,7 @@ class PengampuController extends Controller
 
     public function PengampuEdit($id)
     {
-        $kelas = Kelas::orderBy('nama')->get();
+        $kelas = Kelas::orderBy('tingkat')->get();
         $pengampu = Pengampu::findOrFail($id);
         $guru = Guru::whereIn('id_user', function ($query) {
             $query->select('id')

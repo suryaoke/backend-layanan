@@ -16,7 +16,8 @@ class MapelController extends Controller
     {
 
         //$suppliers = Supplier::all();
-        $mapel = Mapel::latest()->get();
+        $mapel = Mapel::orderByRaw('-induk DESC')->orderBy('kode_mapel', 'asc')->get();
+
 
         return view('backend.data.mapel.mapel_all', compact('mapel'));
     } // end method
@@ -35,6 +36,7 @@ class MapelController extends Controller
         ]);
         Mapel::insert([
             'kode_mapel' => $request->kode_mapel,
+            'induk' => $request->induk,
             'nama' => $request->nama,
             'id_jurusan' => $request->id_jurusan,
             'jenis' => $request->jenis,
@@ -57,7 +59,7 @@ class MapelController extends Controller
         $mapel = Mapel::findOrFail($id);
         $jurusan = Jurusan::orderBy('kode_jurusan', 'asc')->get();
         $tahunajar = Tahunajar::orderBy('tahun', 'asc')->get();
-        return view('backend.data.mapel.mapel_edit', compact('mapel', 'tahunajar','jurusan'));
+        return view('backend.data.mapel.mapel_edit', compact('mapel', 'tahunajar', 'jurusan'));
     }
     public function MapelUpdate(Request $request)
     {
@@ -66,6 +68,7 @@ class MapelController extends Controller
         Mapel::findOrFail($mapel_id)->update([
             'nama' => $request->nama,
             'kode_mapel' => $request->kode_mapel,
+            'induk' => $request->induk,
             'nama' => $request->nama,
             'id_jurusan' => $request->id_jurusan,
             'jenis' => $request->jenis,

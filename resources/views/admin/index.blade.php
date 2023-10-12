@@ -48,8 +48,8 @@
         <div class="col-span-12 2xl:col-span-9">
             <div class="grid grid-cols-12 gap-6">
                 <!-- BEGIN: General Report -->
-                <div class="col-span-12 mt-8">
-                    <div class="ml-1 mb-2 intro-y flex items-center justify-between">
+                <div class="col-span-12 mt-1">
+                    <di class="ml-1 mb-2 intro-y flex items-center justify-between">
                         <h2 class="  text-primary">
                             <span class="text-4xl "> Selamat Datang, @if (Auth::user()->role == '1')
                                     Admin Sistem
@@ -65,15 +65,62 @@
                                     Siswa
                                 @endif </span>
                             <br>
-                          
-                        </h2>
-                    </div>
 
-                    <div class="bg-danger p-2 mb-2">
-                        <span class="text-white">
+                        </h2>
+                    </di>
+                    <div class="intro-y alert alert-danger show mb-2 " role="alert">
+                        <span>
                             Silahkan gunakan aplikasi dengan sebaik-baiknya, dan jaga kerahasiaan email, username, dan
                             password Anda..!!!
                         </span>
+                    </div>
+
+                    <div class="intro-y col-span-12 lg:col-span-8 xl:col-span-9 mb-2">
+                        <div class="intro-y box lg:mt-5">
+                            <div class="flex items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
+                                <h2 class="font-medium text-base mr-auto">
+                                    Visi - Misi MAN 1 Kota Padang.
+                                </h2>
+                            </div>
+                            <div id="faq-accordion-1" class="accordion accordion-boxed p-5">
+                                <div class="accordion-item">
+                                    <div id="faq-accordion-content-1" class="accordion-header">
+                                        <button class="accordion-button" type="button" data-tw-toggle="collapse"
+                                            data-tw-target="#faq-accordion-collapse-1" aria-expanded="true"
+                                            aria-controls="faq-accordion-collapse-1"> Visi</button>
+                                    </div>
+                                    <div id="faq-accordion-collapse-1" class="accordion-collapse collapse show"
+                                        aria-labelledby="faq-accordion-content-1" data-tw-parent="#faq-accordion-1">
+                                        <div class="accordion-body text-slate-600 dark:text-slate-600 leading-relaxed">
+                                            Unggul, Berakhlak dan Berbudaya Lingkungan. </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <div id="faq-accordion-content-2" class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-tw-toggle="collapse"
+                                            data-tw-target="#faq-accordion-collapse-2" aria-expanded="false"
+                                            aria-controls="faq-accordion-collapse-2"> Misi</button>
+                                    </div>
+                                    <div id="faq-accordion-collapse-2" class="accordion-collapse collapse"
+                                        aria-labelledby="faq-accordion-content-2" data-tw-parent="#faq-accordion-1">
+                                        <div class="accordion-body text-slate-600 dark:text-slate-600 leading-relaxed">
+                                            1. Mewujudkan managerial kependidikan yang profesional <br>
+                                            2. Mewujudkan pendidikan yang islami, berkualitas dan berdaya guna <br>
+                                            3. Mewujudkan SDM yang berkualitas, profesional dan menguasai teknologi <br>
+                                            4. Mewujudkan suasana pembelajaran yang kondusif, persuasif dan kompetitif <br>
+                                            5. Membina dan mengembangkan potensi guru dan siswa secara terencana dan
+                                            profesional <br>
+                                            6. Mewujudkan siswa yang sehat, cerdas mandiri dan berbudaya lingkungan <br>
+                                            7. Membina seluruh perangkat madrasah untuk mengembangkan sikap:<br>
+                                            &emsp; a. Mencegah pencemaran <br>
+                                            &emsp; b. Mencegah kerusakan lingkungan <br>
+                                            &emsp; c. Mengupayakan pelestarian lingkungan. </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="intro-y flex items-center h-10">

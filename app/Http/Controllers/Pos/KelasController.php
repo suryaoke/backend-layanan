@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
+use App\Models\Jurusan;
 use App\Models\Kelas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,24 +14,26 @@ class KelasController extends Controller
     public function KelasAll()
     {
 
-        $kelas = Kelas::orderBy('nama', 'asc')->get();
+        $kelas = Kelas::orderBy('tingkat', 'asc')->get();
 
         return view('backend.data.kelas.kelas_all', compact('kelas'));
     } // end method
 
     public function KelasAdd()
     {
-
-        return view('backend.data.kelas.kelas_add');
+        $jurusan = Jurusan::orderBy('kode_jurusan', 'asc')->get();
+        return view('backend.data.kelas.kelas_add', compact('jurusan'));
     } // end method
     public function KelasStore(Request $request)
     {
-        $request->validate([
-            'nama' => ['required', 'string', 'max:255', 'unique:' . Kelas::class],
+        // $request->validate([
+        //     'nama' => ['required', 'string', 'max:255', 'unique:' . Kelas::class],
 
-        ]);
+        // ]);
         Kelas::insert([
             'nama' => $request->nama,
+            'id_jurusan' => $request->id_jurusan,
+            'tingkat' => $request->tingkat,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
 
@@ -46,7 +49,8 @@ class KelasController extends Controller
     public function KelasEdit($id)
     {
         $kelas = Kelas::findOrFail($id);
-        return view('backend.data.kelas.kelas_edit', compact('kelas'));
+        $jurusan = Jurusan::orderBy('kode_jurusan', 'asc')->get();
+        return view('backend.data.kelas.kelas_edit', compact('kelas', 'jurusan'));
     }
     public function KelasUpdate(Request $request)
     {
@@ -54,6 +58,8 @@ class KelasController extends Controller
         $kelas_id = $request->id;
         Kelas::findOrFail($kelas_id)->update([
             'nama' => $request->nama,
+            'id_jurusan' => $request->id_jurusan,
+            'tingkat' => $request->tingkat,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 

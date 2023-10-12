@@ -19,6 +19,11 @@
         </div>
 
         <div class="mt-4">
+            <label for=""> Induk</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
+                placeholder="Kosong Kalau Tidak Ada !!" name="induk" value="{{ $mapel->induk }}">
+        </div>
+        <div class="mt-4">
             <label for=""> Nama Mapel</label>
             <input type="text" class="intro-x login__input form-control py-3 px-4 block "
                 placeholder="Masukkan Nama Mapel" name="nama" id="nama" value="{{ $mapel->nama }}">
@@ -26,7 +31,7 @@
 
         <div class="mt-4">
             <label for=""> Jam Pelajaran</label>
-            <select name="jp" id="jp" class="form-control w-full " required>
+            <select name="jp" id="jp" class="tom-select w-full " required>
                 <option value="{{ $mapel->jp }}">{{ $mapel->jp }} JP</option>
                 <option value="1">1 JP</option>
                 <option value="2">2 JP</option>
@@ -40,7 +45,7 @@
 
         <div class="mt-4">
             <label for="">Semester</label>
-            <select name="semester" id="semester" class="form-control w-full " required>
+            <select name="semester" id="semester" class="tom-select w-full " required>
                 <option value="{{ $mapel->semester }}">{{ $mapel['tahunajars']['semester'] }} -
                     {{ $mapel['tahunajars']['tahun'] }}
                 </option>
@@ -53,7 +58,7 @@
 
         <div class="mt-4">
             <label for=""> Jurusan</label>
-            <select name="id_jurusan" id="id_jurusan" class="form-control w-full " required>
+            <select name="id_jurusan" id="id_jurusan" class="tom-select w-full " required>
                 <option value="{{ $mapel->id_jurusan }}">{{ $mapel['jurusans']['nama'] }} </option>
                 @foreach ($jurusan as $item)
                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
@@ -62,11 +67,12 @@
         </div>
 
         <div class="mt-4">
-            <label for=""> Jenis</label>
-            <select name="jenis" id="jenis" class="form-control w-full " required>
-                <option value="{{ $mapel->jenis }}">{{ $mapel->jenis }}</option>
-                <option value="Teori">Teori</option>
-                <option value="Pratikum">Pratikum</option>
+            <label for=""> Kelompok</label>
+            <select name="jenis" id="jenis" class="tom-select w-full " required>
+                <option value="{{ $mapel->jenis }}">Kelompok {{ $mapel->jenis }}</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
             </select>
         </div>
 

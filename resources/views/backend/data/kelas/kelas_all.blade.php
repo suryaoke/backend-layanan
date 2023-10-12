@@ -2,11 +2,11 @@
 @section('admin')
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-           Data Kelas All
+            Data Kelas All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
             <a href="{{ route('kelas.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
-          
+
         </div>
     </div>
     <div class="page-content">
@@ -20,15 +20,20 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Tingkat</th>
                                         <th>Nama</th>
+                                        <th>Jurusan</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($kelas as $key => $item)
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
+                                            <td> {{ $item->tingkat }} </td>
                                             <td> {{ $item->nama }} </td>
 
+                                            <td>
+                                                {{ $item['jurusans']['nama'] }}</td>
                                             <td>
                                                 <a id="delete" href="{{ route('kelas.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">

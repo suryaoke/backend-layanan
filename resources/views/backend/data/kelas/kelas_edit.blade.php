@@ -12,10 +12,52 @@
         @csrf
 
         <input type="hidden" name="id" value="{{ $kelas->id }}">
-        <div class="form-group mt-3">
-            <label for="username" class="mb-2">Nama</label>
-            <input type="text" name="nama" id="nama" value="{{ $kelas->nama }}"
-                class="intro-x login__input form-control py-3 px-4 block ">
+
+        <div class="mt-4">
+            <label for=""> Tingkat</label>
+            <select name="tingkat" id="tingkat" class="tom-select w-full " required>
+                <option value="{{ $kelas->tingkat }}">{{ $kelas->tingkat }}</option>
+                <option value="X">X</option>
+                <option value="XI">XI</option>
+                <option value="XII">XII</option>
+            </select>
+        </div>
+        <div class="mt-4">
+            <label for=""> Nama</label>
+            <select name="nama" id="nama" class="tom-select w-full " required>
+                <option value="{{ $kelas->nama }}">{{ $kelas->nama }}</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+                <option value="H">H</option>
+                <option value="I">I</option>
+                <option value="J">J</option>
+
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <label for=""> Jurusan</label>
+            <select name="id_jurusan" id="id_jurusan" class="tom-select w-full " required>
+                <option value="{{ $kelas->id_jurusan }}"> {{ $kelas['jurusans']['nama'] }}</option>
+                @foreach ($jurusan as $item)
+                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                @endforeach
+            </select>
         </div>
         <div class="mt-4">
             <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>

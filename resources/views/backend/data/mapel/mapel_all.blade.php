@@ -32,12 +32,13 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Mapel</th>
-                                        <th>Nama Mapel</th>
+                                        <th style="white-space: nowrap;">Kode Mapel</th>
+                                        <th>Induk</th>
+                                        <th style="white-space: nowrap;">Nama Mapel</th>
                                         <th>JP</th>
-                                        <th>Semester</th>
                                         <th>Jurusan</th>
-                                        <th>Type</th>
+                                        <th>Kelompok</th>
+                                        <th>Semester</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
@@ -46,15 +47,23 @@
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
 
-                                            <td class="text-primary"> {{ $item->kode_mapel }} </td>
-                                            <td> {{ $item->nama }} </td>
-                                            <td> {{ $item->jp }} </td>
-                                            <td> {{ $item['tahunajars']['semester'] }}-
-                                                {{ $item['tahunajars']['tahun'] }} 
+                                            <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_mapel }}
                                             </td>
-                                            <td> {{ $item['jurusans']['nama']}}</td>
-                                            <td> {{ $item->jenis }} </td>
+                                            <td>
+                                                @if ($item->induk == null)
+                                                    -
+                                                @else
+                                                    {{ $item->induk }}
+                                                @endif
+                                            </td>
+                                            <td style="white-space: nowrap;"> {{ $item->nama }} </td>
+                                            <td> {{ $item->jp }} </td>
 
+                                            <td> {{ $item['jurusans']['nama'] }}</td>
+                                            <td>Kelompok {{ $item->jenis }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['tahunajars']['semester'] }}-
+                                                {{ $item['tahunajars']['tahun'] }}
+                                            </td>
                                             <td>
                                                 <a id="delete" href="{{ route('mapel.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">

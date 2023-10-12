@@ -46,8 +46,13 @@
             </div>
             <div class="flex-1 sm:mr-2">
                 <div class="form-group">
-                    <input type="text" name="searchkelas" class="form-control" placeholder="Kelas"
-                        value="{{ request('searchkelas') }}">
+                    <select name="searchkelas" class="form-select w-full">
+                        <option value="">Kelas</option>
+                        @foreach ($kelas as $item)
+                            <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                                {{ $item->jurusans->nama }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="sm:ml-1">
@@ -81,14 +86,13 @@
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
                                 <tr>
+
                                     <th>No.</th>
                                     <th style="white-space: nowrap;">Kode Seksi</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
-                                    <th>Kode Guru</th>
-                                    <th>Nama Guru</th>
-                                    <th>Kode Mapel</th>
-                                    <th>Nama Mapel</th>
+                                    <th style="white-space: nowrap;">Kode Guru</th>
+                                    <th style="white-space: nowrap;">Kode Mapel</th>
                                     <th>Kelas</th>
                                     <th>JP</th>
                                     <th>Kode Ruangan</th>
@@ -111,21 +115,23 @@
 
                                     <tr>
                                         <td align="center">{{ $key + 1 }}</td>
-                                        <td style="white-space: nowrap;" class="text-primary">{{ $item->kode_jadwalmapel }}
+                                        <td style="white-space: nowrap;" class="text-primary">
+                                            {{ $item->kode_jadwalmapel }}
                                         </td>
                                         <td> {{ $item['haris']['nama'] }} </td>
                                         <td> {{ $item['waktus']['range'] }} </td>
-                                        <td> {{ $guruid->kode_gr }} </td>
-                                        <td> {{ $guruid->nama }} </td>
-                                        <td> {{ $mapelid->kode_mapel }} </td>
-                                        <td> {{ $mapelid->nama }} </td>
-                                        <td> {{ $kelas->nama }} </td>
+                                        <td style="white-space: nowrap;"> {{ $guruid->kode_gr }} </td>
+                                        <td style="white-space: nowrap;"> {{ $mapelid->kode_mapel }} </td>
+                                        <td style="white-space: nowrap;"> {{ $kelas->tingkat }} {{ $kelas->nama }}
+                                            {{ $kelas['jurusans']['nama'] }}
+                                        </td>
                                         <td> {{ $mapelid->jp }} </td>
                                         <td> {{ $item['ruangans']['kode_ruangan'] }} </td>
-                                        <td>
+                                        <td style="white-space: nowrap;">
                                             {{ $mapelid['tahunajars']['semester'] }}-
                                             {{ $mapelid['tahunajars']['tahun'] }}
                                         </td>
+
                                         <td> {{ $pengampuid->kurikulum }} </td>
                                         <td>
                                             @if ($item->status == '0')
