@@ -74,7 +74,8 @@
                                             <td> {{ $item->nama }} </td>
                                             <td style="white-space: nowrap;" class="text-primary"> {{ $item->nisn }} </td>
                                             <td> {{ $item->jk }} </td>
-                                            <td> {{ $item['kelass']['nama'] }} </td>
+                                            <td> {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
+                                                {{ $item['kelass']['jurusans']['nama'] }}</td>
                                             <td>
                                                 @if ($item->id_user == 0)
                                                     <span class="text-danger">Kosong</span>

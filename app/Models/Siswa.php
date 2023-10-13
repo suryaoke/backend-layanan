@@ -30,4 +30,8 @@ class Siswa extends Model
     {
         return $this->belongsTo(Pengampu::class, 'id_pengampu');
     }
+    public function jurusans()
+    {
+        return $this->belongsTo(Jurusan::class, 'id_jurusan' ,'id');
+    }
 }

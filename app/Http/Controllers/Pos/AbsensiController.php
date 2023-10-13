@@ -51,7 +51,7 @@ class AbsensiController extends Controller
             $query->whereHas('jadwalss', function ($lecturerQuery) use ($searchKelas) {
                 $lecturerQuery->whereHas('pengampus', function ($lecturerQuery1) use ($searchKelas) {
                     $lecturerQuery1->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
-                        $courseQuery->where('nama', 'LIKE', '%' . $searchKelas . '%');
+                        $courseQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
                     });
                 });
             });
@@ -71,8 +71,9 @@ class AbsensiController extends Controller
 
 
         $siswa1 = Siswa::latest()->get();
+        $kelas = Kelas::orderBy('tingkat')->get();
 
-        return view('backend.data.absensi.absensi_all', compact('absensi', 'siswa1',));
+        return view('backend.data.absensi.absensi_all', compact('kelas', 'absensi', 'siswa1',));
     } // end method
 
     public function AbsensiAdd()
@@ -138,7 +139,7 @@ class AbsensiController extends Controller
         );
         return redirect()->route('absensi.siswa', [
             'tanggal' => $request->tanggal,
-            'kelas' => Kelas::find($request->search)->nama,
+            'kelas' => Kelas::find($request->search)->id,
             'mapel' => Jadwalmapel::find($request->id_jadwal)->pengampus->mapels->nama,
 
 
@@ -194,7 +195,7 @@ class AbsensiController extends Controller
                 return $q->whereHas('jadwalss', function ($subQ) use ($request) {
                     return $subQ->whereHas('pengampus', function ($subQ1) use ($request) {
                         return $subQ1->whereHas('kelass', function ($subQ2) use ($request) {
-                            $subQ2->where('nama', $request->kelas);
+                            $subQ2->where('id', $request->kelas);
                         });
                     });
                 });

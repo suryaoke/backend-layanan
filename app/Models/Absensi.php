@@ -38,5 +38,9 @@ class Absensi extends Model
     {
         return $this->belongsTo(Mapel::class, 'id_mapel');
     }
+    public function jurusans()
+    {
+        return $this->belongsTo(Mapel::class, 'id_jurusan');
+    }
 }
     

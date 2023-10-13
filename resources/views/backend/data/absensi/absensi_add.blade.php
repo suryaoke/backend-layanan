@@ -31,23 +31,6 @@
             </div>
         </div>
 
-        {{--  <div class="mt-3">
-            <label for="input-state-2" class="form-label">Kelas</label>
-            <select placeholder="kelas" id="kelas" name="search" class="tom-select w-full  ">
-                <option value="">Pilih Kelas</option>
-                @foreach ($kelas as $item)
-                    @php
-                        $siswadata = App\Models\Siswa::where('kelas', $item->id)->first();
-                    @endphp
-                    @if ($siswadata != null)
-                        <option value="{{ isset($search) ? $search : "$item->id" }}">
-                            {{ $item->nama }} 
-                        </option>
-                    @endif
-                @endforeach
-            </select>
-        </div>  --}}
-
         <div class="mt-3">
             <label for="input-state-2" class="form-label">Mata Pelajaran</label>
             <select placeholder="Pilih Mata Pelajaran" name="id_jadwal" id="id_jadwal" class="tom-select w-full">
@@ -58,7 +41,7 @@
                         $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
                     @endphp
                     <option value="{{ $item->id }}" data-kelas="{{ $item['pengampus']['kelass']['id'] }}"
-                        data-kelas1="{{ $item['pengampus']['kelass']['nama'] }}">
+                        data-kelas1="{{ $item['pengampus']['kelass']['tingkat'] }} {{ $item['pengampus']['kelass']['nama'] }} {{ $item['pengampus']['kelass']['jurusans']['nama'] }}">
                         {{ $mapel->nama }} /
                         {{ $item->kode_jadwalmapel }}</option>
                 @endforeach

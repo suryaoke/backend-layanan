@@ -45,9 +45,10 @@
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
                                             <td class="text-primary"> {{ $item->kode_pengampu }} </td>
-                                            <td> {{ $item['gurus']['kode_gr'] }} </td>                   
+                                            <td> {{ $item['gurus']['kode_gr'] }} </td>
                                             <td> {{ $item['mapels']['kode_mapel'] }} </td>
-                                            <td> {{ $item['kelass']['nama'] }} </td>
+                                            <td> {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
+                                                {{ $item['kelass']['jurusans']['nama'] }} </td>
                                             <td> {{ $item->kurikulum }} </td>
 
 

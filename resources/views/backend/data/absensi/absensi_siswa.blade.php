@@ -4,7 +4,7 @@
         $absensii = route('absensi.siswa');
         $currentUrl = url()->current();
         $tanggalParam = request()->query('tanggal'); // Mengambil nilai parameter tanggal dari URL
-        
+
     @endphp
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
 
@@ -18,7 +18,11 @@
             @endphp
 
             @if ($currentUrl1 != $absensii || $tanggalParam)
-                Absensi Kelas &nbsp : {{ $kelas1 }}
+                @php
+                    $kelasdata = App\Models\Kelas::where('id', $kelas1)->first();
+                @endphp
+
+                Absensi Kelas &nbsp : {{ $kelasdata->tingkat }} {{ $kelasdata->nama }} {{ $kelasdata['jurusans']['nama'] }}
                 <br> Mata Pelajaran : {{ $mapel }}
             @else
                 Pilih Data Absensi Siswa
@@ -49,14 +53,19 @@
                     </div>
                 </div>
 
-
                 <div class="flex-1 sm:mr-2">
                     <div class="form-group">
-                        <input type="text" name="kelas" class="form-control" placeholder="Kelas"
-                            value="{{ Request::get('kelas') }}">
+                        <select name="kelas" class="form-select w-full">
+                            <option value="">Kelas</option>
+                            @foreach ($kelas as $item)
+                                <option value="{{ $item->id }}"
+                                    {{ Request::get('kelas') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->tingkat }} {{ $item->nama }} {{ $item->jurusans->nama }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
-
 
 
                 <div class="sm:ml-1">

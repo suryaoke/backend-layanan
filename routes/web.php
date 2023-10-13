@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Pos\AbsensiController;
+use App\Http\Controllers\Pos\CttnwalasController;
+use App\Http\Controllers\Pos\EkstraController;
 use App\Http\Controllers\Pos\GuruController;
 use App\Http\Controllers\Pos\HariController;
 use App\Http\Controllers\Pos\JadwalmapelController;
@@ -94,6 +96,7 @@ Route::controller(SiswaController::class)->middleware(['auth'])->group(function 
     Route::get('/siswa/search', 'search')->name('siswa.search');
     Route::get('/siswa/profile', 'SiswaProfile')->name('siswa.profile');
     Route::get('/siswa/guru', 'SiswaGuru')->name('siswa.guru');
+    Route::get('/siswa/guruwalas', 'SiswaGuruwalas')->name('siswa.guruwalas');
 });
 
 // Kelas All Route
@@ -163,11 +166,36 @@ Route::controller(WalasController::class)->middleware(['auth'])->group(function 
     Route::get('/walas/all', 'WalasAll')->name('walas.all');
     Route::get('/walas/add', 'WalasAdd')->name('walas.add');
     Route::post('/walas/store', 'WalasStore')->name('walas.store');
-    Route::get('/walas/delete{id}', 'WalasDelete')->name('walas.delete');
+    Route::get('/walas/delete/{id}', 'WalasDelete')->name('walas.delete');
     Route::get('/walas/edit/{id}', 'WalasEdit')->name('walas.edit');
     Route::post('/walas/update', 'WalasUpdate')->name('walas.update');
 });
 
+// Ekstra All Route
+Route::controller(EkstraController::class)->middleware(['auth'])->group(function () {
+    Route::get('/ekstra/all', 'EkstraAll')->name('ekstra.all');
+    Route::get('/ekstra/add', 'EkstraAdd')->name('ekstra.add');
+    Route::post('/ekstra/store', 'EkstraStore')->name('ekstra.store');
+    Route::get('/ekstra/delete/{id}', 'EkstraDelete')->name('ekstra.delete');
+    Route::get('/ekstra/edit/{id}', 'EkstraEdit')->name('ekstra.edit');
+    Route::post('/ekstra/update', 'EkstraUpdate')->name('ekstra.update');
+
+    Route::get('/ekstranilai/all', 'EkstranilaiAll')->name('ekstranilai.all');
+    Route::get('/ekstranilai/add', 'EkstranilaiAdd')->name('ekstranilai.add');
+    Route::post('/ekstranilai/store', 'EkstranilaiStore')->name('ekstranilai.store');
+    Route::get('/ekstranilai/delete/{id}', 'EkstranilaiDelete')->name('ekstranilai.delete');
+    Route::get('/ekstranilai/edit/{id}', 'EkstranilaiEdit')->name('ekstranilai.edit');
+    Route::post('/ekstranilai/update', 'EkstranilaiUpdate')->name('ekstranilai.update');
+    Route::get('/ekstranilai/view/{id}', 'EkstranilaiView')->name('ekstranilai.view');
+});
+
+
+// Cttn walas All Route
+Route::controller(CttnwalasController::class)->middleware(['auth'])->group(function () {
+    Route::get('/cttnwalas/all', 'CttnwalasAll')->name('cttnwalas.all');
+    Route::post('/cttnwalas/store', 'CttnwalasStore')->name('cttnwalas.store');
+    Route::post('/cttnwalas/update', 'CttnwalasUpdate')->name('cttnwalas.update');
+});
 
 
 

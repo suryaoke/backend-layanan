@@ -64,8 +64,14 @@
                 </div>
                 <div class="flex-1 sm:mr-2">
                     <div class="form-group">
-                        <input type="text" name="searchkelas" class="form-control" placeholder="Kelas"
-                            value="{{ request('searchkelas') }}">
+
+                        <select name="searchkelas" class="form-select w-full">
+                            <option value="">Kelas</option>
+                            @foreach ($kelas as $item)
+                                <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                                    {{ $item->jurusans->nama }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="sm:ml-1">
@@ -112,7 +118,10 @@
                         @if ($item['siswass'] != null)
                             <td>{{ $item['siswass']['nama'] }}</td>
                             <td>{{ $item['siswass']['nisn'] }}</td>
-                            <td>{{ $item['siswass']['kelass']['nama'] }}</td>
+                            <td>{{ $item['siswass']['kelass']['tingkat'] }}
+                                {{ $item['siswass']['kelass']['nama'] }}
+                                {{ $item['siswass']['kelass']['jurusans']['nama'] }}
+                            </td>
                         @else
                             <td></td>
                             <td></td>
@@ -121,7 +130,8 @@
 
                         <td>{{ $item->tanggal }}</td>
                         <td> {{ $mapel->kode_mapel }}</td>
-                        <td>  {{ $mapel->nama }}</td> <td>
+                        <td> {{ $mapel->nama }}</td>
+                        <td>
 
                             @if ($item->status == '0')
                                 <span class="text-danger">

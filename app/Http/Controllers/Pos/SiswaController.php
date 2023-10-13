@@ -9,6 +9,7 @@ use App\Models\Kelas;
 use App\Models\Pengampu;
 use App\Models\Siswa;
 use App\Models\User;
+use App\Models\Walas;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
@@ -154,4 +155,27 @@ class SiswaController extends Controller
         return view('backend.data.siswa.siswa_guru', compact('siswa', 'kelas'));
     } // end method
 
+
+    public function SiswaGuruwalas()
+    {
+        $userId = Auth::user()->id;
+
+        // Ambil ID guru berdasarkan ID user yang aktif
+        $guruId = Guru::where('id_user', $userId)->value('id');
+
+        $walas = Walas::where('id_guru', $guruId)->first();
+        $siswa = null; // inisialisasi variabel $siswa
+
+        if ($walas) {
+            $siswa = Siswa::where('kelas', $walas->id_kelas)->get();
+        }
+
+        // Mengonstruksi array untuk dikirim ke view
+        $data = [
+            'walas' => $walas,
+            'siswa' => $siswa,
+        ];
+
+        return view('backend.data.siswa.siswa_guruwalas', compact('data','walas','siswa'));
+    }
 }

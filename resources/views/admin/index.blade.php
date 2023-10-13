@@ -42,6 +42,19 @@
                 ->from('pengampus')
                 ->whereIn('id', $pengampuIds);
         })->count();
+
+        $kepsek = App\Models\User::where('role', '2')->first();
+        $nipkepsek = App\Models\Guru::where('id_user', $kepsek->id)->first();
+
+        $walas = App\Models\Walas::where('id_guru', $guruId)->first();
+        if ($walas) {
+            $siswawalas = App\Models\Siswa::where('kelas', $walas->id_kelas)->count();
+            $kelaswalas = App\Models\kelas::where('id', $walas->id_kelas)->first();
+            $kelaswalasjurusan = App\Models\Jurusan::where('id', $kelaswalas->id_jurusan)->first();
+        }
+
+        $jadwal = App\Models\Guru::where('id_user', $userId)->value('id');
+
     @endphp
 
     <div class="grid grid-cols-12 gap-6">
@@ -75,52 +88,84 @@
                         </span>
                     </div>
 
-                    <div class="intro-y col-span-12 lg:col-span-8 xl:col-span-9 mb-2">
-                        <div class="intro-y box lg:mt-5">
-                            <div class="flex items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-                                <h2 class="font-medium text-base mr-auto">
-                                    Visi - Misi MAN 1 Kota Padang.
-                                </h2>
-                            </div>
-                            <div id="faq-accordion-1" class="accordion accordion-boxed p-5">
-                                <div class="accordion-item">
-                                    <div id="faq-accordion-content-1" class="accordion-header">
-                                        <button class="accordion-button" type="button" data-tw-toggle="collapse"
-                                            data-tw-target="#faq-accordion-collapse-1" aria-expanded="true"
-                                            aria-controls="faq-accordion-collapse-1"> Visi</button>
+
+
+                    <div class="grid grid-cols-12 gap-6 mb-2">
+                        <!-- BEGIN: FAQ Menu -->
+                        <div class="intro-y col-span-12 lg:col-span-4 xl:col-span-3 ">
+                            <div class="intro-y box mt-4 lg:mt-0">
+                                <div class="relative flex items-center p-5">
+                                    <div>
+                                        <img style="width:145px; height:155px" alt="Midone - HTML Admin Template"
+                                            src=" {{ !empty($kepsek->profile_image) ? url('uploads/admin_images/' . $kepsek->profile_image) : url('backend/dist/images/profile-user.png') }}">
                                     </div>
-                                    <div id="faq-accordion-collapse-1" class="accordion-collapse collapse show"
-                                        aria-labelledby="faq-accordion-content-1" data-tw-parent="#faq-accordion-1">
-                                        <div class="accordion-body text-slate-600 dark:text-slate-600 leading-relaxed">
-                                            Unggul, Berakhlak dan Berbudaya Lingkungan. </div>
-                                    </div>
+
                                 </div>
-                                <div class="accordion-item">
-                                    <div id="faq-accordion-content-2" class="accordion-header">
-                                        <button class="accordion-button collapsed" type="button" data-tw-toggle="collapse"
-                                            data-tw-target="#faq-accordion-collapse-2" aria-expanded="false"
-                                            aria-controls="faq-accordion-collapse-2"> Misi</button>
-                                    </div>
-                                    <div id="faq-accordion-collapse-2" class="accordion-collapse collapse"
-                                        aria-labelledby="faq-accordion-content-2" data-tw-parent="#faq-accordion-1">
-                                        <div class="accordion-body text-slate-600 dark:text-slate-600 leading-relaxed">
-                                            1. Mewujudkan managerial kependidikan yang profesional <br>
-                                            2. Mewujudkan pendidikan yang islami, berkualitas dan berdaya guna <br>
-                                            3. Mewujudkan SDM yang berkualitas, profesional dan menguasai teknologi <br>
-                                            4. Mewujudkan suasana pembelajaran yang kondusif, persuasif dan kompetitif <br>
-                                            5. Membina dan mengembangkan potensi guru dan siswa secara terencana dan
-                                            profesional <br>
-                                            6. Mewujudkan siswa yang sehat, cerdas mandiri dan berbudaya lingkungan <br>
-                                            7. Membina seluruh perangkat madrasah untuk mengembangkan sikap:<br>
-                                            &emsp; a. Mencegah pencemaran <br>
-                                            &emsp; b. Mencegah kerusakan lingkungan <br>
-                                            &emsp; c. Mengupayakan pelestarian lingkungan. </div>
-                                    </div>
+
+                                <div class="p-1 border-t ml-4 border-slate-200/60 dark:border-darkmode-400">
+                                    <a class="flex ml-8 " href=""> Kepala Sekolah</a>
+                                    <a class="flex items-center mt-2 mb-2" href=""> <i data-lucide="user"
+                                            class="w-4 h-4 mr-2"></i> {{ $kepsek->name }}</a>
+
                                 </div>
 
                             </div>
                         </div>
+                        <!-- END: FAQ Menu -->
+                        <!-- BEGIN: FAQ Content -->
 
+
+                        <div class="intro-y col-span-12 lg:col-span-8 xl:col-span-9 mb-2">
+                            <div class="intro-y box lg:mt-4">
+                                <div class="flex items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
+                                    <h2 class="font-medium text-base mr-auto">
+                                        Visi - Misi MAN 1 Kota Padang.
+                                    </h2>
+                                </div>
+                                <div id="faq-accordion-1" class="accordion accordion-boxed p-5">
+                                    <div class="accordion-item">
+                                        <div id="faq-accordion-content-1" class="accordion-header">
+                                            <button class="accordion-button" type="button" data-tw-toggle="collapse"
+                                                data-tw-target="#faq-accordion-collapse-1" aria-expanded="true"
+                                                aria-controls="faq-accordion-collapse-1"> Visi</button>
+                                        </div>
+                                        <div id="faq-accordion-collapse-1" class="accordion-collapse collapse show"
+                                            aria-labelledby="faq-accordion-content-1" data-tw-parent="#faq-accordion-1">
+                                            <div class="accordion-body text-slate-600 dark:text-slate-600 leading-relaxed">
+                                                Unggul, Berakhlak dan Berbudaya Lingkungan. </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <div id="faq-accordion-content-2" class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-tw-toggle="collapse" data-tw-target="#faq-accordion-collapse-2"
+                                                aria-expanded="false" aria-controls="faq-accordion-collapse-2">
+                                                Misi</button>
+                                        </div>
+                                        <div id="faq-accordion-collapse-2" class="accordion-collapse collapse"
+                                            aria-labelledby="faq-accordion-content-2" data-tw-parent="#faq-accordion-1">
+                                            <div class="accordion-body text-slate-600 dark:text-slate-600 leading-relaxed">
+                                                1. Mewujudkan managerial kependidikan yang profesional <br>
+                                                2. Mewujudkan pendidikan yang islami, berkualitas dan berdaya guna <br>
+                                                3. Mewujudkan SDM yang berkualitas, profesional dan menguasai teknologi <br>
+                                                4. Mewujudkan suasana pembelajaran yang kondusif, persuasif dan kompetitif
+                                                <br>
+                                                5. Membina dan mengembangkan potensi guru dan siswa secara terencana dan
+                                                profesional <br>
+                                                6. Mewujudkan siswa yang sehat, cerdas mandiri dan berbudaya lingkungan <br>
+                                                7. Membina seluruh perangkat madrasah untuk mengembangkan sikap:<br>
+                                                &emsp; a. Mencegah pencemaran <br>
+                                                &emsp; b. Mencegah kerusakan lingkungan <br>
+                                                &emsp; c. Mengupayakan pelestarian lingkungan.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- END: FAQ Content -->
                     </div>
 
                     <div class="intro-y flex items-center h-10">
@@ -130,6 +175,8 @@
                         <a href="" class="ml-auto flex items-center text-primary">
                             <i data-lucide="refresh-ccw" class="w-4 h-4 mr-3"></i> Reload Data </a>
                     </div>
+
+
 
                     {{--  // bagian  admin //  --}}
                     @if (Auth::user()->role == '1')
@@ -524,8 +571,101 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="grid grid-cols-12 gap-6 mb-2 mt-8">
+                            <!-- BEGIN: FAQ Menu -->
+                            <div class="intro-y col-span-12 lg:col-span-4 xl:col-span-3 ">
+                                <div class="intro-y box mt-4 lg:mt-0">
+                                    <div class="relative flex items-center p-5">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="lucide lucide-user-square-2">
+                                            <path d="M18 21a6 6 0 0 0-12 0" />
+                                            <circle cx="12" cy="11" r="4" />
+                                            <rect width="18" height="18" x="3" y="3" rx="2" />
+                                        </svg> <span class="ml-2" style="font-size: 18px"> Wali Kelas</span>
+
+
+
+                                    </div>
+
+                                    <div class="p-1 border-t ml-4 border-slate-200/60 dark:border-darkmode-400">
+
+                                        <a class="flex items-center mt-2 mb-2" href=""> Kelas :
+                                            @if ($walas)
+                                                {{ $kelaswalas->tingkat }} {{ $kelaswalas->nama }}
+                                                {{ $kelaswalasjurusan->nama }}
+                                            @else
+                                                -
+                                            @endif
+                                        </a>
+                                        <a class="flex items-center mt-2 mb-2" href=""> Jumlah Siswa:
+                                            @if ($walas)
+                                                {{ $siswawalas }} Orang
+                                            @else
+                                                -
+                                            @endif
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- END: FAQ Menu -->
+                            <!-- BEGIN: FAQ Content -->
+
+
+                            <div class="intro-y col-span-12 lg:col-span-8 xl:col-span-9 mb-2">
+                                <div class="intro-y box lg:mt-4">
+                                    <div
+                                        class="flex items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
+                                        <h2 class="font-medium text-base mr-auto">
+                                            <i></i> Kelas Anda
+                                        </h2>
+                                    </div>
+                                    <div id="faq-accordion-1" class="accordion accordion-boxed p-5">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="card overflow-x-auto">
+                                                    <div class="card-body">
+                                                        <table id="datatable" class="table table-report -mt-2">
+                                                            <thead>
+                                                                <tr>
+
+                                                                    <th class="whitespace-nowrap">Kelas</th>
+                                                                    <th class="whitespace-nowrap">Mapel</th>
+                                                                    <th class="whitespace-nowrap">Pengetahuan</th>
+                                                                    <th class="whitespace-nowrap">Keterampilan</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+
+                                                                {{--  {{--  @foreach ($absensi as $key => $item)  --}}
+                                                                <tr>
+
+                                                                    <td>2</td>
+                                                                    <td>2</td>
+                                                                    <td>2</td>
+                                                                    <td>2</td>
+
+                                                                </tr>
+                                                                {{--  @endforeach   --}}
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END: FAQ Content -->
+
+                            {{--  // end bagian  guru //  --}}
+                        </div>
                     @endif
-                    {{--  // end bagian  guru //  --}}
                 </div>
                 <!-- END: General Report -->
 

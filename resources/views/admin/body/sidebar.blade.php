@@ -18,6 +18,9 @@
          $kelasedit = URL::route('kelas.edit', ['id' => $id]);
          $tahunajaredit = URL::route('tahunajar.edit', ['id' => $id]);
          $walasedit = URL::route('walas.edit', ['id' => $id]);
+         $ekstraedit = URL::route('ekstra.edit', ['id' => $id]);
+         $ekstranilaiedit = URL::route('ekstranilai.edit', ['id' => $id]);
+         $ekstranilaiview = URL::route('ekstranilai.view', ['id' => $id]);
      } else {
          $guruedit = 1; // Handle jika parameter id tidak ditemukan dalam URL
          $orangtuaedit = 1;
@@ -34,6 +37,9 @@
          $kelasedit = 1;
          $tahunajaredit = 1;
          $walasedit = 1;
+         $ekstraedit = 1;
+         $ekstranilaiedit = 1;
+         $ekstranilaiview = 1;
      }
 
      $url = url()->current();
@@ -76,6 +82,12 @@
      $tahunajaradd = URL::route('tahunajar.add');
      $walas = URL::route('walas.all');
      $walasadd = URL::route('walas.add');
+     $ekstra = URL::route('ekstra.all');
+     $ekstraadd = URL::route('ekstra.add');
+     $ekstranilai = URL::route('ekstranilai.all');
+     $ekstranilaiadd = URL::route('ekstranilai.add');
+     $siswaguruwalas = URL::route('siswa.guruwalas');
+     $cttnwalas = URL::route('cttnwalas.all');
      $routes = [
          'pusherAuth' => URL::route('pusher.auth'),
          'messagesIndex' => URL::route('messages.index'),
@@ -177,7 +189,7 @@
                          <path d="m20.7 13.8 1-.4" />
                      </svg></div>
                  <div class="side-menu__title">
-                     MENU MASTER
+                     MASTER USER
                      <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                  </div>
                  </a>
@@ -314,56 +326,6 @@
              </li>
 
              <li>
-                 @if ($hari == $url)
-                     <a href="javascript:;" class="side-menu side-menu--active">
-                     @elseif ($hariadd == $url)
-                         <a href="javascript:;" class="side-menu side-menu--active">
-                         @elseif ($hariedit == $url)
-                             <a href="javascript:;" class="side-menu side-menu--active">
-                             @elseif ($waktu == $url)
-                                 <a href="javascript:;" class="side-menu side-menu--active">
-                                 @elseif ($waktuadd == $url)
-                                     <a href="javascript:;" class="side-menu side-menu--active">
-                                     @elseif ($waktuedit == $url)
-                                         <a href="javascript:;" class="side-menu side-menu--active">
-                                         @else
-                                             <a href="javascript:;" class="side-menu side-menu">
-                 @endif
-
-                 <div class="side-menu__icon">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round" class="lucide lucide-calendar-clock">
-                         <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" />
-                         <path d="M16 2v4" />
-                         <path d="M8 2v4" />
-                         <path d="M3 10h5" />
-                         <path d="M17.5 17.5 16 16.25V14" />
-                         <path d="M22 16a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z" />
-                     </svg>
-                 </div>
-                 <div class="side-menu__title">
-                     Data Waktu
-                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
-                 </div>
-                 </a>
-                 <ul class="">
-                     <li>
-                         <a href="{{ route('waktu.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="clock"></i> </div>
-                             <div class="side-menu__title"> Waktu</div>
-                         </a>
-                     </li>
-                     <li>
-                         <a href="{{ route('hari.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
-                             <div class="side-menu__title"> Hari</div>
-                         </a>
-                     </li>
-                 </ul>
-             </li>
-
-             <li>
                  @if ($url == $walas)
                      <a href="{{ route('walas.all') }}" class="side-menu  side-menu--active">
                      @elseif ($url == $walasadd)
@@ -385,6 +347,56 @@
                  </div>
                  </a>
 
+             </li>
+
+             <li>
+                 @if ($ekstra == $url)
+                     <a href="javascript:;" class="side-menu side-menu--active">
+                     @elseif ($ekstraadd == $url)
+                         <a href="javascript:;" class="side-menu side-menu--active">
+                         @elseif ($ekstraedit == $url)
+                             <a href="javascript:;" class="side-menu side-menu--active">
+                             @elseif ($waktu == $url)
+                                 <a href="javascript:;" class="side-menu side-menu--active">
+                                 @elseif ($waktuadd == $url)
+                                     <a href="javascript:;" class="side-menu side-menu--active">
+                                     @elseif ($waktuedit == $url)
+                                         <a href="javascript:;" class="side-menu side-menu--active">
+                                         @elseif ($ekstranilaiview == $url)
+                                             <a href="javascript:;" class="side-menu side-menu--active">
+                                             @else
+                                                 <a href="javascript:;" class="side-menu side-menu">
+                 @endif
+
+                 <div class="side-menu__icon">
+                     <i data-lucide="book"></i>
+                 </div>
+                 <div class="side-menu__title">
+                     Rapor
+                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                 </div>
+                 </a>
+                 <ul class="">
+                     <li>
+                         <a href="{{ route('ekstra.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                     class="lucide lucide-gauge-circle">
+                                     <path d="M15.6 2.7a10 10 0 1 0 5.7 5.7" />
+                                     <circle cx="12" cy="12" r="2" />
+                                     <path d="M13.4 10.6 19 5" />
+                                 </svg></div>
+                             <div class="side-menu__title"> Ekstrakurikuler</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('hari.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title"> KKM Tingkat</div>
+                         </a>
+                     </li>
+                 </ul>
              </li>
 
              <li>
@@ -414,30 +426,53 @@
                                                              @elseif ($guruedit == $url)
                                                                  <a
                                                                      href="javascript:;"class="side-menu side-menu--active">
-                                                                 @elseif ($tahunajar == $url)
+                                                                 @elseif($tahunajar == $url)
                                                                      <a href="javascript:;"
                                                                          class="side-menu  side-menu--active">
-                                                                     @elseif ($tahunajaradd == $url)
+                                                                     @elseif($tahunajaradd == $url)
                                                                          <a href="javascript:;"
                                                                              class="side-menu  side-menu--active">
-                                                                         @elseif ($tahunajaredit == $url)
+                                                                         @elseif($tahunajaredit == $url)
                                                                              <a href="javascript:;"
                                                                                  class="side-menu  side-menu--active">
-                                                                             @else
+                                                                             @elseif ($hari == $url)
                                                                                  <a href="javascript:;"
-                                                                                     class="side-menu side-menu">
+                                                                                     class="side-menu side-menu--active">
+                                                                                 @elseif($hariedit == $url)
+                                                                                     <a href="javascript:;"
+                                                                                         class="side-menu side-menu--active">
+                                                                                     @elseif($hariadd == $url)
+                                                                                         <a href="javascript:;"
+                                                                                             class="side-menu side-menu--active">
+                                                                                         @elseif($waktu == $url)
+                                                                                             <a href="javascript:;"
+                                                                                                 class="side-menu side-menu--active">
+                                                                                             @elseif($waktuadd == $url)
+                                                                                                 <a href="javascript:;"
+                                                                                                     class="side-menu side-menu--active">
+                                                                                                 @elseif($waktuedit == $url)
+                                                                                                     <a href="javascript:;"
+                                                                                                         class="side-menu side-menu--active">
+                                                                                                     @else
+                                                                                                         <a href="javascript:;"
+                                                                                                             class="side-menu side-menu">
                  @endif
 
                  <div class="side-menu__icon">
-                     <i data-lucide="edit"></i>
+                     <i data-lucide="database"></i>
                  </div>
                  <div class="side-menu__title">
-                     Data
+                     Master Data
                      <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                  </div>
                  </a>
                  <ul class="">
-
+                     <li>
+                         <a href="{{ route('tahunajar.all') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title"> Tahun Ajar</div>
+                         </a>
+                     </li>
                      <li>
                          <a href="{{ route('guru.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="user"></i> </div>
@@ -456,39 +491,80 @@
                              <div class="side-menu__title"> Orang Tua</div>
                          </a>
                      </li>
+
+
+
                      <li>
-                         <a href="{{ route('ruangan.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                                     height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                     class="lucide lucide-school">
-                                     <path d="m4 6 8-4 8 4" />
-                                     <path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2" />
-                                     <path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4" />
-                                     <path d="M18 5v17" />
-                                     <path d="M6 5v17" />
-                                     <circle cx="12" cy="9" r="2" />
-                                 </svg> </div>
-                             <div class="side-menu__title"> Ruangan</div>
+                         <a href="javascript:;" class="side-menu side-menu">
+
+                             <div class="side-menu__icon">
+                                 <i data-lucide="home"></i>
+                             </div>
+                             <div class="side-menu__title">
+                                 Data Ruangan
+                                 <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                             </div>
                          </a>
+                         <ul class="">
+                             <li>
+                                 <a href="{{ route('ruangan.all') }}" class="side-menu">
+                                     <div class="side-menu__icon"> <i data-lucide="home"></i></div>
+                                     <div class="side-menu__title"> Ruangan</div>
+                                 </a>
+                             </li>
+                             <li>
+                                 <a href="{{ route('kelas.all') }}" class="side-menu">
+                                     <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                     <div class="side-menu__title"> Kelas</div>
+                                 </a>
+                             </li>
+                             <li>
+                                 <a href="{{ route('jurusan.all') }}" class="side-menu">
+                                     <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                     <div class="side-menu__title"> Jurusan</div>
+                                 </a>
+                             </li>
+
+                         </ul>
                      </li>
+
                      <li>
-                         <a href="{{ route('jurusan.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title"> Jurusan</div>
+
+                         <a href="javascript:;" class="side-menu side-menu">
+
+
+                             <div class="side-menu__icon">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                     stroke-linecap="round" stroke-linejoin="round"
+                                     class="lucide lucide-calendar-clock">
+                                     <path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5" />
+                                     <path d="M16 2v4" />
+                                     <path d="M8 2v4" />
+                                     <path d="M3 10h5" />
+                                     <path d="M17.5 17.5 16 16.25V14" />
+                                     <path d="M22 16a6 6 0 1 1-12 0 6 6 0 0 1 12 0Z" />
+                                 </svg>
+                             </div>
+                             <div class="side-menu__title">
+                                 Data Waktu
+                                 <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                             </div>
                          </a>
-                     </li>
-                     <li>
-                         <a href="{{ route('kelas.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title"> Kelas</div>
-                         </a>
-                     </li>
-                     <li>
-                         <a href="{{ route('tahunajar.all') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title"> Tahun Ajar</div>
-                         </a>
+                         <ul class="">
+                             <li>
+                                 <a href="{{ route('waktu.all') }}" class="side-menu">
+                                     <div class="side-menu__icon"> <i data-lucide="clock"></i> </div>
+                                     <div class="side-menu__title"> Waktu</div>
+                                 </a>
+                             </li>
+                             <li>
+                                 <a href="{{ route('hari.all') }}" class="side-menu">
+                                     <div class="side-menu__icon"> <i data-lucide="calendar"></i> </div>
+                                     <div class="side-menu__title"> Hari</div>
+                                 </a>
+                             </li>
+                         </ul>
                      </li>
                  </ul>
              </li>
@@ -547,24 +623,33 @@
 
              </li>
 
+             <li class="side-nav__devider my-4"></li>
 
              <li>
-                 @if ($siswaguru == $url)
+                 @if ($cttnwalas == $url)
                      <a href="javascript:;" class="side-menu side-menu--active">
-                     @else
-                         <a href="javascript:;" class="side-menu ">
+                     @elseif ($siswaguruwalas == $url)
+                         <a href="javascript:;" class="side-menu side-menu--active">
+                         @else
+                             <a href="javascript:;" class="side-menu ">
                  @endif
-                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+                 <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-square-2">
+                         <path d="M18 21a6 6 0 0 0-12 0" />
+                         <circle cx="12" cy="11" r="4" />
+                         <rect width="18" height="18" x="3" y="3" rx="2" />
+                     </svg> </div>
                  <div class="side-menu__title">
-                     REPORT
+                     Wali Kelas
                      <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                  </div>
                  </a>
                  <ul class="">
                      <li>
-                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                         <a href="{{ route('siswa.guruwalas') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Jadwal Mapel</div>
+                             <div class="side-menu__title">Siswa</div>
                          </a>
                      </li>
                      <li>
@@ -574,26 +659,66 @@
                          </a>
                      </li>
                      <li>
-                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                         <a href="{{ route('cttnwalas.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Guru</div>
+                             <div class="side-menu__title">Catatan Walas</div>
                          </a>
                      </li>
                      <li>
                          <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Orang Tua</div>
+                             <div class="side-menu__title">Sikap Sosial</div>
                          </a>
                      </li>
                      <li>
                          <a href="{{ route('siswa.guru') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Siswa</div>
+                             <div class="side-menu__title">Sikap Spritual</div>
                          </a>
                      </li>
-
+                     <li>
+                         <a href="{{ route('siswa.guru') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Prestasi</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('siswa.guru') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Status Nilai</div>
+                         </a>
+                     </li>
+                     <li>
+                         <a href="{{ route('siswa.guru') }}" class="side-menu">
+                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                             <div class="side-menu__title">Rapor</div>
+                         </a>
+                     </li>
                  </ul>
              </li>
+             <li>
+                 @if ($url == $ekstranilai)
+                     <a href="{{ route('ekstranilai.all') }}" class="side-menu  side-menu--active">
+                     @elseif ($url == $ekstranilaiadd)
+                         <a href="{{ route('ekstranilai.all') }}" class="side-menu  side-menu--active">
+                         @elseif ($url == $ekstranilaiedit)
+                             <a href="{{ route('ekstranilai.all') }}" class="side-menu  side-menu--active">
+                             @else
+                                 <a href="{{ route('ekstranilai.all') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gauge-circle">
+                         <path d="M15.6 2.7a10 10 0 1 0 5.7 5.7" />
+                         <circle cx="12" cy="12" r="2" />
+                         <path d="M13.4 10.6 19 5" />
+                     </svg></div>
+                 <div class="side-menu__title"> Ekstrakurikuler</div>
+                 </a>
+             </li>
+
+
+
              {{--  // end bagian guru //  --}}
          @endif
 
