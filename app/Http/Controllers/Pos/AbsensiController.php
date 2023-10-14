@@ -10,6 +10,7 @@ use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Pengampu;
 use App\Models\Siswa;
+use App\Models\Walas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -253,5 +254,25 @@ class AbsensiController extends Controller
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
+    }
+
+    public function AbsensiSiswaguruwalas()
+    {
+        $userId = Auth::user()->id;
+        $absensi = Absensi::all();
+        $guru = Guru::where('id_user', $userId)->first();
+
+        if ($guru) {
+            $walas = Walas::where('id_guru', $guru->id)->first();
+            if ($walas) {
+                $siswa = Siswa::where('kelas', $walas->id_kelas)->get();
+            } else {
+                $siswa = collect(); // membuat koleksi kosong jika $walas null
+            }
+        } else {
+            $siswa = collect(); // membuat koleksi kosong jika $guru null
+        }
+
+        return view('backend.data.absensi.absensi_guruwalas', compact('siswa', 'absensi'));
     }
 }

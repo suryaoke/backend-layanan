@@ -2,7 +2,7 @@
 @section('admin')
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-            Siswa Walas All
+            Absensi Siswa Walas All
         </h1>
 
     </div>
@@ -20,35 +20,44 @@
                                         <th>Nama</th>
                                         <th>NISN</th>
                                         <th>Kelas</th>
-                                        <th>Tanggal</th>
-                                        <th>Kode Mapel</th>
-                                        <th>Nama Mapel</th>
-                                        <th>Status</th>
-                                        <th>Ket</th>
-
+                                        <th>Jk</th>
+                                        <th>Sakit</th>
+                                        <th>Izin</th>
+                                        <th>Alfa</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($siswa as $key => $item)
-                                        <tr>
-                                            <td> {{ $key + 1 }} </td>
-                                            <td> {{ $item->nama }} </td>
-                                            <td> {{ $item->nisn }} </td>
-                                            <td> {{ $item->jk }} </td>
-                                            <td> {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
-                                                {{ $item['kelass']['jurusans']['nama'] }}
-                                            </td>
-                                            <td>
-                                                @if ($item->id_user == 0)
-                                                    <span class="text-danger">Kosong</span>
-                                                @else
-                                                    {{ $item['users']['username'] }}
-                                                @endif
-                                            </td>
+                                        @php
+                                            $absensi1 = App\Models\Absensi::where('id_siswa', $item->id)->first();
+                                            $absensialfa = App\Models\Absensi::where('id_siswa', $item->id)
+                                                ->where('status', 0)
+                                                ->count();
+                                            $absensisakit = App\Models\Absensi::where('id_siswa', $item->id)
+                                                ->where('status', 3)
+                                                ->count();
+                                            $absensiizin = App\Models\Absensi::where('id_siswa', $item->id)
+                                                ->where('status', 2)
+                                                ->count();
+                                        @endphp
 
-
-                                        </tr>
+                                        @if ($absensi1 && $absensi1->siswass && $absensi1->siswass->kelass && $absensi1->siswass->kelass->jurusans)
+                                            <tr>
+                                                <td> {{ $key + 1 }} </td>
+                                                <td> {{ $absensi1->siswass->nama }} </td>
+                                                <td> {{ $absensi1->siswass->nisn }} </td>
+                                                <td>
+                                                    {{ $absensi1->siswass->kelass->tingkat }}
+                                                    {{ $absensi1->siswass->kelass->nama }}
+                                                    {{ $absensi1->siswass->kelass->jurusans->nama }}
+                                                </td>
+                                                <td> {{ $absensi1->siswass->jk }} </td>
+                                                <td class="text-warning"> {{ $absensisakit }} </td>
+                                                <td class="text-primary"> {{ $absensiizin }} </td>
+                                                <td class="text-danger"> {{ $absensialfa }} </td>
+                                            </tr>
+                                        @endif
                                     @endforeach
-
                                 </tbody>
                             </table>
 

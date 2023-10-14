@@ -34,7 +34,7 @@
             <select name="id_kelas" id="id_kelas" class="tom-select  w-full " required>
                 <option value="">Pilih kelas</option>
                 @foreach ($kelas as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }} {{ $item['jurusans']['nama'] }}</option>
                 @endforeach
             </select>
         </div>

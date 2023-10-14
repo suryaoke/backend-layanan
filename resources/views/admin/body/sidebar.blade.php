@@ -88,6 +88,11 @@
      $ekstranilaiadd = URL::route('ekstranilai.add');
      $siswaguruwalas = URL::route('siswa.guruwalas');
      $cttnwalas = URL::route('cttnwalas.all');
+     $absensisiswaguruwalas = URL::route('absensi.siswaguruwalas');
+     $nilaisosial = URL::route('nilaisosial.all');
+     $nilaispiritual = URL::route('nilaispiritual.all');
+     $nilaiprestasi = URL::route('nilaiprestasi.all');
+
      $routes = [
          'pusherAuth' => URL::route('pusher.auth'),
          'messagesIndex' => URL::route('messages.index'),
@@ -608,6 +613,58 @@
              </li>
 
              <li>
+                 @if ($cttnwalas == $url)
+                     <a href="javascript:;" class="side-menu side-menu--active">
+                     @elseif ($siswaguruwalas == $url)
+                         <a href="javascript:;" class="side-menu side-menu--active">
+                         @else
+                             <a href="javascript:;" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-square-2">
+                         <path d="M18 21a6 6 0 0 0-12 0" />
+                         <circle cx="12" cy="11" r="4" />
+                         <rect width="18" height="18" x="3" y="3" rx="2" />
+                     </svg> </div>
+                 <div class="side-menu__title">
+                     Penilaian Anda
+                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                 </div>
+                 </a>
+                 <ul class="">
+                     @php
+                         $userId = Auth::user()->id;
+                         $guru = App\Models\Guru::where('id_user', $userId)->first(); // Mengambil data guru berdasarkan id_user
+                         if ($guru) {
+                             $pengampu = App\Models\Pengampu::where('id_guru', $guru->id)->get(); // Mengambil data pengampu berdasarkan id_guru
+                             $pengampuIds = $pengampu->pluck('id')->toArray(); // Mengambil array dari ID pengampu yang terkait
+
+                             $jadwalguru = App\Models\Jadwalmapel::whereIn('id_pengampu', $pengampuIds)->get(); // Mengambil jadwal mapel berdasarkan id_pengampu yang terkait
+                         } else {
+                             // Lakukan sesuatu jika data guru tidak ditemukan
+                         }
+                     @endphp
+                     @foreach ($jadwalguru as $item)
+                         @php
+                             $pengampus = App\Models\Pengampu::where('id', $item->id_pengampu)->first();
+                             $mapels = App\Models\Mapel::where('id', $pengampus->id_mapel)->first();
+                             $kelas = App\Models\Kelas::where('id', $pengampus->kelas)->first();
+                             $jurusan = App\Models\Jurusan::where('id', $kelas->id_jurusan)->first();
+                         @endphp
+                         <li>
+                             <a href="{{ route('siswa.guruwalas') }}" class="side-menu">
+                                 <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                 <div class="side-menu__title">{{ $mapels->nama }}: {{ $kelas->tingkat }}{{ $kelas->nama }} {{ $jurusan->nama }} </div>
+                             </a>
+                         </li>
+                     @endforeach
+
+                 </ul>
+             </li>
+
+
+             <li>
                  @if ($url == $a)
                      <a href="{{ route('messages.index') }}" class="side-menu  side-menu--active">
                      @elseif ($url == $routes)
@@ -630,8 +687,16 @@
                      <a href="javascript:;" class="side-menu side-menu--active">
                      @elseif ($siswaguruwalas == $url)
                          <a href="javascript:;" class="side-menu side-menu--active">
-                         @else
-                             <a href="javascript:;" class="side-menu ">
+                         @elseif($absensisiswaguruwalas == $url)
+                             <a href="javascript:;" class="side-menu side-menu--active">
+                             @elseif($nilaisosial == $url)
+                                 <a href="javascript:;" class="side-menu side-menu--active">
+                                 @elseif($nilaispiritual == $url)
+                                     <a href="javascript:;" class="side-menu side-menu--active">
+                                     @elseif($nilaiprestasi == $url)
+                                         <a href="javascript:;" class="side-menu side-menu--active">
+                                         @else
+                                             <a href="javascript:;" class="side-menu ">
                  @endif
                  <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -653,7 +718,7 @@
                          </a>
                      </li>
                      <li>
-                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                         <a href="{{ route('absensi.siswaguruwalas') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
                              <div class="side-menu__title">Absensi Siswa</div>
                          </a>
@@ -665,19 +730,19 @@
                          </a>
                      </li>
                      <li>
-                         <a href="{{ route('jadwalmapel.all') }}" class="side-menu">
+                         <a href="{{ route('nilaisosial.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
                              <div class="side-menu__title">Sikap Sosial</div>
                          </a>
                      </li>
                      <li>
-                         <a href="{{ route('siswa.guru') }}" class="side-menu">
+                         <a href="{{ route('nilaispiritual.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Sikap Spritual</div>
+                             <div class="side-menu__title">Sikap Spiritual</div>
                          </a>
                      </li>
                      <li>
-                         <a href="{{ route('siswa.guru') }}" class="side-menu">
+                         <a href="{{ route('nilaiprestasi.all') }}" class="side-menu">
                              <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
                              <div class="side-menu__title">Prestasi</div>
                          </a>
@@ -696,6 +761,8 @@
                      </li>
                  </ul>
              </li>
+
+
              <li>
                  @if ($url == $ekstranilai)
                      <a href="{{ route('ekstranilai.all') }}" class="side-menu  side-menu--active">

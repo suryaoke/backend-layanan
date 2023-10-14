@@ -16,19 +16,18 @@ class CttnwalasController extends Controller
     public function CttnwalasAll()
     {
 
-        $cttnwalas = Cttnwalas::orderBy('id', 'asc')->get();
         $guruId = Guru::where('id_user', Auth::user()->id)->first();
         $walas = Walas::where('id_guru', $guruId->id)->orderBy('id', 'asc')->first();
         $siswa = null; // inisialisasi variabel $siswa
         if ($walas) {
-            $siswa = Siswa::where('kelas', $walas->id_kelas)->orderBy('id', 'asc')->get();
+            $siswa = Siswa::where('kelas', $walas->id_kelas)->orderBy('nama', 'asc')->get();
         }
 
         $data = [
             'walas' => $walas,
             'siswa' => $siswa,
         ];
-        return view('backend.data.cttnwalas.cttnwalas_all', compact('walas', 'data', 'cttnwalas', 'siswa'));
+        return view('backend.data.cttnwalas.cttnwalas_all', compact('walas', 'data', 'siswa'));
     } // end method
 
 

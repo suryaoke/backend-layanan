@@ -13,6 +13,7 @@ use App\Http\Controllers\Pos\MapelController;
 use App\Http\Controllers\Pos\NaskahController;
 use App\Http\Controllers\Pos\OrangTuaController;
 use App\Http\Controllers\Pos\PengampuController;
+use App\Http\Controllers\Pos\RaporController;
 use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SiswaController;
 use App\Http\Controllers\Pos\SuratKeluarController;
@@ -235,7 +236,24 @@ Route::controller(AbsensiController::class)->middleware(['auth'])->group(functio
     Route::get('/absensi/siswa', 'AbsensiSiswa')->name('absensi.siswa');
     Route::post('/absensi/siswa/store', 'AbsensiSiswaStore')->name('absensi.siswa.store');
     Route::get('/absensi/delete{id}', 'AbsensiDelete')->name('absensi.delete');
+    Route::get('/absensi/siswa/guruwalas', 'AbsensiSiswaguruwalas')->name('absensi.siswaguruwalas');
 });
+
+// Nilai Rapor All Route
+Route::controller(RaporController::class)->middleware(['auth'])->group(function () {
+    Route::get('/nilaisosial/all', 'NilaisosialAll')->name('nilaisosial.all');
+    Route::post('/nilaisosial/store', 'NilaisosialStore')->name('nilaisosial.store');
+    Route::post('/nilaisosial/update', 'NilaisosialUpdate')->name('nilaisosial.update');
+
+    Route::get('/nilaispiritual/all', 'NilaispiritualAll')->name('nilaispiritual.all');
+    Route::post('/nilaispiritual/store', 'NilaispiritualStore')->name('nilaispiritual.store');
+    Route::post('/nilaispiritual/update', 'NilaispiritualUpdate')->name('nilaispiritual.update');
+
+    Route::get('/nilaiprestasi/all', 'NilaiprestasiAll')->name('nilaiprestasi.all');
+    Route::post('/nilaiprestasi/store', 'NilaiprestasiStore')->name('nilaiprestasi.store');
+    Route::post('/nilaiprestasi/update', 'NilaiprestasiUpdate')->name('nilaiprestasi.update');
+});
+
 
 
 // Orang Tua All Route

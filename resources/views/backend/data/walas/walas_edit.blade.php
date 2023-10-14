@@ -30,16 +30,18 @@
         <div class="mt-4">
             <label for=""> Kelas </label>
             <select name="id_kelas" id="id_kelas" class="tom-select w-full " required>
-                <option value="{{ $walas->id_kelas }}">{{ $walas['kelass']['nama'] }}</option>
+                <option value="{{ $walas->id_kelas }}">{{ $walas['kelass']['tingkat'] }} {{ $walas['kelass']['nama'] }}
+                    {{ $walas['kelass']['jurusans']['nama'] }}</option>
                 @foreach ($kelas as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                        {{ $item['jurusans']['nama'] }}</option>
                 @endforeach
             </select>
         </div>
 
 
         <div class="mt-2">
-            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Update</button>
+            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
             <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('walas.all') }}">Cancel
             </a>
         </div>

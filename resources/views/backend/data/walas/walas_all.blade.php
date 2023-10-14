@@ -37,10 +37,12 @@
                                         <path d="M18 21a6 6 0 0 0-12 0" />
                                         <circle cx="12" cy="11" r="4" />
                                         <rect width="18" height="18" x="3" y="3" rx="2" />
-                                    </svg> </div> Wali Kelas: {{ $item['kelass']['nama'] }}
+                                    </svg> </div> Wali Kelas:
+                                {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
+                                {{ $item['kelass']['jurusans']['nama'] }}
                             </div>
                             <div class="flex items-center mt-2"> <i data-lucide="users" class="w-4 h-4 mr-2"></i> Siswa :
-                               {{$siswa}} Orang</div>
+                                {{ $siswa }} Orang</div>
                         </div>
                     </div>
                     <div
