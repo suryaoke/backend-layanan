@@ -2,47 +2,14 @@
 @section('admin')
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-            @php
-                $siswa1 = URL::route('siswa.all');
-
-            @endphp
-            @if (url()->current() == $siswa1)
+        
                 Siswa All
-            @else
-                @php
-                    $kelas1 = app\Models\Kelas::where('id', $search)->first();
-                @endphp
-                @if ($kelas1 != null)
-                    Siswa Kelas {{ $kelas1->nama }}
-                @else
-                    Siswa Kosong
-                @endif
-            @endif
+   
 
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
             <a href="{{ route('siswa.add') }}" class="btn btn-primary mr-2"> Tambah Data</a>
-            <form method="get" action="{{ route('siswa.search') }}">
-
-                <select name="search">
-                    <option> Pilih Kelas..
-                    </option>
-                    @foreach ($kelas as $item)
-                        @php
-                            $siswadata = app\Models\Siswa::where('kelas', $item->id)->first();
-                        @endphp
-                        @if ($siswadata != null)
-                            <option value="{{ isset($search) ? $search : "$item->id" }}">
-                                {{ $item->nama }} <type="hidden" {{ $item->id }}>
-                            </option>
-                        @endif
-                    @endforeach
-                </select>
-                <button type="submit" class="btn btn-primary">Search</button>
-                @if (url()->current() != $siswa1)
-                    <a href="{{ route('siswa.all') }}" class="btn btn-danger">Clear</a>
-                @endif
-            </form>
+           
         </div>
     </div>
     <div class="page-content">
@@ -59,7 +26,6 @@
                                         <th>Nama</th>
                                         <th style="white-space: nowrap;">Nisn</th>
                                         <th>JK</th>
-                                        <th>Kelas</th>
                                         <th>Username</th>
                                         <th>Foto</th>
                                         <th>Action</th>
@@ -74,8 +40,6 @@
                                             <td> {{ $item->nama }} </td>
                                             <td style="white-space: nowrap;" class="text-primary"> {{ $item->nisn }} </td>
                                             <td> {{ $item->jk }} </td>
-                                            <td> {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
-                                                {{ $item['kelass']['jurusans']['nama'] }}</td>
                                             <td>
                                                 @if ($item->id_user == 0)
                                                     <span class="text-danger">Kosong</span>

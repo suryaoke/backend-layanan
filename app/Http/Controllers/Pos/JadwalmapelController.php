@@ -104,11 +104,11 @@ class JadwalmapelController extends Controller
 
         $tanggal = Carbon::now()->toDateString();
 
-        // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
-        $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 3);
+        // // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
+        // $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 3);
 
         // Gabungkan kode_gr dengan kode_acak untuk mendapatkan kode_pengampu
-        $kode_jadwalmapel = $tanggal . '.' . $kode_jadwal . '.' . $kode_acak;
+        $kode_jadwalmapel = $tanggal . '.' . $kode_jadwal;
 
 
         // Jika validasi berhasil, simpan data ke dalam database

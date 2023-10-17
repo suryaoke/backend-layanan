@@ -15,7 +15,10 @@ class WalasController extends Controller
     public function WalasAll()
     {
 
-        $walas = Walas::orderBy('id_kelas', 'asc')->paginate(perPage: 12);
+        $walas = Walas::join('kelas', 'walas.id_kelas', '=', 'kelas.id')
+            ->select('walas.*', 'kelas.tingkat')
+            ->orderBy('kelas.tingkat', 'asc')
+            ->get();
 
         return view('backend.data.walas.walas_all', compact('walas'));
     } // end method

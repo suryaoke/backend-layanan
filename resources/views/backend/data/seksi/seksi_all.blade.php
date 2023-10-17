@@ -2,10 +2,10 @@
 @section('admin')
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-            Data Wali Kelas All
+            Data Seksi All
         </h1>
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('walas.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
+            <a href="{{ route('seksi.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
 
         </div>
     </div>
@@ -20,35 +20,34 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Guru</th>
-                                        <th>Kode Guru</th>
-                                        <th>Kelas</th>
+                                        <th>Kode Seksi</th>
+                                        <th>Mata Pelajaran</th>
+                                        <th> Guru</th>
+                                        <th>Kelas / Rombel</th>
+                                        <th>Tahun Ajar</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($walas as $key => $item)
-                                        @php
+                                    @foreach ($seksi as $key => $item)
+                                        {{--  @php
                                             $guru = App\Models\Guru::where('id', $item->id_guru)->first();
 
-                                        @endphp
+                                        @endphp  --}}
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-                                            <td> {{ $guru->nama }} </td>
-                                            <td>{{ $guru->kode_gr }}</td>
-                                            <td> {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
-                                                {{ $item['kelass']['jurusans']['nama'] }}</td>
+                                     <td> {{$item->id}} </td>
 
                                             <td>
-                                                <a id="delete" href="{{ route('walas.delete', $item->id) }}"
+                                                <a id="delete" href="{{ route('seksi.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
                                                     <i data-lucide="trash" class="w-4 h-4"></i> </a>
-                                                <a href="{{ route('walas.edit', $item->id) }}"
+                                                <a href="{{ route('seksi.edit', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
                                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </td>
 
-                                        </tr>
+                                        </tr> 
                                     @endforeach
 
                                 </tbody>

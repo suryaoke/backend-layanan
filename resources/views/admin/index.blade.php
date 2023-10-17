@@ -36,22 +36,22 @@
             ->unique();
 
         // Ambil data siswa dengan kelas yang sama dengan pengampu yang diambil dari jadwalmapels
-        $siswaguru = App\Models\Siswa::whereIn('kelas', function ($query) use ($pengampuIds) {
-            $query
-                ->select('kelas')
-                ->from('pengampus')
-                ->whereIn('id', $pengampuIds);
-        })->count();
+       // $siswaguru = App\Models\Siswa::whereIn('kelas', function ($query) use ($pengampuIds) {
+        //    $query
+        //        ->select('kelas')
+         //       ->from('pengampus')
+      //          ->whereIn('id', $pengampuIds);
+      //  })->count();
 
         $kepsek = App\Models\User::where('role', '2')->first();
         $nipkepsek = App\Models\Guru::where('id_user', $kepsek->id)->first();
 
-        $walas = App\Models\Walas::where('id_guru', $guruId)->first();
-        if ($walas) {
-            $siswawalas = App\Models\Siswa::where('kelas', $walas->id_kelas)->count();
-            $kelaswalas = App\Models\kelas::where('id', $walas->id_kelas)->first();
-            $kelaswalasjurusan = App\Models\Jurusan::where('id', $kelaswalas->id_jurusan)->first();
-        }
+      //  $walas = App\Models\Walas::where('id_guru', $guruId)->first();
+     //   if ($walas) {
+     //       $siswawalas = App\Models\Siswa::where('kelas', $walas->id_kelas)->count();
+     //       $kelaswalas = App\Models\kelas::where('id', $walas->id_kelas)->first();
+     //       $kelaswalasjurusan = App\Models\Jurusan::where('id', $kelaswalas->id_jurusan)->first();
+     //   }
 
         $jadwal = App\Models\Guru::where('id_user', $userId)->value('id');
 
@@ -553,7 +553,7 @@
                                             <i data-lucide="users" class="report-box__icon text-primary"></i>
 
                                         </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $siswaguru }}</div>
+                                        <div class="text-3xl font-medium leading-8 mt-6"> 0</div>
                                         <div class="text-base text-slate-500 mt-1">Siswa</div>
                                     </div>
                                 </div>
@@ -594,19 +594,19 @@
                                     <div class="p-1 border-t ml-4 border-slate-200/60 dark:border-darkmode-400">
 
                                         <a class="flex items-center mt-2 mb-2" href=""> Kelas :
-                                            @if ($walas)
+                                            {{--  @if ($walas)
                                                 {{ $kelaswalas->tingkat }} {{ $kelaswalas->nama }}
                                                 {{ $kelaswalasjurusan->nama }}
                                             @else
                                                 -
-                                            @endif
+                                            @endif  --}}
                                         </a>
                                         <a class="flex items-center mt-2 mb-2" href=""> Jumlah Siswa:
-                                            @if ($walas)
+                                            {{--  @if ($walas)
                                                 {{ $siswawalas }} Orang
                                             @else
                                                 -
-                                            @endif
+                                            @endif  --}}
                                         </a>
                                     </div>
 

@@ -22,22 +22,22 @@ class SiswaController extends Controller
 {
     public function SiswaAll()
     {
-        $siswa = Siswa::orderBy('kelas', 'desc')
+        $siswa = Siswa::orderBy('nisn', 'desc')
             ->orderBy('nama', 'asc')
             ->paginate(perPage: 50);
-        $kelas = Kelas::orderBy('nama')->get();
-        return view('backend.data.siswa.siswa_all', compact('siswa', 'kelas'));
+     
+        return view('backend.data.siswa.siswa_all', compact('siswa'));
     } // end method
 
     public function SiswaAdd()
     {
 
-        $kelas = Kelas::orderBy('nama')->get();
+
         $orangtuaIds = Siswa::pluck('id_user')->toArray();
         $user = User::where('role', '6')
             ->whereNotIn('id', $orangtuaIds)
             ->get();
-        return view('backend.data.siswa.siswa_add', compact('kelas', 'user'));
+        return view('backend.data.siswa.siswa_add', compact( 'user'));
     } // end method
     public function SiswaStore(Request $request)
     {
@@ -49,7 +49,6 @@ class SiswaController extends Controller
         Siswa::insert([
             'nama' => $request->nama,
             'nisn' => $request->nisn,
-            'kelas' => $request->kelas,
             'jk' => $request->jk,
             'id_user' => $request->id_user,
             'created_by' => Auth::user()->id,
@@ -67,12 +66,12 @@ class SiswaController extends Controller
     public function SiswaEdit($id)
     {
         $siswa = Siswa::findOrFail($id);
-        $kelas = Kelas::all();
+      
         $orangtuaIds = Siswa::pluck('id_user')->toArray();
         $user = User::where('role', '6')
             ->whereNotIn('id', $orangtuaIds)
             ->get();
-        return view('backend.data.siswa.siswa_edit', compact('siswa', 'kelas', 'user'));
+        return view('backend.data.siswa.siswa_edit', compact('siswa', 'user'));
     }
     public function SiswaUpdate(Request $request)
     {
@@ -82,7 +81,7 @@ class SiswaController extends Controller
         Siswa::findOrFail($siswa_id)->update([
             'nama' => $request->nama,
             'nisn' => $request->nisn,
-            'kelas' => $request->kelas,
+
             'jk' => $request->jk,
             'id_user' => $request->id_user,
             'updated_by' => Auth::user()->id,
@@ -151,8 +150,8 @@ class SiswaController extends Controller
 
 
         // Sekarang $siswa akan berisi data siswa dengan kelas yang diajar oleh guru yang aktif
-        $kelas = Kelas::orderBy('nama')->get();
-        return view('backend.data.siswa.siswa_guru', compact('siswa', 'kelas'));
+  
+        return view('backend.data.siswa.siswa_guru', compact('siswa'));
     } // end method
 
 

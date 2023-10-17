@@ -20,7 +20,7 @@
                                         <th>Nama</th>
                                         <th>Nisn</th>
                                         <th>JK</th>
-                                        <th>Kelas</th>
+                                      
                                         <th>Username</th>
 
                                 </thead>
@@ -32,9 +32,7 @@
                                                 <td> {{ $item->nama }} </td>
                                                 <td> {{ $item->nisn }} </td>
                                                 <td> {{ $item->jk }} </td>
-                                                <td> {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
-                                                    {{ $item['kelass']['jurusans']['nama'] }}
-                                                </td>
+                                               
                                                 <td>
                                                     @if ($item->id_user == 0)
                                                         <span class="text-danger">Kosong</span>

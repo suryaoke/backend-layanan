@@ -42,15 +42,6 @@
             </div>
         </div>
 
-        <div class="mt-4">
-            <label for=""> Kelas</label>
-            <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
-                <option value="{{ $siswa->kelas }}">{{ $siswa['kelass']['nama'] }}</option>
-                @foreach ($kelas as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                @endforeach
-            </select>
-        </div>
         @if (Auth::user()->role == '1')
             <div class="mt-4">
                 <label for=""> Username</label>
@@ -90,9 +81,7 @@
                     nisn: {
                         required: true,
                     },
-                    kelas: {
-                        required: true,
-                    },
+                   
                     jk: {
                         required: true,
                     },
@@ -107,9 +96,7 @@
                     nisn: {
                         required: 'Please Enter Your NISN',
                     },
-                    kelas: {
-                        required: 'Please Select Your Kelas',
-                    },
+                  
                     jk: {
                         required: 'Please Select Your Jenis Kelamin',
                     },

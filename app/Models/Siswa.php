@@ -11,10 +11,6 @@ class Siswa extends Model
     use HasFactory, SoftDeletes;
     protected $guarded = [];
 
-    public function kelass()
-    {
-        return $this->belongsTo(Kelas::class, 'kelas', 'id');
-    }
 
     public function absensi1()
     {

@@ -23,6 +23,7 @@
                 @endphp
 
                 Absensi Kelas &nbsp : {{ $kelasdata->tingkat }} {{ $kelasdata->nama }} {{ $kelasdata['jurusans']['nama'] }}
+             
                 <br> Mata Pelajaran : {{ $mapel }}
             @else
                 Pilih Data Absensi Siswa

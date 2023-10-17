@@ -44,15 +44,17 @@ class PengampuController extends Controller
     {
 
         $mapel = Mapel::find($request->id_mapel);
-  
-      
+        $guru = Guru::find($request->id_guru);
+
         $kode_mapel = $mapel->kode_mapel;
+        $kode_guru = substr($guru->kode_gr, 0, 3);
 
         // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
-        $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 3);
-
-        // Gabungkan kode_gr dengan kode_acak untuk mendapatkan kode_pengampu
-        $kode_pengampu =  $kode_mapel . '.' . $kode_acak;
+        do {
+            $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 4);
+            $kode_pengampu =  $kode_mapel . '.' . $kode_guru . '.' . $kode_acak;
+            $existingPengampu = Pengampu::where('kode_pengampu', $kode_pengampu)->first();
+        } while (!empty($existingPengampu));
 
         Pengampu::insert([
             'kode_pengampu' => $kode_pengampu,
