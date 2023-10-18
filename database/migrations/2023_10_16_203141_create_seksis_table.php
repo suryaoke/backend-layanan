@@ -15,8 +15,9 @@ return new class extends Migration
     {
         Schema::create('seksis', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_seksi')->nullable();
             $table->integer('id_rombel');
-            $table->integer('id_pengampu');
+            $table->integer('id_jadwal');
             $table->integer('semester');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

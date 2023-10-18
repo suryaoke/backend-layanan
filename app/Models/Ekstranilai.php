@@ -31,4 +31,14 @@ class Ekstranilai extends Model
     {
         return $this->belongsTo(Jurusan::class, 'id_jurusan', 'id');
     }
+
+    public function rombelsiswa()
+    {
+        return $this->belongsTo(Rombelsiswa::class, 'id_rombelsiswa', 'id');
+    }
+
+    public function rombels()
+    {
+        return $this->belongsTo(Rombel::class, 'id_rombel', 'id');
+    }
 }

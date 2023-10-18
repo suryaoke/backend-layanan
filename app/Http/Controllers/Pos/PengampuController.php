@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
+use App\Models\Jadwalmapel;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\Mapel;
@@ -43,13 +44,27 @@ class PengampuController extends Controller
     public function PengampuStore(Request $request)
     {
 
+        $existingData = Pengampu::where('id_guru', $request->id_guru)
+            ->where('id_mapel', $request->id_mapel)
+            ->where('kelas', $request->kelas)
+            ->count();
+
+        if ($existingData > 0) {
+            $notification = array(
+                'message' => 'Data combination Pengampu Sudah Ada!',
+                'alert-type' => 'warning'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+
         $mapel = Mapel::find($request->id_mapel);
         $guru = Guru::find($request->id_guru);
 
         $kode_mapel = $mapel->kode_mapel;
         $kode_guru = substr($guru->kode_gr, 0, 3);
 
-        // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
+
         do {
             $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 4);
             $kode_pengampu =  $kode_mapel . '.' . $kode_guru . '.' . $kode_acak;
@@ -111,12 +126,21 @@ class PengampuController extends Controller
 
     public function PengampuDelete($id)
     {
-        Pengampu::findOrFail($id)->delete();
-
-        $notification = array(
-            'message' => 'Pengampu Deleted SuccessFully',
-            'alert-type' => 'success'
-        );
-        return redirect()->back()->with($notification);
+        $pengampu = Pengampu::findOrFail($id);
+        if ($pengampu) {
+            $pengampu->delete();
+            Jadwalmapel::where('id_pengampu', $id)->delete();
+            $notification = array(
+                'message' => 'Pengampu Deleted SuccessFully',
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        } else {
+            $notification = array(
+                'message' => 'Jadwal not found',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
     }
 }

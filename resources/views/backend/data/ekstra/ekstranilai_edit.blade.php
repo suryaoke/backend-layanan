@@ -15,6 +15,20 @@
 
         <div class="mt-4">
             <label for=""> Nama Ekstrakulikuler</label>
+        </div>
+        <div class="mt-1 flex">
+            <div
+                class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-gauge-circle">
+                    <path d="M15.6 2.7a10 10 0 1 0 5.7 5.7" />
+                    <circle cx="12" cy="12" r="2" />
+                    <path d="M13.4 10.6 19 5" />
+                </svg>
+            </div>
             <select name="id_ekstra" id="id_ekstra" class="tom-select  w-full " required>
                 <option value="{{ $ekstranilai->id_ekstra }}"> {{ $ekstranilai['ekstras']['nama'] }} </option>
                 @foreach ($ekstra as $item)
@@ -25,24 +39,51 @@
 
         <div class="mt-4">
             <label for=""> Nama Siswa</label>
-            <select name="id_siswa" id="id_siswa" class="tom-select  w-full " required>
-                <option value="{{ $ekstranilai->id_siswa }}">{{ $ekstranilai['siswas']['nama'] }}</option>
-                @foreach ($siswa as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->nisn }} </option>
+        </div>
+        <div class="mt-1 flex">
+            <div
+                class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                <i data-lucide="user"></i>
+            </div>
+            <select name="id_rombelsiswa" id="id_rombelsiswa" class="tom-select  w-full " required>
+
+                <option value="{{ $ekstranilai->id_rombelsiswa }}">{{ $ekstranilai['rombelsiswa']['siswas']['nama'] }}
+                   / {{ $ekstranilai['rombelsiswa']['siswas']['nisn'] }}
+                </option>
+                @foreach ($rombelsiswa as $item)
+                    @php
+                        $siswa = App\Models\Siswa::where('id', $item->id_siswa)->first();
+                    @endphp
+                    <option value="{{ $item->id }}"> {{ $siswa->nama }} / {{ $siswa->nisn }}
+                    </option>
                 @endforeach
             </select>
         </div>
 
         <div class="mt-4">
             <label for=""> Nilai</label>
+        </div>
+        <div class="input-group mt-1">
+            <div id="input-group-email" class="input-group-text">
+                <i data-lucide="clipboard"></i>
+            </div>
             <input class="intro-x login__input form-control py-3 px-4 block" type="text" placeholder="Masukkan Nilai"
                 name="nilai" value="{{ $ekstranilai->nilai }}">
         </div>
+
         <div class="mt-4">
             <label for=""> Keterangan</label>
+        </div>
+        <div class="input-group mt-1">
+            <div id="input-group-email" class="input-group-text">
+                <i data-lucide="clipboard"></i>
+            </div>
             <input class="intro-x login__input form-control py-3 px-4 block" type="text" placeholder="Masukkan Ket"
                 name="ket" value="{{ $ekstranilai->ket }}">
         </div>
+
 
         <div class="mt-2">
             <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>

@@ -10,7 +10,6 @@ use App\Http\Controllers\Pos\JadwalmapelController;
 use App\Http\Controllers\Pos\JurusanController;
 use App\Http\Controllers\Pos\KelasController;
 use App\Http\Controllers\Pos\MapelController;
-use App\Http\Controllers\Pos\NaskahController;
 use App\Http\Controllers\Pos\OrangTuaController;
 use App\Http\Controllers\Pos\PengampuController;
 use App\Http\Controllers\Pos\RaporController;
@@ -18,16 +17,12 @@ use App\Http\Controllers\Pos\RombelController;
 use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SeksiController;
 use App\Http\Controllers\Pos\SiswaController;
-use App\Http\Controllers\Pos\SuratKeluarController;
-use App\Http\Controllers\Pos\SuratMasukController;
 use App\Http\Controllers\Pos\TahunajarController;
 use App\Http\Controllers\Pos\WalasController;
-use App\Http\Controllers\Pos\TamuController;
 use App\Http\Controllers\Pos\UserController;
 use App\Http\Controllers\Pos\WaktuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\vendor\Chatify\MessagesController;
-use App\Models\SuratMasuk;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -194,7 +189,7 @@ Route::controller(SeksiController::class)->middleware(['auth'])->group(function 
     Route::post('/seksi/store', 'SeksiStore')->name('seksi.store');
     Route::get('/seksi/delete/{id}', 'SeksiDelete')->name('seksi.delete');
     Route::get('/seksi/edit/{id}', 'SeksiEdit')->name('seksi.edit');
-    Route::post('/seksi/update/{id}', 'SeksiUpdate')->name('seksi.update');
+    Route::post('/seksi/update', 'SeksiUpdate')->name('seksi.update');
 });
 
 

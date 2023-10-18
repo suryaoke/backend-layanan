@@ -20,23 +20,32 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Seksi</th>
-                                        <th>Mata Pelajaran</th>
+                                        <th>Seksi</th>
+                                        <th>Kode</th>
+                                        <th style="white-space: nowrap;">Mata Pelajaran</th>
                                         <th> Guru</th>
-                                        <th>Kelas / Rombel</th>
+                                        <th style="white-space: nowrap;">Kelas / Rombel</th>
                                         <th>Tahun Ajar</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($seksi as $key => $item)
-                                        {{--  @php
-                                            $guru = App\Models\Guru::where('id', $item->id_guru)->first();
-
-                                        @endphp  --}}
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-                                     <td> {{$item->id}} </td>
-
+                                            <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_seksi }}
+                                            </td>
+                                            <td style="white-space: nowrap;" class="text-primary">
+                                                {{ $item['jadwalmapels']['pengampus']['kode_pengampu'] }}
+                                            </td>
+                                            <td style="white-space: nowrap;"> {{ $item['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                            </td>
+                                            <td> {{ $item['jadwalmapels']['pengampus']['gurus']['nama'] }} </td>
+                                            <td> {{ $item['rombels']['kelass']['tingkat'] }}
+                                                {{ $item['rombels']['kelass']['nama'] }}
+                                                {{ $item['rombels']['kelass']['jurusans']['nama'] }} </td>
+                                            <td style="white-space: nowrap;">
+                                                {{ $item['semesters']['semester'] }} / {{ $item['semesters']['tahun'] }}
+                                            </td>
                                             <td>
                                                 <a id="delete" href="{{ route('seksi.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
@@ -47,7 +56,7 @@
                                                 </a>
                                             </td>
 
-                                        </tr> 
+                                        </tr>
                                     @endforeach
 
                                 </tbody>

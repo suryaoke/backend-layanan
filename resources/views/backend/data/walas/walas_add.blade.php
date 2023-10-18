@@ -20,23 +20,44 @@
     <form method="post" action="{{ route('walas.store') }}" enctype="multipart/form-data" id="myForm">
         @csrf
         <div class="mt-4">
-            <label for=""> Nama Guru</label>
-            <select name="id_guru" id="id_guru" class="tom-select  w-full " required>
-                <option value="">Pilih Guru</option>
-                @foreach ($guru as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_gr }} </option>
-                @endforeach
-            </select>
+            <label for="">Nama Guru</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="user"></i>
+                </div>
+                <select name="id_guru" id="id_guru" class="tom-select  w-full " required>
+                    <option value="">Pilih Guru</option>
+                    @foreach ($guru as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_gr }} </option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
-            <label for=""> Kelas</label>
-            <select name="id_kelas" id="id_kelas" class="tom-select  w-full " required>
-                <option value="">Pilih kelas</option>
-                @foreach ($kelas as $item)
-                    <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }} {{ $item['jurusans']['nama'] }}</option>
-                @endforeach
-            </select>
+            <label for="">Kelas</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="home"></i>
+                </div>
+                <select name="id_kelas" id="id_kelas" class="tom-select  w-full " required>
+                    <option value="">Pilih kelas</option>
+                    @foreach ($kelas as $item)
+                        <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                            {{ $item['jurusans']['nama'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-2">
@@ -46,9 +67,13 @@
         </div>
     </form>
 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        jQuery(document).ready(function() {
             $('#myForm').validate({
+                ignore: [],
                 rules: {
                     id_guru: {
                         required: true,
@@ -59,16 +84,18 @@
                 },
                 messages: {
                     id_guru: {
-                        required: 'Please Enter Your Id_guru',
+                        required: 'Please Enter Your Nama guru',
                     },
                     id_kelas: {
-                        required: 'Please Enter Your Id_kelas',
+                        required: 'Please Enter Your Kelas',
                     },
+
                 },
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',
                 errorPlacement: function(error, element) {
-                    error.insertAfter(element);
+                    error.addClass('block text-sm text-red-600');
+                    error.appendTo(element.parent().next());
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');

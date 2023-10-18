@@ -12,70 +12,136 @@
         @csrf
 
         <input type="hidden" name="id" value="{{ $mapel->id }}">
+
         <div class="mt-4">
-            <label for=""> Kode Mapel</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Masukkan Kode Mapel" name="kode_mapel" id="kode_mapel" value="{{ $mapel->kode_mapel }}">
+            <label for="">Kode Mapel</label>
+
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="code-2"></i>
+                </div>
+                <input type="text" class="intro-x login__input form-control py-3 px-4 block "
+                    placeholder="Masukkan Kode Mapel" name="kode_mapel" id="kode_mapel" value="{{ $mapel->kode_mapel }}">
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
-            <label for=""> Induk</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Kosong Kalau Tidak Ada !!" name="induk" value="{{ $mapel->induk }}">
+            <label for="">Induk</label>
+
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="file"></i>
+                </div>
+                <input type="text" class="intro-x login__input form-control py-3 px-4 block "
+                    placeholder="Kosong Kalau Tidak Ada !!" name="induk" value="{{ $mapel->induk }}">
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
+
+
         <div class="mt-4">
-            <label for=""> Nama Mapel</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block "
-                placeholder="Masukkan Nama Mapel" name="nama" id="nama" value="{{ $mapel->nama }}">
+            <label for="">Nama Mapel</label>
+
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="book"></i>
+                </div>
+                <input type="text" class="intro-x login__input form-control py-3 px-4 block "
+                    placeholder="Masukkan Nama Mapel" name="nama" id="nama" value="{{ $mapel->nama }}">
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
-            <label for=""> Jam Pelajaran</label>
-            <select name="jp" id="jp" class="tom-select w-full " required>
-                <option value="{{ $mapel->jp }}">{{ $mapel->jp }} JP</option>
-                <option value="1">1 JP</option>
-                <option value="2">2 JP</option>
-                <option value="3">3 JP</option>
-                <option value="4">4 JP</option>
-                <option value="5">5 JP</option>
-                <option value="6">6 JP</option>
+            <label for="">Jam Pelajaran</label>
 
-            </select>
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="clock"></i>
+                </div>
+                <select name="jp" id="jp" class="tom-select w-full " required>
+                    <option value="{{ $mapel->jp }}">{{ $mapel->jp }} JP</option>
+                    <option value="1">1 JP</option>
+                    <option value="2">2 JP</option>
+                    <option value="3">3 JP</option>
+                    <option value="4">4 JP</option>
+                    <option value="5">5 JP</option>
+                    <option value="6">6 JP</option>
+
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
+
+
 
         <div class="mt-4">
             <label for="">Semester</label>
-            <select name="semester" id="semester" class="tom-select w-full " required>
-                <option value="{{ $mapel->semester }}">{{ $mapel['tahunajars']['semester'] }} -
-                    {{ $mapel['tahunajars']['tahun'] }}
-                </option>
-                @foreach ($tahunajar as $item)
-                    <option value="{{ $item->id }}">{{ $item->semester }}-{{ $item->tahun }}</option>
-                @endforeach
-            </select>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="tag"></i>
+                </div>
+                <select name="semester" id="semester" class="tom-select w-full " required>
+                    <option value="{{ $mapel->semester }}">{{ $mapel['tahunajars']['semester'] }} -
+                        {{ $mapel['tahunajars']['tahun'] }}
+                    </option>
+                    @foreach ($tahunajar as $item)
+                        <option value="{{ $item->id }}">{{ $item->semester }}-{{ $item->tahun }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
+
 
 
         <div class="mt-4">
-            <label for=""> Jurusan</label>
-            <select name="id_jurusan" id="id_jurusan" class="tom-select w-full " required>
-                <option value="{{ $mapel->id_jurusan }}">{{ $mapel['jurusans']['nama'] }} </option>
-                @foreach ($jurusan as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                @endforeach
-            </select>
+            <label for="">Jurusan</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="file"></i>
+                </div>
+                <select name="id_jurusan" id="id_jurusan" class="tom-select w-full " required>
+                    <option value="{{ $mapel->id_jurusan }}">{{ $mapel['jurusans']['nama'] }} </option>
+                    @foreach ($jurusan as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
-            <label for=""> Kelompok</label>
-            <select name="jenis" id="jenis" class="tom-select w-full " required>
-                <option value="{{ $mapel->jenis }}">Kelompok {{ $mapel->jenis }}</option>
-                <option value="A">A</option>
-                <option value="B">B</option>
-                <option value="C">C</option>
-            </select>
-        </div>
+            <label for="">Kelompok</label>
 
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="file"></i>
+                </div>
+                <select name="jenis" id="jenis" class="tom-select w-full " required>
+                    <option value="{{ $mapel->jenis }}">Kelompok {{ $mapel->jenis }}</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>
 
         <div class="mt-4">
             <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
@@ -85,9 +151,12 @@
 
     </form>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
             $('#myForm').validate({
+                ignore: [],
                 rules: {
                     kode_mapel: {
                         required: true,
@@ -107,6 +176,8 @@
                     jenis: {
                         required: true,
                     },
+
+
                 },
                 messages: {
                     kode_mapel: {
@@ -132,7 +203,8 @@
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',
                 errorPlacement: function(error, element) {
-                    error.insertAfter(element);
+                    error.addClass('block text-sm text-red-600');
+                    error.appendTo(element.parent().next());
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');

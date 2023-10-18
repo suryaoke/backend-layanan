@@ -87,12 +87,14 @@
                             <thead>
                                 <tr>
 
+
                                     <th>No.</th>
-                                    <th style="white-space: nowrap;">Kode Seksi</th>
+                                    <th style="white-space: nowrap;">Seksi</th>
+                                    <th style="white-space: nowrap;">Kode</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
-                                    <th style="white-space: nowrap;">Kode Guru</th>
-                                    <th style="white-space: nowrap;">Kode Mapel</th>
+                                    <th style="white-space: nowrap;">Guru</th>
+                                    <th style="white-space: nowrap;">Mata Pelajaran</th>
                                     <th>Kelas</th>
                                     <th>JP</th>
                                     <th>Kode Ruangan</th>
@@ -100,6 +102,7 @@
                                     <th>Kurikulum</th>
                                     <th>Status</th>
                                     <th>Action</th>
+
 
 
                                 </tr>
@@ -118,10 +121,12 @@
                                         <td style="white-space: nowrap;" class="text-primary">
                                             {{ $item->kode_jadwalmapel }}
                                         </td>
+                                        <td style="white-space: nowrap;" class="text-primary">
+                                            {{ $item['pengampus']['kode_pengampu'] }} </td>
                                         <td> {{ $item['haris']['nama'] }} </td>
                                         <td> {{ $item['waktus']['range'] }} </td>
-                                        <td style="white-space: nowrap;"> {{ $guruid->kode_gr }} </td>
-                                        <td style="white-space: nowrap;"> {{ $mapelid->kode_mapel }} </td>
+                                        <td style="white-space: nowrap;"> {{ $guruid->nama }} </td>
+                                        <td style="white-space: nowrap;"> {{ $mapelid->nama }} </td>
                                         <td style="white-space: nowrap;"> {{ $kelas->tingkat }} {{ $kelas->nama }}
                                             {{ $kelas['jurusans']['nama'] }}
                                         </td>

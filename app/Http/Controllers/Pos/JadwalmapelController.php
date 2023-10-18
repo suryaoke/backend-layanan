@@ -76,61 +76,107 @@ class JadwalmapelController extends Controller
 
         $mapel = Mapel::all();
 
-        $pengampu = Pengampu::all();
+        $pengampu = Pengampu::orderby('id', 'asc')
+            ->whereNotIn('id', function ($query) {
+                $query->select('id_pengampu')
+                    ->from('jadwalmapels');
+            })
+            ->get();
+
+
 
         $kelas = Kelas::orderBy('tingkat')->get();
         return view('backend.data.jadwalmapel.jadwalmapel_all', compact('kelas', 'pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
     } // end method
 
 
-    public function JadwalmapelStore(Request $request)
+    public function jadwalMapelStore(Request $request)
     {
-        // Membuat validasi
-        $validator = Validator::make($request->all(), [
-            'id_pengampu' => 'required',
+        $guruInput = Pengampu::where('id', $request->id_pengampu)->first();
 
-        ], ['id_pengampu.required' => 'Jadwal Gagal Dibuat Kode Pengampu Kosong.',]);
+        $guru = DB::table('jadwalmapels')
+            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+            ->select('pengampus.kelas', 'pengampus.id_guru')
+            ->first();
+        $tanggal = Carbon::now()->toDateString(); // '2023-10-17'
+        $tanggal_tanpa_strip = str_replace("-", "", $tanggal); // '20231017'
 
-        // Jika validasi gagal, kembali ke halaman sebelumnya 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
+        // Generate 4 random digits
+        $kode_acak = mt_rand(1000, 9999);
+        do {
+            $kode_jadwalmapel = $tanggal_tanpa_strip . '.' . $kode_acak;
+            $existingPengampu = Jadwalmapel::where('kode_jadwalmapel', $kode_jadwalmapel)->first();
+        } while (!empty($existingPengampu));
+
+        if (!$guru) {
+            Jadwalmapel::insert([
+                'kode_jadwalmapel' => $kode_jadwalmapel,
+                'id_pengampu' => $request->id_pengampu,
+                'id_hari' => $request->id_hari,
+                'id_waktu' => $request->id_waktu,
+                'id_ruangan' => $request->id_ruangan,
+                'status' => '0',
+                'created_by' => Auth::user()->id,
+                'created_at' => Carbon::now(),
+            ]);
+
+            $notification = array(
+                'message' => 'Jadwal Inserted Successfully kode ',
+                'alert-type' => 'success'
+            );
+            return redirect()->route('jadwalmapel.all')->with($notification);
         }
 
-        // Dapatkan kode_gr dari guru yang sesuai dengan id_guru yang diambil dari $request
-        $pengampu = Pengampu::find($request->id_pengampu);
-
-        // Ambil kode_gr dari guru
-        $kode_jadwal = $pengampu->kode_pengampu;
-
-        $tanggal = Carbon::now()->toDateString();
-
-        // // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
-        // $kode_acak = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'), 0, 3);
-
-        // Gabungkan kode_gr dengan kode_acak untuk mendapatkan kode_pengampu
-        $kode_jadwalmapel = $tanggal . '.' . $kode_jadwal;
 
 
-        // Jika validasi berhasil, simpan data ke dalam database
-        Jadwalmapel::insert([
-            'kode_jadwalmapel' =>  $kode_jadwalmapel,
-            'id_pengampu' => $request->id_pengampu,
-            'id_hari' => $request->id_hari,
-            'id_waktu' => $request->id_waktu,
-            'id_ruangan' => $request->id_ruangan,
-            'status' => '0',
-            'created_by' => Auth::user()->id,
-            'created_at' => Carbon::now(),
-        ]);
+        if ($guruInput->id_guru == $guru->id_guru || $guruInput->kelas == $guru->kelas) {
+            $existingData = Jadwalmapel::where('id_hari', $request->id_hari)
+                ->where('id_waktu', $request->id_waktu)
+                ->count();
 
-        $notification = array(
-            'message' => 'Jadwal Inserted Successfully',
-            'alert-type' => 'success'
-        );
+            if ($existingData > 0) {
+                $notification = array(
+                    'message' => 'Data Jadwal Mapel Bentrok..!!',
+                    'alert-type' => 'warning'
+                );
+                return redirect()->back()->with($notification);
+            } else {
+                Jadwalmapel::insert([
+                    'kode_jadwalmapel' => $kode_jadwalmapel,
+                    'id_pengampu' => $request->id_pengampu,
+                    'id_hari' => $request->id_hari,
+                    'id_waktu' => $request->id_waktu,
+                    'id_ruangan' => $request->id_ruangan,
+                    'status' => '0',
+                    'created_by' => Auth::user()->id,
+                    'created_at' => Carbon::now(),
+                ]);
 
-        return redirect()->route('jadwalmapel.all')->with($notification);
+                $notification = array(
+                    'message' => 'Jadwal Inserted Successfully',
+                    'alert-type' => 'success'
+                );
+                return redirect()->route('jadwalmapel.all')->with($notification);
+            }
+        } else {
+            Jadwalmapel::insert([
+                'kode_jadwalmapel' => $kode_jadwalmapel,
+                'id_pengampu' => $request->id_pengampu,
+                'id_hari' => $request->id_hari,
+                'id_waktu' => $request->id_waktu,
+                'id_ruangan' => $request->id_ruangan,
+                'status' => '0',
+                'created_by' => Auth::user()->id,
+                'created_at' => Carbon::now(),
+            ]);
+
+            $notification = array(
+                'message' => 'Jadwal Inserted Successfully kode ',
+                'alert-type' => 'success'
+            );
+            return redirect()->route('jadwalmapel.all')->with($notification);
+        }
     }
-
 
 
     public function JadwalmapelUpdate(Request $request, $id)

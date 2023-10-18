@@ -100,10 +100,7 @@ class AbsensiController extends Controller
     public function AbsensiStore(Request $request)
     {
 
-        // $request->validate([
-        //     'tanggal' => 'required|min:3|max:255|unique:absensis,tanggal,NULL,id,id_jadwal,' . $request->input('id_jadwal'),
-
-        // ]);
+       
         $search = $request->search;
         $siswa = Siswa::where('kelas', $search)->get();
         $absensi = Absensi::first();

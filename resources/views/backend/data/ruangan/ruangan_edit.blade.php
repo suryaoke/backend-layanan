@@ -14,61 +14,100 @@
         <input type="hidden" name="id" value="{{ $ruangan->id }}">
 
         <div class="mt-4">
-            <label>
-                Kode Ruangan
-            </label>
-            <input class="intro-x login__input form-control py-3 px-4 block" type="text"
-                placeholder="Masukkan Kode Ruangan" name="kode_ruangan" id="kode_ruangan"
-                value="{{ $ruangan->kode_ruangan }}" required>
-        </div>
-
-        <div class="mt-4">
-            <label for=""> Nama Ruangan</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block"
-                placeholder="Masukkan Nama Ruangan" name="nama" id="nama" value="{{ $ruangan->nama }}" required>
-        </div>
-
-        <div class="mt-4">
-            <label for=""> Kapasitas</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Masukkan Kapasitas"
-                name="kapasitas" id="kapasitas" value="{{ $ruangan->kapasitas }}" required>
-        </div>
-
-        <div class="mt-4">
-            <label for=""> Jurusan</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block" placeholder="Masukkan Jurusan"
-                name="jurusan" id="jurusan" value="{{ $ruangan->jurusan }}" required>
+            <label for="">Kode Ruangan</label>
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="code-2"></i>
+                </div>
+                <input class="intro-x login__input form-control py-3 px-4 block" type="text"
+                    placeholder="Masukkan Kode Ruangan" name="kode_ruangan" id="kode_ruangan"
+                    value="{{ $ruangan->kode_ruangan }}" required>
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
 
 
         <div class="mt-4">
-            <label for=""> Jurusan</label>
-            <select name="id_jurusan" id="id_jurusan" class="tom-select  w-full " required>
-                <option value="{{ $ruangan->id_jurusan }}">{{ $ruangan['jurusans']['nama'] }} </option>
-                @foreach ($jurusan as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                @endforeach
-            </select>
+            <label for="">Nama Ruangan</label>
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="file"></i>
+                </div>
+                <input type="text" class="intro-x login__input form-control py-3 px-4 block"
+                    placeholder="Masukkan Nama Ruangan" name="nama" id="nama" value="{{ $ruangan->nama }}" required>
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
+
+
+
         <div class="mt-4">
-            <label for=""> Type</label>
-            <select name="type" id="type" class="tom-select  w-full " required>
-                <option value="{{ $ruangan->type }}">{{ $ruangan->type }}</option>
-                <option value="Teori">Teori</option>
-                <option value="Teori">Pratikum</option>
-            </select>
+            <label for="">Kapasitas</label>
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="file"></i>
+                </div>
+                <input type="text" class="intro-x login__input form-control py-3 px-4 block"
+                    placeholder="Masukkan Kapasitas" name="kapasitas" id="kapasitas" value="{{ $ruangan->kapasitas }}"
+                    required>
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
+
+
         <div class="mt-4">
-            <button class="btn btn-primary   w-full h-10 xl:w-32 xl:mr-3 align-top" type="submit">Update</button>
+            <label for="">Jurusan</label>
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="file"></i>
+                </div>
+                <select name="id_jurusan" id="id_jurusan" class="tom-select  w-full " required>
+                    <option value="{{ $ruangan->id_jurusan }}">{{ $ruangan['jurusans']['nama'] }} </option>
+                    @foreach ($jurusan as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>
+
+
+        <div class="mt-4">
+            <label for="">Type</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="file"></i>
+                </div>
+                <select name="type" id="type" class="tom-select  w-full " required>
+                    <option value="{{ $ruangan->type }}">{{ $ruangan->type }}</option>
+                    <option value="Teori">Teori</option>
+                    <option value="Teori">Pratikum</option>
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>
+
+        <div class="mt-4">
+            <button class="btn btn-primary   w-full h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
             <a class="btn btn-danger  w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('ruangan.all') }}">Cancel
             </a>
         </div>
 
     </form>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        jQuery(document).ready(function() {
             $('#myForm').validate({
+                ignore: [],
                 rules: {
                     kode_ruangan: {
                         required: true,
@@ -106,7 +145,8 @@
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',
                 errorPlacement: function(error, element) {
-                    error.insertAfter(element);
+                    error.addClass('block text-sm text-red-600');
+                    error.appendTo(element.parent().next());
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');

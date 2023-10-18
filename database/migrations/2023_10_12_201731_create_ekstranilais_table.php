@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('ekstranilais', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_siswa');
+            $table->integer('id_rombel');
             $table->string('nilai')->nullable();
             $table->integer('id_ekstra');
             $table->string('ket')->nullable();

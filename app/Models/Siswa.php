@@ -28,6 +28,20 @@ class Siswa extends Model
     }
     public function jurusans()
     {
-        return $this->belongsTo(Jurusan::class, 'id_jurusan' ,'id');
+        return $this->belongsTo(Jurusan::class, 'id_jurusan', 'id');
+    }
+
+    public function siswas()
+    {
+        return $this->belongsTo(Siswa::class, 'id_siswa', 'id');
+    }
+
+    public function kelass()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas', 'id');
+    }
+    public function rombelsiswa()
+    {
+        return $this->belongsTo(Rombelsiswa::class, 'id_rombelsiswa', 'id');
     }
 }

@@ -9,8 +9,7 @@
             </ul>
         </div>
     @endif
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> <!-- Include jQuery Validation plugin -->
+
     <div class="intro-y flex items-center mt-8 mb-4">
         <h1 class="text-lg font-medium mr-auto">
             Add Pengampu Mata Pelajaran
@@ -20,50 +19,79 @@
     <form method="post" action="{{ route('pengampu.store') }}" enctype="multipart/form-data" id="myForm">
         @csrf
 
-
         <div class="mt-4">
-            <label for=""> Guru</label>
-            <select name="id_guru" id="id_guru" class="tom-select w-full" required>
-                <option value="">Pilih Guru</option>
-                @foreach ($guru as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }} / {{$item->kode_gr }}</option>
-                @endforeach
-            </select>
+            <label for="id_guru">Guru</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="user"></i>
+                </div>
+                <select name="id_guru" id="id_guru" class="tom-select w-full" required>
+                    <option value="">Pilih Guru</option>
+                    @foreach ($guru as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_gr }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-id_guru" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
-            <label for=""> Mata Pelajaran</label>
-            <select name="id_mapel" id="id_mapel" class="tom-select w-full" required>
-                <option value="">Pilih Mapel</option>
-                @foreach ($mapel as $item)
-                    <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_mapel }}</option>
-                @endforeach
-            </select>
-        </div>
+            <label for="id_mapel">Mata Pelajaran</label>
 
-
-        <div class="mt-4">
-            <label for=""> Kelas</label>
-            <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
-                <option value="">Pilih Kelas</option>
-                {{--  @foreach ($kelas as $item)
-                    @php
-                        $siswa = App\Models\Siswa::where('kelas', $item->id)->first();
-                    @endphp
-                    @if ($siswa)
-                        <option value="{{ $siswa->kelas }}">{{ $siswa['kelass']['nama'] }}</option>
-                    @endif
-                @endforeach  --}}
-                @foreach ($kelas as $item)
-                    <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }} {{ $item['jurusans']['nama'] }}</option>
-                @endforeach
-            </select>
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="book"></i>
+                </div>
+                <select name="id_mapel" id="id_mapel" class="tom-select w-full" required>
+                    <option value="">Pilih Mapel</option>
+                    @foreach ($mapel as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama }} / {{ $item->kode_mapel }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-id_mapel" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
-            <label for=""> Kurikulum</label>
-            <input type="text" class="intro-x login__input form-control py-3 px-4 block " name="kurikulum" id="kurikulum"
-                value="2013" readonly>
+            <label for="kelas">Kelas</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="home"></i>
+                </div>
+                <select name="kelas" id="kelas" class="tom-select w-full mt-1" required>
+                    <option value="">Pilih Kelas</option>
+
+                    @foreach ($kelas as $item)
+                        <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                            {{ $item['jurusans']['nama'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>
+
+        <div class="mt-4">
+            <label for="kurikulum">Kurikulum</label>
+
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="file"></i>
+                </div>
+                <input type="text" class="intro-x login__input form-control py-3 px-4 block " name="kurikulum"
+                    id="kurikulum" value="2013" readonly>
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
@@ -74,10 +102,14 @@
 
     </form>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
             $('#myForm').validate({
+                ignore: [],
                 rules: {
+                    // Your form validation rules
                     id_guru: {
                         required: true,
                     },
@@ -90,9 +122,9 @@
                     kurikulum: {
                         required: true,
                     },
-
                 },
                 messages: {
+                    // Your form validation messages
                     id_guru: {
                         required: 'Please Enter Your Guru',
                     },
@@ -105,12 +137,12 @@
                     kurikulum: {
                         required: 'Please Enter Your Kurikulum',
                     },
-
                 },
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',
                 errorPlacement: function(error, element) {
-                    error.insertAfter(element);
+                    error.addClass('block text-sm text-red-600');
+                    error.appendTo(element.parent().next());
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');
@@ -121,5 +153,4 @@
             });
         });
     </script>
-
 @endsection

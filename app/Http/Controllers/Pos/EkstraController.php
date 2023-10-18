@@ -7,6 +7,7 @@ use App\Models\Ekstra;
 use App\Models\Ekstranilai;
 use App\Models\Guru;
 use App\Models\Kelas;
+use App\Models\Rombelsiswa;
 use App\Models\Siswa;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -148,7 +149,7 @@ class EkstraController extends Controller
     {
         $guru = Guru::where('id_user', Auth::user()->id)->first();
         $ekstra = Ekstra::where('id_guru', $guru->id)->first();
-        $ekstranilai = Ekstranilai::where('id_ekstra', $ekstra->id)->orderBy('id_ekstra', 'asc')->orderby('id_siswa', 'asc')->get();
+        $ekstranilai = Ekstranilai::where('id_ekstra', $ekstra->id)->orderBy('id_ekstra', 'asc')->get();
 
         return view('backend.data.ekstra.ekstranilai_all', compact('ekstranilai'));
     } // end method
@@ -156,22 +157,19 @@ class EkstraController extends Controller
     public function EkstranilaiAdd()
     {
 
-        $siswa = Siswa::orderBy('id', 'asc')->get();
+        $rombelsiswa = Rombelsiswa::orderBy('id', 'asc')->get();
         $kelas = Kelas::orderBy('nama', 'asc')->get();
         $guru = Guru::where('id_user', Auth::user()->id)->first();
         $ekstra = Ekstra::where('id_guru', $guru->id)->get();
 
-        return view('backend.data.ekstra.ekstranilai_add', compact('ekstra', 'siswa', 'kelas'));
+        return view('backend.data.ekstra.ekstranilai_add', compact('ekstra', 'rombelsiswa', 'kelas'));
     } // end method
     public function EkstranilaiStore(Request $request)
     {
-        // $request->validate([
-        //     'nama' => ['required', 'string', 'max:255', 'unique:' . Ekstra::class],
 
-        // ]);
         Ekstranilai::insert([
             'id_ekstra' => $request->id_ekstra,
-            'id_siswa' => $request->id_siswa,
+            'id_rombelsiswa' => $request->id_rombelsiswa,
             'nilai' => $request->nilai,
             'ket' => $request->ket,
             'created_by' => Auth::user()->id,
@@ -192,10 +190,10 @@ class EkstraController extends Controller
 
         $guru = Guru::orderBy('kode_gr', 'asc')->get();
         $siswa = Siswa::orderBy('id', 'asc')->get();
-
+        $rombelsiswa = Rombelsiswa::orderBy('id', 'asc')->get();
         $guru1 = Guru::where('id_user', Auth::user()->id)->first();
         $ekstra = Ekstra::where('id_guru', $guru1->id)->get();
-        return view('backend.data.ekstra.ekstranilai_edit', compact('ekstra', 'ekstranilai', 'guru', 'siswa'));
+        return view('backend.data.ekstra.ekstranilai_edit', compact('rombelsiswa', 'ekstra', 'ekstranilai', 'guru', 'siswa'));
     } // end method
 
     public function EkstranilaiUpdate(Request $request)
@@ -204,7 +202,7 @@ class EkstraController extends Controller
         $ekstra_id = $request->id;
         Ekstranilai::findOrFail($ekstra_id)->update([
             'id_ekstra' => $request->id_ekstra,
-            'id_siswa' => $request->id_siswa,
+            'id_rombelsiswa' => $request->id_rombelsiswa,
             'nilai' => $request->nilai,
             'ket' => $request->ket,
             'updated_by' => Auth::user()->id,
@@ -234,10 +232,10 @@ class EkstraController extends Controller
 
     public function EkstranilaiView($id)
     {
-        $ekstranilai = Ekstranilai::where('id_ekstra', $id)->orderBy('id_siswa', 'asc')->get();
+        $ekstranilai = Ekstranilai::where('id_ekstra', $id)->orderBy('id', 'asc')->get();
 
-     
-        return view('backend.data.ekstra.ekstranilai_view', compact( 'ekstranilai'));
+
+        return view('backend.data.ekstra.ekstranilai_view', compact('ekstranilai'));
     } // end method
 
 }

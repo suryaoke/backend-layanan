@@ -14,7 +14,6 @@ class Rombel extends Model
         return $this->belongsTo(Guru::class, 'id_guru', 'id');
     }
 
-
     public function jurusans()
     {
         return $this->belongsTo(Jurusan::class, 'id_jurusan', 'id');

@@ -20,7 +20,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Ekstrakulikuler</th>
+                                        <th style="white-space: nowrap;">Nama Ekstrakulikuler</th>
                                         <th>Nisn</th>
                                         <th>Nama</th>
                                         <th>Kelas</th>
@@ -34,15 +34,19 @@
                                     @foreach ($ekstranilai as $key => $item)
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-                                            <td> {{ $item['ekstras']['nama'] }} </td>
-                                            <td> {{ $item['siswas']['nisn'] }} </td>
-                                            <td> {{ $item['siswas']['nama'] }} </td>
-
-                                            <td style="white-space: nowrap;"> {{ $item['siswas']['kelass']['tingkat'] }}
-                                                {{ $item['siswas']['kelass']['nama'] }}
-                                                {{ $item['siswas']['kelass']['jurusans']['nama'] }}
+                                            <td style="white-space: nowrap;"> {{ $item['ekstras']['nama'] }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['rombelsiswa']['siswas']['nisn'] }}
                                             </td>
-                                            <td> {{ $item['siswas']['jk'] }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['rombelsiswa']['siswas']['nama'] }}
+                                            </td>
+
+                                            <td style="white-space: nowrap;">
+                                                {{ $item['rombelsiswa']['rombels']['kelass']['tingkat']}}
+                                                {{ $item['rombelsiswa']['rombels']['kelass']['nama']}}
+                                                {{ $item['rombelsiswa']['rombels']['kelass']['jurusans']['nama']}}
+                                            
+                                            </td>
+                                            <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
                                             <td>
                                                 @if ($item->nilai == null)
                                                     -

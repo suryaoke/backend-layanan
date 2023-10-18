@@ -357,9 +357,9 @@
                                              @elseif ($url == $seksiadd)
                                                  <a href="javascript:;" class="side-menu  side-menu--active">
                                                  @elseif ($url == $seksiedit)
-                                                     <a href="javascript:;" class="side-menu side-menu--active">                                                  
-                                                                 @else
-                                                                     <a href="javascript:;" class="side-menu ">
+                                                     <a href="javascript:;" class="side-menu side-menu--active">
+                                                     @else
+                                                         <a href="javascript:;" class="side-menu ">
                  @endif
                  <div class="side-menu__icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -414,16 +414,10 @@
                          <a href="javascript:;" class="side-menu side-menu--active">
                          @elseif ($ekstraedit == $url)
                              <a href="javascript:;" class="side-menu side-menu--active">
-                             @elseif ($waktu == $url)
+                             @elseif ($ekstranilaiview == $url)
                                  <a href="javascript:;" class="side-menu side-menu--active">
-                                 @elseif ($waktuadd == $url)
-                                     <a href="javascript:;" class="side-menu side-menu--active">
-                                     @elseif ($waktuedit == $url)
-                                         <a href="javascript:;" class="side-menu side-menu--active">
-                                         @elseif ($ekstranilaiview == $url)
-                                             <a href="javascript:;" class="side-menu side-menu--active">
-                                             @else
-                                                 <a href="javascript:;" class="side-menu side-menu">
+                                 @else
+                                     <a href="javascript:;" class="side-menu side-menu">
                  @endif
 
                  <div class="side-menu__icon">
@@ -573,7 +567,7 @@
                          <ul class="">
                              <li>
                                  <a href="{{ route('ruangan.all') }}" class="side-menu">
-                                     <div class="side-menu__icon"> <i data-lucide="home"></i></div>
+                                     <div class="side-menu__icon"> <i data-lucide="file"></i></div>
                                      <div class="side-menu__title"> Ruangan</div>
                                  </a>
                              </li>

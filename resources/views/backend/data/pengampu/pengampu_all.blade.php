@@ -32,9 +32,11 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Pengampu</th>
-                                        <th>Kode Guru</th>
-                                        <th>Kode Mapel</th>
+                                        <th style="white-space: nowrap;">Kode Pengampu</th>
+                                        <th style="white-space: nowrap;">Nama Guru</th>
+                                        <th style="white-space: nowrap;">Kode Guru</th>
+                                        <th style="white-space: nowrap;">Mata Pelajaran</th>
+                                        <th style="white-space: nowrap;">Kode Mapel</th>
                                         <th>Kelas</th>
                                         <th>Kurikulum</th>
                                         <th>Action</th>
@@ -44,10 +46,14 @@
                                     @foreach ($pengampu as $key => $item)
                                         <tr>
                                             <td> {{ $key + 1 }} </td>
-                                            <td class="text-primary"> {{ $item->kode_pengampu }} </td>
-                                            <td> {{ $item['gurus']['kode_gr'] }} </td>
-                                            <td> {{ $item['mapels']['kode_mapel'] }} </td>
-                                            <td> {{ $item['kelass']['tingkat'] }} {{ $item['kelass']['nama'] }}
+                                            <td style="white-space: nowrap;" class="text-primary">
+                                                {{ $item->kode_pengampu }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['gurus']['nama'] }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['gurus']['kode_gr'] }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['mapels']['nama'] }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['mapels']['kode_mapel'] }} </td>
+                                            <td style="white-space: nowrap;"> {{ $item['kelass']['tingkat'] }}
+                                                {{ $item['kelass']['nama'] }}
                                                 {{ $item['kelass']['jurusans']['nama'] }} </td>
                                             <td> {{ $item->kurikulum }} </td>
 

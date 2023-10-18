@@ -14,11 +14,10 @@
         <!-- BEGIN: Users Layout -->
         @foreach ($ekstra as $key => $item)
             @php
-                $guru = App\Models\Guru::where('id', $item->id_guru)->first();
 
-                $siswa = App\Models\Siswa::where('kelas', $item->id_kelas)->count();
-
+                $guru = App\Models\Guru::find($item->id_guru);
                 $ekstranilai = App\Models\Ekstranilai::where('id_ekstra', $item->id)->count();
+                 
 
             @endphp
 
