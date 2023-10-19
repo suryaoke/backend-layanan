@@ -8,6 +8,8 @@ use App\Models\Kelas;
 use App\Models\Nilaiprestasi;
 use App\Models\Nilaisosial;
 use App\Models\Nilaispiritual;
+use App\Models\Rombel;
+use App\Models\Rombelsiswa;
 use App\Models\Siswa;
 use App\Models\Walas;
 use Carbon\Carbon;
@@ -23,9 +25,23 @@ class RaporController extends Controller
         $guruId = Guru::where('id_user', Auth::user()->id)->first();
         $walas = Walas::where('id_guru', $guruId->id)->orderBy('id', 'asc')->first();
         $siswa = null; // inisialisasi variabel $siswa
+
+
         if ($walas) {
-            $siswa = Siswa::where('kelas', $walas->id_kelas)->orderBy('nama', 'asc')->get();
+            $rombel = Rombel::where('id_walas', $walas->id)->first();
+            if ($rombel) {
+                $rombelSiswa = Rombelsiswa::where('id_rombel', $rombel->id)->get();
+                if ($rombelSiswa) {
+                    $siswaIds = $rombelSiswa->pluck('id_siswa')->unique()->toArray();
+                    $siswa = Siswa::whereIn('id', $siswaIds)->get();
+                }
+            }
         }
+
+
+        // if ($walas) {
+        //     $siswa = Siswa::where('kelas', $walas->id_kelas)->orderBy('nama', 'asc')->get();
+        // }
 
         $data = [
             'walas' => $walas,
@@ -102,9 +118,15 @@ class RaporController extends Controller
         $walas = Walas::where('id_guru', $guruId->id)->orderBy('id', 'asc')->first();
         $siswa = null; // inisialisasi variabel $siswa
         if ($walas) {
-            $siswa = Siswa::where('kelas', $walas->id_kelas)->orderBy('nama', 'asc')->get();
+            $rombel = Rombel::where('id_walas', $walas->id)->first();
+            if ($rombel) {
+                $rombelSiswa = Rombelsiswa::where('id_rombel', $rombel->id)->get();
+                if ($rombelSiswa) {
+                    $siswaIds = $rombelSiswa->pluck('id_siswa')->unique()->toArray();
+                    $siswa = Siswa::whereIn('id', $siswaIds)->get();
+                }
+            }
         }
-
         $data = [
             'walas' => $walas,
             'siswa' => $siswa,
@@ -177,9 +199,15 @@ class RaporController extends Controller
         $walas = Walas::where('id_guru', $guruId->id)->orderBy('id', 'asc')->first();
         $siswa = null; // inisialisasi variabel $siswa
         if ($walas) {
-            $siswa = Siswa::where('kelas', $walas->id_kelas)->orderBy('nama', 'asc')->get();
+            $rombel = Rombel::where('id_walas', $walas->id)->first();
+            if ($rombel) {
+                $rombelSiswa = Rombelsiswa::where('id_rombel', $rombel->id)->get();
+                if ($rombelSiswa) {
+                    $siswaIds = $rombelSiswa->pluck('id_siswa')->unique()->toArray();
+                    $siswa = Siswa::whereIn('id', $siswaIds)->get();
+                }
+            }
         }
-
         $data = [
             'walas' => $walas,
             'siswa' => $siswa,

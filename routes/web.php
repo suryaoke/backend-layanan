@@ -185,11 +185,12 @@ Route::controller(RombelController::class)->middleware(['auth'])->group(function
 // Seksi All Route
 Route::controller(SeksiController::class)->middleware(['auth'])->group(function () {
     Route::get('/seksi/all', 'SeksiAll')->name('seksi.all');
-    Route::get('/seksi/add', 'SeksiAdd')->name('seksi.add'); 
+    Route::get('/seksi/add', 'SeksiAdd')->name('seksi.add');
     Route::post('/seksi/store', 'SeksiStore')->name('seksi.store');
     Route::get('/seksi/delete/{id}', 'SeksiDelete')->name('seksi.delete');
     Route::get('/seksi/edit/{id}', 'SeksiEdit')->name('seksi.edit');
     Route::post('/seksi/update', 'SeksiUpdate')->name('seksi.update');
+    Route::get('/get-jadwalmapel/{id_kelas}', 'getJadwalmapel')->name('getjadwal.mapel');
 });
 
 
@@ -208,7 +209,7 @@ Route::controller(EkstraController::class)->middleware(['auth'])->group(function
     Route::post('/ekstranilai/store', 'EkstranilaiStore')->name('ekstranilai.store');
     Route::get('/ekstranilai/delete/{id}', 'EkstranilaiDelete')->name('ekstranilai.delete');
     Route::get('/ekstranilai/edit/{id}', 'EkstranilaiEdit')->name('ekstranilai.edit');
-    Route::post('/ekstranilai/update', 'EkstranilaiUpdate')->name('ekstranilai.update'); 
+    Route::post('/ekstranilai/update', 'EkstranilaiUpdate')->name('ekstranilai.update');
     Route::get('/ekstranilai/view/{id}', 'EkstranilaiView')->name('ekstranilai.view');
 });
 

@@ -50,20 +50,44 @@
               dark:text-slate-400 -mr-1">
                     <i data-lucide="users"></i>
                 </div>
-                <select name="id_rombel" id="id_rombel" class="tom-select  w-full " required>
+                <select name="id_rombel" id="id_rombel" class="tom-select w-full" required>
                     <option value="">Pilih Rombel</option>
                     @foreach ($rombel as $item)
-                        <option value="{{ $item->id }}">{{ $item['kelass']['tingkat'] }}
-                            {{ $item['kelass']['nama'] }} {{ $item['kelass']['jurusans']['nama'] }} </option>
+                        @php
+                            $pengampus = App\Models\Pengampu::where('kelas', $item->id_kelas)->get();
+                            $jadwalsData = [];
+                            $mapelsData = [];
+                            $kodeData = [];
+                            $guruData = [];
+                            foreach ($pengampus as $peng) {
+                                $jadwals = App\Models\Jadwalmapel::where('id_pengampu', $peng->id)->where('status','2')->get();
+                                foreach ($jadwals as $jadwal) {
+                                    $jadwalsData[] = $jadwal->id;
+                                    $mapelsData[] = $jadwal->pengampus->mapels->nama;
+                                    $kodeData[] = $jadwal->kode_jadwalmapel;
+                                    $guruData[] = $jadwal->pengampus->gurus->nama;
+                                }
+                            }
+                        @endphp
+                        <option value="{{ $item->id }}" data-jadwal="{{ json_encode($jadwalsData) }}"
+                            data-mapel="{{ json_encode($mapelsData) }}" data-kode="{{ json_encode($kodeData) }}"
+                            data-guru="{{ json_encode($guruData) }}">
+               
+                            {{ $item->kelass->tingkat }}
+                            {{ $item->kelass->nama }} {{ $item->kelass->jurusans->nama }}
+                        </option>
                     @endforeach
                 </select>
+
+
+
             </div>
             <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
 
         <div class="mt-4">
-            <label for="">Mata Pelajaran</label>
+            <label for="">Jadwal Mata Pelajaran</label>
 
             <div class="mt-1 flex">
                 <div
@@ -72,33 +96,13 @@
               dark:text-slate-400 -mr-1">
                     <i data-lucide="book"></i>
                 </div>
-                <select name="id_jadwal" id="id_jadwal" class="tom-select  w-full " required>
-                    <option value="">Pilih Mata Pelajaran</option>
-                    @foreach ($jadwalmapel as $item)
-                        <option value="{{ $item->id }}"
-                            data-guru="{{ $item['pengampus']['gurus']['kode_gr'] }} / {{ $item['pengampus']['gurus']['nama'] }}">
-                            {{ $item['pengampus']['mapels']['nama'] }} /
-                            {{ $item['pengampus']['kelass']['tingkat'] }}{{ $item['pengampus']['kelass']['nama'] }}
-                            {{ $item['pengampus']['kelass']['jurusans']['nama'] }}
-                        </option>
-                    @endforeach
+
+                <select name="id_jadwal" id="id_jadwal" class="form-control" required>
                 </select>
+
             </div>
             <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
-
-
-        <div class="mt-4">
-            <label for="">Guru</label>
-            <div class="input-group mt-1">
-                <div id="input-group-email" class="input-group-text">
-                    <i data-lucide="user"></i>
-                </div>
-                <input type="text" id="guru" value="" class="form-control" readonly>
-            </div>
-            <span id="error-kurikulum" class="text-sm text-red-600"></span>
-        </div>
-
 
 
 
@@ -172,4 +176,33 @@
 
         });
     </script>
+
+
+
+    <script>
+        document.getElementById("id_rombel").addEventListener("change", function() {
+            var selectedOption = this.options[this.selectedIndex];
+
+            var pengampusData = JSON.parse(selectedOption.getAttribute("data-jadwal"));
+            var mapelsData = JSON.parse(selectedOption.getAttribute("data-mapel"));
+            var kodeData = JSON.parse(selectedOption.getAttribute("data-kode"));
+            var guruData = JSON.parse(selectedOption.getAttribute("data-guru"));
+
+            var selectJadwal = document.getElementById("id_jadwal");
+            selectJadwal.innerHTML = ''; // menghapus opsi sebelumnya
+
+            if (pengampusData) {
+                for (var i = 0; i < pengampusData.length; i++) {
+                    var option = document.createElement("option");
+                    option.text =  mapelsData[i] + " - Seksi: " + kodeData[i];
+                    option.value = pengampusData[i];
+                    selectJadwal.add(option);
+                }
+            }
+        });
+    </script>
+
+
+
+
 @endsection

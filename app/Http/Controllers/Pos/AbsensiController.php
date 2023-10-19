@@ -9,6 +9,9 @@ use App\Models\Jadwalmapel;
 use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Pengampu;
+use App\Models\Rombel;
+use App\Models\Rombelsiswa;
+use App\Models\Seksi;
 use App\Models\Siswa;
 use App\Models\Walas;
 use Carbon\Carbon;
@@ -84,37 +87,40 @@ class AbsensiController extends Controller
         // Mendapatkan ID pengguna yang saat ini aktif
         $userId = Auth::user()->id;
 
-        // Menjalankan query untuk mengambil data jadwalmapels yang sesuai
-        $jadwal = Jadwalmapel::join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+
+        $seksi = Seksi::join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
             ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
             ->join('users', 'gurus.id_user', '=', 'users.id')
             ->where('users.id', $userId)
             ->where('jadwalmapels.status', 2)
-            ->select('jadwalmapels.*')
+            ->select('seksis.*')
             ->get();
 
-        return view('backend.data.absensi.absensi_add', compact('jadwal',  'kelas'));
+
+        return view('backend.data.absensi.absensi_add', compact('seksi',  'kelas'));
     } // end method
 
 
     public function AbsensiStore(Request $request)
     {
 
-       
+
         $search = $request->search;
-        $siswa = Siswa::where('kelas', $search)->get();
+        $rombelsiswa = Rombelsiswa::where('id_rombel', $search)->get();
+        //   $siswa = Siswa::where('id', $rombelsiswa->id_siswa)->get();
         $absensi = Absensi::first();
 
-        foreach ($siswa as $row) {
+        foreach ($rombelsiswa as $row) {
 
             $existingAbsensi = Absensi::where([
                 'tanggal' => $request->input('tanggal'),
                 'id_jadwal' => $request->input('id_jadwal'),
-                'id_siswa' => $row->id
+                'id_siswa' => $row->id_siswa
             ])->first();
             if (!$existingAbsensi) {
                 $absensi = new Absensi();
-                $absensi->id_siswa = $row->id;
+                $absensi->id_siswa = $row->id_siswa;
                 $absensi->tanggal = $request->tanggal;
                 $absensi->status = $request->status;
                 $absensi->ket = $request->ket;
@@ -137,7 +143,7 @@ class AbsensiController extends Controller
         );
         return redirect()->route('absensi.siswa', [
             'tanggal' => $request->tanggal,
-            'kelas' => Kelas::find($request->search)->id,
+            'kelas' => Rombel::find($request->search)->kelass->id,
             'mapel' => Jadwalmapel::find($request->id_jadwal)->pengampus->mapels->nama,
 
 
@@ -253,23 +259,35 @@ class AbsensiController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    public function AbsensiSiswaguruwalas()
+    public function AbsensiSiswaGuruWalas()
     {
         $userId = Auth::user()->id;
-        $absensi = Absensi::all();
-        $guru = Guru::where('id_user', $userId)->first();
 
-        if ($guru) {
-            $walas = Walas::where('id_guru', $guru->id)->first();
-            if ($walas) {
-                $siswa = Siswa::where('kelas', $walas->id_kelas)->get();
-            } else {
-                $siswa = collect(); // membuat koleksi kosong jika $walas null
+        $guru = Guru::where('id_user', $userId)->first();
+        $walas = $guru ? Walas::where('id_guru', $guru->id)->first() : null;
+        $siswa = null; // inisialisasi variabel $siswa
+        $absensi = null; // inisialisasi variabel $absensi
+
+        if ($walas) {
+            $rombel = Rombel::where('id_walas', $walas->id)->first();
+            if ($rombel) {
+                $rombelSiswa = RombelSiswa::where('id_rombel', $rombel->id)->get();
+                if ($rombelSiswa) {
+                    $siswaIds = $rombelSiswa->pluck('id_siswa')->unique()->toArray();
+                    $siswa = Siswa::whereIn('id', $siswaIds)->get();
+                    if ($siswa) {
+                        $absensi = Absensi::whereIn('id_siswa', $siswaIds)->get();
+                    }
+                }
             }
-        } else {
-            $siswa = collect(); // membuat koleksi kosong jika $guru null
         }
 
-        return view('backend.data.absensi.absensi_guruwalas', compact('siswa', 'absensi'));
+        $data = [
+            'walas' => $walas,
+            'siswa' => $siswa,
+        ];
+
+        return view('backend.data.absensi.absensi_guruwalas', compact('absensi', 'data', 'walas', 'siswa'));
     }
+
 }

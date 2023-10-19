@@ -113,14 +113,17 @@
                             $jadwal = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
                             $pengampu = App\Models\Pengampu::where('id', $jadwal->id_pengampu)->first();
                             $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
+                            $seksi = App\Models\Seksi::where('id', $item->id_jadwal)->first();
+                            $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id_siswa)->first();
+                            $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
                         @endphp
                         <td> {{ $key + 1 }} </td>
                         @if ($item['siswass'] != null)
                             <td>{{ $item['siswass']['nama'] }}</td>
                             <td>{{ $item['siswass']['nisn'] }}</td>
-                            <td>{{ $item['siswass']['kelass']['tingkat'] }}
-                                {{ $item['siswass']['kelass']['nama'] }}
-                                {{ $item['siswass']['kelass']['jurusans']['nama'] }}
+                            <td>{{ $rombel['kelass']['tingkat'] }}
+                                {{ $rombel['kelass']['nama'] }}
+                                {{ $rombel['kelass']['jurusans']['nama'] }}
                             </td>
                         @else
                             <td></td>

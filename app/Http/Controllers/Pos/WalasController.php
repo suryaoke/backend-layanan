@@ -26,8 +26,19 @@ class WalasController extends Controller
     public function WalasAdd()
     {
 
-        $guru = Guru::orderBy('kode_gr', 'asc')->get();
-        $kelas = Kelas::orderBy('nama', 'asc')->get();
+
+        $guru = Guru::orderBy('kode_gr', 'asc')
+            ->whereNotIn('id', function ($query) {
+                $query->select('id_guru')
+                    ->from('walas');
+            })
+            ->get();
+        $kelas = Kelas::orderBy('tingkat', 'asc')
+            ->whereNotIn('id', function ($query) {
+                $query->select('id_kelas')
+                    ->from('walas');
+            })
+            ->get();
 
         return view('backend.data.walas.walas_add', compact('guru', 'kelas'));
     } // end method
@@ -55,8 +66,18 @@ class WalasController extends Controller
     {
         $walas = Walas::findOrFail($id);
 
-        $guru = Guru::orderBy('kode_gr', 'asc')->get();
-        $kelas = Kelas::orderBy('nama', 'asc')->get();
+        $guru = Guru::orderBy('kode_gr', 'asc')
+            ->whereNotIn('id', function ($query) {
+                $query->select('id_guru')
+                    ->from('walas');
+            })
+            ->get();
+        $kelas = Kelas::orderBy('tingkat', 'asc')
+            ->whereNotIn('id', function ($query) {
+                $query->select('id_kelas')
+                    ->from('walas');
+            })
+            ->get();
         return view('backend.data.walas.walas_edit', compact('walas', 'guru', 'kelas'));
     } // end method
 

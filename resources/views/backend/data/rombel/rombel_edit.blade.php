@@ -85,12 +85,13 @@
                     <i data-lucide="user"></i>
                 </div>
                 <select data-placeholder="Select Siswa" name="id_siswa[]" class="tom-select w-full" multiple>
-                    <option value="">(in_array( $selectedSiswa))</option>
-                    @foreach ($siswa as $item)
+                   
+                     @foreach ($siswa as $item)
                         <option value="{{ $item->id }}" @if (in_array($item->id, $selectedSiswa)) selected @endif>
                             {{ $item->nama }} </option>
-                    @endforeach
-                </select>
+                    @endforeach  
+       
+                </select>  
             </div>
             <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
@@ -98,7 +99,7 @@
 
         <div class="mt-2">
             <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('walas.all') }}">Cancel
+            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('rombel.all') }}">Cancel
             </a>
         </div>
     </form>
@@ -119,9 +120,7 @@
                     id_walas: {
                         required: true,
                     },
-                    'id_siswa[]': {
-                        required: true,
-                    },
+
                 },
                 messages: {
                     kode_rombel: {
@@ -133,9 +132,7 @@
                     id_walas: {
                         required: 'Please Enter Your Walas',
                     },
-                    'id_siswa[]': {
-                        required: 'Please Enter Your Siswa',
-                    },
+
                 },
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',

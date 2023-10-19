@@ -27,7 +27,7 @@ class RombelController extends Controller
     {
 
         $guru = Guru::orderBy('kode_gr', 'asc')->get();
-        $kelas = Kelas::orderBy('nama', 'asc')
+        $kelas = Kelas::orderBy('tingkat', 'asc')
             ->whereNotIn('id', function ($query) {
                 $query->select('id_kelas')
                     ->from('rombels');
@@ -89,7 +89,7 @@ class RombelController extends Controller
     {
         $rombel = Rombel::findOrFail($id);
         $guru = Guru::orderBy('kode_gr', 'asc')->get();
-        $kelas = Kelas::orderBy('nama', 'asc')
+        $kelas = Kelas::orderBy('tingkat', 'asc')
             ->whereNotIn('id', function ($query) use ($id) {
                 $query->select('id_kelas')
                     ->from('rombels')
@@ -105,13 +105,19 @@ class RombelController extends Controller
             })
             ->get();
 
-        $siswa = Siswa::orderBy('id', 'asc')
+        $siswa = Siswa::orderBy('id', 'asc')->get();
 
+
+        $siswatersimpan = Siswa::orderBy('id', 'asc')
+            ->whereNotIn('id', function ($query) {
+                $query->select('id_siswa')
+                    ->from('rombelsiswas');
+            })
             ->get();
 
         $selectedSiswa = RombelSiswa::where('id_rombel', $id)->pluck('id_siswa')->all();
 
-        return view('backend.data.rombel.rombel_edit', compact('siswa', 'walas', 'guru', 'kelas', 'rombel', 'selectedSiswa'));
+        return view('backend.data.rombel.rombel_edit', compact('siswatersimpan', 'siswa', 'walas', 'guru', 'kelas', 'rombel', 'selectedSiswa'));
     }
     public function RombelUpdate(Request $request, $id)
     {
@@ -136,11 +142,13 @@ class RombelController extends Controller
 
         // Memperbarui RombelSiswa
         $selectedSiswa = $request->input('id_siswa');
-        foreach ($selectedSiswa as $siswaId) {
-            $rombelsiswa = new RombelSiswa();
-            $rombelsiswa->id_rombel = $rombel->id; // ID Rombel yang baru saja diperbarui
-            $rombelsiswa->id_siswa = $siswaId;
-            $rombelsiswa->save();
+        if (!is_null($selectedSiswa)) {
+            foreach ($selectedSiswa as $siswaId) {
+                $rombelsiswa = new RombelSiswa();
+                $rombelsiswa->id_rombel = $rombel->id; // ID Rombel yang baru saja diperbarui
+                $rombelsiswa->id_siswa = $siswaId;
+                $rombelsiswa->save();
+            }
         }
 
         $notification = array(
@@ -150,6 +158,7 @@ class RombelController extends Controller
 
         return redirect()->route('rombel.all')->with($notification);
     }
+
 
 
     public function RombelDelete($id)

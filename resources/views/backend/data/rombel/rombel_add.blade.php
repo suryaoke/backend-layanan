@@ -47,7 +47,12 @@
                 <select name="id_kelas" id="id_kelas" class="tom-select  w-full " required>
                     <option value="">Pilih Kelas</option>
                     @foreach ($kelas as $item)
-                        <option value="{{ $item->id }}">{{ $item->tingkat }}{{ $item->nama }}
+                        @php
+                            $walas = App\Models\Walas::where('id_kelas', $item->id)->first();
+                        @endphp
+                        <option value="{{ $item->id }}" data-walas="{{ $walas ? $walas->id : '' }}"
+                            data-walas1="{{ $walas ? $walas['gurus']['nama'] : '' }}">
+                            {{ $item->tingkat }}{{ $item->nama }}
                             {{ $item['jurusans']['nama'] }} </option>
                     @endforeach
                 </select>
@@ -56,7 +61,7 @@
         </div>
 
 
-        <div class="mt-4">
+        {{--  <div class="mt-4">
             <label for="">Wali Kelas</label>
 
             <div class="mt-1 flex">
@@ -74,6 +79,18 @@
                 </select>
             </div>
             <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>  --}}
+
+        <div class="mt-4">
+            <label for="">Wali Kelas</label>
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="key"></i>
+                </div>
+                <input type="hidden" class="form-control" name="id_walas" id="walas" value="">
+                <input type="text" class="form-control" id="walas1" value="" readonly>
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
 
         <div class="mt-4">
@@ -151,6 +168,21 @@
                     $(element).removeClass('is-invalid');
                 },
             });
+        });
+    </script>
+
+
+    <script>
+        // Menambahkan event listener ke dropdown mata pelajaran
+        document.getElementById("id_kelas").addEventListener("change", function() {
+            // Mendapatkan nilai kelas dari data-kelas yang terkait dengan option yang dipilih
+            var selectedOption = this.options[this.selectedIndex];
+            var kelas = selectedOption.getAttribute("data-walas");
+            var kelas1 = selectedOption.getAttribute("data-walas1");
+
+            // Memasukkan nilai kelas ke input kelas
+            document.getElementById("walas").value = kelas;
+            document.getElementById("walas1").value = kelas1;
         });
     </script>
 @endsection

@@ -33,7 +33,7 @@ class Absensi extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas');
     }
-
+  
     public function mapels()
     {
         return $this->belongsTo(Mapel::class, 'id_mapel');
@@ -42,5 +42,13 @@ class Absensi extends Model
     {
         return $this->belongsTo(Mapel::class, 'id_jurusan');
     }
+
+    public function rombels()
+    {
+        return $this->belongsTo(Rombel::class, 'id_rombel', 'id');
+    }
+    public function rombelsiswas()
+    {
+        return $this->belongsTo(Rombelsiswa::class, 'id_siswa', 'id');
+    }
 }
-    

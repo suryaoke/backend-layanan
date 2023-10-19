@@ -34,17 +34,17 @@
                                         @foreach ($siswa as $key => $item)
                                             @php
                                                 $nilaispiritual = App\Models\Nilaispiritual::where('id_siswa', $item->id)->first();
+                                                $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
+                                                $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+                                                $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
                                             @endphp
                                             <tr>
                                                 <td style="white-space: nowrap;"> {{ $key + 1 }} </td>
 
                                                 <td style="white-space: nowrap;"> {{ $item->nisn }} </td>
                                                 <td style="white-space: nowrap;"> {{ $item->nama }} </td>
-                                                <td style="white-space: nowrap;">
-                                                    {{ $item['kelass']['tingkat'] }}
-                                                    {{ $item['kelass']['nama'] }}
-                                                    {{ $item['kelass']['jurusans']['nama'] }}
-                                                </td>
+                                                <td style="white-space: nowrap;"> {{ $kelas->tingkat }}{{ $kelas->nama }}
+                                                    {{ $kelas['jurusans']['nama'] }} </td>
                                                 <td style="white-space: nowrap;"> {{ $item->jk }} </td>
                                                 {{--  <td style="white-space: nowrap;">
                                                     @if ($nilaispiritual)
@@ -165,9 +165,9 @@
     <!--  Modal Add Nilaispiritual All Content -->
     @if ($walas)
         @foreach ($siswa as $item)
-            @php
+            {{--  @php
                 $walas = App\Models\Walas::where('id_kelas', $item->kelas)->first();
-            @endphp
+            @endphp  --}}
             <!-- BEGIN: Modal Kirim Jadwal All-->
             <div id="add-nilaispiritual-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -211,8 +211,8 @@
                                     </select>
                                 </div>
 
-                                <div class="col-span-12 sm:col-span-6"> <label for="modal-form-3"
-                                        class="form-label">Shalat Berjamaah</label> <select name="nilai_shalatberjamaah" class="tom-select w-full"
+                                <div class="col-span-12 sm:col-span-6"> <label for="modal-form-3" class="form-label">Shalat
+                                        Berjamaah</label> <select name="nilai_shalatberjamaah" class="tom-select w-full"
                                         required>
                                         <option value="A">A - Baik Sekali</option>
                                         <option value="B">B - Baik</option>

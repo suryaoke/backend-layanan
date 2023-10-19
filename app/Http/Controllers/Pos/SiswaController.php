@@ -7,6 +7,8 @@ use App\Models\Guru;
 use App\Models\Jadwalmapel;
 use App\Models\Kelas;
 use App\Models\Pengampu;
+use App\Models\Rombel;
+use App\Models\Rombelsiswa;
 use App\Models\Siswa;
 use App\Models\User;
 use App\Models\Walas;
@@ -25,7 +27,7 @@ class SiswaController extends Controller
         $siswa = Siswa::orderBy('nisn', 'desc')
             ->orderBy('nama', 'asc')
             ->paginate(perPage: 50);
-     
+
         return view('backend.data.siswa.siswa_all', compact('siswa'));
     } // end method
 
@@ -37,7 +39,7 @@ class SiswaController extends Controller
         $user = User::where('role', '6')
             ->whereNotIn('id', $orangtuaIds)
             ->get();
-        return view('backend.data.siswa.siswa_add', compact( 'user'));
+        return view('backend.data.siswa.siswa_add', compact('user'));
     } // end method
     public function SiswaStore(Request $request)
     {
@@ -66,7 +68,7 @@ class SiswaController extends Controller
     public function SiswaEdit($id)
     {
         $siswa = Siswa::findOrFail($id);
-      
+
         $orangtuaIds = Siswa::pluck('id_user')->toArray();
         $user = User::where('role', '6')
             ->whereNotIn('id', $orangtuaIds)
@@ -150,10 +152,9 @@ class SiswaController extends Controller
 
 
         // Sekarang $siswa akan berisi data siswa dengan kelas yang diajar oleh guru yang aktif
-  
+
         return view('backend.data.siswa.siswa_guru', compact('siswa'));
     } // end method
-
 
     public function SiswaGuruwalas()
     {
@@ -166,7 +167,14 @@ class SiswaController extends Controller
         $siswa = null; // inisialisasi variabel $siswa
 
         if ($walas) {
-            $siswa = Siswa::where('kelas', $walas->id_kelas)->get();
+            $rombe = Rombel::where('id_walas', $walas->id)->first();
+            if ($rombe) {
+                $rombelsiswa = Rombelsiswa::where('id_rombel', $rombe->id)->get();
+                if ($rombelsiswa) {
+                    $siswaIds = $rombelsiswa->pluck('id_siswa')->toArray();
+                    $siswa = Siswa::whereIn('id', $siswaIds)->get();
+                }
+            }
         }
 
         // Mengonstruksi array untuk dikirim ke view
@@ -175,6 +183,6 @@ class SiswaController extends Controller
             'siswa' => $siswa,
         ];
 
-        return view('backend.data.siswa.siswa_guruwalas', compact('data','walas','siswa'));
+        return view('backend.data.siswa.siswa_guruwalas', compact('data', 'walas', 'siswa'));
     }
 }

@@ -79,16 +79,18 @@
                             <thead>
                                 <tr>
                                     <th>No.</th>
-                                    <th style="white-space: nowrap;">Kode Seksi</th>
+                                    <th style="white-space: nowrap;">Seksi</th>
+                                    <th style="white-space: nowrap;">Kode</th>
                                     <th>Hari</th>
                                     <th>Waktu</th>
-                                    <th style="white-space: nowrap;">Kode Guru</th>
-                                    <th style="white-space: nowrap;">Kode Mapel</th>
+                                    <th style="white-space: nowrap;">Guru</th>
+                                    <th style="white-space: nowrap;">Mata Pelajaran</th>
                                     <th>Kelas</th>
                                     <th>JP</th>
                                     <th>Kode Ruangan</th>
                                     <th>Semester</th>
                                     <th>Kurikulum</th>
+                                    <th>Jumlah Siswa</th>
 
                                 </tr>
                             </thead>
@@ -96,33 +98,49 @@
                                 @foreach ($jadwalmapel as $key => $item)
                                     @php
                                         $pengampuid = App\Models\Pengampu::find($item->id_pengampu);
-                                        $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
-                                        $guruid = App\Models\Guru::find($pengampuid->id_guru);
-                                        $kelas = App\Models\Kelas::find($pengampuid->kelas);
+                                        if ($pengampuid) {
+                                            $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
+                                            $guruid = App\Models\Guru::find($pengampuid->id_guru);
+                                            $kelas = App\Models\Kelas::find($pengampuid->kelas);
+                                            $jadwal = App\Models\Jadwalmapel::where('id_pengampu', $pengampuid->id)->first();
+                                            $seksi = App\Models\Seksi::where('id_jadwal', $jadwal->id)->first();
+                                            $rombel = App\Models\Rombel::where('id', $seksi->id_rombel)->first();
+                                            $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $rombel->id)->count();
+                                        }
                                     @endphp
 
                                     <tr>
                                         <td align="center">{{ $key + 1 }}</td>
-                                        <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_jadwalmapel }}
+                                        <td style="white-space: nowrap;" class="text-primary">
+                                            {{ $item->kode_jadwalmapel }}
                                         </td>
-                                        <td> {{ $item['haris']['nama'] }} </td>
-                                        <td> {{ $item['waktus']['range'] }} </td>
-                                        <td style="white-space: nowrap;"> {{ $guruid->kode_gr }} </td>
-                                        <td style="white-space: nowrap;"> {{ $mapelid->kode_mapel }} </td>
-                                        <td style="white-space: nowrap;"> {{ $kelas->tingkat }} {{ $kelas->nama }}
-                                            {{ $kelas['jurusans']['nama'] }}
-                                        </td>
-                                        <td> {{ $mapelid->jp }} </td>
-                                        <td> {{ $item['ruangans']['kode_ruangan'] }} </td>
+                                        <td style="white-space: nowrap;" class="text-primary">
+                                            {{ $item['pengampus']['kode_pengampu'] }} </td>
+                                        <td> {{ $item['haris']['nama'] ?? '' }} </td>
+                                        <td> {{ $item['waktus']['range'] ?? '' }} </td>
+                                        <td style="white-space: nowrap;"> {{ $guruid->nama ?? '' }} </td>
+                                        <td style="white-space: nowrap;"> {{ $mapelid->nama ?? '' }} </td>
                                         <td style="white-space: nowrap;">
-                                            {{ $mapelid['tahunajars']['semester'] }}-
-                                            {{ $mapelid['tahunajars']['tahun'] }}
+                                            @if ($kelas)
+                                                {{ $kelas->tingkat }} {{ $kelas->nama }}
+                                                {{ $kelas['jurusans']['nama'] ?? '' }}
+                                            @endif
+                                        </td>
+                                        <td> {{ $mapelid->jp ?? '' }} </td>
+                                        <td> {{ $item['ruangans']['kode_ruangan'] ?? '' }} </td>
+                                        <td style="white-space: nowrap;">
+                                            @if ($mapelid && $mapelid['tahunajars'])
+                                                {{ $mapelid['tahunajars']['semester'] }}-
+                                                {{ $mapelid['tahunajars']['tahun'] }}
+                                            @endif
                                         </td>
 
-                                        <td> {{ $pengampuid->kurikulum }} </td>
+                                        <td> {{ $pengampuid->kurikulum ?? '' }} </td>
+                                        <td> {{ $rombelsiswa ?? '' }} </td>
                                     </tr>
                                 @endforeach
                             </tbody>
+
                         </table>
 
                     </div>

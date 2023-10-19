@@ -30,17 +30,18 @@
                                         @foreach ($siswa as $key => $item)
                                             @php
                                                 $nilaiprestasi = App\Models\Nilaiprestasi::where('id_siswa', $item->id)->first();
+                                                $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
+                                                $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+                                                $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
                                             @endphp
                                             <tr>
                                                 <td> {{ $key + 1 }} </td>
 
                                                 <td> {{ $item->nisn }} </td>
                                                 <td> {{ $item->nama }} </td>
-                                                <td>
-                                                    {{ $item['kelass']['tingkat'] }}
-                                                    {{ $item['kelass']['nama'] }}
-                                                    {{ $item['kelass']['jurusans']['nama'] }}
-                                                </td>
+
+                                                <td style="white-space: nowrap;"> {{ $kelas->tingkat }}{{ $kelas->nama }}
+                                                    {{ $kelas['jurusans']['nama'] }} </td>
                                                 <td> {{ $item->jk }} </td>
                                                 <td>
                                                     @if ($nilaiprestasi)
@@ -92,9 +93,9 @@
     <!--  Modal Add Cttn All Content -->
     @if ($walas)
         @foreach ($siswa as $item)
-            @php
+            {{--  @php
                 $walas = App\Models\Walas::where('id_kelas', $item->kelas)->first();
-            @endphp
+            @endphp  --}}
             <!-- BEGIN: Modal Kirim Jadwal All-->
             <div id="add-nilaiprestasi-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">

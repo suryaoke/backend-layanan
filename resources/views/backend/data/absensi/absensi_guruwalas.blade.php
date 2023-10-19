@@ -27,38 +27,37 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($siswa as $key => $item)
+                                    @foreach ($absensi->unique('id_siswa') as $key => $item)
                                         @php
-                                            $absensi1 = App\Models\Absensi::where('id_siswa', $item->id)->first();
-                                            $absensialfa = App\Models\Absensi::where('id_siswa', $item->id)
+                                            $absensialfa = App\Models\Absensi::where('id_siswa', $item->id_siswa)
                                                 ->where('status', 0)
                                                 ->count();
-                                            $absensisakit = App\Models\Absensi::where('id_siswa', $item->id)
+                                            $absensisakit = App\Models\Absensi::where('id_siswa', $item->id_siswa)
                                                 ->where('status', 3)
                                                 ->count();
-                                            $absensiizin = App\Models\Absensi::where('id_siswa', $item->id)
+                                            $absensiizin = App\Models\Absensi::where('id_siswa', $item->id_siswa)
                                                 ->where('status', 2)
                                                 ->count();
+                                            $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id_siswa)->first();
+                                            $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+                                            $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
                                         @endphp
 
-                                        @if ($absensi1 && $absensi1->siswass && $absensi1->siswass->kelass && $absensi1->siswass->kelass->jurusans)
-                                            <tr>
-                                                <td> {{ $key + 1 }} </td>
-                                                <td> {{ $absensi1->siswass->nama }} </td>
-                                                <td> {{ $absensi1->siswass->nisn }} </td>
-                                                <td>
-                                                    {{ $absensi1->siswass->kelass->tingkat }}
-                                                    {{ $absensi1->siswass->kelass->nama }}
-                                                    {{ $absensi1->siswass->kelass->jurusans->nama }}
-                                                </td>
-                                                <td> {{ $absensi1->siswass->jk }} </td>
-                                                <td class="text-warning"> {{ $absensisakit }} </td>
-                                                <td class="text-primary"> {{ $absensiizin }} </td>
-                                                <td class="text-danger"> {{ $absensialfa }} </td>
-                                            </tr>
-                                        @endif
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+
+                                            <td>{{ $item->siswass->nama }}</td>
+                                            <td>{{ $item->siswass->nisn }}</td>
+                                            <td> {{ $kelas->tingkat }}{{ $kelas->nama }} {{ $kelas['jurusans']['nama'] }} </td>
+                                            <td>{{ $item->siswass->jk }}</td>
+                                            <td class="text-danger">{{ $absensialfa }}</td>
+                                            <td class="text-primary">{{ $absensiizin }}</td>
+                                            <td class="text-warning">{{ $absensisakit }}</td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
+
+
                             </table>
 
                         </div>

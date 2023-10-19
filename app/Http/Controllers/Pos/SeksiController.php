@@ -32,19 +32,35 @@ class SeksiController extends Controller
         $kelas = Kelas::orderBy('nama', 'asc')->get();
         $semester = Tahunajar::orderBy('tahun', 'asc')->get();
         $rombel = Rombel::orderBy('id', 'asc')->get();
-        $jadwalmapel = Jadwalmapel::orderBy('id', 'asc')->get();
+        $jadwalmapel = Jadwalmapel::where('status', '2')->orderBy('id', 'asc')->get();
         return view('backend.data.seksi.seksi_add', compact('jadwalmapel', 'rombel', 'semester', 'guru', 'kelas'));
     } // end method
     public function SeksiStore(Request $request)
     {
 
+        $semester = $request->semester;
+        $id_rombel = $request->id_rombel;
+        $id_jadwal = $request->id_jadwal;
+
+        // Pastikan tidak ada kombinasi yang sama dari semester, id_rombel, dan id_jadwal
+        $existingSeksi = Seksi::where('semester', $semester)
+            ->where('id_rombel', $id_rombel)
+            ->where('id_jadwal', $id_jadwal)
+            ->first();
+
+        if ($existingSeksi) {
+            $notification = array(
+                'message' => 'Kombinasi data seksi sudah ada..!!',
+                'alert-type' => 'warning'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+
         $tanggal = Carbon::now()->toDateString(); // '2023-10-17'
-
         $tanggal_tanpa_strip = str_replace("-", "", $tanggal); // '20231017'
-
         // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
         $kode_acak = substr(str_shuffle('0123456789'), 0, 4);
-
         $kode_seksi = $tanggal_tanpa_strip . '.' . $kode_acak;
 
 
@@ -72,7 +88,9 @@ class SeksiController extends Controller
         $kelas = Kelas::orderBy('nama', 'asc')->get();
         $semester = Tahunajar::orderBy('tahun', 'asc')->get();
         $rombel = Rombel::orderBy('id', 'asc')->get();
-        $jadwalmapel = Jadwalmapel::orderBy('id', 'asc')->get();
+        $rombel1 = Rombel::orderBy('id', 'asc')->first();
+        $pengampus = Pengampu::where('kelas', $rombel1->id_kelas)->first();
+        $jadwalmapel = Jadwalmapel::where('id_pengampu', $pengampus->id)->orderBy('id', 'asc')->get();
         return view('backend.data.seksi.seksi_edit', compact('semester', 'rombel', 'jadwalmapel', 'seksi', 'guru', 'kelas'));
     } // end method
 

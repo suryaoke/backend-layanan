@@ -31,28 +31,43 @@
             </div>
         </div>
 
-        <div class="mt-3">
-            <label for="input-state-2" class="form-label">Mata Pelajaran</label>
-            <select placeholder="Pilih Mata Pelajaran" name="id_jadwal" id="id_jadwal" class="tom-select w-full">
-                <option value="">Pilih Mata Pelajaran</option>
-                @foreach ($jadwal as $item)
-                    @php
-                        $pengampu = App\Models\Pengampu::where('id', $item->id_pengampu)->first();
-                        $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
-                    @endphp
-                    <option value="{{ $item->id }}" data-kelas="{{ $item['pengampus']['kelass']['id'] }}"
-                        data-kelas1="{{ $item['pengampus']['kelass']['tingkat'] }} {{ $item['pengampus']['kelass']['nama'] }} {{ $item['pengampus']['kelass']['jurusans']['nama'] }}">
-                        {{ $mapel->nama }} /
-                        {{ $item->kode_jadwalmapel }}</option>
-                @endforeach
-            </select>
+        <div class="mt-4">
+            <label for="">Mata Pelajaran</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="users"></i>
+                </div>
+                <select placeholder="Pilih Mata Pelajaran" name="id_jadwal" id="id_jadwal" class="tom-select w-full">
+                    <option value="">Pilih Mata Pelajaran</option>
+                    @foreach ($seksi as $item)
+                        <option value=" {{ $item['jadwalmapels']['id'] }}" data-kelas="{{ $item['rombels']['id'] }}"
+                            data-kelas1="{{ $item['jadwalmapels']['pengampus']['kelass']['tingkat'] }} {{ $item['jadwalmapels']['pengampus']['kelass']['nama'] }} {{ $item['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}">
+                            {{ $item['jadwalmapels']['pengampus']['mapels']['nama'] }} /
+                            {{ $item['jadwalmapels']['kode_jadwalmapel'] }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
-        <div class="mt-3">
-            <label for="input-state-2" class="form-label">Kelas</label>
-            <input type="hidden" class="form-control" name="search" id="kelas" value="">
-            <input type="text" class="form-control" id="kelas1" value="" readonly>
+
+        <div class="mt-4">
+            <label for="">Kelas</label>
+            <div class="input-group mt-1">
+                <div id="input-group-email" class="input-group-text">
+                    <i data-lucide="file"></i>
+                </div>
+                <input type="hidden" class="form-control" name="search" id="kelas" value="">
+                <input type="text" class="form-control" id="kelas1" value="" readonly>
+            </div>
+            <span id="error-kurikulum" class="text-sm text-red-600"></span>
         </div>
+
 
 
 
@@ -64,9 +79,12 @@
         </div>
     </form>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
             $('#myForm').validate({
+                ignore: [],
                 rules: {
                     tanggal: {
                         required: true,
@@ -87,15 +105,16 @@
                         required: 'Please Enter Your Email',
                     },
                     id_jadwal: {
-                        required: 'Please Enter Your Username',
+                        required: 'Please Enter Your Mata Pelajaran',
                     },
 
 
                 },
                 errorElement: 'span',
+                errorClass: 'invalid-feedback',
                 errorPlacement: function(error, element) {
-                    error.addClass('invalid-feedback');
-                    element.closest('.form-group').append(error);
+                    error.addClass('block text-sm text-red-600');
+                    error.appendTo(element.parent().next());
                 },
                 highlight: function(element, errorClass, validClass) {
                     $(element).addClass('is-invalid');
