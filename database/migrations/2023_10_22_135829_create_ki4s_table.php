@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('nilaisosials', function (Blueprint $table) {
+        Schema::create('ki4s', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_walas');
-            $table->integer('id_rombelsiswa');
-            $table->integer('tahunajar');
-            $table->text('nilai')->nullable();
-            $table->integer('created_by')->nullable();
-            $table->integer('updated_by')->nullable();
+            $table->integer('id_seksi')->nullable();
+            $table->integer('tahunajar')->nullable();
+            $table->string('ket')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nilaisosials');
+        Schema::dropIfExists('ki4s');
     }
 };

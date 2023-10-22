@@ -35,10 +35,12 @@
                                     @if ($walas)
                                         @foreach ($siswa as $key => $item)
                                             @php
-                                                $nilaisosial = App\Models\Nilaisosial::where('id_siswa', $item->id)->first();
                                                 $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
-                                                $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
-                                                $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                                                $nilaisosial = App\Models\Nilaisosial::where('id_rombelsiswa', optional($rombelsiswa)->id)->first();
+
+                                                $rombel = App\Models\Rombel::where('id', optional($rombelsiswa)->id_rombel)->first();
+                                                $kelas = App\Models\Kelas::where('id', optional($rombel)->id_kelas)->first();
+                                                $tahunajars = App\Models\Tahunajar::where('id', optional($nilaisosial)->tahunajar)->first();
                                             @endphp
                                             <tr>
                                                 <td style="white-space: nowrap;"> {{ $key + 1 }} </td>
@@ -46,8 +48,12 @@
                                                 <td style="white-space: nowrap;"> {{ $item->nisn }} </td>
                                                 <td style="white-space: nowrap;"> {{ $item->nama }} </td>
 
-                                                <td style="white-space: nowrap;"> {{ $kelas->tingkat }}{{ $kelas->nama }}
-                                                    {{ $kelas['jurusans']['nama'] }} </td>
+                                                <td style="white-space: nowrap;">
+                                                    @if ($kelas)
+                                                        {{ $kelas->tingkat }}{{ $kelas->nama }}
+                                                        {{ $kelas->jurusans['nama'] }}
+                                                    @endif
+                                                </td>
                                                 <td style="white-space: nowrap;"> {{ $item->jk }} </td>
                                                 {{--  <td style="white-space: nowrap;">
                                                     @if ($nilaisosial)
@@ -75,7 +81,7 @@
                                                     @else
                                                         -
                                                     @endif
-                                                </td>  --}}
+                                                </td>    --}}
                                                 <td>
                                                     @if ($nilaisosial)
                                                         @php
@@ -89,6 +95,7 @@
                                                     @else
                                                         -
                                                     @endif
+
                                                 </td>
                                                 <td>
                                                     @if ($nilaisosial)
@@ -210,9 +217,9 @@
     <!--  Modal Add Cttn All Content -->
     @if ($walas)
         @foreach ($siswa as $item)
-            {{--  @php
-                $walas = App\Models\Walas::where('id_kelas', $item->kelas)->first();
-            @endphp  --}}
+            @php
+                $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
+            @endphp
             <!-- BEGIN: Modal Kirim Jadwal All-->
             <div id="add-nilaisosial-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -231,9 +238,21 @@
                                 </div>
                             </div> <!-- END: Modal Header -->
                             <!-- BEGIN: Modal Body -->
-                            <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
 
-                                <input type="hidden" name="id_siswa" value="{{ $item->id }}">
+                            <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                                <div class="col-span-12 sm:col-span-12">
+                                    <div class="mb-2">
+                                        <label for="edit-ruangan">Semester</label>
+                                    </div>
+                                    <select name="tahunajar" id="tahunajar" class="tom-select w-full" required>
+                                        <option value=""> Pilih Semester</option>
+                                        @foreach ($tahunajar as $item)
+                                            <option value="{{ $item->id }}">{{ $item->semester }} /
+                                                {{ $item->tahun }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <input type="hidden" name="id_rombelsiswa" value="{{ $rombelsiswa->id }}">
                                 <input type="hidden" name="id_walas" value="{{ $walas->id }}">
 
                                 <div class="col-span-12 sm:col-span-6">
@@ -322,7 +341,10 @@
     @if ($walas)
         @foreach ($siswa as $item)
             @php
-                $nilaisosial = App\Models\Nilaisosial::where('id_siswa', $item->id)->first();
+                $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
+                $nilaisosial = App\Models\Nilaisosial::where('id_rombelsiswa', $rombelsiswa->id)->first();
+                $tahunajarss = App\Models\Tahunajar::where('id', optional($nilaisosial)->tahunajar)->first();
+
             @endphp
             <!-- BEGIN: Modal Kirim Jadwal All-->
             <div id="edit-nilaisosial-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
@@ -345,8 +367,22 @@
                             <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
 
                                 @if ($nilaisosial)
+                                    <div class="col-span-12 sm:col-span-12">
+                                        <div class="mb-2">
+                                            <label for="edit-ruangan">Semester</label>
+                                        </div>
+                                        <select name="tahunajar" id="tahunajar" class="tom-select w-full" required>
+                                            <option value="{{ $nilaisosial->tahunajar }}"> {{ $tahunajarss->semester }} /
+                                                {{ $tahunajarss->tahun }}</option>
+                                            @foreach ($tahunajar as $item)
+                                                <option value="{{ $item->id }}">{{ $item->semester }} /
+                                                    {{ $item->tahun }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <input type="hidden" name="id" value="{{ $nilaisosial->id }}">
-                                    <input type="hidden" name="id_siswa" value="{{ $nilaisosial->id_siswa }}">
+                                    <input type="hidden" name="id_rombelsiswa"
+                                        value="{{ $nilaisosial->id_rombelsiswa }}">
                                     <input type="hidden" name="id_walas" value="{{ $nilaisosial->id_walas }}">
                                     <div class="col-span-12 sm:col-span-6">
                                         <label for="modal-form-1" class="form-label">Kejujuran</label>

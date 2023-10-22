@@ -8,6 +8,7 @@ use App\Models\Guru;
 use App\Models\Rombel;
 use App\Models\Rombelsiswa;
 use App\Models\Siswa;
+use App\Models\Tahunajar;
 use App\Models\Walas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ class CttnwalasController extends Controller
     {
         $user_id = Auth::user()->id;
         $guru = Guru::where('id_user', $user_id)->first();
+        $tahunajar = Tahunajar::all();
 
         $walas1 = Walas::where('id_guru', $guru->id)->orderBy('id', 'asc')->first();
         $siswa = null;
@@ -43,7 +45,7 @@ class CttnwalasController extends Controller
             'siswa' => $siswa,
         ];
 
-        return view('backend.data.cttnwalas.cttnwalas_all', compact('data', 'walas1', 'walas', 'siswa'));
+        return view('backend.data.cttnwalas.cttnwalas_all', compact('tahunajar', 'data', 'walas1', 'walas', 'siswa'));
     }
 
 
@@ -52,8 +54,9 @@ class CttnwalasController extends Controller
 
         Cttnwalas::insert([
             'id_walas' => $request->id_walas,
-            'id_siswa' => $request->id_siswa,
             'ket' => $request->ket,
+            'id_rombelsiswa' => $request->id_rombelsiswa,
+            'tahunajar' => $request->tahunajar,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
         ]);
@@ -72,8 +75,9 @@ class CttnwalasController extends Controller
         $cttnwalas_id = $request->id;
         Cttnwalas::findOrFail($cttnwalas_id)->update([
             'id_walas' => $request->id_walas,
-            'id_siswa' => $request->id_siswa,
+            'id_rombelsiswa' => $request->id_rombelsiswa,
             'ket' => $request->ket,
+            'tahunajar' => $request->tahunajar,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 

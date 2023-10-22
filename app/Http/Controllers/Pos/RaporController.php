@@ -11,6 +11,7 @@ use App\Models\Nilaispiritual;
 use App\Models\Rombel;
 use App\Models\Rombelsiswa;
 use App\Models\Siswa;
+use App\Models\Tahunajar;
 use App\Models\Walas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class RaporController extends Controller
         $walas = Walas::where('id_guru', $guruId->id)->orderBy('id', 'asc')->first();
         $siswa = null; // inisialisasi variabel $siswa
 
-
+        $tahunajar = Tahunajar::all();
         if ($walas) {
             $rombel = Rombel::where('id_walas', $walas->id)->first();
             if ($rombel) {
@@ -38,7 +39,6 @@ class RaporController extends Controller
             }
         }
 
-
         // if ($walas) {
         //     $siswa = Siswa::where('kelas', $walas->id_kelas)->orderBy('nama', 'asc')->get();
         // }
@@ -47,7 +47,7 @@ class RaporController extends Controller
             'walas' => $walas,
             'siswa' => $siswa,
         ];
-        return view('backend.data.rapor.nilaiwalas.nilaisosial_all', compact('walas', 'data', 'siswa'));
+        return view('backend.data.rapor.nilaiwalas.nilaisosial_all', compact('tahunajar','walas', 'data', 'siswa'));
     } // end method
 
 
@@ -65,7 +65,8 @@ class RaporController extends Controller
 
         Nilaisosial::insert([
             'id_walas' => $request->id_walas,
-            'id_siswa' => $request->id_siswa,
+            'id_rombelsiswa' => $request->id_rombelsiswa,
+            'tahunajar' => $request->tahunajar,
             'nilai' => json_encode($nilaiArray), // Simpan sebagai JSON string
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
@@ -95,7 +96,8 @@ class RaporController extends Controller
 
         Nilaisosial::findOrFail($nilaisosial_id)->update([
             'id_walas' => $request->id_walas,
-            'id_siswa' => $request->id_siswa,
+            'id_rombelsiswa' => $request->id_rombelsiswa,
+            'tahunajar' => $request->tahunajar,
             'nilai' => json_encode($nilaiArray),
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),

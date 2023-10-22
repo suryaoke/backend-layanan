@@ -179,20 +179,61 @@ class JadwalmapelController extends Controller
     }
 
 
+    // public function JadwalmapelUpdate(Request $request, $id)
+    // {
+
+    //     $this->validate($request, [
+    //         'id_hari' => 'required',
+    //         'id_waktu' => 'required',
+    //         'id_ruangan' => 'required',
+
+    //     ]);
+
+    //     // Mengambil data jadwal berdasarkan $id
+    //     $jadwalmapel = Jadwalmapel::find($id);
+
+    //     // Mengupdate nilai kolom-kolom jadwal berdasarkan data yang diterima dari formulir
+    //     $jadwalmapel->id_hari = $request->input('id_hari');
+    //     $jadwalmapel->id_waktu = $request->input('id_waktu');
+    //     $jadwalmapel->id_ruangan = $request->input('id_ruangan');
+    //     // Tambahkan pembaruan lain sesuai kebutuhan Anda
+
+    //     // Menyimpan perubahan ke dalam database
+    //     $jadwalmapel->save();
+    //     $notification = array(
+    //         'message' => 'Jadwal Sementara Update SuccessFully',
+    //         'alert-type' => 'success'
+    //     );
+    //     return redirect()->back()->with($notification);
+    // } // end method
+
     public function JadwalmapelUpdate(Request $request, $id)
     {
-
         $this->validate($request, [
             'id_hari' => 'required',
             'id_waktu' => 'required',
             'id_ruangan' => 'required',
-
         ]);
 
         // Mengambil data jadwal berdasarkan $id
         $jadwalmapel = Jadwalmapel::find($id);
 
-        // Mengupdate nilai kolom-kolom jadwal berdasarkan data yang diterima dari formulir
+        // Cek untuk memastikan tidak ada bentrok jadwal saat memperbarui
+        $existingData = Jadwalmapel::where('id_hari', $request->id_hari)
+            ->where('id_waktu', $request->id_waktu)
+            ->where('id', '!=', $id) // untuk menghindari membandingkan dengan dirinya sendiri
+            ->count();
+
+        // Jika ada bentrok, kirim notifikasi
+        if ($existingData > 0) {
+            $notification = array(
+                'message' => 'Data Jadwal Mapel Bentrok saat Update..!!',
+                'alert-type' => 'warning'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        // Lakukan pembaruan pada nilai kolom-kolom jadwal berdasarkan data yang diterima dari formulir
         $jadwalmapel->id_hari = $request->input('id_hari');
         $jadwalmapel->id_waktu = $request->input('id_waktu');
         $jadwalmapel->id_ruangan = $request->input('id_ruangan');
@@ -200,12 +241,15 @@ class JadwalmapelController extends Controller
 
         // Menyimpan perubahan ke dalam database
         $jadwalmapel->save();
+
         $notification = array(
             'message' => 'Jadwal Sementara Update SuccessFully',
             'alert-type' => 'success'
         );
+
         return redirect()->back()->with($notification);
-    } // end method
+    }
+
 
 
     public function JadwalmapelDelete($id)

@@ -24,6 +24,13 @@
             ->orderBy('id_hari', 'asc')
             ->orderBy('id_waktu', 'asc')
             ->count();
+        $seksi = App\Models\Seksi::join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+            ->where('status', '=', '2')
+            ->where('gurus.id_user', '=', $userId)
+            ->select('seksis.*')
+            ->get();
 
         // Ambil ID guru berdasarkan ID user yang aktif
         $guruId = App\Models\Guru::where('id_user', $userId)->value('id');
@@ -35,14 +42,6 @@
             ->pluck('id_pengampu')
             ->unique();
 
-        // Ambil data siswa dengan kelas yang sama dengan pengampu yang diambil dari jadwalmapels
-        // $siswaguru = App\Models\Siswa::whereIn('kelas', function ($query) use ($pengampuIds) {
-        //    $query
-        //        ->select('kelas')
-        //       ->from('pengampus')
-        //          ->whereIn('id', $pengampuIds);
-        //  })->count();
-
         $kepsek = App\Models\User::where('role', '2')->first();
         $nipkepsek = App\Models\Guru::where('id_user', $kepsek->id)->first();
 
@@ -50,7 +49,6 @@
 
         if ($walas) {
             $rombel = App\Models\Rombel::where('id_walas', $walas->id)->first();
-            //  $siswawalas = App\Models\Siswa::where('kelas', $walas->id_kelas)->count();
             $kelaswalas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
             $kelaswalasjurusan = App\Models\Jurusan::where('id', $kelaswalas->id_jurusan)->first();
             $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $rombel->id)->count();
@@ -619,6 +617,7 @@
                             <!-- BEGIN: FAQ Content -->
 
 
+
                             <div class="intro-y col-span-12 lg:col-span-8 xl:col-span-9 mb-2">
                                 <div class="intro-y box lg:mt-4">
                                     <div
@@ -633,6 +632,7 @@
                                                 <div class="card overflow-x-auto">
                                                     <div class="card-body">
                                                         <table id="datatable" class="table table-report -mt-2">
+
                                                             <thead>
                                                                 <tr>
 
@@ -642,20 +642,32 @@
                                                                     <th class="whitespace-nowrap">Keterampilan</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody>
+                                                            @foreach ($seksi as $key => $item)
+                                                                @php
+                                                                    $rombel = App\Models\Rombel::where('id', $item->id_rombel)->first();
+                                                                    $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                                                                    $jurusan = App\Models\Jurusan::where('id', $kelas->id_jurusan)->first();
+                                                                    $jadwal = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
+                                                                    $pengampu = App\Models\Pengampu::where('id', $jadwal->id_pengampu)->first();
+                                                                    $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
+                                                                @endphp
+                                                                <tbody>
 
-                                                                {{--  {{--  @foreach ($absensi as $key => $item)  --}}
-                                                                <tr>
 
-                                                                    <td>2</td>
-                                                                    <td>2</td>
-                                                                    <td>2</td>
-                                                                    <td>2</td>
+                                                                    <tr>
 
-                                                                </tr>
-                                                                {{--  @endforeach   --}}
+                                                                        <td> {{ $kelas->tingkat }} {{ $kelas->nama }}
+                                                                            {{ $jurusan->nama }}
+                                                                        </td>
+                                                                        <td> {{ $mapel->nama }} </td>
+                                                                        <td>- </td>
+                                                                        <td>-</td>
 
-                                                            </tbody>
+                                                                    </tr>
+
+
+                                                                </tbody>
+                                                            @endforeach
                                                         </table>
                                                     </div>
                                                 </div>

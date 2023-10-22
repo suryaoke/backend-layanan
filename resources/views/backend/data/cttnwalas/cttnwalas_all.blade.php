@@ -16,31 +16,36 @@
                                 style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Nisn</th>
-                                        <th>Nama</th>
-                                        <th>Kelas</th>
-                                        <th>Jk</th>
-                                        <th>Catatan</th>
-                                        <th>Action</th>
+                                        <th style="white-space: nowrap;">No</th>
+                                        <th style="white-space: nowrap;">Nisn</th>
+                                        <th style="white-space: nowrap;">Nama</th>
+                                        <th style="white-space: nowrap;">Kelas</th>
+                                        <th style="white-space: nowrap;">Jk</th>
+                                        <th style="white-space: nowrap;">Catatan</th>
+                                        <th style="white-space: nowrap;">Semester</th>
+                                        <th style="white-space: nowrap;">Action</th>
                                 </thead>
                                 <tbody>
                                     @if ($walas)
                                         @foreach ($siswa as $key => $item)
                                             @php
-                                                $cctnwalas = App\Models\Cttnwalas::where('id_siswa', $item->id)->first();
                                                 $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
-                                                $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
-                                                $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                                                $cctnwalas = App\Models\Cttnwalas::where('id_rombelsiswa', optional($rombelsiswa)->id)->first();
+
+                                                $rombel = App\Models\Rombel::where('id', optional($rombelsiswa)->id_rombel)->first();
+                                                $kelas = App\Models\Kelas::where('id', optional($rombel)->id_kelas)->first();
+                                                $tahunajars = App\Models\Tahunajar::where('id', optional($cctnwalas)->tahunajar)->first();
                                             @endphp
                                             <tr>
                                                 <td> {{ $key + 1 }} </td>
-
-                                                <td> {{ $item->nisn }} </td>
-                                                <td> {{ $item->nama }} </td>
-                                                <td> {{ $kelas->tingkat }}{{ $kelas->nama }}
-                                                    {{ $kelas['jurusans']['nama'] }} </td>
-
+                                                <td style="white-space: nowrap;"> {{ $item->nisn }} </td>
+                                                <td style="white-space: nowrap;"> {{ $item->nama }} </td>
+                                                <td style="white-space: nowrap;">
+                                                    @if ($kelas)
+                                                        {{ $kelas->tingkat }}{{ $kelas->nama }}
+                                                        {{ $kelas->jurusans['nama'] }}
+                                                    @endif
+                                                </td>
                                                 <td> {{ $item->jk }} </td>
                                                 <td>
                                                     @if ($cctnwalas)
@@ -49,7 +54,13 @@
                                                         -
                                                     @endif
                                                 </td>
-
+                                                <td>
+                                                    @if ($cctnwalas)
+                                                        {{ $tahunajars->semester }} / {{ $tahunajars->tahun }}
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
                                                 <td>
                                                     @if ($cctnwalas)
                                                         <a class="btn btn-success mr-1 mb-2"
@@ -64,13 +75,12 @@
                                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                                         </a>
                                                     @endif
-
                                                 </td>
-
                                             </tr>
                                         @endforeach
                                     @endif
                                 </tbody>
+
 
                             </table>
 
@@ -85,9 +95,9 @@
     <!--  Modal Add Cttn All Content -->
     @if ($walas1)
         @foreach ($siswa as $item)
-            {{--  @php
-                $walas = App\Models\Walas::where('id_kelas', $item->kelas)->first();
-            @endphp  --}}
+            @php
+                $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
+            @endphp
             <!-- BEGIN: Modal Kirim Jadwal All-->
             <div id="add-cttnwalas-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
@@ -107,9 +117,21 @@
                             </div> <!-- END: Modal Header -->
                             <!-- BEGIN: Modal Body -->
                             <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                                <div class="col-span-12 sm:col-span-12">
+                                    <div class="mb-2">
+                                        <label for="edit-ruangan">Semester</label>
+                                    </div>
+                                    <select name="tahunajar" id="tahunajar" class="tom-select w-full" required>
+                                        <option value=""> Pilih Semester</option>
+                                        @foreach ($tahunajar as $item)
+                                            <option value="{{ $item->id }}">{{ $item->semester }} /
+                                                {{ $item->tahun }} </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-span-12">
                                     <label for="modal-form-1" class="form-label">Catatan</label>
-                                    <input type="hidden" name="id_siswa" value="{{ $item->id }}">
+                                    <input type="hidden" name="id_rombelsiswa" value="{{ $rombelsiswa->id }}">
                                     <input type="hidden" name="id_walas" value="{{ $walas1->id }}">
 
                                     <textarea class="form-control" name="ket" cols="30" rows="10"></textarea>
@@ -132,12 +154,13 @@
     @endif
     <!-- END: Modal Add Cttn All Content -->
 
-
     <!--  Modal edit cttn All Content -->
     @if ($walas1)
         @foreach ($siswa as $item)
             @php
-                $cttnwalas = App\Models\Cttnwalas::where('id_siswa', $item->id)->first();
+                $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id)->first();
+                $cttnwalas = App\Models\Cttnwalas::where('id_rombelsiswa', $rombelsiswa->id)->first();
+                $tahunajarss = App\Models\Tahunajar::where('id', optional($cttnwalas)->tahunajar)->first();
             @endphp
             <!-- BEGIN: Modal Kirim Jadwal All-->
             <div id="edit-cttnwalas-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
@@ -158,16 +181,32 @@
                             </div> <!-- END: Modal Header -->
                             <!-- BEGIN: Modal Body -->
                             <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                                <div class="col-span-12">
-                                    @if ($cttnwalas)
+                                @if ($cttnwalas)
+                                    <div class="col-span-12 sm:col-span-12">
+                                        <div class="mb-2">
+                                            <label for="edit-ruangan">Semester</label>
+                                        </div>
+                                        <select name="tahunajar" id="tahunajar" class="tom-select w-full" required>
+                                            <option value="{{ $cttnwalas->tahunajar }}"> {{ $tahunajarss->semester }} /
+                                                {{ $tahunajarss->tahun }}</option>
+                                            @foreach ($tahunajar as $item)
+                                                <option value="{{ $item->id }}">{{ $item->semester }} /
+                                                    {{ $item->tahun }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-span-12">
+
                                         <input type="hidden" name="id" value="{{ $cttnwalas->id }}">
-                                        <input type="hidden" name="id_siswa" value="{{ $cttnwalas->id_siswa }}">
+                                        <input type="hidden" name="id_rombelsiswa"
+                                            value="{{ $cttnwalas->id_rombelsiswa }}">
                                         <input type="hidden" name="id_walas" value="{{ $cttnwalas->id_walas }}">
                                         <textarea class="form-control" name="ket" cols="30" rows="10">{{ $cttnwalas->ket }}</textarea>
-                                    @endif
 
 
-                                </div>
+
+                                    </div>
+                                @endif
                             </div>
 
                             <!-- END: Modal Body -->

@@ -137,19 +137,22 @@ class RombelController extends Controller
 
         $rombel->save();
 
-        // Menghapus semua RombelSiswa sebelumnya
-        RombelSiswa::where('id_rombel', $id)->delete();
+        // Menghapus RombelSiswa yang tidak termasuk dalam kumpulan siswa yang diberikan
+        RombelSiswa::where('id_rombel', $id)
+            ->whereNotIn('id_siswa', $request->input('id_siswa', []))
+            ->delete();
 
-        // Memperbarui RombelSiswa
+        // Memperbarui atau tambahkan RombelSiswa baru
         $selectedSiswa = $request->input('id_siswa');
         if (!is_null($selectedSiswa)) {
             foreach ($selectedSiswa as $siswaId) {
-                $rombelsiswa = new RombelSiswa();
-                $rombelsiswa->id_rombel = $rombel->id; // ID Rombel yang baru saja diperbarui
-                $rombelsiswa->id_siswa = $siswaId;
-                $rombelsiswa->save();
+                RombelSiswa::updateOrCreate(
+                    ['id_rombel' => $id, 'id_siswa' => $siswaId],
+                    ['id_rombel' => $id, 'id_siswa' => $siswaId]
+                );
             }
         }
+
 
         $notification = array(
             'message' => 'Rombel Updated Successfully',

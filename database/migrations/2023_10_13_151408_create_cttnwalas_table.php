@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('cttnwalas', function (Blueprint $table) {
             $table->id();
             $table->integer('id_walas');
-            $table->integer('id_siswa');
+            $table->integer('id_rombelsiswa');
             $table->string('ket')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

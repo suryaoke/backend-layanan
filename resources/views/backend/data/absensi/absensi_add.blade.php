@@ -46,7 +46,7 @@
                     @foreach ($seksi as $item)
                         <option value=" {{ $item['jadwalmapels']['id'] }}" data-kelas="{{ $item['rombels']['id'] }}"
                             data-kelas1="{{ $item['jadwalmapels']['pengampus']['kelass']['tingkat'] }} {{ $item['jadwalmapels']['pengampus']['kelass']['nama'] }} {{ $item['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}">
-                            {{ $item['jadwalmapels']['pengampus']['mapels']['nama'] }} /
+                            {{ $item['jadwalmapels']['pengampus']['mapels']['nama'] }}  / Seksi:
                             {{ $item['jadwalmapels']['kode_jadwalmapel'] }}
                         </option>
                     @endforeach
