@@ -19,7 +19,7 @@ class RombelController extends Controller
     {
 
 
-        $rombel = Rombel::orderBy('id', 'asc')->paginate(perPage: 12);
+        $rombel = Rombel::orderBy('id', 'asc')->paginate(12);
         return view('backend.data.rombel.rombel_all', compact('rombel'));
     } // end method
 

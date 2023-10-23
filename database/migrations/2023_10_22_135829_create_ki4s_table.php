@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('id_seksi')->nullable();
             $table->integer('tahunajar')->nullable();
             $table->string('ket')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }

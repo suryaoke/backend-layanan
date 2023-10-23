@@ -74,7 +74,7 @@ class CttnwalasController extends Controller
 
         $cttnwalas_id = $request->id;
         Cttnwalas::findOrFail($cttnwalas_id)->update([
-            'id_walas' => $request->id_walas,
+            'id_walas' => $request->id_walas ,
             'id_rombelsiswa' => $request->id_rombelsiswa,
             'ket' => $request->ket,
             'tahunajar' => $request->tahunajar,

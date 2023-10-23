@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Ki3 extends Model
 {
     use HasFactory;
+    protected $guarded = [];
 }

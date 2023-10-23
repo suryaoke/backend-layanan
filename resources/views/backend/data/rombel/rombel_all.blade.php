@@ -25,7 +25,7 @@
                 $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $item->id)->count();
 
             @endphp
-            @if (isset($user) && isset($guru) && isset($walas))
+            {{--  @if (isset($user) && isset($guru) && isset($walas))  --}}
                 <div class="intro-y col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3">
                     <div class="box">
                         <div class="p-3">
@@ -71,10 +71,10 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            {{--  @endif  --}}
         @endforeach
 
     </div>
 
-    <div class="mt-8">{{ $rombel->links() }}</div>
+   <div class="mt-8">{{ $rombel->links() }}</div>  
 @endsection

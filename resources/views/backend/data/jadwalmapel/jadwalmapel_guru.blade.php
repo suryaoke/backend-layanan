@@ -103,9 +103,15 @@
                                             $guruid = App\Models\Guru::find($pengampuid->id_guru);
                                             $kelas = App\Models\Kelas::find($pengampuid->kelas);
                                             $jadwal = App\Models\Jadwalmapel::where('id_pengampu', $pengampuid->id)->first();
-                                            $seksi = App\Models\Seksi::where('id_jadwal', $jadwal->id)->first();
-                                            $rombel = App\Models\Rombel::where('id', $seksi->id_rombel)->first();
-                                            $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $rombel->id)->count();
+                                            if ($jadwal) {
+                                                $seksi = App\Models\Seksi::where('id_jadwal', $jadwal->id)->first();
+                                                if ($seksi) {
+                                                    $rombel = App\Models\Rombel::where('id', $seksi->id_rombel)->first();
+                                                    if ($rombel) {
+                                                        $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $rombel->id)->count();
+                                                    }
+                                                }
+                                            }
                                         }
                                     @endphp
 

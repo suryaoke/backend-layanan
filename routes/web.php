@@ -17,6 +17,7 @@ use App\Http\Controllers\Pos\RombelController;
 use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SeksiController;
 use App\Http\Controllers\Pos\SiswaController;
+use App\Http\Controllers\Pos\StandarkompetensiController;
 use App\Http\Controllers\Pos\TahunajarController;
 use App\Http\Controllers\Pos\WalasController;
 use App\Http\Controllers\Pos\UserController;
@@ -288,6 +289,17 @@ Route::controller(OrangTuaController::class)->middleware(['auth'])->group(functi
     Route::post('/ortu/update', 'OrtuUpdate')->name('orangtua.update');
     Route::get('/ortu/delete{id}', 'OrtuDelete')->name('orangtua.delete');
     Route::get('/ambil-mata-pelajaran/{id_pengampu}', 'ambilMataPelajaran');
+});
+
+
+// Stabdar Komptensi All
+Route::controller(StandarkompetensiController::class)->middleware(['auth'])->group(function () {
+    Route::get('/sk/all/{id}', 'SkAll')->name('sk.all');
+
+    Route::post('/ki3/update', 'Ki3Update')->name('ki3.update');
+    Route::post('/ki4/update', 'Ki4Update')->name('ki4.update');
+    Route::post('/kd3/update', 'Kd3Store')->name('kd3.store');
+    Route::post('/kd4/update', 'Kd4Store')->name('kd4.store');
 });
 
 

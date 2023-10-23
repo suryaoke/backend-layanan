@@ -23,6 +23,7 @@
          $ekstranilaiview = URL::route('ekstranilai.view', ['id' => $id]);
          $rombeledit = URL::route('rombel.edit', ['id' => $id]);
          $seksiedit = URL::route('seksi.edit', ['id' => $id]);
+         $sk = URL::route('sk.all', ['id' => $id]);
      } else {
          $guruedit = 1; // Handle jika parameter id tidak ditemukan dalam URL
          $orangtuaedit = 1;
@@ -44,6 +45,7 @@
          $ekstranilaiview = 1;
          $rombeledit = 1;
          $seksiedit = 1;
+         $sk = 1;
      }
 
      $url = url()->current();
@@ -670,20 +672,93 @@
              </li>
 
              <li>
-                 
-                             <a href="javascript:;" class="side-menu ">
-                
+                 @if ($url == $sk)
+                     <a href="javascript:;" class="side-menu side-menu--active">
+                     @else
+                         <a href="javascript:;" class="side-menu ">
+                 @endif
                  <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                          viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-square-2">
-                         <path d="M18 21a6 6 0 0 0-12 0" />
-                         <circle cx="12" cy="11" r="4" />
-                         <rect width="18" height="18" x="3" y="3" rx="2" />
-                     </svg> </div>
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet">
+                         <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                         <polyline points="14 2 14 8 20 8" />
+                         <path d="M8 13h2" />
+                         <path d="M8 17h2" />
+                         <path d="M14 13h2" />
+                         <path d="M14 17h2" />
+                     </svg></div>
                  <div class="side-menu__title">
-                     Penilaian Anda
+                     SK (KI/KD)
                      <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
                  </div>
+                 </a>
+                 @php
+                     $userId = Auth::user()->id;
+                     $guru = App\Models\Guru::where('id_user', $userId)->first(); // Mengambil data guru berdasarkan id_user
+                     $seksi = [];
+                     if ($guru) {
+                         $pengampu = App\Models\Pengampu::where('id_guru', $guru->id)->get(); // Mengambil data pengampu berdasarkan id_guru dengan kondisi id_mapel yang unik
+
+                         $pengampuIds = $pengampu->pluck('id')->toArray(); // Mengambil array dari ID pengampu yang terkait
+                         $jadwalguru = App\Models\Jadwalmapel::whereIn('id_pengampu', $pengampuIds)->get(); // Mengambil jadwal mapel berdasarkan id_pengampu yang terkait
+
+                         $jadwalguruIds = $jadwalguru->pluck('id')->toArray(); // Ambil array ID dari koleksi $jadwalguru
+                         $seksi = App\Models\Seksi::whereIn('id_jadwal', $jadwalguruIds)->get();
+
+                         $jadwalguru2 = App\Models\Jadwalmapel::whereIn('id', $seksi->pluck('id_jadwal')->toArray())->get();
+                         $pengampu2 = App\Models\Pengampu::whereIn('id', $jadwalguru2->pluck('id_pengampu')->toArray())->get();
+                     }
+                     $uniqueRecords = [];
+                     $filteredPengampu2 = collect();
+                     foreach ($pengampu2 as $item) {
+                         $kelas = App\Models\Kelas::where('id', $item->kelas)->first();
+                         $key = $item->id_mapel . '-' . $kelas->tingkat; // Menggunakan ID Mapel dan Tingkat sebagai kunci
+
+                         if (!in_array($key, $uniqueRecords)) {
+                             $filteredPengampu2->push($item);
+                             $uniqueRecords[] = $key;
+                         }
+                     }
+                 @endphp
+                 <ul class="">
+                     @foreach ($filteredPengampu2 as $item)
+                         @php
+                             $mapel1 = App\Models\Mapel::where('id', $item->id_mapel)->first();
+                             $kelas1 = App\Models\Kelas::where('id', $item->kelas)->first();
+                             $jadwal2 = App\Models\Jadwalmapel::where('id_pengampu', $item->id)->first();
+                             $seksi2 = App\Models\Seksi::where('id_jadwal', $jadwal2->id)->first();
+
+                         @endphp
+                         <li>
+                             <a href="{{ route('sk.all', $seksi2->id) }}" class="side-menu">
+                                 <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                 <div class="side-menu__title"> {{ $mapel1->nama }} : {{ $kelas1->tingkat }}
+                                     {{ $seksi2->id }} </div>
+                             </a>
+                         </li>
+                     @endforeach
+                 </ul>
+
+
+             </li>
+
+
+             <li>
+
+                 <a href="javascript:;" class="side-menu ">
+
+                     <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-user-square-2">
+                             <path d="M18 21a6 6 0 0 0-12 0" />
+                             <circle cx="12" cy="11" r="4" />
+                             <rect width="18" height="18" x="3" y="3" rx="2" />
+                         </svg> </div>
+                     <div class="side-menu__title">
+                         Penilaian Anda
+                         <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                     </div>
                  </a>
                  <ul class="">
                      @php

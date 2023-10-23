@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Guru;
 use App\Models\Jadwalmapel;
 use App\Models\Kelas;
+use App\Models\Ki3;
+use App\Models\Ki4;
 use App\Models\Pengampu;
 use App\Models\Rombel;
 use App\Models\Seksi;
@@ -35,6 +37,8 @@ class SeksiController extends Controller
         $jadwalmapel = Jadwalmapel::where('status', '2')->orderBy('id', 'asc')->get();
         return view('backend.data.seksi.seksi_add', compact('jadwalmapel', 'rombel', 'semester', 'guru', 'kelas'));
     } // end method
+
+
     public function SeksiStore(Request $request)
     {
 
@@ -77,8 +81,31 @@ class SeksiController extends Controller
             'message' => 'Seksi Inserted SuccessFully',
             'alert-type' => 'success'
         );
+
+        // Memasukkan data ke model Kd setelah menyimpan data ke model Seksi
+        $seksi = Seksi::where('semester', $semester)
+            ->where('id_rombel', $id_rombel)
+            ->where('id_jadwal', $id_jadwal)
+            ->first();
+
+        Ki3::insert([
+            'id_seksi' => $seksi->id,
+            'tahunajar' => $seksi->semester, // Pastikan $seksi->id sudah didefinisikan dengan benar
+            'created_by' => Auth::user()->id,
+            'created_at' => Carbon::now(),
+        ]);
+
+        Ki4::insert([
+            'id_seksi' => $seksi->id,
+            'tahunajar' => $seksi->semester, // Pastikan $seksi->id sudah didefinisikan dengan benar
+            'created_by' => Auth::user()->id,
+            'created_at' => Carbon::now(),
+        ]);
+
+
         return redirect()->route('seksi.all')->with($notification);
     } // end method
+
 
     public function SeksiEdit($id)
     {
