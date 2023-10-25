@@ -24,6 +24,7 @@
          $rombeledit = URL::route('rombel.edit', ['id' => $id]);
          $seksiedit = URL::route('seksi.edit', ['id' => $id]);
          $sk = URL::route('sk.all', ['id' => $id]);
+         $nilai = URL::route('nilaikd.all', ['id' => $id]);
      } else {
          $guruedit = 1; // Handle jika parameter id tidak ditemukan dalam URL
          $orangtuaedit = 1;
@@ -46,6 +47,7 @@
          $rombeledit = 1;
          $seksiedit = 1;
          $sk = 1;
+         $nilai = 1;
      }
 
      $url = url()->current();
@@ -733,7 +735,7 @@
                              <a href="{{ route('sk.all', $seksi2->id) }}" class="side-menu">
                                  <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
                                  <div class="side-menu__title"> {{ $mapel1->nama }} : {{ $kelas1->tingkat }}
-                                     {{ $seksi2->id }} </div>
+                                 </div>
                              </a>
                          </li>
                      @endforeach
@@ -745,46 +747,54 @@
 
              <li>
 
-                 <a href="javascript:;" class="side-menu ">
+                 @if ($url == $nilai)
+                     <a href="javascript:;" class="side-menu side-menu--active">
+                     @else
+                         <a href="javascript:;" class="side-menu ">
+                 @endif
 
-                     <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
-                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                             class="lucide lucide-user-square-2">
-                             <path d="M18 21a6 6 0 0 0-12 0" />
-                             <circle cx="12" cy="11" r="4" />
-                             <rect width="18" height="18" x="3" y="3" rx="2" />
-                         </svg> </div>
-                     <div class="side-menu__title">
-                         Penilaian Anda
-                         <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
-                     </div>
+                 <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-square-2">
+                         <path d="M18 21a6 6 0 0 0-12 0" />
+                         <circle cx="12" cy="11" r="4" />
+                         <rect width="18" height="18" x="3" y="3" rx="2" />
+                     </svg> </div>
+                 <div class="side-menu__title">
+                     Penilaian Anda
+                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                 </div>
                  </a>
                  <ul class="">
                      @php
-                         $userId = Auth::user()->id;
-                         $guru = App\Models\Guru::where('id_user', $userId)->first(); // Mengambil data guru berdasarkan id_user
-                         if ($guru) {
-                             $pengampu = App\Models\Pengampu::where('id_guru', $guru->id)->get(); // Mengambil data pengampu berdasarkan id_guru
-                             $pengampuIds = $pengampu->pluck('id')->toArray(); // Mengambil array dari ID pengampu yang terkait
+                         $userId1 = Auth::user()->id;
+                         $guru1 = App\Models\Guru::where('id_user', $userId1)->first(); // Mengambil data guru berdasarkan id_user
+                         $seksi1 = [];
+                         if ($guru1) {
+                             $pengampu1 = App\Models\Pengampu::where('id_guru', $guru1->id)->get(); // Mengambil data pengampu berdasarkan id_guru dengan kondisi id_mapel yang unik
 
-                             $jadwalguru = App\Models\Jadwalmapel::whereIn('id_pengampu', $pengampuIds)->get(); // Mengambil jadwal mapel berdasarkan id_pengampu yang terkait
-                         } else {
-                             // Lakukan sesuatu jika data guru tidak ditemukan
+                             $pengampuIds1 = $pengampu1->pluck('id')->toArray(); // Mengambil array dari ID pengampu yang terkait
+                             $jadwalguru1 = App\Models\Jadwalmapel::whereIn('id_pengampu', $pengampuIds1)->get(); // Mengambil jadwal mapel berdasarkan id_pengampu yang terkait
+
+                             $jadwalguruIds1 = $jadwalguru1->pluck('id')->toArray(); // Ambil array ID dari koleksi $jadwalguru
+                             $seksi1 = App\Models\Seksi::whereIn('id_jadwal', $jadwalguruIds1)->get();
                          }
+
                      @endphp
-                     @foreach ($jadwalguru as $item)
+                     @foreach ($seksi1 as $item)
                          @php
-                             $pengampus = App\Models\Pengampu::where('id', $item->id_pengampu)->first();
+                             $jadwal1 = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
+                             $pengampus = App\Models\Pengampu::where('id', $jadwal1->id_pengampu)->first();
                              $mapels = App\Models\Mapel::where('id', $pengampus->id_mapel)->first();
                              $kelas = App\Models\Kelas::where('id', $pengampus->kelas)->first();
                              $jurusan = App\Models\Jurusan::where('id', $kelas->id_jurusan)->first();
                          @endphp
                          <li>
-                             <a href="{{ route('siswa.guruwalas') }}" class="side-menu">
+                             <a href="{{ route('nilaikd.all', $item->id) }}" class="side-menu">
                                  <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
                                  <div class="side-menu__title">{{ $mapels->nama }}:
                                      {{ $kelas->tingkat }}{{ $kelas->nama }} {{ $jurusan->nama }} </div>
+
                              </a>
                          </li>
                      @endforeach

@@ -298,8 +298,16 @@ Route::controller(StandarkompetensiController::class)->middleware(['auth'])->gro
 
     Route::post('/ki3/update', 'Ki3Update')->name('ki3.update');
     Route::post('/ki4/update', 'Ki4Update')->name('ki4.update');
-    Route::post('/kd3/update', 'Kd3Store')->name('kd3.store');
-    Route::post('/kd4/update', 'Kd4Store')->name('kd4.store');
+    Route::post('/kd3/store', 'Kd3Store')->name('kd3.store');
+    Route::post('/kd4/store', 'Kd4Store')->name('kd4.store');
+
+    Route::get('/kd3/delete{id}', 'Kd3Delete')->name('kd3.delete');
+    Route::get('/kd4/delete{id}', 'Kd4Delete')->name('kd4.delete');
+
+    Route::get('/nilaikd/all/{id}', 'NilaikdAll')->name('nilaikd.all');
+
+    Route::post('/Nilaikd3/store', 'Nilaikd3Store')->name('nilaikd3.store');
+    Route::post('/Nilaikd4/store', 'Nilaikd4Store')->name('nilaikd4.store');
 });
 
 

@@ -9,4 +9,9 @@ class Ki3 extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function seksis()
+    {
+        return $this->belongsTo(Seksi::class, 'id_seksi', 'id');
+    }
 }

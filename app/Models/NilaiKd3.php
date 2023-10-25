@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ki4 extends Model
+class NilaiKd3 extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    public function seksis()
+    public function kd3()
     {
-        return $this->belongsTo(Seksi::class, 'id_seksi', 'id');
+        return $this->belongsTo(Kd3::class, 'id_kd3', 'id');
     }
 }

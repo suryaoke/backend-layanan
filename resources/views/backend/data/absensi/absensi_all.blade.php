@@ -92,7 +92,7 @@
 
         <table class="table table-report -mt-2">
             <thead>
-                <tr>
+                <tr class=" alert-primary">
                     <th class="whitespace-nowrap">No</th>
                     <th class="whitespace-nowrap">Nama</th>
                     <th class="whitespace-nowrap">NISN</th>

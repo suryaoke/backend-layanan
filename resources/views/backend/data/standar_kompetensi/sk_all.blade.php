@@ -5,14 +5,14 @@
         <div class="intro-y box mt-5">
             <div class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
                 <h2 class="font-medium text-base mr-auto">
-                    STANDAR KOMPETENSI (KI/KD) Mapel :
+                    STANDAR KOMPETENSI (KI/KD) : {{ $pengampu['mapels']['nama'] }} {{ $pengampu['kelass']['tingkat'] }}
                 </h2>
             </div>
 
             <div class="p-5">
                 <table class="table">
                     <thead>
-                        <tr>
+                        <tr class=" alert-primary">
                             <th>No.</th>
                             <th>KOMPETENSI INTI (KI)</th>
                             <th class="whitespace-nowrap">KOMPETENSI DASAR (KD) </th>
@@ -49,14 +49,19 @@
 
                                     <textarea class="form-control mt-1" name="ket" cols="40" rows="" placeholder="Kompetensi Dasar"></textarea>
                                     <br> <button type="submit" class="btn btn-primary btn-sm mt-1" title="Save">
-                                        <i data-lucide="save" class="w-5 h-5 "></i> &nbsp;Save
+                                        <i data-lucide="save" class="w-5 h-5 "></i> &nbsp; Save
                                     </button>
                                 </form>
                                 <br> <br>
                                 @foreach ($kd3 as $key => $item)
-                                    <span class=" text-small"> 3.{{ $item->urutan }}
-                                        {{ $item->ket }}</span> <br> <br>
+                                    <span class="text-small"> 3.{{ $item->urutan }} {{ $item->ket }}
+                                        <a id="delete" href="{{ route('kd3.delete', $item->id) }}" class="text-danger"
+                                            title="delete">
+                                            <i data-lucide="trash" class="w-4 h-4"></i>
+                                        </a>
+                                    </span><br>
                                 @endforeach
+
                             </td>
 
                         </tr>
@@ -81,10 +86,10 @@
                                 </td>
                             @endforeach
                             <td> <br>
-                                <form method="post" action="{{ route('kd3.store') }}"
+                                <form method="post" action="{{ route('kd4.store') }}"
                                     onkeydown="return event.key != 'Enter';">
                                     @csrf
-                                    <input type="hidden" name="id_ki3" value="{{ $ki3data->id }}">
+                                    <input type="hidden" name="id_ki4" value="{{ $ki4data->id }}">
                                     <input class="intro-x login__input form-control py-3 px-4 block" type="number"
                                         placeholder="Urutan" name="urutan">
 
@@ -94,9 +99,13 @@
                                     </button>
                                 </form>
                                 <br> <br>
-                                @foreach ($kd3 as $key => $item)
-                                    <span class=" text-small"> 3.{{ $item->urutan }}
-                                        {{ $item->ket }}</span> <br> <br>
+                                @foreach ($kd4 as $key => $item)
+                                    <span class="text-small"> 4.{{ $item->urutan }} {{ $item->ket }}
+                                        <a id="delete" href="{{ route('kd4.delete', $item->id) }}" class="text-danger"
+                                            title="delete">
+                                            <i data-lucide="trash" class="w-4 h-4"></i>
+                                        </a>
+                                    </span><br>
                                 @endforeach
                             </td>
                         </tr>
@@ -109,4 +118,8 @@
         </div>
         <!-- END: Events -->
     </div> <!-- end row -->
+
+
+
+
 @endsection
