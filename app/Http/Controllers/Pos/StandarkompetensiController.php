@@ -11,6 +11,7 @@ use App\Models\Kd4;
 use App\Models\Kelas;
 use App\Models\Ki3;
 use App\Models\Ki4;
+use App\Models\Kkm;
 use App\Models\Mapel;
 use App\Models\NilaiKd3;
 use App\Models\NilaiKd4;
@@ -272,9 +273,21 @@ class StandarkompetensiController extends Controller
         $nilaisiswakd3 = null;
         if ($datanilaikd3) {
             $nilaisiswakd3 = NilaisiswaKd3::where('id_nilaikd3', $datanilaikd3->id)->get();
+
+            $nilaisiswakd3id = NilaisiswaKd3::where('id_nilaikd3', $datanilaikd3->id)->first();
+            $rombelsiswa = Rombelsiswa::where('id', $nilaisiswakd3id->id_rombelsiswa)->first();
+            $rombel = Rombel::where('id', $rombelsiswa->id_rombel)->first();
+            $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+            $kkm1 =  Kkm::where('id_kelas', $kelas->tingkat)->first();
         }
 
-        return view('backend.data.standar_kompetensi.nilaikd_all',  compact('nilaisiswakd3', 'rombel', 'pengampu', 'datanilaikd4', 'kd4', 'ki4', 'kd3', 'ki3', 'datanilaikd3', 'seksi', 'nilaikd3', 'nilaikd4'));
+
+        $nilaisiswakd4 = null;
+        if ($datanilaikd4) {
+            $nilaisiswakd4 = NilaisiswaKd4::where('id_nilaikd4', $datanilaikd4->id)->get();
+        }
+
+        return view('backend.data.standar_kompetensi.nilaikd_all',  compact('kkm1', 'nilaisiswakd4', 'nilaisiswakd3', 'rombel', 'pengampu', 'datanilaikd4', 'kd4', 'ki4', 'kd3', 'ki3', 'datanilaikd3', 'seksi', 'nilaikd3', 'nilaikd4'));
     } // end method
 
 
@@ -423,6 +436,96 @@ class StandarkompetensiController extends Controller
         );
 
         // Redirect atau kembalikan response sesuai kebutuhan aplikasi
+        return redirect()->back()->with($notification);
+    }
+
+    public function Nilaikd3Delete($id)
+    {
+        $nilaikd3 = NilaiKd3::findOrFail($id);
+        if ($nilaikd3) {
+            $nilaikd3->delete();
+            NilaisiswaKd3::where('id_nilaikd3', $id)->delete();
+            $notification = array(
+                'message' => 'NilaiKd3 Deleted SuccessFully',
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        } else {
+            $notification = array(
+                'message' => 'NilaiKd3 not found',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+    } // end method
+
+    public function Nilaikd4Delete($id)
+    {
+        $nilaikd4 = NilaiKd4::findOrFail($id);
+        if ($nilaikd4) {
+            $nilaikd4->delete();
+            NilaisiswaKd4::where('id_nilaikd4', $id)->delete();
+            $notification = array(
+                'message' => 'NilaiKd4 Deleted SuccessFully',
+                'alert-type' => 'success'
+            );
+            return redirect()->back()->with($notification);
+        } else {
+            $notification = array(
+                'message' => 'NilaiKd4 not found',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+    } // end method
+
+
+    public function Nilaisiswakd3Update(Request $request)
+    {
+        $cttnwalas_ids = $request->id; // Ambil array id dari permintaan
+        foreach ($cttnwalas_ids as $key => $cttnwalas_id) {
+            $nilaiSiswaKd3 = NilaisiswaKd3::findOrFail($cttnwalas_id); // Mencari data sesuai dengan id
+
+            $nilaiSiswaKd3->nilai = $request->nilai[$key]; // Perbarui nilai
+            $nilaiSiswaKd3->remedial = $request->remedial[$key]; // Perbarui remedial
+            $nilaiSiswaKd3->feedback = $request->feedback[$key]; // Perbarui feedback
+            $nilaiSiswaKd3->status = $request->status[$key];
+            
+            $nilaiSiswaKd3->updated_by = Auth::user()->id; // Perbarui updated_by dengan user yang sedang login
+            $nilaiSiswaKd3->updated_at = Carbon::now(); // Perbarui updated_at dengan waktu sekarang
+
+            $nilaiSiswaKd3->save(); // Simpan perubahan
+        }
+
+        $notification = array(
+            'message' => 'Nilaisiswakd3 Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+    }
+
+    public function Nilaisiswakd4Update(Request $request)
+    {
+        $cttnwalas_ids = $request->id; // Ambil array id dari permintaan
+        foreach ($cttnwalas_ids as $key => $cttnwalas_id) {
+            $nilaiSiswaKd4 = NilaisiswaKd4::findOrFail($cttnwalas_id); // Mencari data sesuai dengan id
+
+            $nilaiSiswaKd4->nilai = $request->nilai[$key]; // Perbarui nilai
+            $nilaiSiswaKd4->remedial = $request->remedial[$key]; // Perbarui remedial
+            $nilaiSiswaKd4->feedback = $request->feedback[$key]; // Perbarui feedback
+            $nilaiSiswaKd4->status = $request->status[$key];
+            $nilaiSiswaKd4->updated_by = Auth::user()->id; // Perbarui updated_by dengan user yang sedang login
+            $nilaiSiswaKd4->updated_at = Carbon::now(); // Perbarui updated_at dengan waktu sekarang
+
+            $nilaiSiswaKd4->save(); // Simpan perubahan
+        }
+
+        $notification = array(
+            'message' => 'Nilaisiswakd4 Updated Successfully',
+            'alert-type' => 'success'
+        );
+
         return redirect()->back()->with($notification);
     }
 }

@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('nilaimapels', function (Blueprint $table) {
+        Schema::create('kkms', function (Blueprint $table) {
             $table->id();
+            $table->integer('kkm')->nullable();
+            $table->integer('id_kelas')->nullable();
+            $table->integer('created_by')->nullable();
+            $table->integer('updated_by')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nilaimapels');
+        Schema::dropIfExists('kkms');
     }
 };

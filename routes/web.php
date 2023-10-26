@@ -2,17 +2,15 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Pos\AbsensiController;
-use App\Http\Controllers\Pos\CttnwalasController;
-use App\Http\Controllers\Pos\EkstraController;
 use App\Http\Controllers\Pos\GuruController;
 use App\Http\Controllers\Pos\HariController;
 use App\Http\Controllers\Pos\JadwalmapelController;
 use App\Http\Controllers\Pos\JurusanController;
 use App\Http\Controllers\Pos\KelasController;
+use App\Http\Controllers\Pos\KkmController;
 use App\Http\Controllers\Pos\MapelController;
 use App\Http\Controllers\Pos\OrangTuaController;
 use App\Http\Controllers\Pos\PengampuController;
-use App\Http\Controllers\Pos\RaporController;
 use App\Http\Controllers\Pos\RombelController;
 use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SeksiController;
@@ -171,6 +169,15 @@ Route::controller(WalasController::class)->middleware(['auth'])->group(function 
 });
 
 
+// Kkm All Route
+Route::controller(KkmController::class)->middleware(['auth'])->group(function () {
+    Route::get('/kkm/all', 'KkmAll')->name('kkm.all');
+    Route::get('/kkm/add', 'KkmAdd')->name('kkm.add');
+    Route::post('/kkm/store', 'KkmStore')->name('kkm.store');
+    Route::get('/kkm/delete/{id}', 'KkmDelete')->name('kkm.delete');
+    Route::get('/kkm/edit/{id}', 'KkmEdit')->name('kkm.edit');
+    Route::post('/kkm/update', 'KkmUpdate')->name('kkm.update');
+});
 
 // Rombel All Route
 Route::controller(RombelController::class)->middleware(['auth'])->group(function () {
@@ -193,35 +200,6 @@ Route::controller(SeksiController::class)->middleware(['auth'])->group(function 
     Route::post('/seksi/update', 'SeksiUpdate')->name('seksi.update');
     Route::get('/get-jadwalmapel/{id_kelas}', 'getJadwalmapel')->name('getjadwal.mapel');
 });
-
-
-
-// Ekstra All Route 
-Route::controller(EkstraController::class)->middleware(['auth'])->group(function () {
-    Route::get('/ekstra/all', 'EkstraAll')->name('ekstra.all');
-    Route::get('/ekstra/add', 'EkstraAdd')->name('ekstra.add');
-    Route::post('/ekstra/store', 'EkstraStore')->name('ekstra.store');
-    Route::get('/ekstra/delete/{id}', 'EkstraDelete')->name('ekstra.delete');
-    Route::get('/ekstra/edit/{id}', 'EkstraEdit')->name('ekstra.edit');
-    Route::post('/ekstra/update', 'EkstraUpdate')->name('ekstra.update');
-
-    Route::get('/ekstranilai/all', 'EkstranilaiAll')->name('ekstranilai.all');
-    Route::get('/ekstranilai/add', 'EkstranilaiAdd')->name('ekstranilai.add');
-    Route::post('/ekstranilai/store', 'EkstranilaiStore')->name('ekstranilai.store');
-    Route::get('/ekstranilai/delete/{id}', 'EkstranilaiDelete')->name('ekstranilai.delete');
-    Route::get('/ekstranilai/edit/{id}', 'EkstranilaiEdit')->name('ekstranilai.edit');
-    Route::post('/ekstranilai/update', 'EkstranilaiUpdate')->name('ekstranilai.update');
-    Route::get('/ekstranilai/view/{id}', 'EkstranilaiView')->name('ekstranilai.view');
-});
-
-
-// Cttn walas All Route
-Route::controller(CttnwalasController::class)->middleware(['auth'])->group(function () {
-    Route::get('/cttnwalas/all', 'CttnwalasAll')->name('cttnwalas.all');
-    Route::post('/cttnwalas/store', 'CttnwalasStore')->name('cttnwalas.store');
-    Route::post('/cttnwalas/update', 'CttnwalasUpdate')->name('cttnwalas.update');
-});
-
 
 
 // Pengampu All Route
@@ -263,21 +241,6 @@ Route::controller(AbsensiController::class)->middleware(['auth'])->group(functio
     Route::get('/absensi/siswa/guruwalas', 'AbsensiSiswaguruwalas')->name('absensi.siswaguruwalas');
 });
 
-// Nilai Rapor All Route
-Route::controller(RaporController::class)->middleware(['auth'])->group(function () {
-    Route::get('/nilaisosial/all', 'NilaisosialAll')->name('nilaisosial.all');
-    Route::post('/nilaisosial/store', 'NilaisosialStore')->name('nilaisosial.store');
-    Route::post('/nilaisosial/update', 'NilaisosialUpdate')->name('nilaisosial.update');
-
-    Route::get('/nilaispiritual/all', 'NilaispiritualAll')->name('nilaispiritual.all');
-    Route::post('/nilaispiritual/store', 'NilaispiritualStore')->name('nilaispiritual.store');
-    Route::post('/nilaispiritual/update', 'NilaispiritualUpdate')->name('nilaispiritual.update');
-
-    Route::get('/nilaiprestasi/all', 'NilaiprestasiAll')->name('nilaiprestasi.all');
-    Route::post('/nilaiprestasi/store', 'NilaiprestasiStore')->name('nilaiprestasi.store');
-    Route::post('/nilaiprestasi/update', 'NilaiprestasiUpdate')->name('nilaiprestasi.update');
-});
-
 
 
 // Orang Tua All Route
@@ -308,6 +271,12 @@ Route::controller(StandarkompetensiController::class)->middleware(['auth'])->gro
 
     Route::post('/Nilaikd3/store', 'Nilaikd3Store')->name('nilaikd3.store');
     Route::post('/Nilaikd4/store', 'Nilaikd4Store')->name('nilaikd4.store');
+
+    Route::get('/nilaikd3/delete{id}', 'Nilaikd3Delete')->name('Nilaikd3.delete');
+    Route::get('/nilaikd4/delete{id}', 'Nilaikd4Delete')->name('Nilaikd4.delete');
+
+    Route::post('/nilaisiswakd3/update', 'Nilaisiswakd3Update')->name('Nilaisiswakd3.update');
+    Route::post('/nilaisiswakd4/update', 'Nilaisiswakd4Update')->name('Nilaisiswakd4.update');
 });
 
 

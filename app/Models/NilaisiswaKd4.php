@@ -9,4 +9,13 @@ class NilaisiswaKd4 extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    public function rombelsiswa()
+    {
+        return $this->belongsTo(Rombelsiswa::class, 'id_rombelsiswa', 'id');
+    }
+
+    public function siswas()
+    {
+        return $this->belongsTo(Siswa::class, 'id_siswa', 'id');
+    }
 }

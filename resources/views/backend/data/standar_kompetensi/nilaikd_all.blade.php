@@ -63,7 +63,7 @@
                                                                         ->where('nilai', null)
                                                                         ->count();
                                                                     $nilaisiswakd3remedial = App\Models\NilaisiswaKd3::where('id_nilaikd3', $item->id)
-                                                                        ->where('nilai', '!=', null)
+                                                                        ->where('status', 'remedial')
                                                                         ->count();
 
                                                                 @endphp
@@ -84,13 +84,22 @@
                                                                         @endif
 
                                                                     </td>
-                                                                    <td>Tidak dinilai: {{ $nilaisiswakd3belumdinilai }}
-                                                                        <br>
-                                                                        Remedial : {{ $nilaisiswakd3remedial }}
+                                                                    <td>
+                                                                        @if (isset($nilaisiswakd3belumdinilai))
+                                                                            Tidak dinilai: {{ $nilaisiswakd3belumdinilai }}
+                                                                        @else
+                                                                            Tidak dinilai: 0
+                                                                        @endif <br>
+
+                                                                        @if (isset($nilaisiswakd3remedial))
+                                                                            Remedial: {{ $nilaisiswakd3remedial }}
+                                                                        @else
+                                                                            Remedial: 0
+                                                                        @endif
                                                                     </td>
                                                                     <td>
                                                                         <a id="delete"
-                                                                            href="{{ route('walas.delete', $item->id) }}"
+                                                                            href="{{ route('Nilaikd3.delete', $item->id) }}"
                                                                             class="btn btn-danger mr-1 mb-2">
                                                                             <i data-lucide="trash" class="w-5 h-5"></i> </a>
                                                                         <a data-tw-toggle="modal"
@@ -124,7 +133,7 @@
 
                                                 </div>
                                                 <div class="mt-4">
-                                                    <table id="datatable" class="table table-sm"
+                                                    <table id="datatable1" class="table table-sm"
                                                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                         <thead>
                                                             <tr class=" alert-primary ">
@@ -142,7 +151,7 @@
                                                                         ->where('nilai', null)
                                                                         ->count();
                                                                     $nilaisiswakd4remedial = App\Models\NilaisiswaKd4::where('id_nilaikd4', $item->id)
-                                                                        ->where('nilai', '!=', null)
+                                                                        ->where('status', 'remedial')
                                                                         ->count();
 
                                                                 @endphp
@@ -167,16 +176,26 @@
                                                                         @endif
 
                                                                     </td>
-                                                                    <td>Tidak dinilai: {{ $nilaisiswakd3belumdinilai }}
-                                                                        <br>
-                                                                        Remedial : {{ $nilaisiswakd3remedial }}
+                                                                    <td>
+                                                                        @if (isset($nilaisiswakd4belumdinilai))
+                                                                            Tidak dinilai: {{ $nilaisiswakd4belumdinilai }}
+                                                                        @else
+                                                                            Tidak dinilai: 0
+                                                                        @endif <br>
+
+                                                                        @if (isset($nilaisiswakd4remedial))
+                                                                            Remedial: {{ $nilaisiswakd4remedial }}
+                                                                        @else
+                                                                            Remedial: 0
+                                                                        @endif
                                                                     </td>
                                                                     <td>
                                                                         <a id="delete"
-                                                                            href="{{ route('walas.delete', $item->id) }}"
+                                                                            href="{{ route('Nilaikd4.delete', $item->id) }}"
                                                                             class="btn btn-danger mr-1 mb-2">
                                                                             <i data-lucide="trash" class="w-5 h-5"></i> </a>
-                                                                        <a href="{{ route('walas.edit', $item->id) }}"
+                                                                        <a data-tw-toggle="modal"
+                                                                            data-tw-target="#nilaisiswa-kd4"
                                                                             class="btn btn-success mr-1 mb-2">
                                                                             <i data-lucide="edit" class="w-4 h-4"></i>
                                                                             &ensp;Nilai
@@ -345,6 +364,9 @@
     </div> <!-- END: Modal Content Keterampilan-->
 
 
+
+
+
     <!-- BEGIN: Add nilai siswa pengetahuan-->
     <style>
         .modal-xl {
@@ -359,18 +381,26 @@
     <div id="nilaisiswa-kd3" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan</h2>
+                <div class="modal-header intro-y alert alert-primary show mb-2 ">
+
+                    <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan Siswa <br>
+                        <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
+                        <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua.</span>
+                    </h2>
+
+                    <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
+                            class="w-8 h-8 text-slate-400"></i> </a>
                 </div>
-                <form method="post" action="{{ route('jadwalmapel.store') }}" enctype="multipart/form-data"
-                    id="myForm1">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
-                            <div class="col-span-12">
-                                <div class="card overflow-x-auto">
+
+                <div class="modal-body">
+                    <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
+                        <div class="col-span-12">
+                            <div class="card overflow-x-auto">
+                                <form method="post" action="{{ route('Nilaisiswakd3.update') }}"
+                                    onkeydown="return event.key != 'Enter';">
+                                    @csrf
                                     <div class="overflow-x-auto">
-                                        <table id="datatable" class="table table-bordered table-hover">
+                                        <table id="datatable2" class="table table-bordered table-hover">
                                             <thead>
                                                 <tr>
                                                     <th class="whitespace-nowrap">No</th>
@@ -387,49 +417,296 @@
                                             <tbody>
                                                 @if ($nilaisiswakd3)
                                                     @foreach ($nilaisiswakd3 as $key => $item)
+                                                        @php
+                                                            $rombelsiswa = App\Models\Rombelsiswa::where('id', $item->id_rombelsiswa)->first();
+                                                            $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+                                                            $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                                                            $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
+                                                        @endphp
+                                                        <tr>
+
+                                                            <td> {{ $key + 1 }} </td>
+                                                            <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
+                                                            <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
+                                                            <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
+                                                            <td>
+                                                                <input name="nilai[]" type="number"
+                                                                    value="{{ $item->nilai }}" class="form-control"
+                                                                    style="width: 100px;"
+                                                                    oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
+                                                                    data-id="1">
+                                                            </td>
+                                                            <td id="status{{ $key }}"
+                                                                style="color: {{ $item->status === 'remedial' ? 'red' : 'green' }}">
+                                                                <input type="hidden" name="status[]"
+                                                                    value="{{ $item->status }}">
+                                                                {{ $item->status }}
+                                                            </td>
+                                                            <td>
+                                                                @if ($item->status == 'remedial')
+                                                                    <input name="remedial[]" type="number"
+                                                                        value="{{ $item->remedial }}"
+                                                                        class="form-control" style="width: 100px;">
+                                                                @else
+                                                                    <input name="remedial[]" type="hidden"
+                                                                        value="{{ $item->remedial }}"
+                                                                        class="form-control" style="width: 100px;">
+                                                                @endif
+
+                                                            </td>
+                                                            <td>
+                                                                <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
+                                                            </td>
+
+                                                            <input type="hidden" name="id[]"
+                                                                value="{{ $item->id }}">
+                                                            <!-- Add additional action buttons if necessary -->
+
+                                                        </tr>
+                                                    @endforeach
+                                                @endif
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <p class="horizontal-align  mt-4">
+                                        <span class="text-danger">Pastikan data yang diinputkan benar.</span>
+                                    </p>
+                                    <div class="modal-footer">
+                                        <button type="button" data-tw-dismiss="modal"
+                                            class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                                        <button type="submit" class="btn btn-primary w-20">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var table = $('#datatable1').DataTable(); // Inisialisasi DataTable
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+
+            // Hapus DataTable sebelum menginisialisasi kembali
+            if ($.fn.DataTable.isDataTable('#datatable1')) {
+                $('#datatable1').DataTable().destroy();
+            }
+
+            // Menginisialisasi DataTable kembali dengan paginasi
+            $('#datatable1').DataTable({
+                paging: true
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var table = $('#datatable2').DataTable(); // Inisialisasi DataTable
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+
+            // Hapus DataTable sebelum menginisialisasi kembali
+            if ($.fn.DataTable.isDataTable('#datatable2')) {
+                $('#datatable2').DataTable().destroy();
+            }
+
+            // Menginisialisasi DataTable kembali dengan paginasi
+            $('#datatable2').DataTable({
+                paging: true
+            });
+        });
+    </script>
+
+
+    <script>
+        function changeStatus(inputElement, kkmValue, key) {
+            var value = inputElement.value;
+            var statusElement = document.getElementById('status' + key);
+
+            if (value < kkmValue) {
+                statusElement.innerHTML =
+                    '<input type="hidden" name="status[]" value="remedial"><span style="color: red">remedial</span>';
+            } else {
+                statusElement.innerHTML =
+                    '<input type="hidden" name="status[]" value="lulus"><span style="color: green">lulus</span>';
+            }
+
+            document.getElementById('submitBtn').click();
+        }
+    </script>
+    <!-- BEGIN: Add nilai siswa pengetahuan-->
+
+
+
+
+
+    <!-- BEGIN: Add nilai siswa keterampilan-->
+    <style>
+        .modal-xl {
+            width: 90% !important;
+        }
+
+        .table {
+            width: 100% !important;
+        }
+    </style>
+
+    <div id="nilaisiswa-kd4" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header intro-y alert alert-primary show mb-2 ">
+
+                    <h2 class="font-medium text-base mr-auto">Nilai Keterampilan Siswa <br>
+                        <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
+                        <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua.</span>
+                    </h2>
+                    <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
+                            class="w-8 h-8 text-slate-400"></i> </a>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
+                        <div class="col-span-12">
+                            <div class="card overflow-x-auto">
+                                <form method="post" action="{{ route('Nilaisiswakd4.update') }}"
+                                    onkeydown="return event.key != 'Enter';">
+                                    @csrf
+                                    <div class="overflow-x-auto">
+                                        <table id="datatable3" class="table table-bordered table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="whitespace-nowrap">No</th>
+                                                    <th class="whitespace-nowrap">Nisn</th>
+                                                    <th class="whitespace-nowrap">Nama</th>
+                                                    <th class="whitespace-nowrap">Jk</th>
+                                                    <th class="whitespace-nowrap">Nilai</th>
+                                                    <th class="whitespace-nowrap">Status</th>
+                                                    <th class="whitespace-nowrap">Remedial</th>
+                                                    <th class="whitespace-nowrap">Feedback</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if ($nilaisiswakd4)
+                                                    @foreach ($nilaisiswakd4 as $key => $item)
+                                                        @php
+                                                            $rombelsiswa = App\Models\Rombelsiswa::where('id', $item->id_rombelsiswa)->first();
+                                                            $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+                                                            $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                                                            $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
+                                                        @endphp
                                                         <tr>
                                                             <td> {{ $key + 1 }} </td>
                                                             <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
                                                             <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
                                                             <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
                                                             <td>
-                                                                <input name="nilai" type="number"
+                                                                <input name="nilai[]" type="number"
                                                                     value="{{ $item->nilai }}" class="form-control"
-                                                                    style="width: 100px;">
+                                                                    style="width: 100px;"
+                                                                    oninput="changeStatus1(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
+                                                                    data-id="1">
+                                                            </td>
+                                                            <td id="status1{{ $key }}"
+                                                                style="color: {{ $item->status === 'remedial' ? 'red' : 'green' }}">
+                                                                <input type="hidden" name="status[]"
+                                                                    value="{{ $item->status }}">
+                                                                {{ $item->status }}
+                                                            </td>
+                                                            <td>
+                                                                @if ($item->status == 'remedial')
+                                                                    <input name="remedial[]" type="number"
+                                                                        value="{{ $item->remedial }}"
+                                                                        class="form-control" style="width: 100px;">
+                                                                @else
+                                                                    <input name="remedial[]" type="hidden"
+                                                                        value="{{ $item->remedial }}"
+                                                                        class="form-control" style="width: 100px;">
+                                                                @endif
+
+                                                            </td>
+                                                            <td>
+                                                                <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
                                                             </td>
 
-                                                            <td> {{ $item->status }} </td>
-                                                            <td>
-                                                                <input name="remedial" type="number"
-                                                                    value="{{ $item->remedial }}" class="form-control"
-                                                                    style="width: 100px;">
-                                                            </td>
-                                                            <td>
-                                                                <textarea name="" id="" class="form-control" name="ket" cols="10" rows="2">{{ $item->feedback }}</textarea>
+                                                            <input type="hidden" name="id[]"
+                                                                value="{{ $item->id }}">
+                                                            <!-- Add additional action buttons if necessary -->
 
-                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 @endif
                                             </tbody>
                                         </table>
+
                                     </div>
-                                </div>
+                                    <p class="horizontal-align  mt-4">
+                                        <span class="text-danger">Pastikan data yang diinputkan benar.</span>
+                                    </p>
+                                    <div class="modal-footer">
+                                        <button type="button" data-tw-dismiss="modal"
+                                            class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                                        <button type="submit" class="btn btn-primary w-20">Save</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
+
+
+
                     </div>
-                    <p class="horizontal-align ml-4">
-                        <span class="text-danger">Pastikan data yang diinputkan benar.</span>
-                    </p>
-                    <div class="modal-footer">
-                        <button type="button" data-tw-dismiss="modal"
-                            class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-                        <button type="submit" class="btn btn-primary w-20">Save</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- BEGIN: Add nilai siswa pengetahuan-->
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var table = $('#datatable3').DataTable(); // Inisialisasi DataTable
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
+            });
+
+            // Hapus DataTable sebelum menginisialisasi kembali
+            if ($.fn.DataTable.isDataTable('#datatable2')) {
+                $('#datatable2').DataTable().destroy();
+            }
+
+            // Menginisialisasi DataTable kembali dengan paginasi
+            $('#datatable2').DataTable({
+                paging: true
+            });
+        });
+    </script>
+
+    <script>
+        function changeStatus1(inputElement, kkmValue, key) {
+            var value = inputElement.value;
+            var statusElement = document.getElementById('status1' + key);
+
+            if (value < kkmValue) {
+                statusElement.innerHTML =
+                    '<input type="hidden" name="status[]" value="remedial"><span style="color: red">remedial</span>';
+            } else {
+                statusElement.innerHTML =
+                    '<input type="hidden" name="status[]" value="lulus"><span style="color: green">lulus</span>';
+            }
+
+            document.getElementById('submitBtn').click();
+        }
+    </script>
+
+    <!-- BEGIN: Add nilai siswa keterampilan-->
 @endsection
