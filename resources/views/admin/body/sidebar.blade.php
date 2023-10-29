@@ -18,7 +18,7 @@
          $kelasedit = URL::route('kelas.edit', ['id' => $id]);
          $tahunajaredit = URL::route('tahunajar.edit', ['id' => $id]);
          $walasedit = URL::route('walas.edit', ['id' => $id]);
-       
+
          $rombeledit = URL::route('rombel.edit', ['id' => $id]);
          $seksiedit = URL::route('seksi.edit', ['id' => $id]);
          $sk = URL::route('sk.all', ['id' => $id]);
@@ -40,7 +40,7 @@
          $kelasedit = 1;
          $tahunajaredit = 1;
          $walasedit = 1;
-       
+
          $rombeledit = 1;
          $seksiedit = 1;
          $sk = 1;
@@ -88,17 +88,19 @@
      $tahunajaradd = URL::route('tahunajar.add');
      $walas = URL::route('walas.all');
      $walasadd = URL::route('walas.add');
-    
+
      $siswaguruwalas = URL::route('siswa.guruwalas');
-   
+
      $absensisiswaguruwalas = URL::route('absensi.siswaguruwalas');
-  
+
      $rombel = URL::route('rombel.all');
      $rombeladd = URL::route('rombel.add');
      $seksi = URL::route('seksi.all');
      $seksiadd = URL::route('seksi.add');
      $kkm = URL::route('kkm.all');
      $kkmadd = URL::route('kkm.add');
+     $NilaiSiswaGuruWalas = URL::route('NilaiSiswaGuruWalas.all');
+
      $routes = [
          'pusherAuth' => URL::route('pusher.auth'),
          'messagesIndex' => URL::route('messages.index'),
@@ -761,61 +763,83 @@
                  </ul>
              </li>
 
+             <li>
+                 @if ($url == $jadwalmapelguru)
+                     <a href="{{ route('jadwalmapel.guru') }}" class="side-menu  side-menu--active">
+                     @else
+                         <a href="{{ route('jadwalmapel.guru') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+                 <div class="side-menu__title">
+                     Rekap Nilai
+                 </div>
+                 </a>
 
+             </li>
 
 
              <li class="side-nav__devider my-4"></li>
 
-             <li>
-               
+             @php
+                 $userId1 = Auth::user()->id;
+                 $guru1 = App\Models\Guru::where('id_user', $userId1)->first();
+                 $walas = App\Models\Walas::where('id_guru', $guru1->id)->first();
+                 $rombel = App\Models\Rombel::where('id_walas', $walas->id)->first();
+
+             @endphp
+
+             @if ($rombel)
+
+                 <li>
+
                      @if ($siswaguruwalas == $url)
                          <a href="javascript:;" class="side-menu side-menu--active">
                          @elseif($absensisiswaguruwalas == $url)
                              <a href="javascript:;" class="side-menu side-menu--active">
-                           
-                                         @else
-                                             <a href="javascript:;" class="side-menu ">
-                 @endif
-                 <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                         stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-square-2">
-                         <path d="M18 21a6 6 0 0 0-12 0" />
-                         <circle cx="12" cy="11" r="4" />
-                         <rect width="18" height="18" x="3" y="3" rx="2" />
-                     </svg> </div>
-                 <div class="side-menu__title">
-                     Wali Kelas
-                     <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
-                 </div>
-                 </a>
-                 <ul class="">
-                     <li>
-                         <a href="{{ route('siswa.guruwalas') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Siswa</div>
-                         </a>
-                     </li>
-                     <li>
-                         <a href="{{ route('absensi.siswaguruwalas') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Absensi Siswa</div>
-                         </a>
-                     </li>
+                             @elseif($NilaiSiswaGuruWalas == $url)
+                                 <a href="javascript:;" class="side-menu side-menu--active">
+                                 @else
+                                     <a href="javascript:;" class="side-menu ">
+                     @endif
+                     <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                             height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                             class="lucide lucide-user-square-2">
+                             <path d="M18 21a6 6 0 0 0-12 0" />
+                             <circle cx="12" cy="11" r="4" />
+                             <rect width="18" height="18" x="3" y="3" rx="2" />
+                         </svg> </div>
+                     <div class="side-menu__title">
+                         Wali Kelas
+                         <div class="side-menu__sub-icon "> <i data-lucide="chevron-down"></i> </div>
+                     </div>
+                     </a>
+                     <ul class="">
+                         <li>
+                             <a href="{{ route('siswa.guruwalas') }}" class="side-menu">
+                                 <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                 <div class="side-menu__title">Siswa</div>
+                             </a>
+                         </li>
+                         <li>
+                             <a href="{{ route('absensi.siswaguruwalas') }}" class="side-menu">
+                                 <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                 <div class="side-menu__title">Absensi Siswa</div>
+                             </a>
+                         </li>
 
-                     <li>
-                         <a href="{{ route('siswa.guru') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Status Nilai</div>
-                         </a>
-                     </li>
-                     <li>
-                         <a href="{{ route('siswa.guru') }}" class="side-menu">
-                             <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                             <div class="side-menu__title">Rapor</div>
-                         </a>
-                     </li>
-                 </ul>
-             </li>
+                         <li>
+                             <a href="{{ route('NilaiSiswaGuruWalas.all') }}" class="side-menu">
+                                 <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                 <div class="side-menu__title">Rekap
+                                     Nilai </div>
+                             </a>
+                         </li>
+
+                     </ul>
+                 </li>
+             @endif
+
              <li>
                  @if ($url == $a)
                      <a href="{{ route('messages.index') }}" class="side-menu  side-menu--active">
@@ -831,8 +855,6 @@
                  </a>
 
              </li>
-
-
 
 
 

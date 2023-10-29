@@ -70,8 +70,9 @@ class AbsensiController extends Controller
             ->join('users', 'gurus.id_user', '=', 'users.id')
             ->where('users.id', $userId)
             ->select('absensis.*')
+            ->orderby('id','desc')
             ->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
-            ->paginate(perPage: 50);
+            ->get();
 
 
         $siswa1 = Siswa::latest()->get();
@@ -108,7 +109,7 @@ class AbsensiController extends Controller
 
         $search = $request->search;
         $rombelsiswa = Rombelsiswa::where('id_rombel', $search)->get();
-        //   $siswa = Siswa::where('id', $rombelsiswa->id_siswa)->get();
+  
         $absensi = Absensi::first();
 
         foreach ($rombelsiswa as $row) {
@@ -276,7 +277,13 @@ class AbsensiController extends Controller
                     $siswaIds = $rombelSiswa->pluck('id_siswa')->unique()->toArray();
                     $siswa = Siswa::whereIn('id', $siswaIds)->get();
                     if ($siswa) {
-                        $absensi = Absensi::whereIn('id_siswa', $siswaIds)->get();
+                        $absensi = Absensi::whereIn('id_siswa', $siswaIds)->orderby('id', 'desc')->get();
+
+                        // $absensi = Absensi::join('siswas', 'absensis.id_siswa', '=', 'siswas.id')
+                        // ->whereIn('absensis.id_siswa', $siswaIds)
+                        // ->orderBy('absensis.id', 'desc')
+                        // ->orderBy('siswas.nama', 'asc')
+                        // ->get();
                     }
                 }
             }
@@ -287,7 +294,7 @@ class AbsensiController extends Controller
             'siswa' => $siswa,
         ];
 
-        return view('backend.data.absensi.absensi_guruwalas', compact('absensi', 'data', 'walas', 'siswa'));
+        return view('backend.data.absensi.absensi_guruwalas', compact('rombel','absensi', 'data', 'walas', 'siswa'));
     }
 
 }

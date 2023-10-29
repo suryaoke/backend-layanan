@@ -25,6 +25,9 @@ class GuruController extends Controller
         $user = User::where('role', '4')
             ->whereNotIn('id', $guruIds)
             ->get();
+
+
+
         return view('backend.data.guru.guru_add', compact('user'));
     } // end method
     public function GuruStore(Request $request)
@@ -32,7 +35,7 @@ class GuruController extends Controller
 
         $this->validate($request, [
             'kode_gr' => 'required|max:50|unique:gurus,kode_gr',
-           
+
         ]);
 
         Guru::insert([
@@ -57,9 +60,9 @@ class GuruController extends Controller
         $guru = Guru::findOrFail($id);
         $guruIds = Guru::pluck('id_user')->toArray();
         $user = User::where('role', '4')
-        ->whereNotIn('id', $guruIds)
+            ->whereNotIn('id', $guruIds)
             ->get();
-        return view('backend.data.guru.guru_edit', compact('guru','user'));
+        return view('backend.data.guru.guru_edit', compact('guru', 'user'));
     }
     public function GuruUpdate(Request $request)
     {

@@ -32,29 +32,36 @@
             ->select('seksis.*')
             ->get();
 
-        // Ambil ID guru berdasarkan ID user yang aktif
         $guruId = App\Models\Guru::where('id_user', $userId)->value('id');
-
-        // Ambil ID pengampu yang berelasi dengan guru melalui jadwalmapels
-        $pengampuIds = App\Models\Jadwalmapel::whereHas('pengampus', function ($query) use ($guruId) {
-            $query->where('id_guru', $guruId);
-        })
-            ->pluck('id_pengampu')
-            ->unique();
-
         $kepsek = App\Models\User::where('role', '2')->first();
-        $nipkepsek = App\Models\Guru::where('id_user', $kepsek->id)->first();
+        if ($guruId) {
+            // Ambil ID pengampu yang berelasi dengan guru melalui jadwalmapels
+            $pengampuIds = App\Models\Jadwalmapel::whereHas('pengampus', function ($query) use ($guruId) {
+                $query->where('id_guru', $guruId);
+            })
+                ->pluck('id_pengampu')
+                ->unique();
 
-        $walas = App\Models\Walas::where('id_guru', $guruId)->first();
+            $kepsek = App\Models\User::where('role', '2')->first();
+            $nipkepsek = App\Models\Guru::where('id_user', $kepsek->id)->first();
 
-        if ($walas) {
-            $rombel = App\Models\Rombel::where('id_walas', $walas->id)->first();
-            $kelaswalas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
-            $kelaswalasjurusan = App\Models\Jurusan::where('id', $kelaswalas->id_jurusan)->first();
-            $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $rombel->id)->count();
+            $walas = App\Models\Walas::where('id_guru', $guruId)->first();
+            $kelaswalas = null;
+            $kelaswalasjurusan = null;
+
+            if ($walas) {
+                $rombel = App\Models\Rombel::where('id_walas', $walas->id)->first();
+                if ($rombel) {
+                    $kelaswalas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                    if ($kelaswalas) {
+                        $kelaswalasjurusan = App\Models\Jurusan::where('id', $kelaswalas->id_jurusan)->first();
+                    }
+                    $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $rombel->id)->count();
+                }
+            }
+
+            $jadwal = App\Models\Guru::where('id_user', $userId)->value('id');
         }
-
-        $jadwal = App\Models\Guru::where('id_user', $userId)->value('id');
 
     @endphp
 
@@ -595,16 +602,18 @@
                                     <div class="p-1 border-t ml-4 border-slate-200/60 dark:border-darkmode-400">
 
                                         <a class="flex items-center mt-2 mb-2" href=""> Kelas :
-                                            @if ($walas)
-                                                {{ $kelaswalas->tingkat }} {{ $kelaswalas->nama }}
-                                                {{ $kelaswalasjurusan->nama }}
+                                            @if ($walas && $kelaswalas)
+                                                {{ $kelaswalas->tingkat ?? 'Unknown' }}
+                                                {{ $kelaswalas->nama ?? 'Unknown' }}
+                                                {{ $kelaswalasjurusan->nama ?? 'Unknown' }}
                                             @else
                                                 -
                                             @endif
+
                                         </a>
                                         <a class="flex items-center mt-2 mb-2" href=""> Jumlah Siswa:
                                             @if ($walas)
-                                                {{ $rombelsiswa }} Orang
+                                                {{ $rombelsiswa ?? '0' }} Orang
                                             @else
                                                 -
                                             @endif

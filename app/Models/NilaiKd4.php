@@ -13,4 +13,13 @@ class NilaiKd4 extends Model
     {
         return $this->belongsTo(Kd4::class, 'id_kd4', 'id');
     }
+
+    public function seksis()
+    {
+        return $this->belongsTo(Seksi::class, 'id_seksi', 'id');
+    }
+    public function mapels()
+    {
+        return $this->belongsTo(Mapel::class, 'id_mapel');
+    }
 }

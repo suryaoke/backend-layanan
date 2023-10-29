@@ -64,6 +64,7 @@
                                                                         ->count();
                                                                     $nilaisiswakd3remedial = App\Models\NilaisiswaKd3::where('id_nilaikd3', $item->id)
                                                                         ->where('status', 'remedial')
+                                                                        ->where('remedial', null)
                                                                         ->count();
 
                                                                 @endphp
@@ -152,6 +153,7 @@
                                                                         ->count();
                                                                     $nilaisiswakd4remedial = App\Models\NilaisiswaKd4::where('id_nilaikd4', $item->id)
                                                                         ->where('status', 'remedial')
+                                                                        ->where('remedial', null)
                                                                         ->count();
 
                                                                 @endphp
@@ -384,7 +386,11 @@
                 <div class="modal-header intro-y alert alert-primary show mb-2 ">
 
                     <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan Siswa <br>
-                        <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
+                        @if ($kkm1)
+                            <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
+                        @else
+                            <Span>- KKM Nilai belum tersedia.</Span> <br>
+                        @endif
                         <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua.</span>
                     </h2>
 
@@ -430,17 +436,31 @@
                                                             <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
                                                             <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
                                                             <td>
-                                                                <input name="nilai[]" type="number"
-                                                                    value="{{ $item->nilai }}" class="form-control"
-                                                                    style="width: 100px;"
-                                                                    oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
-                                                                    data-id="1">
+                                                                @if ($item->status == 'remedial')
+                                                                    <input name="nilai[]" type="number"
+                                                                        value="{{ $item->nilai }}" class="form-control"
+                                                                        style="width: 100px;"
+                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
+                                                                        data-id="1" readonly>
+                                                                @else
+                                                                    <input name="nilai[]" type="number"
+                                                                        value="{{ $item->nilai }}" class="form-control"
+                                                                        style="width: 100px;"
+                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
+                                                                        data-id="1">
+                                                                @endif
+
                                                             </td>
                                                             <td id="status{{ $key }}"
                                                                 style="color: {{ $item->status === 'remedial' ? 'red' : 'green' }}">
                                                                 <input type="hidden" name="status[]"
                                                                     value="{{ $item->status }}">
-                                                                {{ $item->status }}
+                                                                @if ($item->remedial != null)
+                                                                    <span style="color: green"> lulus</span>
+                                                                @else
+                                                                    {{ $item->status }}
+                                                                @endif
+
                                                             </td>
                                                             <td>
                                                                 @if ($item->status == 'remedial')
@@ -567,7 +587,11 @@
                 <div class="modal-header intro-y alert alert-primary show mb-2 ">
 
                     <h2 class="font-medium text-base mr-auto">Nilai Keterampilan Siswa <br>
-                        <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
+                        @if ($kkm1)
+                            <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
+                        @else
+                            <Span>- KKM Nilai belum tersedia.</Span> <br>
+                        @endif
                         <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua.</span>
                     </h2>
                     <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
@@ -612,11 +636,20 @@
                                                             <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
                                                             <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
                                                             <td>
-                                                                <input name="nilai[]" type="number"
-                                                                    value="{{ $item->nilai }}" class="form-control"
-                                                                    style="width: 100px;"
-                                                                    oninput="changeStatus1(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
-                                                                    data-id="1">
+                                                                @if ($item->status == 'remedial')
+                                                                    <input name="nilai[]" type="number"
+                                                                        value="{{ $item->nilai }}" class="form-control"
+                                                                        style="width: 100px;"
+                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
+                                                                        data-id="1" readonly>
+                                                                @else
+                                                                    <input name="nilai[]" type="number"
+                                                                        value="{{ $item->nilai }}" class="form-control"
+                                                                        style="width: 100px;"
+                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
+                                                                        data-id="1">
+                                                                @endif
+
                                                             </td>
                                                             <td id="status1{{ $key }}"
                                                                 style="color: {{ $item->status === 'remedial' ? 'red' : 'green' }}">

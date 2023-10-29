@@ -23,6 +23,10 @@ class Rombel extends Model
     {
         return $this->belongsTo(Kelas::class, 'id_kelas', 'id');
     }
+    public function kelassa()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas', 'id');
+    }
 
     public function walass()
     {

@@ -32,7 +32,7 @@ class Seksi extends Model
 
     public function mapels()
     {
-        return $this->belongsTo(Mapel::class, 'id_mapel');
+        return $this->belongsTo(Mapel::class, 'id_mapel', 'id');
     }
 
     public function pengampus()

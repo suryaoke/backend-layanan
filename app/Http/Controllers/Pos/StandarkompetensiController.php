@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
+use App\Models\Absensi;
 use App\Models\Cttnwalas;
 use App\Models\Guru;
 use App\Models\Jadwalmapel;
@@ -21,6 +22,8 @@ use App\Models\Pengampu;
 use App\Models\Rombel;
 use App\Models\Rombelsiswa;
 use App\Models\Seksi;
+use App\Models\Siswa;
+use App\Models\Walas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -271,6 +274,7 @@ class StandarkompetensiController extends Controller
         $rombel = Rombel::where('id_kelas', optional($pengampu)->kelas)->first();
 
         $nilaisiswakd3 = null;
+        $kkm1 = null;
         if ($datanilaikd3) {
             $nilaisiswakd3 = NilaisiswaKd3::where('id_nilaikd3', $datanilaikd3->id)->get();
 
@@ -490,7 +494,7 @@ class StandarkompetensiController extends Controller
             $nilaiSiswaKd3->remedial = $request->remedial[$key]; // Perbarui remedial
             $nilaiSiswaKd3->feedback = $request->feedback[$key]; // Perbarui feedback
             $nilaiSiswaKd3->status = $request->status[$key];
-            
+
             $nilaiSiswaKd3->updated_by = Auth::user()->id; // Perbarui updated_by dengan user yang sedang login
             $nilaiSiswaKd3->updated_at = Carbon::now(); // Perbarui updated_at dengan waktu sekarang
 
@@ -527,5 +531,74 @@ class StandarkompetensiController extends Controller
         );
 
         return redirect()->back()->with($notification);
+    }
+
+
+    public function NilaiSiswaGuruWalas(Request $request)
+    {
+
+        $searchMapel = $request->input('searchmapel');
+        $searchMapel1 = $request->input('searchmapel1');
+        $query = NilaisiswaKd3::query();
+        $query1 = NilaisiswaKd4::query();
+
+        if (!empty($searchMapel)) {
+            $query->whereHas('nilaikd3', function ($nilaiQuery) use ($searchMapel) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+
+
+        if (!empty($searchMapel1)) {
+            $query1->whereHas('nilaikd4', function ($nilaiQuery) use ($searchMapel1) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel1) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel1) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel1) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel1) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel1 . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+
+        $userId = Auth::user()->id;
+        $guru = Guru::where('id_user', $userId)->first();
+        $walas = $guru ? Walas::where('id_guru', $guru->id)->first() : null;
+        $siswa = null; // inisialisasi variabel $siswa
+
+
+
+        if ($walas) {
+            $rombel = Rombel::where('id_walas', $walas->id)->first();
+            if ($rombel) {
+                $rombelSiswaIds = RombelSiswa::where('id_rombel', $rombel->id)->pluck('id')->toArray();
+                if ($rombelSiswaIds) {
+                    $rombelSiswa = RombelSiswa::whereIn('id', $rombelSiswaIds)->get();
+                    if ($rombelSiswa) {
+                        $nilaiSiswaKd3 = $query->whereIn('id_rombelsiswa', $rombelSiswaIds)->get();
+                        $nilaiSiswaKd4 = $query1->whereIn('id_rombelsiswa', $rombelSiswaIds)->get();
+                    }
+                }
+            }
+        }
+
+        $data = [
+            'walas' => $walas,
+            'siswa' => $siswa,
+        ];
+
+        return view('backend.data.nilai.nilai_siswaguruwalas', compact('nilaiSiswaKd4', 'rombel', 'nilaiSiswaKd3', 'data', 'walas', 'siswa'));
     }
 }
