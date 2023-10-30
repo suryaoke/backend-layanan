@@ -89,6 +89,8 @@
      $walas = URL::route('walas.all');
      $walasadd = URL::route('walas.add');
 
+     $NilaiSiswaGuruMapel = URL::route('NilaiSiswaGuruMapel.all');
+
      $siswaguruwalas = URL::route('siswa.guruwalas');
 
      $absensisiswaguruwalas = URL::route('absensi.siswaguruwalas');
@@ -754,7 +756,7 @@
                              <a href="{{ route('nilaikd.all', $item->id) }}" class="side-menu">
                                  <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
                                  <div class="side-menu__title">{{ $mapels->nama }}:
-                                     {{ $kelas->tingkat }}{{ $kelas->nama }} {{ $jurusan->nama }} </div>
+                                     {{ $kelas->tingkat }}{{ $kelas->nama }} {{ $jurusan->nama }}  </div>
 
                              </a>
                          </li>
@@ -764,10 +766,10 @@
              </li>
 
              <li>
-                 @if ($url == $jadwalmapelguru)
-                     <a href="{{ route('jadwalmapel.guru') }}" class="side-menu  side-menu--active">
+                 @if ($url == $NilaiSiswaGuruMapel)
+                     <a href="{{ route('NilaiSiswaGuruMapel.all') }}" class="side-menu  side-menu--active">
                      @else
-                         <a href="{{ route('jadwalmapel.guru') }}" class="side-menu ">
+                         <a href="{{ route('NilaiSiswaGuruMapel.all') }}" class="side-menu ">
                  @endif
                  <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
                  <div class="side-menu__title">

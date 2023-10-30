@@ -251,7 +251,9 @@ class StandarkompetensiController extends Controller
     public function NilaikdAll($id)
     {
         $nilaikd3 = NilaiKd3::where('id_seksi', $id)->orderby('ph', 'asc')->get();
+        $nilaikd3id = NilaiKd3::where('id_seksi', $id)->first();
         $nilaikd4 = NilaiKd4::where('id_seksi', $id)->orderby('ph', 'asc')->get();
+        $nilaikd4id = NilaiKd4::where('id_seksi', $id)->first();
         $seksi = Seksi::where('id', $id)->first();
 
         $datanilaikd3 = NilaiKd3::where('id_seksi', $id)->orderby('ph', 'desc')->first();
@@ -291,7 +293,7 @@ class StandarkompetensiController extends Controller
             $nilaisiswakd4 = NilaisiswaKd4::where('id_nilaikd4', $datanilaikd4->id)->get();
         }
 
-        return view('backend.data.standar_kompetensi.nilaikd_all',  compact('kkm1', 'nilaisiswakd4', 'nilaisiswakd3', 'rombel', 'pengampu', 'datanilaikd4', 'kd4', 'ki4', 'kd3', 'ki3', 'datanilaikd3', 'seksi', 'nilaikd3', 'nilaikd4'));
+        return view('backend.data.standar_kompetensi.nilaikd_all',  compact('nilaikd4id', 'nilaikd3id', 'kkm1', 'nilaisiswakd4', 'nilaisiswakd3', 'rombel', 'pengampu', 'datanilaikd4', 'kd4', 'ki4', 'kd3', 'ki3', 'datanilaikd3', 'seksi', 'nilaikd3', 'nilaikd4'));
     } // end method
 
 
@@ -330,9 +332,29 @@ class StandarkompetensiController extends Controller
 
         // Redirect kembali ke halaman sebelumnya dengan notifikasi
         return redirect()->back()->with($notification);
-    }
+    } // end method
+
+    public function Nilaikd3Update(Request $request)
+    {
+        $nilaikd3_id = $request->id;
+        NilaiKd3::findOrFail($nilaikd3_id)->update([
+            'id_kd3' => $request->id_kd3,
+            'skema' => $request->skema,
+
+            'updated_by' => Auth::user()->id,
+            'updated_at' => Carbon::now(),
+        ]);
 
 
+        // Set notifikasi untuk ditampilkan kepada pengguna
+        $notification = array(
+            'message' => 'NilaiKd3 Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        // Redirect kembali ke halaman sebelumnya dengan notifikasi
+        return redirect()->back()->with($notification);
+    } // end method
 
     public function Nilaikd4Store(Request $request)
     {
@@ -365,6 +387,28 @@ class StandarkompetensiController extends Controller
         );
         return redirect()->back()->with($notification);
     } // end method
+
+    public function Nilaikd4Update(Request $request)
+    {
+        $nilaikd4_id = $request->id;
+        NilaiKd4::findOrFail($nilaikd4_id)->update([
+            'id_kd4' => $request->id_kd4,
+            'skema' => $request->skema,
+
+            'updated_by' => Auth::user()->id,
+            'updated_at' => Carbon::now(),
+        ]);
+
+
+        // Set notifikasi untuk ditampilkan kepada pengguna
+        $notification = array(
+            'message' => 'NilaiKd4 Updated Successfully',
+            'alert-type' => 'success'
+        );
+
+        // Redirect kembali ke halaman sebelumnya dengan notifikasi
+        return redirect()->back()->with($notification);
+    }
 
 
 
@@ -576,7 +620,6 @@ class StandarkompetensiController extends Controller
         $userId = Auth::user()->id;
         $guru = Guru::where('id_user', $userId)->first();
         $walas = $guru ? Walas::where('id_guru', $guru->id)->first() : null;
-        $siswa = null; // inisialisasi variabel $siswa
 
 
 
@@ -596,9 +639,103 @@ class StandarkompetensiController extends Controller
 
         $data = [
             'walas' => $walas,
-            'siswa' => $siswa,
+
         ];
 
-        return view('backend.data.nilai.nilai_siswaguruwalas', compact('nilaiSiswaKd4', 'rombel', 'nilaiSiswaKd3', 'data', 'walas', 'siswa'));
+        return view('backend.data.nilai.nilai_siswaguruwalas', compact('nilaiSiswaKd4', 'rombel', 'nilaiSiswaKd3', 'data', 'walas',));
+    }
+
+    public function NilaiSiswaGuruMapel(Request $request)
+    {
+
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
+        $searchMapel1 = $request->input('searchmapel1');
+        $searchKelas1 = $request->input('searchkelas1');
+        $query = NilaisiswaKd3::query();
+        $query1 = NilaisiswaKd4::query();
+
+        if (!empty($searchMapel)) {
+            $query->whereHas('nilaikd3', function ($nilaiQuery) use ($searchMapel) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        if (!empty($searchKelas)) {
+            $query->whereHas('nilaikd3', function ($nilaiQuery) use ($searchKelas) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchKelas) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchKelas) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchKelas) {
+                            $pengampuQuery->whereHas('kelass', function ($mapelQuery) use ($searchKelas) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+
+        if (!empty($searchMapel1)) {
+            $query1->whereHas('nilaikd4', function ($nilaiQuery) use ($searchMapel1) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel1) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel1) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel1) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel1) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel1 . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        if (!empty($searchKelas1)) {
+            $query1->whereHas('nilaikd4', function ($nilaiQuery) use ($searchKelas1) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchKelas1) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchKelas1) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchKelas1) {
+                            $pengampuQuery->whereHas('kelass', function ($mapelQuery) use ($searchKelas1) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchKelas1 . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+
+        $userId = Auth::user()->id;
+        $guru = Guru::where('id_user', $userId)->first();
+
+        if ($guru) {
+            $pengampu = Pengampu::where('id_guru', $guru->id)->pluck('id')->toArray();
+
+            $jadwal = Jadwalmapel::whereIn('id_pengampu', $pengampu)->pluck('id')->toArray();
+
+            $seksi = Seksi::whereIn('id_jadwal', $jadwal)->pluck('id')->toArray();
+
+            $nilaikd3 = NilaiKd3::whereIn('id_seksi', $seksi)->get();
+            $idNilaikad3 = $nilaikd3->pluck('id')->toArray();
+            $nilaiSiswaKd3 = $query->whereIn('id_nilaikd3', $idNilaikad3)->get();
+
+            $nilaikd4 = NilaiKd4::whereIn('id_seksi', $seksi)->get();
+            $idNilaikad4 = $nilaikd4->pluck('id')->toArray();
+            $nilaiSiswaKd4 = $query1->whereIn('id_nilaikd4', $idNilaikad4)->get();
+        }
+
+
+
+
+
+        return view('backend.data.nilai.nilai_siswagurumapel', compact('nilaiSiswaKd4', 'nilaiSiswaKd3', 'nilaikd3', 'seksi',));
     }
 }

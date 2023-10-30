@@ -1,5 +1,6 @@
 @extends('admin.admin_master')
 @section('admin')
+
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
@@ -7,14 +8,6 @@
                     <div class="card overflow-x-auto">
                         <div class="card-body">
                             <div class="intro-y box mt-5">
-                                <div
-                                    class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-                                    <h2 class="font-medium text-base mr-auto">
-                                        Nilai Harian Kelas :
-                                        {{ $rombel['kelass']['tingkat'] }}{{ $rombel['kelass']['nama'] }}
-                                        {{ $rombel['kelass']['jurusans']['nama'] }}
-                                    </h2>
-                                </div>
 
 
                                 <div id="link-tab" class="p-5">
@@ -92,18 +85,23 @@
                                                         @else
                                                             <div class=" show flex items-center mt-2 ml-4 text-danger"
                                                                 role="alert"> <i data-lucide="alert-octagon"
-                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran </div>
+                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran dan Kelas
+                                                            </div>
                                                         @endif
                                                     </div>
-                                                    <div class="col-span-12 ml-4 sm:col-span-6">
+                                                    <div class="col-span-12 sm:col-span-6">
 
-                                                        <label for="modal-form-6" class="form-label mt-6 mb-4">Mata
+                                                        <label for="modal-form-6" class="form-label mt-6 mb-4 mr-4">Mata
                                                             Pelajaran</label>
+                                                        <label for="modal-form-6"
+                                                            class="form-label mt-6 mb-4 ml-8">Kelas</label>
 
-                                                        <form role="form" action="{{ route('NilaiSiswaGuruWalas.all') }}"
-                                                            method="get" class="sm:flex">
+                                                        <form role="form" action="{{ route('NilaiSiswaGuruMapel.all') }}"
+                                                            method="get" class="sm:flex" enctype="multipart/form-data"
+                                                            id="myForm">
 
-                                                            <select name="searchmapel" class="tom-select w-full" required>
+                                                            <select name="searchmapel" class="tom-select w-full mr-4"
+                                                                required>
                                                                 <option value="">Pilih Mata Pelajaran</option>
                                                                 @foreach ($nilaiSiswaKd3 as $item)
                                                                     <option
@@ -116,6 +114,20 @@
 
 
                                                             </select>
+                                                            <select name="searchkelas" class="tom-select w-full mr-4"
+                                                                required>
+                                                                <option value="">Pilih Kelas</option>
+                                                                @foreach ($nilaiSiswaKd3 as $item)
+                                                                    <option
+                                                                        value="{{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['id'] }}">
+                                                                        {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['tingkat'] }}
+                                                                        {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['nama'] }}
+                                                                        {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}
+
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+
 
                                                             <div class="sm:ml-1">
                                                                 <button type="submit"
@@ -123,7 +135,7 @@
                                                             </div>
                                                             <div class="sm:ml-2">
 
-                                                                <a href="{{ route('NilaiSiswaGuruWalas.all') }}"
+                                                                <a href="{{ route('NilaiSiswaGuruMapel.all') }}"
                                                                     class="btn btn-danger">Clear</a>
 
                                                             </div>
@@ -141,11 +153,16 @@
                                                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                                             <thead>
                                                                                 <tr class="alert-primary">
-                                                                                    <th>No</th>
+                                                                                    <th class="whitespace-nowrap">No</th>
 
-                                                                                    <th>Nama Siswa</th>
-                                                                                    <th>NISN</th>
-                                                                                    <th>Mapel</th>
+                                                                                    <th class="whitespace-nowrap">Nama
+                                                                                        Siswa
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">NISN</th>
+                                                                                    <th class="whitespace-nowrap">Mapel
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">Kelas
+                                                                                    </th>
 
 
                                                                                     @php
@@ -158,7 +175,9 @@
                                                                                         @endphp
 
                                                                                         @if ($nilaikd && !in_array($nilaikd->ph, $printedPhValues))
-                                                                                            <th>PH {{ $nilaikd->ph }}
+                                                                                            <th class="whitespace-nowrap">
+                                                                                                PH
+                                                                                                {{ $nilaikd->ph }}
                                                                                             </th>
                                                                                             @php
                                                                                                 $printedPhValues[] = $nilaikd->ph;
@@ -194,17 +213,26 @@
                                                                                     @endphp
 
                                                                                     <tr>
-                                                                                        <td>{{ $key + 1 }} </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $key + 1 }} </td>
 
-                                                                                        <td>{{ $item['rombelsiswa']['siswas']['nama'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nama'] }}
                                                                                         </td>
-                                                                                        <td>{{ $item['rombelsiswa']['siswas']['nisn'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nisn'] }}
                                                                                         </td>
-                                                                                        <td>{{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                                                                        </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['tingkat'] }}
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['nama'] }}
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}
                                                                                         </td>
 
                                                                                         @foreach ($printedPhValues as $phValue)
-                                                                                            <td>
+                                                                                            <td class="whitespace-nowrap">
                                                                                                 @foreach ($nilaiSiswaKd3 as $nilai)
                                                                                                     @if (
                                                                                                         $nilai->nilaikd3->ph == $phValue &&
@@ -262,7 +290,8 @@
                                                                     }
                                                                 @endphp
 
-                                                                <div id="faq-accordion-2" class="accordion accordion-boxed">
+                                                                <div id="faq-accordion-2"
+                                                                    class="accordion accordion-boxed">
                                                                     <div class="accordion-item">
                                                                         <div id="faq-accordion-content-6"
                                                                             class="accordion-header">
@@ -291,19 +320,22 @@
                                                         @else
                                                             <div class=" show flex items-center mt-2 ml-4 text-danger"
                                                                 role="alert"> <i data-lucide="alert-octagon"
-                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran </div>
+                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran dan Kelas </div>
                                                         @endif
                                                     </div>
                                                     <div class="col-span-12 ml-4 sm:col-span-6">
 
-                                                        <label for="modal-form-6" class="form-label mt-6 mb-4">Mata
+                                                        <label for="modal-form-6" class="form-label mt-6 mb-4 mr-4">Mata
                                                             Pelajaran</label>
+                                                        <label for="modal-form-6"
+                                                            class="form-label mt-6 mb-4 ml-8">Kelas</label>
 
                                                         <form role="form"
-                                                            action="{{ route('NilaiSiswaGuruWalas.all') }}"
+                                                            action="{{ route('NilaiSiswaGuruMapel.all') }}"
                                                             method="get" class="sm:flex">
 
-                                                            <select name="searchmapel1" class="tom-select w-full" required>
+                                                            <select name="searchmapel1" class="tom-select w-full mr-4"
+                                                                required>
                                                                 <option value="">Pilih Mata Pelajaran</option>
                                                                 @foreach ($nilaiSiswaKd4 as $item)
                                                                     <option
@@ -313,9 +345,23 @@
 
                                                                     </option>
                                                                 @endforeach
-
-
                                                             </select>
+
+
+                                                            <select name="searchkelas1" class="tom-select w-full mr-4"
+                                                                required>
+                                                                <option value="">Pilih Kelas</option>
+                                                                @foreach ($nilaiSiswaKd4 as $item)
+                                                                    <option
+                                                                        value="{{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['id'] }}">
+                                                                        {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['tingkat'] }}
+                                                                        {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['nama'] }}
+                                                                        {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}
+
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+
 
                                                             <div class="sm:ml-1">
                                                                 <button type="submit"
@@ -323,7 +369,7 @@
                                                             </div>
                                                             <div class="sm:ml-2">
 
-                                                                <a href="{{ route('NilaiSiswaGuruWalas.all') }}"
+                                                                <a href="{{ route('NilaiSiswaGuruMapel.all') }}"
                                                                     class="btn btn-danger">Clear</a>
 
                                                             </div>
@@ -337,17 +383,18 @@
                                                             <div class="col-12">
                                                                 <div class="card overflow-x-auto">
                                                                     <div class="card-body">
-                                                                        <table id="datatable" class="table table-sm"
+                                                                        <table id="datatable1" class="table table-sm"
                                                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                                             <thead>
                                                                                 <tr class="alert-primary">
-                                                                                    <th>No</th>
-
-                                                                                    <th>Nama Siswa</th>
-                                                                                    <th>NISN</th>
-                                                                                    <th>Mapel</th>
-
-
+                                                                                    <th class="whitespace-nowrap">No</th>
+                                                                                    <th class="whitespace-nowrap">Nama
+                                                                                        Siswa</th>
+                                                                                    <th class="whitespace-nowrap">NISN</th>
+                                                                                    <th class="whitespace-nowrap">Mapel
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">Kelas
+                                                                                    </th>
                                                                                     @php
                                                                                         $printedPhValues = [];
                                                                                     @endphp
@@ -358,7 +405,8 @@
                                                                                         @endphp
 
                                                                                         @if ($nilaikd && !in_array($nilaikd->ph, $printedPhValues))
-                                                                                            <th>PH {{ $nilaikd->ph }}
+                                                                                            <th class="whitespace-nowrap">
+                                                                                                PH {{ $nilaikd->ph }}
                                                                                             </th>
                                                                                             @php
                                                                                                 $printedPhValues[] = $nilaikd->ph;
@@ -394,17 +442,26 @@
                                                                                     @endphp
 
                                                                                     <tr>
-                                                                                        <td>{{ $key + 1 }} </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $key + 1 }} </td>
 
-                                                                                        <td>{{ $item['rombelsiswa']['siswas']['nama'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nama'] }}
                                                                                         </td>
-                                                                                        <td>{{ $item['rombelsiswa']['siswas']['nisn'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nisn'] }}
                                                                                         </td>
-                                                                                        <td>{{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                                                                        </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['tingkat'] }}
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['nama'] }}
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}
                                                                                         </td>
 
                                                                                         @foreach ($printedPhValues as $phValue)
-                                                                                            <td>
+                                                                                            <td class="whitespace-nowrap">
                                                                                                 @foreach ($nilaiSiswaKd4 as $nilai)
                                                                                                     @if (
                                                                                                         $nilai->nilaikd4->ph == $phValue &&
@@ -436,7 +493,7 @@
 
 
                                             </div>
-                                        </div>
+                                        </div> --
                                     </div>
                                     <div class="source-code hidden">
                                         <button data-target="#copy-link-tab"
@@ -473,4 +530,8 @@
             });
         });
     </script>
+
+
+
+
 @endsection

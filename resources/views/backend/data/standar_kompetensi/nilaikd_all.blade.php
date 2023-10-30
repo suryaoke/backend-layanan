@@ -69,7 +69,7 @@
 
                                                                 @endphp
                                                                 <tr>
-                                                                    <td> {{ $key + 1 }} </td>
+                                                                    <td> {{ $key + 1 }}</td>
                                                                     <td>3. {{ $item['kd3']['urutan'] }}
                                                                         {{ $item['kd3']['ket'] }} </td>
                                                                     <td> Ph - {{ $item->ph }} <br>
@@ -104,9 +104,28 @@
                                                                             class="btn btn-danger mr-1 mb-2">
                                                                             <i data-lucide="trash" class="w-5 h-5"></i> </a>
                                                                         <a data-tw-toggle="modal"
+                                                                            data-tw-target="#edit-pengetahuan-modal-preview-{{ $item->id }}"
+                                                                            class="btn btn-primary mr-1 mb-2">
+                                                                            <i data-lucide="edit" class="w-5 h-5"></i> </a>
+                                                                        <br>
+                                                                        <a data-tw-toggle="modal"
                                                                             data-tw-target="#nilaisiswa-kd3"
                                                                             class="btn btn-success mr-1 mb-2">
-                                                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="24" height="24"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                class="lucide lucide-clipboard-edit">
+                                                                                <rect width="8" height="4" x="8"
+                                                                                    y="2" rx="1" ry="1" />
+                                                                                <path
+                                                                                    d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z" />
+                                                                                <path
+                                                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5.5" />
+                                                                                <path d="M4 13.5V6a2 2 0 0 1 2-2h2" />
+                                                                            </svg>
                                                                             &ensp;Nilai
                                                                         </a>
 
@@ -197,9 +216,28 @@
                                                                             class="btn btn-danger mr-1 mb-2">
                                                                             <i data-lucide="trash" class="w-5 h-5"></i> </a>
                                                                         <a data-tw-toggle="modal"
+                                                                            data-tw-target="#edit-keterampilan-modal-preview-{{ $item->id }}"
+                                                                            class="btn btn-primary mr-1 mb-2">
+                                                                            <i data-lucide="edit" class="w-5 h-5"></i> </a>
+                                                                        <br>
+                                                                        <a data-tw-toggle="modal"
                                                                             data-tw-target="#nilaisiswa-kd4"
                                                                             class="btn btn-success mr-1 mb-2">
-                                                                            <i data-lucide="edit" class="w-4 h-4"></i>
+                                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                width="24" height="24"
+                                                                                viewBox="0 0 24 24" fill="none"
+                                                                                stroke="currentColor" stroke-width="2"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"
+                                                                                class="lucide lucide-clipboard-edit">
+                                                                                <rect width="8" height="4" x="8"
+                                                                                    y="2" rx="1" ry="1" />
+                                                                                <path
+                                                                                    d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44Z" />
+                                                                                <path
+                                                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5.5" />
+                                                                                <path d="M4 13.5V6a2 2 0 0 1 2-2h2" />
+                                                                            </svg>
                                                                             &ensp;Nilai
                                                                         </a>
                                                                     </td>
@@ -231,6 +269,7 @@
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
+
 
 
 
@@ -302,6 +341,73 @@
     </div> <!-- END: Modal Content Pengetahuan-->
 
 
+    <!-- BEGIN: Edit Pengetahuan  -->
+    @foreach ($nilaikd3 as $key => $item)
+        <div id="edit-pengetahuan-modal-preview-{{ $item->id }}" class="modal" tabindex="-1"
+            aria-labelledby="edit-pengetahuan-modal-preview-{{ $item->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content"> <!-- BEGIN: Modal Header -->
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan</h2>
+
+                    </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
+                    <form method="post" action="{{ route('nilaikd3.update') }}"
+                        onkeydown="return event.key != 'Enter';">
+                        @csrf
+
+                        <input type="hidden" name="id" id="" value="{{ $item->id }}">
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12"> <label for="modal-form-1" class="form-label">Skema
+                                    Penilaian</label>
+                                <select name="skema" id="skema" class="tom-select w-full " required>
+                                    <option value="{{ $item->skema }}">
+                                        @if ($item->skema == '1')
+                                            Tes Tertulis
+                                        @elseif ($item->skema == '2')
+                                            Tes Lisan
+                                        @elseif ($item->skema == '3')
+                                            Penugasan
+                                        @endif
+                                    </option>
+                                    <option value="1">Tes Tertulis</option>
+                                    <option value="2">Tes Lisan</option>
+                                    <option value="3">Penugasan</option>
+
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12"> <label for="modal-form-2"
+                                    class="form-label">Kompetensi
+                                    Dasar
+                                    (KD)
+                                </label>
+                                <select name="id_kd3" id="id_kd3" class="tom-select w-full " required>
+                                    <option value="{{ $item->id_kd3 }}">
+                                        3.{{ $item['kd3']['urutan'] }} {{ $item['kd3']['ket'] }}</option>
+
+                                    @foreach ($kd3 as $item)
+                                        <option value="{{ $item->id }}">3.{{ $item->urutan }} {{ $item->ket }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+
+
+                        </div> <!-- END: Modal Body --> <!-- BEGIN: Modal Footer -->
+                        <div class="modal-footer">
+
+                            <button type="button" data-tw-dismiss="modal"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                        </div> <!-- END: Modal Footer -->
+
+                    </form>
+
+                </div>
+            </div>
+        </div> <!-- END: Modal Content Pengetahuan-->
+    @endforeach
 
     <!-- BEGIN: Add Keterampilan  -->
     <div id="keterampilan-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
@@ -365,6 +471,80 @@
         </div>
     </div> <!-- END: Modal Content Keterampilan-->
 
+    <!-- BEGIN: Edit Keterampilan  -->
+    @foreach ($nilaikd4 as $key => $item)
+        <div id="edit-keterampilan-modal-preview-{{ $item->id }}" class="modal" tabindex="-1"
+            aria-labelledby="edit-keterampilan-modal-preview-{{ $item->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content"> <!-- BEGIN: Modal Header -->
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Nilai Keterampilan</h2>
+
+                    </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
+                    <form method="post" action="{{ route('nilaikd4.update') }}"
+                        onkeydown="return event.key != 'Enter';">
+                        @csrf
+
+                        <input type="hidden" name="id" id="" value="{{ $item->id }}">
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12"> <label for="modal-form-1" class="form-label">Skema
+                                    Penilaian</label>
+                                <select name="skema" id="skema" class="tom-select w-full " required>
+                                    <option value="{{ $item->skema }}">
+                                        @if ($item->skema == '1')
+                                            Unjuk Kerja / Praktek
+                                        @elseif ($item->skema == '2')
+                                            Proyek
+                                        @elseif ($item->skema == '3')
+                                            Portofolio
+                                        @elseif ($item->skema == '4')
+                                            Produk
+                                        @elseif ($item->skema == '5')
+                                            Lainnya
+                                        @endif
+                                    </option>
+                                    <option value="1">Unjuk Kerja / Praktek</option>
+                                    <option value="2">Proyek</option>
+                                    <option value="3">Portofolio</option>
+                                    <option value="4">Produk</option>
+                                    <option value="5">Lainnya</option>
+
+                                </select>
+                            </div>
+                            <div class="col-span-12 sm:col-span-12"> <label for="modal-form-2"
+                                    class="form-label">Kompetensi
+                                    Dasar
+                                    (KD)
+                                </label>
+                                <select name="id_kd4" id="id_kd4" class="tom-select w-full " required>
+                                    <option value="{{ $item->id_kd4 }}">
+                                        4.{{ $item['kd4']['urutan'] }} {{ $item['kd4']['ket'] }}</option>
+
+                                    @foreach ($kd4 as $item)
+                                        <option value="{{ $item->id }}">4.{{ $item->urutan }} {{ $item->ket }}
+                                        </option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+
+
+
+                        </div> <!-- END: Modal Body --> <!-- BEGIN: Modal Footer -->
+                        <div class="modal-footer">
+
+                            <button type="button" data-tw-dismiss="modal"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                        </div> <!-- END: Modal Footer -->
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    @endforeach
+    <!-- END: Modal Content Pengetahuan-->
 
 
 
@@ -570,6 +750,8 @@
 
 
 
+
+
     <!-- BEGIN: Add nilai siswa keterampilan-->
     <style>
         .modal-xl {
@@ -646,7 +828,7 @@
                                                                     <input name="nilai[]" type="number"
                                                                         value="{{ $item->nilai }}" class="form-control"
                                                                         style="width: 100px;"
-                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
+                                                                        oninput="changeStatus1(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
                                                                         data-id="1">
                                                                 @endif
 

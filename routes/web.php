@@ -279,6 +279,10 @@ Route::controller(StandarkompetensiController::class)->middleware(['auth'])->gro
     Route::post('/nilaisiswakd4/update', 'Nilaisiswakd4Update')->name('Nilaisiswakd4.update');
 
     Route::get('/nilaisiswaguruwalas/all', 'NilaiSiswaGuruWalas')->name('NilaiSiswaGuruWalas.all');
+    Route::get('/nilaisiswagurumapel/all', 'NilaiSiswaGuruMapel')->name('NilaiSiswaGuruMapel.all');
+
+    Route::post('/Nilaikd3/update', 'Nilaikd3Update')->name('nilaikd3.update');
+    Route::post('/Nilaikd4/update', 'Nilaikd4Update')->name('nilaikd4.update');
 });
 
 
