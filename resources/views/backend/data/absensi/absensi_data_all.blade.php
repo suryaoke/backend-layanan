@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
     @php
-        $absensii = route('absensi.all');
+        $absensii = route('absensi.data.all');
         $currentUrl = url()->current();
         $tanggalParam = request()->query('tanggal'); // Mengambil nilai parameter tanggal dari URL
 
@@ -26,21 +26,14 @@
                 Absensi Siswa All
             @endif
         </h1>
-        <div class="mr-8"> <a href="{{ route('absensi.siswa') }}" class="btn btn-success"><i data-lucide="user-check"
-                    class="w-5 h-5"></i> &nbsp
-                Absensi </a></div>
+
 
     </div>
     <div class="intro-y flex flex-col sm:flex-row items-center ">
 
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('absensi.add') }}" class="btn btn-primary shadow-md mr-2"> <i data-lucide="file-plus"
-                    class="w-5 h-5"></i> &nbsp Form Absensi</a>
 
-        </div>
-        <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-
-            <form role="form" action="{{ route('absensi.all') }}" method="get" class="sm:flex">
+            <form role="form" action="{{ route('absensi.data.all') }}" method="get" class="sm:flex">
 
                 <div class="flex-1 sm:mr-2">
                     <div class="form-group">
@@ -58,13 +51,13 @@
                 <div class="flex-1 sm:mr-2">
                     <div class="form-group">
                         <input type="text" name="searchmapel" class="form-control" placeholder="Mata Pelajaran"
-                            value="{{ request('searchmapel') }}">
+                            value="{{ request('searchmapel') }}" required>
                     </div>
                 </div>
                 <div class="flex-1 sm:mr-2">
                     <div class="form-group">
 
-                        <select name="searchkelas" class="form-select w-full">
+                        <select name="searchkelas" class="form-select w-full" required>
                             <option value="">Kelas</option>
                             @foreach ($kelas as $item)
                                 <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
@@ -77,14 +70,16 @@
                     <button type="submit" class="btn btn-default">Search</button>
                 </div>
                 <div class="sm:ml-2">
-                    <a href="{{ route('absensi.all') }}" class="btn btn-danger">Clear</a>
+
+                    <a href="{{ route('absensi.data.all') }}" class="btn btn-danger">Clear</a>
+
                 </div>
             </form>
 
         </div>
+
     </div>
 
-    
     <div class="col-span-2  mt-4">
 
         <a class="btn btn-success btn-block" href=" ">
@@ -96,7 +91,6 @@
                 class="w-4 h-4"></i>&nbsp;Export Pdf</a>
 
     </div>
-
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
@@ -228,8 +222,10 @@
                                                                                     <th>NISN</th>
                                                                                     <th>Kelas</th>
                                                                                     <th>Jk</th>
-                                                                                    <th>Kode Mapel</th>
-                                                                                    <th>Nama Mapel</th>
+                                                                                    <th>Kode
+                                                                                        Mapel</th>
+                                                                                    <th>Nama
+                                                                                        Mapel</th>
                                                                                     <th>Hadir</th>
                                                                                     <th>Sakit</th>
                                                                                     <th>Izin</th>
@@ -268,7 +264,6 @@
                                                                                             $jadwal = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
                                                                                             $pengampu = App\Models\Pengampu::where('id', $jadwal->id_pengampu)->first();
                                                                                             $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
-
                                                                                             $rombelsiswa = App\Models\Rombelsiswa::where('id_siswa', $item->id_siswa)->first();
                                                                                             $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
                                                                                             $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();

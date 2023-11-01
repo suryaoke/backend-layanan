@@ -9,6 +9,17 @@
 
         </div>
     </div>
+     <div class="col-span-2 mb-4 mt-4">
+      
+        <a class="btn btn-success btn-block" href=" ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Excel
+        </a>
+        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
+                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
+       
+    </div>
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
@@ -19,29 +30,31 @@
                                 style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                 <thead>
                                     <tr>
-                                        <th>Sl</th>
-                                        <th>Nama</th>
-                                        <th>Username</th>
-                                        <th>Foto</th>
-                                        <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
+                                        <th class="whitespace-nowrap">No</th>
+                                        <th class="whitespace-nowrap">Nama</th>
+                                        <th class="whitespace-nowrap">Username</th>
+                                        <th class="whitespace-nowrap">Foto</th>
+                                        <th class="whitespace-nowrap">Email</th>
+                                        <th class="whitespace-nowrap">Role</th>
+                                        <th class="whitespace-nowrap">Status</th>
+                                        <th class="whitespace-nowrap">Last updated</th>
+                                        <th class="whitespace-nowrap">Last Active</th>
+                                        <th class="whitespace-nowrap">Action</th>
                                 </thead>
                                 <tbody>
                                     @foreach ($users as $key => $item)
                                         <tr>
-                                            <td> {{ $key + 1 }} </td>
-                                            <td> {{ $item->name }} </td>
-                                            <td> {{ $item->username }} </td>
-                                            <td>
-                                                <img style="width:70px; height:60px"
-                                                    src=" {{ !empty($item->profile_image) ? url('uploads/admin_images/' . $item->profile_image) : url('backend/dist/images/profile-user.png') }}"
-                                                    alt="">
+                                            <td class="whitespace-nowrap"> {{ $key + 1 }} </td>
+                                            <td class="whitespace-nowrap"> {{ $item->name }} </td>
+                                            <td class="whitespace-nowrap"> {{ $item->username }} </td>
+                                            <td class="whitespace-nowrap">
+                                                <img src="{{ !empty($item->profile_image) ? url('uploads/admin_images/' . $item->profile_image) : url('backend/dist/images/profile-user.png') }}"
+                                                    style="max-width:60px; max-height:100px" alt="User Image">
                                             </td>
-                                            <td> {{ $item->email }} </td>
 
-                                            <td>
+                                            <td class="whitespace-nowrap"> {{ $item->email }} </td>
+
+                                            <td class="whitespace-nowrap">
                                                 @if ($item->role == '1')
                                                     <span class="text-dark">Admin</span>
                                                 @elseif($item->role == '2')
@@ -58,14 +71,26 @@
 
                                             </td>
 
-                                            <td>
+                                            <td class="whitespace-nowrap">
                                                 @if ($item->status == '0')
                                                     <span class="btn btn-outline-danger">Tidak Aktif</span>
                                                 @elseif($item->status == '1')
                                                     <span class="btn btn-outline-success">Aktif</span>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="whitespace-nowrap">
+                                                @if ($item->updated_at == null)
+                                                    {{ $item->created_at }}
+                                                @else
+                                                    {{ $item->updated_at }}
+                                                @endif
+                                            </td>
+                                            <td class="whitespace-nowrap">
+                                               
+                                                    {{ $item->last }}
+                                              
+                                            </td>
+                                            <td class="whitespace-nowrap">
                                                 @if ($item->status == '1')
                                                     <a href="{{ route('user.tidak.aktif', $item->id) }}"
                                                         class="btn btn-danger mr-1 mb-2" title="Inactive">

@@ -75,6 +75,17 @@
         </a>
 
 
+
+        <a class="btn btn-success btn-block" href=" ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Excel
+        </a>
+        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
+                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
+
+
+
     </div>
 
     <div class="page-content">

@@ -70,7 +70,7 @@ class AbsensiController extends Controller
             ->join('users', 'gurus.id_user', '=', 'users.id')
             ->where('users.id', $userId)
             ->select('absensis.*')
-            ->orderby('id','desc')
+            ->orderby('id', 'desc')
             ->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
             ->get();
 
@@ -109,7 +109,7 @@ class AbsensiController extends Controller
 
         $search = $request->search;
         $rombelsiswa = Rombelsiswa::where('id_rombel', $search)->get();
-  
+
         $absensi = Absensi::first();
 
         foreach ($rombelsiswa as $row) {
@@ -294,7 +294,58 @@ class AbsensiController extends Controller
             'siswa' => $siswa,
         ];
 
-        return view('backend.data.absensi.absensi_guruwalas', compact('rombel','absensi', 'data', 'walas', 'siswa'));
+        return view('backend.data.absensi.absensi_guruwalas', compact('rombel', 'absensi', 'data', 'walas', 'siswa'));
     }
 
+    public function AbsensiDataAll(Request $request)
+    {
+
+        // Bagian search Data //
+        $searchHari = $request->input('searchhari');
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
+
+
+        $query = Absensi::query();
+
+        // Filter berdasarkan nama hari
+        if (!empty($searchHari)) {
+            $query->where('tanggal', '=', $searchHari);
+        }
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('jadwalss', function ($lecturerQuery) use ($searchMapel) {
+                $lecturerQuery->whereHas('pengampus', function ($lecturerQuery1) use ($searchMapel) {
+                    $lecturerQuery1->whereHas('mapels', function ($courseQuery) use ($searchMapel) {
+                        $courseQuery->where('nama', 'LIKE', '%' . $searchMapel . '%');
+                    });
+                });
+            });
+        }
+
+        // Filter berdasarkan nama kelas jika searchclass tidak kosong
+        if (!empty($searchKelas)) {
+            $query->whereHas('jadwalss', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->whereHas('pengampus', function ($lecturerQuery1) use ($searchKelas) {
+                    $lecturerQuery1->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
+                        $courseQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
+                    });
+                });
+            });
+        }
+        // End Bagian search Data //
+
+
+        $userId = Auth::user()->id;
+        $absensi = $query->orderby('id', 'desc')
+            ->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
+            ->get();
+
+
+        $siswa1 = Siswa::latest()->get();
+        $kelas = Kelas::orderBy('tingkat')->get();
+
+        return view('backend.data.absensi.absensi_data_all', compact('kelas', 'absensi', 'siswa1',));
+    } // end method
 }

@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
-use App\Models\Absensi;
-use App\Models\Cttnwalas;
 use App\Models\Guru;
 use App\Models\Jadwalmapel;
 use App\Models\Kd3;
@@ -13,7 +11,6 @@ use App\Models\Kelas;
 use App\Models\Ki3;
 use App\Models\Ki4;
 use App\Models\Kkm;
-use App\Models\Mapel;
 use App\Models\NilaiKd3;
 use App\Models\NilaiKd4;
 use App\Models\NilaisiswaKd3;
@@ -35,7 +32,9 @@ class StandarkompetensiController extends Controller
 
 
         $ki3 = Ki3::where('id_seksi', $id)->get();
+        $idki3 = Ki3::where('id_seksi', $id)->first();
         $ki4 = Ki4::where('id_seksi', $id)->get();
+        $idki4 = Ki4::where('id_seksi', $id)->first();
         $ki3data = Ki3::where('id_seksi', $id)->first();
         $kd3 = Kd3::where('id_ki3', $ki3data->id)->orderby('urutan', 'asc')->get();
 
@@ -47,7 +46,7 @@ class StandarkompetensiController extends Controller
         $pengampu = Pengampu::where('id', $jadwal->id_pengampu)->first();
 
 
-        return view('backend.data.standar_kompetensi.sk_all',  compact('pengampu', 'ki4data', 'kd4', 'ki3data', 'kd3', 'ki3', 'ki4'));
+        return view('backend.data.standar_kompetensi.sk_all',  compact('idki4', 'idki3', 'pengampu', 'ki4data', 'kd4', 'ki3data', 'kd3', 'ki3', 'ki4'));
     }
 
 
@@ -90,27 +89,27 @@ class StandarkompetensiController extends Controller
 
     public function ki4Update(Request $request)
     {
-        $ki3_id = $request->id;
+        $ki4_id = $request->id;
 
-        // Mengambil ki3 berdasarkan ID
-        $ki3 = Ki4::findOrFail($ki3_id);
+        // Mengambil ki4 berdasarkan ID
+        $ki4 = Ki4::findOrFail($ki4_id);
 
-        // Mendapatkan id_mapel dari ki3
-        $id_mapel = $ki3->seksis->jadwalMapels->pengampus->id_mapel;
+        // Mendapatkan id_mapel dari ki4
+        $id_mapel = $ki4->seksis->jadwalMapels->pengampus->id_mapel;
 
-        // Mendapatkan tingkat dari ki3
-        $tingkat = $ki3->seksis->jadwalMapels->pengampus->kelass->tingkat;
+        // Mendapatkan tingkat dari ki4
+        $tingkat = $ki4->seksis->jadwalMapels->pengampus->kelass->tingkat;
 
-        // Menemukan semua ki3 dengan id_mapel dan tingkat yang sama
-        $ki3s_with_same_mapel_and_tingkat = Ki4::whereHas('seksis.jadwalMapels.pengampus.kelass', function ($query) use ($tingkat) {
+        // Menemukan semua ki4 dengan id_mapel dan tingkat yang sama
+        $ki4s_with_same_mapel_and_tingkat = Ki4::whereHas('seksis.jadwalMapels.pengampus.kelass', function ($query) use ($tingkat) {
             $query->where('tingkat', $tingkat);
         })->whereHas('seksis.jadwalMapels.pengampus', function ($query) use ($id_mapel) {
             $query->where('id_mapel', $id_mapel);
         })->get();
 
-        // Mengupdate semua ki3 dengan id_mapel dan tingkat yang sama
-        foreach ($ki3s_with_same_mapel_and_tingkat as $ki3_item) {
-            $ki3_item->update([
+        // Mengupdate semua ki4 dengan id_mapel dan tingkat yang sama
+        foreach ($ki4s_with_same_mapel_and_tingkat as $ki4_item) {
+            $ki4_item->update([
                 'ket' => $request->ket,
                 'updated_by' => Auth::user()->id,
                 'updated_at' => Carbon::now(),
@@ -118,12 +117,11 @@ class StandarkompetensiController extends Controller
         }
 
         $notification = array(
-            'message' => 'Ki3 Updated SuccessFully',
+            'message' => 'Ki4 Updated SuccessFully',
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
     }
-
 
 
     public function Kd3Store(Request $request)
@@ -183,9 +181,7 @@ class StandarkompetensiController extends Controller
 
         // Mengarahkan pengguna kembali ke halaman sebelumnya dengan notifikasi
         return redirect()->back()->with($notification);
-    }
-
-
+    } // end method
 
     public function Kd4Store(Request $request)
     {
@@ -247,19 +243,19 @@ class StandarkompetensiController extends Controller
     } // end method
 
 
-
     public function NilaikdAll($id)
     {
         $nilaikd3 = NilaiKd3::where('id_seksi', $id)->orderby('ph', 'asc')->get();
-        $nilaikd3id = NilaiKd3::where('id_seksi', $id)->first();
+
         $nilaikd4 = NilaiKd4::where('id_seksi', $id)->orderby('ph', 'asc')->get();
-        $nilaikd4id = NilaiKd4::where('id_seksi', $id)->first();
+
         $seksi = Seksi::where('id', $id)->first();
 
         $datanilaikd3 = NilaiKd3::where('id_seksi', $id)->orderby('ph', 'desc')->first();
         $datanilaikd4 = NilaiKd4::where('id_seksi', $id)->orderby('ph', 'desc')->first();
 
         $ki3 = Ki3::where('id_seksi', $id)->first();
+
         $kd3 = null;
         if ($ki3) {
             $kd3 = Kd3::where('id_ki3', $ki3->id)->get();
@@ -275,28 +271,13 @@ class StandarkompetensiController extends Controller
         $pengampu = Pengampu::where('id', optional($jadwal)->id_pengampu)->first();
         $rombel = Rombel::where('id_kelas', optional($pengampu)->kelas)->first();
 
-        $nilaisiswakd3 = null;
-        $kkm1 = null;
-        if ($datanilaikd3) {
-            $nilaisiswakd3 = NilaisiswaKd3::where('id_nilaikd3', $datanilaikd3->id)->get();
-
-            $nilaisiswakd3id = NilaisiswaKd3::where('id_nilaikd3', $datanilaikd3->id)->first();
-            $rombelsiswa = Rombelsiswa::where('id', $nilaisiswakd3id->id_rombelsiswa)->first();
-            $rombel = Rombel::where('id', $rombelsiswa->id_rombel)->first();
-            $kelas = Kelas::where('id', $rombel->id_kelas)->first();
-            $kkm1 =  Kkm::where('id_kelas', $kelas->tingkat)->first();
-        }
 
 
-        $nilaisiswakd4 = null;
-        if ($datanilaikd4) {
-            $nilaisiswakd4 = NilaisiswaKd4::where('id_nilaikd4', $datanilaikd4->id)->get();
-        }
 
-        return view('backend.data.standar_kompetensi.nilaikd_all',  compact('nilaikd4id', 'nilaikd3id', 'kkm1', 'nilaisiswakd4', 'nilaisiswakd3', 'rombel', 'pengampu', 'datanilaikd4', 'kd4', 'ki4', 'kd3', 'ki3', 'datanilaikd3', 'seksi', 'nilaikd3', 'nilaikd4'));
+
+
+        return view('backend.data.standar_kompetensi.nilaikd_all',  compact('rombel', 'pengampu', 'datanilaikd4', 'kd4', 'ki4', 'kd3', 'ki3', 'datanilaikd3', 'seksi', 'nilaikd3', 'nilaikd4'));
     } // end method
-
-
 
     public function Nilaikd3Store(Request $request)
     {
@@ -408,14 +389,13 @@ class StandarkompetensiController extends Controller
 
         // Redirect kembali ke halaman sebelumnya dengan notifikasi
         return redirect()->back()->with($notification);
-    }
+    } // end method
 
 
-
-    public function Kd3Delete($id)
+    public function Kd3Delete($id, $urutan)
     {
-        // Cari data Kd3 berdasarkan ID
-        $kd3 = Kd3::find($id);
+        // Cari data Kd3 berdasarkan ID dan urutan
+        $kd3 = Kd3::where('id', $id)->where('urutan', $urutan)->first();
 
         if (!$kd3) {
             // Jika data tidak ditemukan, kembalikan response atau lakukan aksi sesuai kebutuhan aplikasi
@@ -431,13 +411,13 @@ class StandarkompetensiController extends Controller
         // Mendapatkan tingkat dari ki3
         $tingkat = $ki3->seksis->jadwalMapels->pengampus->kelass->tingkat;
 
-        // Menghapus data Kd3 yang memiliki id_mapel dan tingkat yang sama dengan Kd3 yang akan dihapus
-        Kd3::whereHas('ki3s.seksis.jadwalMapels.pengampus.kelass', function ($query) use ($id_mapel, $tingkat) {
+        // Menghapus data Kd3 yang memiliki id_mapel, tingkat, dan urutan yang sama dengan Kd3 yang akan dihapus
+        Kd3::whereHas('ki3s.seksis.jadwalMapels.pengampus.kelass', function ($query) use ($id_mapel, $tingkat, $urutan) {
             $query->where('id_mapel', $id_mapel)->where('tingkat', $tingkat);
-        })->delete();
+        })->where('urutan', $urutan)->delete();
 
-        // Hapus data Kd3
-        $kd3->delete();
+        // Hapus data Kd3 berdasarkan ID dan urutan
+        Kd3::where('id', $id)->where('urutan', $urutan)->delete();
 
         // Siapkan notifikasi untuk ditampilkan setelah penghapusan
         $notification = array(
@@ -447,13 +427,13 @@ class StandarkompetensiController extends Controller
 
         // Redirect atau kembalikan response sesuai kebutuhan aplikasi
         return redirect()->back()->with($notification);
-    }
+    } // end method
 
 
-    public function Kd4Delete($id)
+    public function Kd4Delete($id, $urutan)
     {
-        // Cari data Kd4 berdasarkan ID
-        $kd4 = Kd4::find($id);
+        // Cari data Kd4 berdasarkan ID dan urutan
+        $kd4 = Kd4::where('id', $id)->where('urutan', $urutan)->first();
 
         if (!$kd4) {
             // Jika data tidak ditemukan, kembalikan response atau lakukan aksi sesuai kebutuhan aplikasi
@@ -469,13 +449,13 @@ class StandarkompetensiController extends Controller
         // Mendapatkan tingkat dari ki4
         $tingkat = $ki4->seksis->jadwalMapels->pengampus->kelass->tingkat;
 
-        // Menghapus data Kd4 yang memiliki id_mapel dan tingkat yang sama dengan Kd4 yang akan dihapus
-        Kd4::whereHas('ki4s.seksis.jadwalMapels.pengampus.kelass', function ($query) use ($id_mapel, $tingkat) {
+        // Menghapus data Kd4 yang memiliki id_mapel, tingkat, dan urutan yang sama dengan Kd4 yang akan dihapus
+        Kd4::whereHas('ki4s.seksis.jadwalMapels.pengampus.kelass', function ($query) use ($id_mapel, $tingkat, $urutan) {
             $query->where('id_mapel', $id_mapel)->where('tingkat', $tingkat);
-        })->delete();
+        })->where('urutan', $urutan)->delete();
 
-        // Hapus data Kd4
-        $kd4->delete();
+        // Hapus data Kd4 berdasarkan ID dan urutan
+        Kd4::where('id', $id)->where('urutan', $urutan)->delete();
 
         // Siapkan notifikasi untuk ditampilkan setelah penghapusan
         $notification = array(
@@ -485,7 +465,8 @@ class StandarkompetensiController extends Controller
 
         // Redirect atau kembalikan response sesuai kebutuhan aplikasi
         return redirect()->back()->with($notification);
-    }
+    } // end method
+
 
     public function Nilaikd3Delete($id)
     {
@@ -551,7 +532,7 @@ class StandarkompetensiController extends Controller
         );
 
         return redirect()->back()->with($notification);
-    }
+    } // end method
 
     public function Nilaisiswakd4Update(Request $request)
     {
@@ -575,7 +556,7 @@ class StandarkompetensiController extends Controller
         );
 
         return redirect()->back()->with($notification);
-    }
+    } // end method
 
 
     public function NilaiSiswaGuruWalas(Request $request)
@@ -600,8 +581,6 @@ class StandarkompetensiController extends Controller
             });
         }
 
-
-
         if (!empty($searchMapel1)) {
             $query1->whereHas('nilaikd4', function ($nilaiQuery) use ($searchMapel1) {
                 $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel1) {
@@ -620,8 +599,6 @@ class StandarkompetensiController extends Controller
         $userId = Auth::user()->id;
         $guru = Guru::where('id_user', $userId)->first();
         $walas = $guru ? Walas::where('id_guru', $guru->id)->first() : null;
-
-
 
         if ($walas) {
             $rombel = Rombel::where('id_walas', $walas->id)->first();
@@ -643,7 +620,7 @@ class StandarkompetensiController extends Controller
         ];
 
         return view('backend.data.nilai.nilai_siswaguruwalas', compact('nilaiSiswaKd4', 'rombel', 'nilaiSiswaKd3', 'data', 'walas',));
-    }
+    } // end method
 
     public function NilaiSiswaGuruMapel(Request $request)
     {
@@ -737,5 +714,133 @@ class StandarkompetensiController extends Controller
 
 
         return view('backend.data.nilai.nilai_siswagurumapel', compact('nilaiSiswaKd4', 'nilaiSiswaKd3', 'nilaikd3', 'seksi',));
-    }
+    } // end method
+
+
+    public function NilaiSiswaAll(Request $request)
+    {
+
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
+        $searchMapel1 = $request->input('searchmapel1');
+        $searchKelas1 = $request->input('searchkelas1');
+        $query = NilaisiswaKd3::query();
+        $query1 = NilaisiswaKd4::query();
+
+        if (!empty($searchMapel)) {
+            $query->whereHas('nilaikd3', function ($nilaiQuery) use ($searchMapel) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        if (!empty($searchKelas)) {
+            $query->whereHas('nilaikd3', function ($nilaiQuery) use ($searchKelas) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchKelas) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchKelas) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchKelas) {
+                            $pengampuQuery->whereHas('kelass', function ($mapelQuery) use ($searchKelas) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        if (!empty($searchMapel1)) {
+            $query1->whereHas('nilaikd4', function ($nilaiQuery) use ($searchMapel1) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel1) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel1) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel1) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel1) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel1 . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        if (!empty($searchKelas1)) {
+            $query1->whereHas('nilaikd4', function ($nilaiQuery) use ($searchKelas1) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchKelas1) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchKelas1) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchKelas1) {
+                            $pengampuQuery->whereHas('kelass', function ($mapelQuery) use ($searchKelas1) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchKelas1 . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        $nilaiSiswaKd3 = $query->get();
+        $nilaiSiswaKd4 = $query1->get();
+
+
+        return view('backend.data.nilai.nilai_siswaall', compact('nilaiSiswaKd4', 'nilaiSiswaKd3'));
+    } // end method
+
+    public function SinkronAll(Request $request)
+    {
+
+        $ki3_id = $request->id3;
+        $ki4_id = $request->id4;
+
+        // Mengambil ki3 berdasarkan ID
+        $ki3 = Ki3::findOrFail($ki3_id);
+        $ki4 = Ki4::findOrFail($ki4_id);
+        // Mendapatkan id_mapel dari ki3
+        $id_mapel = $ki3->seksis->jadwalMapels->pengampus->id_mapel;
+        $id_mapel1 = $ki4->seksis->jadwalMapels->pengampus->id_mapel;
+        // Mendapatkan tingkat dari ki3
+        $tingkat = $ki3->seksis->jadwalMapels->pengampus->kelass->tingkat;
+        $tingkat1 = $ki4->seksis->jadwalMapels->pengampus->kelass->tingkat;
+
+        // Menemukan semua ki3 dengan id_mapel dan tingkat yang sama
+        $ki3s_with_same_mapel_and_tingkat = Ki3::whereHas('seksis.jadwalMapels.pengampus.kelass', function ($query) use ($tingkat) {
+            $query->where('tingkat', $tingkat);
+        })->whereHas('seksis.jadwalMapels.pengampus', function ($query) use ($id_mapel) {
+            $query->where('id_mapel', $id_mapel);
+        })->get();
+
+        $ki4s_with_same_mapel_and_tingkat = Ki4::whereHas('seksis.jadwalMapels.pengampus.kelass', function ($query) use ($tingkat1) {
+            $query->where('tingkat', $tingkat1);
+        })->whereHas('seksis.jadwalMapels.pengampus', function ($query) use ($id_mapel1) {
+            $query->where('id_mapel', $id_mapel1);
+        })->get();
+
+        // Mengupdate semua ki3 dengan id_mapel dan tingkat yang sama
+        foreach ($ki3s_with_same_mapel_and_tingkat as $ki3_item) {
+            $ki3_item->update([
+                'ket' => $request->ket3,
+                'updated_by' => Auth::user()->id,
+                'updated_at' => Carbon::now(),
+            ]);
+        }
+
+        foreach ($ki4s_with_same_mapel_and_tingkat as $ki4_item) {
+            $ki4_item->update([
+                'ket' => $request->ket4,
+                'updated_by' => Auth::user()->id,
+                'updated_at' => Carbon::now(),
+            ]);
+        }
+
+
+        $notification = array(
+            'message' => 'Sinkron SuccessFully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    } // end method
 }

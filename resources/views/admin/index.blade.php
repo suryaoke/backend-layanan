@@ -313,32 +313,6 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-12 gap-6 mt-3">
-                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-                                <div class="report-box zoom-in">
-                                    <div class="box p-5">
-                                        <div class="flex">
-                                            <i data-lucide="file-text" class="report-box__icon text-success"></i>
-                                        </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $user }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Absensi</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-                                <div class="report-box zoom-in">
-                                    <div class="box p-5">
-                                        <div class="flex">
-                                            <i data-lucide="file-text" class="report-box__icon text-success"></i>
-
-                                        </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $guru }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Nilai Rapor</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
                     @endif
                     {{--  // end bagian  kepsek //  --}}
 
@@ -659,24 +633,32 @@
                                                                     $jadwal = App\Models\Jadwalmapel::where('id', $item->id_jadwal)->first();
                                                                     $pengampu = App\Models\Pengampu::where('id', $jadwal->id_pengampu)->first();
                                                                     $mapel = App\Models\Mapel::where('id', $pengampu->id_mapel)->first();
+                                                                    $idseksi = $item->id; // jika $item adalah satu objek
+                                                                    $nilaikd3 = App\Models\NilaiKd3::where('id_seksi', $idseksi)->get();
+                                                                    $nilaikd4 = App\Models\NilaiKd4::where('id_seksi', $idseksi)->get();
                                                                 @endphp
                                                                 <tbody>
 
-
                                                                     <tr>
-
                                                                         <td> {{ $kelas->tingkat }} {{ $kelas->nama }}
-                                                                            {{ $jurusan->nama }}
+                                                                            {{ $jurusan->nama }} - {{ $item->id }}
                                                                         </td>
                                                                         <td> {{ $mapel->nama }} </td>
-                                                                        <td>- </td>
-                                                                        <td>-</td>
-
+                                                                        <td>
+                                                                            @foreach ($nilaikd3 as $nilai)
+                                                                              Ph{{ $nilai->ph }},
+                                                                            @endforeach
+                                                                        </td>
+                                                                        <td>
+                                                                            @foreach ($nilaikd4 as $nilai)
+                                                                               Ph {{ $nilai->ph }},
+                                                                            @endforeach
+                                                                        </td>
                                                                     </tr>
-
 
                                                                 </tbody>
                                                             @endforeach
+
                                                         </table>
                                                     </div>
                                                 </div>

@@ -50,7 +50,7 @@
                                             <td style="white-space: nowrap;" class="text-primary"> {{ $item->kode_mapel }}
                                             </td>
                                             <td>
-                                                @if ($item->induk == null)
+                                                @if ($item->induk === null)
                                                     -
                                                 @else
                                                     {{ $item->induk }}
@@ -59,23 +59,26 @@
                                             <td style="white-space: nowrap;"> {{ $item->nama }} </td>
                                             <td> {{ $item->jp }} </td>
 
-                                            <td> {{ $item['jurusans']['nama'] }}</td>
+                                            <td> {{ $item['jurusans']['nama'] ?? 'Not Found' }}</td>
+                                            <!-- Added a null coalescing operator to handle the case where 'jurusans' or 'nama' is not found -->
                                             <td>Kelompok {{ $item->jenis }} </td>
-                                            <td style="white-space: nowrap;"> {{ $item['tahunajars']['semester'] }}-
-                                                {{ $item['tahunajars']['tahun'] }}
+                                            <td style="white-space: nowrap;">
+                                                {{ $item['tahunajars']['semester'] ?? 'Not Found' }}-
+                                                {{ $item['tahunajars']['tahun'] ?? 'Not Found' }}
                                             </td>
                                             <td>
                                                 <a id="delete" href="{{ route('mapel.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">
-                                                    <i data-lucide="trash" class="w-4 h-4"></i> </a>
+                                                    <i data-lucide="trash" class="w-4 h-4"></i>
+                                                </a>
                                                 <a href="{{ route('mapel.edit', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
                                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </td>
-
                                         </tr>
                                     @endforeach
+
 
                                 </tbody>
                             </table>

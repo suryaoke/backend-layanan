@@ -1,6 +1,17 @@
 @extends('admin.admin_master')
 @section('admin')
 
+    <div class="col-span-2  mt-4">
+
+        <a class="btn btn-success btn-block" href=" ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Excel
+        </a>
+        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
+                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
+
+    </div>
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
@@ -55,31 +66,47 @@
                                                                         continue; // Lewati iterasi jika nilai ph sudah ditampilkan sebelumnya
                                                                     }
                                                                 @endphp
-
-                                                                <div id="faq-accordion-2" class="accordion accordion-boxed">
-                                                                    <div class="accordion-item">
-                                                                        <div id="faq-accordion-content-6"
-                                                                            class="accordion-header">
-                                                                            <button class="accordion-button collapsed"
-                                                                                type="button" data-tw-toggle="collapse"
-                                                                                data-tw-target="#faq-accordion-collapse-6"
-                                                                                aria-expanded="false"
-                                                                                aria-controls="faq-accordion-collapse-6">
-                                                                                PH {{ $nilaikd3->ph }}
-                                                                            </button>
-                                                                        </div>
-                                                                        <div id="faq-accordion-collapse-6"
-                                                                            class="accordion-collapse collapse"
-                                                                            aria-labelledby="faq-accordion-content-6"
-                                                                            data-tw-parent="#faq-accordion-2">
-                                                                            <div
-                                                                                class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
-                                                                                3.{{ $nilaikd3['kd3']['urutan'] }}
-                                                                                {{ $nilaikd3['kd3']['ket'] }}
-                                                                            </div>
-                                                                        </div>
+                                                                @if (isset($nilaikd3) && is_array($nilaikd3))
+                                                                    <div id="faq-accordion-2"
+                                                                        class="accordion accordion-boxed">
+                                                                        @foreach ($nilaikd3 as $nilai)
+                                                                            @if (isset($nilai->ph) && isset($nilai['kd3']['urutan']) && isset($nilai['kd3']['ket']))
+                                                                                <div class="accordion-item">
+                                                                                    <div id="faq-accordion-content-6"
+                                                                                        class="accordion-header">
+                                                                                        <button
+                                                                                            class="accordion-button collapsed"
+                                                                                            type="button"
+                                                                                            data-tw-toggle="collapse"
+                                                                                            data-tw-target="#faq-accordion-collapse-6"
+                                                                                            aria-expanded="false"
+                                                                                            aria-controls="faq-accordion-collapse-6">
+                                                                                            PH {{ $nilai->ph }}
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div id="faq-accordion-collapse-6"
+                                                                                        class="accordion-collapse collapse"
+                                                                                        aria-labelledby="faq-accordion-content-6"
+                                                                                        data-tw-parent="#faq-accordion-2">
+                                                                                        <div
+                                                                                            class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
+                                                                                            3.{{ $nilai['kd3']['urutan'] }}
+                                                                                            {{ $nilai['kd3']['ket'] }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endif
+                                                                        @endforeach
                                                                     </div>
-                                                                </div>
+                                                                @else
+                                                                    <div class="show flex items-center mt-2 ml-4 text-danger"
+                                                                        role="alert">
+                                                                        <i data-lucide="alert-octagon"
+                                                                            class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran
+                                                                        dan Kelas
+                                                                    </div>
+                                                                @endif
+
                                                                 <div class="mt-1"></div>
                                                             @endforeach
                                                         @else
@@ -154,7 +181,6 @@
                                                                             <thead>
                                                                                 <tr class="alert-primary">
                                                                                     <th class="whitespace-nowrap">No</th>
-
                                                                                     <th class="whitespace-nowrap">Nama
                                                                                         Siswa
                                                                                     </th>
@@ -164,8 +190,8 @@
                                                                                     <th class="whitespace-nowrap">Kelas
                                                                                     </th>
 
-
                                                                                     @php
+                                                                                        $index = 1;
                                                                                         $printedPhValues = [];
                                                                                     @endphp
 
@@ -176,9 +202,7 @@
 
                                                                                         @if ($nilaikd && !in_array($nilaikd->ph, $printedPhValues))
                                                                                             <th class="whitespace-nowrap">
-                                                                                                PH
-                                                                                                {{ $nilaikd->ph }}
-                                                                                            </th>
+                                                                                                PH {{ $nilaikd->ph }}</th>
                                                                                             @php
                                                                                                 $printedPhValues[] = $nilaikd->ph;
                                                                                             @endphp
@@ -214,8 +238,7 @@
 
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
-                                                                                            {{ $key + 1 }} </td>
-
+                                                                                            {{ $index }}</td>
                                                                                         <td class="whitespace-nowrap">
                                                                                             {{ $item['rombelsiswa']['siswas']['nama'] }}
                                                                                         </td>
@@ -238,11 +261,23 @@
                                                                                                         $nilai->nilaikd3->ph == $phValue &&
                                                                                                             $nilai['id_rombelsiswa'] == $idRombelsiswa &&
                                                                                                             $nilai->nilaikd3->id_seksi == $idSeksi)
-                                                                                                        {{ $nilai->nilai }}
+                                                                                                        @if ($nilai->status == 'remedial' && $nilai->remedial == null)
+                                                                                                            <div
+                                                                                                                class="text-danger">
+                                                                                                                {{ $nilai->nilai }}
+                                                                                                            </div>
+                                                                                                        @elseif($nilai->status == 'remedial' && $nilai->remedial != null)
+                                                                                                            {{ $nilai->remedial }}
+                                                                                                        @elseif($nilai->status == 'lulus')
+                                                                                                            {{ $nilai->nilai }}
+                                                                                                        @endif
                                                                                                     @endif
                                                                                                 @endforeach
                                                                                             </td>
                                                                                         @endforeach
+                                                                                        @php
+                                                                                            $index++; // Increment index setelah setiap iterasi
+                                                                                        @endphp
                                                                                     </tr>
                                                                                 @endforeach
                                                                             </tbody>
@@ -290,37 +325,55 @@
                                                                     }
                                                                 @endphp
 
-                                                                <div id="faq-accordion-2"
-                                                                    class="accordion accordion-boxed">
-                                                                    <div class="accordion-item">
-                                                                        <div id="faq-accordion-content-6"
-                                                                            class="accordion-header">
-                                                                            <button class="accordion-button collapsed"
-                                                                                type="button" data-tw-toggle="collapse"
-                                                                                data-tw-target="#faq-accordion-collapse-6"
-                                                                                aria-expanded="false"
-                                                                                aria-controls="faq-accordion-collapse-6">
-                                                                                PH {{ $nilaikd4->ph }}
-                                                                            </button>
-                                                                        </div>
-                                                                        <div id="faq-accordion-collapse-6"
-                                                                            class="accordion-collapse collapse"
-                                                                            aria-labelledby="faq-accordion-content-6"
-                                                                            data-tw-parent="#faq-accordion-2">
-                                                                            <div
-                                                                                class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
-                                                                                4.{{ $nilaikd4['kd4']['urutan'] }}
-                                                                                {{ $nilaikd4['kd4']['ket'] }}
-                                                                            </div>
-                                                                        </div>
+                                                                @if (isset($nilaikd4) && is_array($nilaikd4))
+                                                                    <div id="faq-accordion-2"
+                                                                        class="accordion accordion-boxed">
+                                                                        @foreach ($nilaikd4 as $nilai)
+                                                                            @if (isset($nilai->ph) && isset($nilai['kd4']['urutan']) && isset($nilai['kd4']['ket']))
+                                                                                <div class="accordion-item">
+                                                                                    <div id="faq-accordion-content-6"
+                                                                                        class="accordion-header">
+                                                                                        <button
+                                                                                            class="accordion-button collapsed"
+                                                                                            type="button"
+                                                                                            data-tw-toggle="collapse"
+                                                                                            data-tw-target="#faq-accordion-collapse-6"
+                                                                                            aria-expanded="false"
+                                                                                            aria-controls="faq-accordion-collapse-6">
+                                                                                            PH {{ $nilai->ph }}
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div id="faq-accordion-collapse-6"
+                                                                                        class="accordion-collapse collapse"
+                                                                                        aria-labelledby="faq-accordion-content-6"
+                                                                                        data-tw-parent="#faq-accordion-2">
+                                                                                        <div
+                                                                                            class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
+                                                                                            4.{{ $nilai['kd4']['urutan'] }}
+                                                                                            {{ $nilai['kd4']['ket'] }}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            @endif
+                                                                        @endforeach
                                                                     </div>
-                                                                </div>
+                                                                @else
+                                                                    <div class="show flex items-center mt-2 ml-4 text-danger"
+                                                                        role="alert">
+                                                                        <i data-lucide="alert-octagon"
+                                                                            class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran
+                                                                        dan Kelas
+                                                                    </div>
+                                                                @endif
+
+
                                                                 <div class="mt-1"></div>
                                                             @endforeach
                                                         @else
                                                             <div class=" show flex items-center mt-2 ml-4 text-danger"
                                                                 role="alert"> <i data-lucide="alert-octagon"
-                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran dan Kelas </div>
+                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran dan
+                                                                Kelas </div>
                                                         @endif
                                                     </div>
                                                     <div class="col-span-12 ml-4 sm:col-span-6">
@@ -467,7 +520,16 @@
                                                                                                         $nilai->nilaikd4->ph == $phValue &&
                                                                                                             $nilai['id_rombelsiswa'] == $idRombelsiswa &&
                                                                                                             $nilai->nilaikd4->id_seksi == $idSeksi)
-                                                                                                        {{ $nilai->nilai }}
+                                                                                                        @if ($nilai->status == 'remedial' && $nilai->remedial == null)
+                                                                                                            <div
+                                                                                                                class="text-danger">
+                                                                                                                {{ $nilai->nilai }}
+                                                                                                            </div>
+                                                                                                        @elseif($nilai->status == 'remedial' && $nilai->remedial != null)
+                                                                                                            {{ $nilai->remedial }}
+                                                                                                        @elseif($nilai->status == 'lulus')
+                                                                                                            {{ $nilai->nilai }}
+                                                                                                        @endif
                                                                                                     @endif
                                                                                                 @endforeach
                                                                                             </td>

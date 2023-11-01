@@ -7,6 +7,24 @@
                 <h2 class="font-medium text-base mr-auto">
                     STANDAR KOMPETENSI (KI/KD) : {{ $pengampu['mapels']['nama'] }} {{ $pengampu['kelass']['tingkat'] }}
                 </h2>
+                <form method="post" action="{{ route('sinkron.all') }}" onkeydown="return event.key != 'Enter';">
+                    @csrf
+
+                    <input type="hidden" name="id3" value="{{ $idki3->id }}">
+                    <input type="hidden" class="form-control" name="ket3" value="{{ $idki3->ket }}">
+
+                    <input type="hidden" name="id4" value="{{ $idki4->id }}">
+                    <input type="hidden" class="form-control" name="ket4" value="{{ $idki4->ket }}">
+
+                    <button type="submit" class="btn btn-warning mr-1 mb-2"> Sinkronkan Data<i
+                            data-loading-icon="spinning-circles" data-color="white" class="w-4 h-4 ml-2"></i>
+                    </button>
+                </form>
+
+
+
+
+
             </div>
 
             <div class="p-5">
@@ -29,7 +47,7 @@
                                         @csrf
 
                                         <input type="hidden" name="id" value="{{ $item->id }}">
-                                        <textarea class="form-control" name="ket" cols="45" rows="5">{{ $item->ket }}</textarea>
+                                        <textarea class="form-control" name="ket" cols="45" rows="5">{{ $item->ket }}  </textarea>
 
                                         <br><button type="submit" class="text-primary" title="Save">
                                             <i data-lucide="save" class="w-5 h-6 "></i>
@@ -53,10 +71,13 @@
                                     </button>
                                 </form>
                                 <br> <br>
+
+
                                 @foreach ($kd3 as $key => $item)
                                     <span class="text-small"> 3.{{ $item->urutan }} {{ $item->ket }}
-                                        <a id="delete" href="{{ route('kd3.delete', $item->id) }}" class="text-danger"
-                                            title="delete">
+                                        <a id="delete"
+                                            href="{{ route('kd3.delete', ['id' => $item->id, 'urutan' => $item->urutan]) }}"
+                                            class="text-danger" title="delete">
                                             <i data-lucide="trash" class="w-4 h-4"></i>
                                         </a>
                                     </span><br>
@@ -99,10 +120,13 @@
                                     </button>
                                 </form>
                                 <br> <br>
+
+
                                 @foreach ($kd4 as $key => $item)
                                     <span class="text-small"> 4.{{ $item->urutan }} {{ $item->ket }}
-                                        <a id="delete" href="{{ route('kd4.delete', $item->id) }}" class="text-danger"
-                                            title="delete">
+                                        <a id="delete"
+                                            href="{{ route('kd4.delete', ['id' => $item->id, 'urutan' => $item->urutan]) }}"
+                                            class="text-danger" title="delete">
                                             <i data-lucide="trash" class="w-4 h-4"></i>
                                         </a>
                                     </span><br>
@@ -118,8 +142,4 @@
         </div>
         <!-- END: Events -->
     </div> <!-- end row -->
-
-
-
-
 @endsection

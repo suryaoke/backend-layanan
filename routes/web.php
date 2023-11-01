@@ -239,6 +239,8 @@ Route::controller(AbsensiController::class)->middleware(['auth'])->group(functio
     Route::post('/absensi/siswa/store', 'AbsensiSiswaStore')->name('absensi.siswa.store');
     Route::get('/absensi/delete{id}', 'AbsensiDelete')->name('absensi.delete');
     Route::get('/absensi/siswa/guruwalas', 'AbsensiSiswaguruwalas')->name('absensi.siswaguruwalas');
+
+    Route::get('/absensi/data/all', 'AbsensiDataAll')->name('absensi.data.all');
 });
 
 
@@ -264,8 +266,8 @@ Route::controller(StandarkompetensiController::class)->middleware(['auth'])->gro
     Route::post('/kd3/store', 'Kd3Store')->name('kd3.store');
     Route::post('/kd4/store', 'Kd4Store')->name('kd4.store');
 
-    Route::get('/kd3/delete{id}', 'Kd3Delete')->name('kd3.delete');
-    Route::get('/kd4/delete{id}', 'Kd4Delete')->name('kd4.delete');
+    Route::get('/kd3/delete/{id}/{urutan}', 'Kd3Delete')->name('kd3.delete');
+    Route::get('/kd4/delete/{id}/{urutan}', 'Kd4Delete')->name('kd4.delete');
 
     Route::get('/nilaikd/all/{id}', 'NilaikdAll')->name('nilaikd.all');
 
@@ -283,6 +285,11 @@ Route::controller(StandarkompetensiController::class)->middleware(['auth'])->gro
 
     Route::post('/Nilaikd3/update', 'Nilaikd3Update')->name('nilaikd3.update');
     Route::post('/Nilaikd4/update', 'Nilaikd4Update')->name('nilaikd4.update');
+
+    Route::get('/nilaisiswa/all', 'NilaiSiswaAll')->name('NilaiSiswa.all');
+
+
+    Route::post('/sinkron/all', 'SinkronAll')->name('sinkron.all');
 });
 
 

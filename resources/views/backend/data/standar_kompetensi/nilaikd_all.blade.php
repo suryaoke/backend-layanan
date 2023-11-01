@@ -13,7 +13,7 @@
                                         Nilai Harian : {{ $pengampu['mapels']['nama'] }}
                                         {{ $pengampu['kelass']['tingkat'] }}
                                         {{ $pengampu['kelass']['nama'] }} {{ $pengampu['kelass']['jurusans']['nama'] }}
-                                        {{ $rombel->id }}
+
                                     </h2>
 
                                 </div>
@@ -69,11 +69,20 @@
 
                                                                 @endphp
                                                                 <tr>
-                                                                    <td> {{ $key + 1 }}</td>
-                                                                    <td>3. {{ $item['kd3']['urutan'] }}
-                                                                        {{ $item['kd3']['ket'] }} </td>
-                                                                    <td> Ph - {{ $item->ph }} <br>
-                                                                        {{ $item->created_at }}
+                                                                    <td> {{ $key + 1 }} - {{ $item->id }} </td>
+                                                                    <td>3. @if (isset($item['kd3']['urutan']))
+                                                                            {{ $item['kd3']['urutan'] }}
+                                                                            @endif @if (isset($item['kd3']['ket']))
+                                                                                {{ $item['kd3']['ket'] }}
+                                                                            @endif
+                                                                    </td>
+                                                                    <td>
+                                                                        Ph - @if (isset($item->ph))
+                                                                            {{ $item->ph }}
+                                                                        @endif <br>
+                                                                        @if (isset($item->created_at))
+                                                                            {{ $item->created_at }}
+                                                                        @endif
                                                                     </td>
                                                                     <td>
                                                                         @if ($item->skema == '1')
@@ -109,7 +118,7 @@
                                                                             <i data-lucide="edit" class="w-5 h-5"></i> </a>
                                                                         <br>
                                                                         <a data-tw-toggle="modal"
-                                                                            data-tw-target="#nilaisiswa-kd3"
+                                                                            data-tw-target="#nilaisiswa-kd3-{{ $item->id }}"
                                                                             class="btn btn-success mr-1 mb-2">
                                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                                 width="24" height="24"
@@ -178,10 +187,19 @@
                                                                 @endphp
                                                                 <tr>
                                                                     <td> {{ $key + 1 }} </td>
-                                                                    <td>4. {{ $item['kd4']['urutan'] }}
-                                                                        {{ $item['kd4']['ket'] }} </td>
-                                                                    <td> Ph - {{ $item->ph }} <br>
-                                                                        {{ $item->created_at }}
+                                                                    <td>4. @if (isset($item['kd4']['urutan']))
+                                                                            {{ $item['kd4']['urutan'] }}
+                                                                            @endif @if (isset($item['kd4']['ket']))
+                                                                                {{ $item['kd4']['ket'] }}
+                                                                            @endif
+                                                                    </td>
+                                                                    <td>
+                                                                        Ph - @if (isset($item->ph))
+                                                                            {{ $item->ph }}
+                                                                        @endif <br>
+                                                                        @if (isset($item->created_at))
+                                                                            {{ $item->created_at }}
+                                                                        @endif
                                                                     </td>
                                                                     <td>
                                                                         @if ($item->skema == '1')
@@ -221,7 +239,7 @@
                                                                             <i data-lucide="edit" class="w-5 h-5"></i> </a>
                                                                         <br>
                                                                         <a data-tw-toggle="modal"
-                                                                            data-tw-target="#nilaisiswa-kd4"
+                                                                            data-tw-target="#nilaisiswa-kd4-{{ $item->id }}"
                                                                             class="btn btn-success mr-1 mb-2">
                                                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                                                 width="24" height="24"
@@ -300,7 +318,7 @@
                                 Dasar
                                 (KD)</label>
                             <select name="id_kd3" id="id_kd3" class="tom-select w-full " required>
-                                <option value="">- Pilih Skema Penilaian -</option>
+                                <option value="">- Pilih Kompetensi Dasar (KD) -</option>
                                 @foreach ($kd3 as $item)
                                     <option value="{{ $item->id }}">3.{{ $item->urutan }} {{ $item->ket }}
                                     </option>
@@ -375,20 +393,23 @@
 
                                 </select>
                             </div>
-                            <div class="col-span-12 sm:col-span-12"> <label for="modal-form-2"
-                                    class="form-label">Kompetensi
-                                    Dasar
-                                    (KD)
-                                </label>
-                                <select name="id_kd3" id="id_kd3" class="tom-select w-full " required>
-                                    <option value="{{ $item->id_kd3 }}">
-                                        3.{{ $item['kd3']['urutan'] }} {{ $item['kd3']['ket'] }}</option>
 
-                                    @foreach ($kd3 as $item)
-                                        <option value="{{ $item->id }}">3.{{ $item->urutan }} {{ $item->ket }}
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Kompetensi Dasar (KD)</label>
+                                <select name="id_kd3" id="id_kd3" class="tom-select w-full" required>
+                                    @if (isset($item) && isset($item['kd3']['urutan']) && isset($item['kd3']['ket']))
+                                        <option value="{{ $item->id_kd3 }}">
+                                            3.{{ $item['kd3']['urutan'] }} {{ $item['kd3']['ket'] }}
                                         </option>
-                                    @endforeach
+                                    @endif
 
+                                    @foreach ($kd3 as $kd)
+                                        @if (isset($kd['urutan']) && isset($kd['ket']))
+                                            <option value="{{ $kd->id }}">
+                                                3.{{ $kd['urutan'] }} {{ $kd['ket'] }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -439,7 +460,7 @@
                                 Dasar
                                 (KD)</label>
                             <select name="id_kd4" id="id_kd4" class="tom-select w-full " required>
-                                <option value="">- Pilih Skema Penilaian -</option>
+                                <option value="">- Pilih Kompetensi Dasar (KD) -</option>
                                 @foreach ($kd4 as $item)
                                     <option value="{{ $item->id }}">4.{{ $item->urutan }} {{ $item->ket }}
                                     </option>
@@ -511,23 +532,25 @@
 
                                 </select>
                             </div>
-                            <div class="col-span-12 sm:col-span-12"> <label for="modal-form-2"
-                                    class="form-label">Kompetensi
-                                    Dasar
-                                    (KD)
-                                </label>
-                                <select name="id_kd4" id="id_kd4" class="tom-select w-full " required>
-                                    <option value="{{ $item->id_kd4 }}">
-                                        4.{{ $item['kd4']['urutan'] }} {{ $item['kd4']['ket'] }}</option>
 
-                                    @foreach ($kd4 as $item)
-                                        <option value="{{ $item->id }}">4.{{ $item->urutan }} {{ $item->ket }}
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Kompetensi Dasar (KD)</label>
+                                <select name="id_kd4" id="id_kd4" class="tom-select w-full" required>
+                                    @if (isset($item) && isset($item['kd4']['urutan']) && isset($item['kd4']['ket']))
+                                        <option value="{{ $item->id_kd4 }}">
+                                            4.{{ $item['kd4']['urutan'] }} {{ $item['kd4']['ket'] }}
                                         </option>
-                                    @endforeach
+                                    @endif
 
+                                    @foreach ($kd4 as $kd)
+                                        @if (isset($kd['urutan']) && isset($kd['ket']))
+                                            <option value="{{ $kd->id }}">
+                                                4.{{ $kd['urutan'] }} {{ $kd['ket'] }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 </select>
                             </div>
-
 
 
                         </div> <!-- END: Modal Body --> <!-- BEGIN: Modal Footer -->
@@ -560,134 +583,182 @@
         }
     </style>
 
-    <div id="nilaisiswa-kd3" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header intro-y alert alert-primary show mb-2 ">
+    @foreach ($nilaikd3 as $key => $item)
+        @php
+            $nilaisiswakd3 = App\Models\NilaisiswaKd3::where('id_nilaikd3', $item->id)->get();
+            $nilaisiswakd3id = $nilaisiswakd3->first();
+            $rombelsiswa = App\Models\Rombelsiswa::find($nilaisiswakd3id->id_rombelsiswa);
+            $rombel = App\Models\Rombel::find($rombelsiswa->id_rombel);
+            $kelas = App\Models\Kelas::find($rombel->id_kelas);
+            $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
+        @endphp
+        <div id="nilaisiswa-kd3-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header intro-y alert alert-primary show mb-2 ">
 
-                    <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan Siswa <br>
-                        @if ($kkm1)
-                            <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
-                        @else
-                            <Span>- KKM Nilai belum tersedia.</Span> <br>
-                        @endif
-                        <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua.</span>
-                    </h2>
+                        <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan Siswa <br>
+                            @if ($kkm)
+                                <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm->kkm }}.</span></Span>
+                                <br>
+                            @else
+                                <Span>- KKM Nilai belum tersedia.</Span> <br>
+                            @endif
+                            <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua. </span>
+                        </h2>
 
-                    <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
-                            class="w-8 h-8 text-slate-400"></i> </a>
-                </div>
+                        <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
+                                class="w-8 h-8 text-slate-400"></i> </a>
+                    </div>
 
-                <div class="modal-body">
-                    <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
-                        <div class="col-span-12">
-                            <div class="card overflow-x-auto">
-                                <form method="post" action="{{ route('Nilaisiswakd3.update') }}"
-                                    onkeydown="return event.key != 'Enter';">
-                                    @csrf
-                                    <div class="overflow-x-auto">
-                                        <table id="datatable2" class="table table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th class="whitespace-nowrap">No</th>
-                                                    <th class="whitespace-nowrap">Nisn</th>
-                                                    <th class="whitespace-nowrap">Nama</th>
-                                                    <th class="whitespace-nowrap">Jk</th>
-                                                    <th class="whitespace-nowrap">Nilai</th>
-                                                    <th class="whitespace-nowrap">Status</th>
-                                                    <th class="whitespace-nowrap">Remedial</th>
-                                                    <th class="whitespace-nowrap">Feedback</th>
+                    <div class="modal-body">
+                        <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
+                            <div class="col-span-12">
+                                <div class="card overflow-x-auto">
+                                    <form method="post" action="{{ route('Nilaisiswakd3.update') }}"
+                                        onkeydown="return event.key != 'Enter';">
+                                        @csrf
+                                        <div class="overflow-x-auto">
+                                            <table id="datatable2" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="whitespace-nowrap">No</th>
+                                                        <th class="whitespace-nowrap">Nisn</th>
+                                                        <th class="whitespace-nowrap">Nama</th>
+                                                        <th class="whitespace-nowrap">Jk</th>
+                                                        <th class="whitespace-nowrap">Nilai</th>
+                                                        <th class="whitespace-nowrap">Status</th>
+                                                        <th class="whitespace-nowrap">Remedial</th>
+                                                        <th class="whitespace-nowrap">Feedback</th>
 
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if ($nilaisiswakd3)
-                                                    @foreach ($nilaisiswakd3 as $key => $item)
-                                                        @php
-                                                            $rombelsiswa = App\Models\Rombelsiswa::where('id', $item->id_rombelsiswa)->first();
-                                                            $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
-                                                            $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
-                                                            $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
-                                                        @endphp
-                                                        <tr>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($nilaisiswakd3)
+                                                        @foreach ($nilaisiswakd3 as $key => $item)
+                                                            @php
+                                                                $rombelsiswa = App\Models\Rombelsiswa::where('id', $item->id_rombelsiswa)->first();
+                                                                $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+                                                                $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                                                                $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
+                                                            @endphp
+                                                            <tr>
 
-                                                            <td> {{ $key + 1 }} </td>
-                                                            <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
-                                                            <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
-                                                            <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
-                                                            <td>
-                                                                @if ($item->status == 'remedial')
-                                                                    <input name="nilai[]" type="number"
-                                                                        value="{{ $item->nilai }}" class="form-control"
-                                                                        style="width: 100px;"
-                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
-                                                                        data-id="1" readonly>
-                                                                @else
-                                                                    <input name="nilai[]" type="number"
-                                                                        value="{{ $item->nilai }}" class="form-control"
-                                                                        style="width: 100px;"
-                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
-                                                                        data-id="1">
-                                                                @endif
+                                                                <td> {{ $key + 1 }} - {{ $item->id_nilaikd3 }} </td>
+                                                                <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
+                                                                <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
+                                                                <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
 
-                                                            </td>
-                                                            <td id="status{{ $key }}"
-                                                                style="color: {{ $item->status === 'remedial' ? 'red' : 'green' }}">
-                                                                <input type="hidden" name="status[]"
-                                                                    value="{{ $item->status }}">
-                                                                @if ($item->remedial != null)
-                                                                    <span style="color: green"> lulus</span>
-                                                                @else
-                                                                    {{ $item->status }}
-                                                                @endif
 
-                                                            </td>
-                                                            <td>
-                                                                @if ($item->status == 'remedial')
-                                                                    <input name="remedial[]" type="number"
-                                                                        value="{{ $item->remedial }}"
-                                                                        class="form-control" style="width: 100px;">
-                                                                @else
-                                                                    <input name="remedial[]" type="hidden"
-                                                                        value="{{ $item->remedial }}"
-                                                                        class="form-control" style="width: 100px;">
-                                                                @endif
+                                                                <td>
+                                                                    @if ($item->status == 'remedial')
+                                                                        <input name="nilai[]" type="number"
+                                                                            value="{{ $item->nilai }}"
+                                                                            class="form-control" style="width: 100px;"
+                                                                            readonly>
+                                                                    @else
+                                                                        <input name="nilai[]" type="number"
+                                                                            value="{{ $item->nilai }}"
+                                                                            class="form-control" style="width: 100px;">
+                                                                    @endif
+                                                                </td>
+                                                                <td class="status-cell">
+                                                                    @if ($item->status == 'remedial')
+                                                                        <input type="text" name="status[]"
+                                                                            class="form-control"
+                                                                            value="{{ $item->status }}"
+                                                                            style="width: 100px; color: red;" readonly>
+                                                                    @elseif($item->status == 'lulus')
+                                                                        <input type="text" name="status[]"
+                                                                            class="form-control"
+                                                                            value="{{ $item->status }}"
+                                                                            style="width: 100px; color: green;" readonly>
+                                                                    @else
+                                                                        <input type="text" name="status[]"
+                                                                            class="form-control"
+                                                                            value="{{ $item->status }}"
+                                                                            style="width: 100px;" readonly>
+                                                                    @endif
+                                                                </td>
 
-                                                            </td>
-                                                            <td>
-                                                                <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
-                                                            </td>
 
-                                                            <input type="hidden" name="id[]"
-                                                                value="{{ $item->id }}">
-                                                            <!-- Add additional action buttons if necessary -->
+                                                                <td>
+                                                                    @if ($item->status == 'remedial')
+                                                                        <input name="remedial[]" type="number"
+                                                                            value="{{ $item->remedial }}"
+                                                                            class="form-control" style="width: 100px;">
+                                                                    @else
+                                                                        <input name="remedial[]" type="hidden"
+                                                                            value="{{ $item->remedial }}"
+                                                                            class="form-control" style="width: 100px;">
+                                                                    @endif
 
-                                                        </tr>
-                                                    @endforeach
-                                                @endif
-                                            </tbody>
-                                        </table>
+                                                                </td>
+                                                                <td>
+                                                                    <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
+                                                                </td>
 
-                                    </div>
-                                    <p class="horizontal-align  mt-4">
-                                        <span class="text-danger">Pastikan data yang diinputkan benar.</span>
-                                    </p>
-                                    <div class="modal-footer">
-                                        <button type="button" data-tw-dismiss="modal"
-                                            class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-                                        <button type="submit" class="btn btn-primary w-20">Save</button>
-                                    </div>
-                                </form>
+                                                                <input type="hidden" name="id[]"
+                                                                    value="{{ $item->id }}">
+                                                                <!-- Add additional action buttons if necessary -->
+
+                                                            </tr>
+                                                        @endforeach
+                                                    @endif
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <p class="horizontal-align  mt-4">
+                                            <span class="text-danger">Pastikan data yang diinputkan benar.</span>
+                                        </p>
+                                        <div class="modal-footer">
+                                            <button type="button" data-tw-dismiss="modal"
+                                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                let nilaiInputs = document.querySelectorAll("input[name='nilai[]']");
+                let statusInputs = document.querySelectorAll("input[name='status[]']");
+                let kkm = {!! json_encode($kkm->kkm) !!};
+
+                nilaiInputs.forEach(function(input, index) {
+                    input.addEventListener("input", function() {
+                        let nilai = parseFloat(input.value);
+
+                        if (nilai < kkm) {
+                            statusInputs[index].value = "remedial";
+                            statusInputs[index].style.color = "red";
+                        } else {
+                            statusInputs[index].value = "lulus";
+                            statusInputs[index].style.color = "green";
+                        }
+                    });
+                });
+
+                statusInputs.forEach(function(input, index) {
+                    input.addEventListener("input", function() {
+                        let statusValue = input.value;
+                        if (statusValue.toLowerCase() === "remedial") {
+                            nilaiInputs[index].value = kkm - 1;
+                        } else {
+                            nilaiInputs[index].value = kkm;
+                        }
+                    });
+                });
+            });
+        </script>
+    @endforeach
+
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -728,22 +799,10 @@
     </script>
 
 
-    <script>
-        function changeStatus(inputElement, kkmValue, key) {
-            var value = inputElement.value;
-            var statusElement = document.getElementById('status' + key);
 
-            if (value < kkmValue) {
-                statusElement.innerHTML =
-                    '<input type="hidden" name="status[]" value="remedial"><span style="color: red">remedial</span>';
-            } else {
-                statusElement.innerHTML =
-                    '<input type="hidden" name="status[]" value="lulus"><span style="color: green">lulus</span>';
-            }
 
-            document.getElementById('submitBtn').click();
-        }
-    </script>
+
+
     <!-- BEGIN: Add nilai siswa pengetahuan-->
 
 
@@ -762,130 +821,147 @@
             width: 100% !important;
         }
     </style>
+    @foreach ($nilaikd4 as $key => $item)
+        @php
+            $nilaisiswakd4 = App\Models\NilaisiswaKd4::where('id_nilaikd4', $item->id)->get();
+            $nilaisiswakd4id = App\Models\NilaisiswaKd4::where('id_nilaikd4', $item->id)->first();
+            $rombelsiswa = App\Models\Rombelsiswa::where('id', $nilaisiswakd4id->id_rombelsiswa)->first();
+            $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+            $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+            $kkm1 = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
+        @endphp
+        <div id="nilaisiswa-kd4-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header intro-y alert alert-primary show mb-2 ">
 
-    <div id="nilaisiswa-kd4" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header intro-y alert alert-primary show mb-2 ">
+                        <h2 class="font-medium text-base mr-auto">Nilai Keterampilan Siswa <br>
+                            @if ($kkm1)
+                                <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span>
+                                <br>
+                            @else
+                                <Span>- KKM Nilai belum tersedia.</Span> <br>
+                            @endif
+                            <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua.</span>
+                        </h2>
+                        <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
+                                class="w-8 h-8 text-slate-400"></i> </a>
+                    </div>
 
-                    <h2 class="font-medium text-base mr-auto">Nilai Keterampilan Siswa <br>
-                        @if ($kkm1)
-                            <Span>- KKM Nilai ini adalah <span style="color: red">{{ $kkm1->kkm }}.</span></Span> <br>
-                        @else
-                            <Span>- KKM Nilai belum tersedia.</Span> <br>
-                        @endif
-                        <span>- Feedback yang Anda berikan akan dikirim kepada Orang tua.</span>
-                    </h2>
-                    <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
-                            class="w-8 h-8 text-slate-400"></i> </a>
-                </div>
+                    <div class="modal-body">
+                        <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
+                            <div class="col-span-12">
+                                <div class="card overflow-x-auto">
+                                    <form method="post" action="{{ route('Nilaisiswakd4.update') }}"
+                                        onkeydown="return event.key != 'Enter';">
+                                        @csrf
+                                        <div class="overflow-x-auto">
+                                            <table id="datatable3" class="table table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="whitespace-nowrap">No</th>
+                                                        <th class="whitespace-nowrap">Nisn</th>
+                                                        <th class="whitespace-nowrap">Nama</th>
+                                                        <th class="whitespace-nowrap">Jk</th>
+                                                        <th class="whitespace-nowrap">Nilai</th>
+                                                        <th class="whitespace-nowrap">Status</th>
+                                                        <th class="whitespace-nowrap">Remedial</th>
+                                                        <th class="whitespace-nowrap">Feedback</th>
 
-                <div class="modal-body">
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @if ($nilaisiswakd4)
+                                                        @foreach ($nilaisiswakd4 as $key => $item)
+                                                            @php
+                                                                $rombelsiswa = App\Models\Rombelsiswa::where('id', $item->id_rombelsiswa)->first();
+                                                                $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
+                                                                $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
+                                                                $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
+                                                            @endphp
+                                                            <tr>
+                                                                <td> {{ $key + 1 }} </td>
+                                                                <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
+                                                                <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
+                                                                <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
+                                                                <td>
+                                                                    @if ($item->status == 'remedial')
+                                                                        <input name="nilai[]" type="number"
+                                                                            value="{{ $item->nilai }}"
+                                                                            class="form-control" style="width: 100px;"
+                                                                            readonly>
+                                                                    @else
+                                                                        <input name="nilai[]" type="number"
+                                                                            value="{{ $item->nilai }}"
+                                                                            class="form-control" style="width: 100px;">
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    @if ($item->status == 'remedial')
+                                                                        <input type="text" name="status[]"
+                                                                            class="form-control"
+                                                                            value="{{ $item->status }}"
+                                                                            style="width: 100px; color: red;" readonly>
+                                                                    @elseif($item->status == 'lulus')
+                                                                        <input type="text" name="status[]"
+                                                                            class="form-control"
+                                                                            value="{{ $item->status }}"
+                                                                            style="width: 100px; color: green;" readonly>
+                                                                    @else
+                                                                        <input type="text" name="status[]"
+                                                                            class="form-control"
+                                                                            value="{{ $item->status }}"
+                                                                            style="width: 100px;" readonly>
+                                                                    @endif
+                                                                </td>
 
-                    <div class="grid grid-cols-12 gap-4 gap-y-3 mb-4">
-                        <div class="col-span-12">
-                            <div class="card overflow-x-auto">
-                                <form method="post" action="{{ route('Nilaisiswakd4.update') }}"
-                                    onkeydown="return event.key != 'Enter';">
-                                    @csrf
-                                    <div class="overflow-x-auto">
-                                        <table id="datatable3" class="table table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th class="whitespace-nowrap">No</th>
-                                                    <th class="whitespace-nowrap">Nisn</th>
-                                                    <th class="whitespace-nowrap">Nama</th>
-                                                    <th class="whitespace-nowrap">Jk</th>
-                                                    <th class="whitespace-nowrap">Nilai</th>
-                                                    <th class="whitespace-nowrap">Status</th>
-                                                    <th class="whitespace-nowrap">Remedial</th>
-                                                    <th class="whitespace-nowrap">Feedback</th>
+                                                                <td>
+                                                                    @if ($item->status == 'remedial')
+                                                                        <input name="remedial[]" type="number"
+                                                                            value="{{ $item->remedial }}"
+                                                                            class="form-control" style="width: 100px;">
+                                                                    @else
+                                                                        <input name="remedial[]" type="hidden"
+                                                                            value="{{ $item->remedial }}"
+                                                                            class="form-control" style="width: 100px;">
+                                                                    @endif
 
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @if ($nilaisiswakd4)
-                                                    @foreach ($nilaisiswakd4 as $key => $item)
-                                                        @php
-                                                            $rombelsiswa = App\Models\Rombelsiswa::where('id', $item->id_rombelsiswa)->first();
-                                                            $rombel = App\Models\Rombel::where('id', $rombelsiswa->id_rombel)->first();
-                                                            $kelas = App\Models\Kelas::where('id', $rombel->id_kelas)->first();
-                                                            $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
-                                                        @endphp
-                                                        <tr>
-                                                            <td> {{ $key + 1 }} </td>
-                                                            <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
-                                                            <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
-                                                            <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
-                                                            <td>
-                                                                @if ($item->status == 'remedial')
-                                                                    <input name="nilai[]" type="number"
-                                                                        value="{{ $item->nilai }}" class="form-control"
-                                                                        style="width: 100px;"
-                                                                        oninput="changeStatus(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
-                                                                        data-id="1" readonly>
-                                                                @else
-                                                                    <input name="nilai[]" type="number"
-                                                                        value="{{ $item->nilai }}" class="form-control"
-                                                                        style="width: 100px;"
-                                                                        oninput="changeStatus1(this, {{ isset($kkm) ? $kkm->kkm : 0 }}, {{ $key }})"
-                                                                        data-id="1">
-                                                                @endif
+                                                                </td>
+                                                                <td>
+                                                                    <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
+                                                                </td>
 
-                                                            </td>
-                                                            <td id="status1{{ $key }}"
-                                                                style="color: {{ $item->status === 'remedial' ? 'red' : 'green' }}">
-                                                                <input type="hidden" name="status[]"
-                                                                    value="{{ $item->status }}">
-                                                                {{ $item->status }}
-                                                            </td>
-                                                            <td>
-                                                                @if ($item->status == 'remedial')
-                                                                    <input name="remedial[]" type="number"
-                                                                        value="{{ $item->remedial }}"
-                                                                        class="form-control" style="width: 100px;">
-                                                                @else
-                                                                    <input name="remedial[]" type="hidden"
-                                                                        value="{{ $item->remedial }}"
-                                                                        class="form-control" style="width: 100px;">
-                                                                @endif
+                                                                <input type="hidden" name="id[]"
+                                                                    value="{{ $item->id }}">
+                                                                <!-- Add additional action buttons if necessary -->
 
-                                                            </td>
-                                                            <td>
-                                                                <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
-                                                            </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @endif
+                                                </tbody>
+                                            </table>
 
-                                                            <input type="hidden" name="id[]"
-                                                                value="{{ $item->id }}">
-                                                            <!-- Add additional action buttons if necessary -->
-
-                                                        </tr>
-                                                    @endforeach
-                                                @endif
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                    <p class="horizontal-align  mt-4">
-                                        <span class="text-danger">Pastikan data yang diinputkan benar.</span>
-                                    </p>
-                                    <div class="modal-footer">
-                                        <button type="button" data-tw-dismiss="modal"
-                                            class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-                                        <button type="submit" class="btn btn-primary w-20">Save</button>
-                                    </div>
-                                </form>
+                                        </div>
+                                        <p class="horizontal-align  mt-4">
+                                            <span class="text-danger">Pastikan data yang diinputkan benar.</span>
+                                        </p>
+                                        <div class="modal-footer">
+                                            <button type="button" data-tw-dismiss="modal"
+                                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
+
+
+
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    @endforeach
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -895,33 +971,18 @@
             });
 
             // Hapus DataTable sebelum menginisialisasi kembali
-            if ($.fn.DataTable.isDataTable('#datatable2')) {
-                $('#datatable2').DataTable().destroy();
+            if ($.fn.DataTable.isDataTable('#datatable3')) {
+                $('#datatable3').DataTable().destroy();
             }
 
             // Menginisialisasi DataTable kembali dengan paginasi
-            $('#datatable2').DataTable({
+            $('#datatable3').DataTable({
                 paging: true
             });
         });
     </script>
 
-    <script>
-        function changeStatus1(inputElement, kkmValue, key) {
-            var value = inputElement.value;
-            var statusElement = document.getElementById('status1' + key);
 
-            if (value < kkmValue) {
-                statusElement.innerHTML =
-                    '<input type="hidden" name="status[]" value="remedial"><span style="color: red">remedial</span>';
-            } else {
-                statusElement.innerHTML =
-                    '<input type="hidden" name="status[]" value="lulus"><span style="color: green">lulus</span>';
-            }
-
-            document.getElementById('submitBtn').click();
-        }
-    </script>
 
     <!-- BEGIN: Add nilai siswa keterampilan-->
 @endsection

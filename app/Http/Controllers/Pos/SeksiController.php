@@ -5,9 +5,15 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\Guru;
 use App\Models\Jadwalmapel;
+use App\Models\Kd3;
+use App\Models\Kd4;
 use App\Models\Kelas;
 use App\Models\Ki3;
 use App\Models\Ki4;
+use App\Models\NilaiKd3;
+use App\Models\NilaiKd4;
+use App\Models\NilaisiswaKd3;
+use App\Models\NilaisiswaKd4;
 use App\Models\Pengampu;
 use App\Models\Rombel;
 use App\Models\Seksi;
@@ -15,6 +21,7 @@ use App\Models\Tahunajar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Else_;
 
 class SeksiController extends Controller
 {
@@ -143,10 +150,50 @@ class SeksiController extends Controller
 
     public function SeksiDelete($id)
     {
-        Seksi::findOrFail($id)->delete();
+        $seksi = Seksi::find($id);
+
+        if (!$seksi) {
+            $notification = array(
+                'message' => 'Seksi not found',
+                'alert-type' => 'error'
+            );
+            return redirect()->back()->with($notification);
+        }
+
+        $ki3 = Ki3::where('id_seksi', $id)->first();
+        $ki4 = Ki4::where('id_seksi', $id)->first();
+
+        if ($ki3) {
+            Kd3::where('id_ki3', $ki3->id)->delete();
+        }
+        if ($ki4) {
+            Kd4::where('id_ki4', $ki4->id)->delete();
+        }
+
+        $nilaikd3 = NilaiKd3::where('id_seksi', $id)->get();
+        $nilaikd4 = NilaiKd4::where('id_seksi', $id)->get();
+
+        if ($nilaikd3) {
+            foreach ($nilaikd3 as $data) {
+                NilaisiswaKd3::where('id_nilaikd3', $data->id)->delete();
+            }
+        }
+        if ($nilaikd4) {
+            foreach ($nilaikd4 as $data) {
+                NilaisiswaKd4::where('id_nilaikd4', $data->id)->delete();
+            }
+        }
+
+
+        // Delete related entries
+        $seksi->delete();
+        Ki3::where('id_seksi', $id)->delete();
+        Ki4::where('id_seksi', $id)->delete();
+        NilaiKd3::where('id_seksi', $id)->delete();
+        NilaiKd4::where('id_seksi', $id)->delete();
 
         $notification = array(
-            'message' => 'Seksi Deleted SuccessFully',
+            'message' => 'Seksi Deleted Successfully',
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
