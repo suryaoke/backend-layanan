@@ -6,16 +6,17 @@
         </h1>
 
     </div>
-    
+
     <div class="col-span-2 mb-4 mt-4">
 
-        <a class="btn btn-success btn-block" href=" ">
+        <a class="btn btn-success btn-block" href="{{ route('siswawalas.excel') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
         </a>
-        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
-                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
+        <a class="btn btn-primary btn-block" href="{{ route('siswawalas.pdf') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf
+        </a>
 
     </div>
     <div class="page-content">
@@ -32,7 +33,7 @@
                                         <th>Nama</th>
                                         <th>Nisn</th>
                                         <th>JK</th>
-                                      
+
                                         <th>Username</th>
 
                                 </thead>
@@ -44,7 +45,7 @@
                                                 <td> {{ $item->nama }} </td>
                                                 <td> {{ $item->nisn }} </td>
                                                 <td> {{ $item->jk }} </td>
-                                               
+
                                                 <td>
                                                     @if ($item->id_user == 0)
                                                         <span class="text-danger">Kosong</span>

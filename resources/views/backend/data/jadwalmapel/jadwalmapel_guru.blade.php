@@ -71,13 +71,15 @@
 
     <div class="col-span-2 mb-4 mt-4">
 
-        <a class="btn btn-success btn-block" href=" ">
+        </a>
+        <a class="btn btn-success btn-block" href="{{ route('jadwalmapel.excel') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
         </a>
-        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
-                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
+        <a class="btn btn-primary btn-block" href="{{ route('jadwalmapel.pdf') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf
+        </a>
 
     </div>
     <div class="page-content">
@@ -88,7 +90,7 @@
                         <table id="datatable" class="table table-sm"
                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                             <thead>
-                                <tr >
+                                <tr>
                                     <th>No.</th>
                                     <th style="white-space: nowrap;">Seksi</th>
                                     <th style="white-space: nowrap;">Kode</th>
@@ -100,7 +102,7 @@
                                     <th>JP</th>
                                     <th>Kode Ruangan</th>
                                     <th>Semester</th>
-                               
+
 
                                 </tr>
                             </thead>

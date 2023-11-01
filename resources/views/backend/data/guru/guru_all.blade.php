@@ -12,17 +12,18 @@
         @endif
     </div>
     <div class="col-span-2 mb-4 mt-4">
-      
-        <a class="btn btn-success btn-block" href=" ">
+
+        <a class="btn btn-success btn-block" href="{{ route('guru.excel') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
         </a>
-        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
-                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
-       
+        <a class="btn btn-primary btn-block" href="{{ route('guru.pdf') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf
+        </a>
+
     </div>
-    
+
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
@@ -38,8 +39,8 @@
                                         <th class="whitespace-nowrap">Nama</th>
                                         <th class="whitespace-nowrap">No HP</th>
                                         <th class="whitespace-nowrap">Username</th>
-                                        <th class="whitespace-nowrap">Foto</th>
                                         <th class="whitespace-nowrap">Walas</th>
+                                        <th class="whitespace-nowrap">Foto</th>
                                         <th class="whitespace-nowrap">Last Updated</th>
                                         <th class="whitespace-nowrap">Last Active</th>
                                         @if (Auth::user()->role == '1' || Auth::user()->role == '3')
@@ -66,13 +67,6 @@
                                                     {{ $item['users']['username'] }}
                                                 @endif
                                             </td>
-
-                                            <td class="whitespace-nowrap">
-                                                <img style="max-width:70px; max-height:100px"
-                                                    src=" {{ !empty($user->profile_image) ? url('uploads/admin_images/' . $user->profile_image) : url('backend/dist/images/profile-user.png') }}"
-                                                    alt="">
-
-                                            </td>
                                             <td class="whitespace-nowrap">
                                                 @if ($walas)
                                                     {{ $walas['kelass']['tingkat'] }}
@@ -82,6 +76,13 @@
                                                     <span class="text-danger">Kosong</span>
                                                 @endif
                                             </td>
+                                            <td class="whitespace-nowrap">
+                                                <img style="max-width:70px; max-height:100px"
+                                                    src=" {{ !empty($user->profile_image) ? url('uploads/admin_images/' . $user->profile_image) : url('backend/dist/images/profile-user.png') }}"
+                                                    alt="">
+
+                                            </td>
+
                                             <td class="whitespace-nowrap">
                                                 @if ($item->updated_at == null)
                                                     {{ $item->created_at }}

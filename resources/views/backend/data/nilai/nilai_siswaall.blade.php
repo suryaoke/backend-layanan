@@ -1,15 +1,16 @@
 @extends('admin.admin_master')
 @section('admin')
 
-    <div class="col-span-2  mt-4">
+    <div class="col-span-2 mb-4 mt-4">
 
-        <a class="btn btn-success btn-block" href=" ">
+        {{--  <a class="btn btn-success btn-block" href="{{ route('siswa.excel') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
+        </a>  --}}
+        <a class="btn btn-primary btn-block" href="{{ route('nilai.pdf') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf
         </a>
-        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
-                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
 
     </div>
     <div class="page-content">
@@ -177,6 +178,7 @@
 
 
                                                                                     @php
+                                                                                        $index = 1;
                                                                                         $printedPhValues = [];
                                                                                     @endphp
 
@@ -225,7 +227,7 @@
 
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
-                                                                                            {{ $key + 1 }} </td>
+                                                                                            {{ $index }} </td>
 
                                                                                         <td class="whitespace-nowrap">
                                                                                             {{ $item['rombelsiswa']['siswas']['nama'] }}
@@ -263,6 +265,9 @@
                                                                                                 @endforeach
                                                                                             </td>
                                                                                         @endforeach
+                                                                                        @php
+                                                                                            $index++; // Increment index setelah setiap iterasi
+                                                                                        @endphp
                                                                                     </tr>
                                                                                 @endforeach
                                                                             </tbody>
@@ -351,8 +356,7 @@
                                                         <label for="modal-form-6"
                                                             class="form-label mt-6 mb-4 ml-8">Kelas</label>
 
-                                                        <form role="form"
-                                                            action="{{ route('NilaiSiswa.all') }}"
+                                                        <form role="form" action="{{ route('NilaiSiswa.all') }}"
                                                             method="get" class="sm:flex">
 
                                                             <select name="searchmapel1" class="tom-select w-full mr-4"
@@ -438,6 +442,7 @@
                                                                             </thead>
                                                                             <tbody>
                                                                                 @php
+                                                                                    $index = 1;
                                                                                     $checkedData = [];
                                                                                 @endphp
 
@@ -464,7 +469,7 @@
 
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
-                                                                                            {{ $key + 1 }} </td>
+                                                                                            {{ $index }} </td>
 
                                                                                         <td class="whitespace-nowrap">
                                                                                             {{ $item['rombelsiswa']['siswas']['nama'] }}
@@ -502,6 +507,9 @@
                                                                                                 @endforeach
                                                                                             </td>
                                                                                         @endforeach
+                                                                                        @php
+                                                                                            $index++; // Increment index setelah setiap iterasi
+                                                                                        @endphp
                                                                                     </tr>
                                                                                 @endforeach
                                                                             </tbody>

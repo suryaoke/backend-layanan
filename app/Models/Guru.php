@@ -24,4 +24,9 @@ class Guru extends Model
     {
         return $this->belongsTo(Walas::class, 'id_kelas', 'id');
     }
+
+    public function walass()
+    {
+        return $this->belongsTo(Walas::class, 'id' , 'id_guru');
+    }
 }

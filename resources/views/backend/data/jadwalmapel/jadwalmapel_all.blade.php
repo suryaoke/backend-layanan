@@ -78,6 +78,14 @@
         <a class="btn btn-outline-success btn-block ml-2" data-tw-toggle="modal" data-tw-target="#add-schedule-modal">
             <span class="glyphicon glyphicon-download"></span> Tambah Jadwal Mapel
         </a>
+           <a class="btn btn-success btn-block" href="{{ route('jadwal.excel') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Excel
+        </a>
+        <a class="btn btn-primary btn-block" href="{{ route('jadwal.pdf') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf
+        </a>
     </div>
 
     <div class="page-content">

@@ -66,9 +66,15 @@ class JadwalmapelController extends Controller
         // End Bagian search Data //
 
 
-        $jadwalmapel = $query->orderBy('id_hari', 'asc')
-            ->orderBy('id_waktu', 'asc')
+      
+        $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
+            ->orderBy('kelas.tingkat', 'asc')
+            ->orderBy('kelas.nama', 'asc')
+            ->orderBy('haris.kode_hari', 'asc')
             ->get();
+
         $hari = Hari::orderby('kode_hari', 'asc')->get();
 
         $waktu = Waktu::all();
@@ -176,36 +182,9 @@ class JadwalmapelController extends Controller
             );
             return redirect()->route('jadwalmapel.all')->with($notification);
         }
-    }
+    } // end method
 
 
-    // public function JadwalmapelUpdate(Request $request, $id)
-    // {
-
-    //     $this->validate($request, [
-    //         'id_hari' => 'required',
-    //         'id_waktu' => 'required',
-    //         'id_ruangan' => 'required',
-
-    //     ]);
-
-    //     // Mengambil data jadwal berdasarkan $id
-    //     $jadwalmapel = Jadwalmapel::find($id);
-
-    //     // Mengupdate nilai kolom-kolom jadwal berdasarkan data yang diterima dari formulir
-    //     $jadwalmapel->id_hari = $request->input('id_hari');
-    //     $jadwalmapel->id_waktu = $request->input('id_waktu');
-    //     $jadwalmapel->id_ruangan = $request->input('id_ruangan');
-    //     // Tambahkan pembaruan lain sesuai kebutuhan Anda
-
-    //     // Menyimpan perubahan ke dalam database
-    //     $jadwalmapel->save();
-    //     $notification = array(
-    //         'message' => 'Jadwal Sementara Update SuccessFully',
-    //         'alert-type' => 'success'
-    //     );
-    //     return redirect()->back()->with($notification);
-    // } // end method
 
     public function JadwalmapelUpdate(Request $request, $id)
     {
@@ -248,7 +227,7 @@ class JadwalmapelController extends Controller
         );
 
         return redirect()->back()->with($notification);
-    }
+    } // end method
 
 
 
@@ -339,11 +318,17 @@ class JadwalmapelController extends Controller
         }
         // End Bagian search Data //
 
-
-        $jadwalmapel = $query->orderBy('id_hari', 'asc')
-            ->orderBy('id_waktu', 'asc')
-            ->whereIn('status', [1, 2, 3])
+        $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
+            ->where('status', '>=', 1)
+            ->where('status', '<=', 3)
+            ->orderBy('kelas.tingkat', 'asc')
+            ->orderBy('kelas.nama', 'asc')
+            ->orderBy('haris.kode_hari', 'asc')
             ->get();
+
+
         $hari = Hari::all();
 
         $waktu = Waktu::all();
@@ -448,13 +433,18 @@ class JadwalmapelController extends Controller
         $userId = Auth::user()->id;
 
         $jadwalmapel = $query
+            ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
             ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
             ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
             ->where('status', '=', '2')
             ->where('gurus.id_user', '=', $userId)
-            ->orderBy('id_hari', 'asc')
-            ->orderBy('id_waktu', 'asc')
+            ->orderBy('kelas.tingkat', 'asc')
+            ->orderBy('kelas.nama', 'asc')
+            ->orderBy('haris.kode_hari', 'asc')
             ->get();
+
+
 
         $kelas = Kelas::orderBy('tingkat')->get();
         return view('backend.data.jadwalmapel.jadwalmapel_guru', compact('kelas', 'jadwalmapel'));

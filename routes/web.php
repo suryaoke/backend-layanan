@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Pos\AbsensiController;
+use App\Http\Controllers\Pos\ExportController;
 use App\Http\Controllers\Pos\GuruController;
 use App\Http\Controllers\Pos\HariController;
 use App\Http\Controllers\Pos\JadwalmapelController;
@@ -257,7 +258,7 @@ Route::controller(OrangTuaController::class)->middleware(['auth'])->group(functi
 });
 
 
-// Stabdar Komptensi All
+// Standar Komptensi All
 Route::controller(StandarkompetensiController::class)->middleware(['auth'])->group(function () {
     Route::get('/sk/all/{id}', 'SkAll')->name('sk.all');
 
@@ -290,6 +291,54 @@ Route::controller(StandarkompetensiController::class)->middleware(['auth'])->gro
 
 
     Route::post('/sinkron/all', 'SinkronAll')->name('sinkron.all');
+});
+
+
+
+
+// Export All Route
+Route::controller(ExportController::class)->middleware(['auth'])->group(function () {
+    Route::get('user/pdf', 'Userpdf')->name('user.pdf');
+    Route::get('user/excel', 'Userexcel')->name('user.excel');
+
+    Route::get('guru/pdf', 'Gurupdf')->name('guru.pdf');
+    Route::get('guru/excel', 'Guruexcel')->name('guru.excel');
+
+    Route::get('orangtua/pdf', 'Orangtuapdf')->name('orangtua.pdf');
+    Route::get('orangtua/excel', 'Orangtuaexcel')->name('orangtua.excel');
+
+    Route::get('siswa/pdf', 'Siswapdf')->name('siswa.pdf');
+    Route::get('siswa/excel', 'Siswaexcel')->name('siswa.excel');
+
+    Route::get('siswawalas/pdf', 'Siswawalaspdf')->name('siswawalas.pdf');
+    Route::get('siswawalas/excel', 'Siswawalasexcel')->name('siswawalas.excel');
+
+    Route::get('jadwalkepsek/pdf', 'Jadwalkepsekpdf')->name('jadwalkepsek.pdf');
+    Route::get('jadwalkepsek/excel', 'Jadwalkepsekexcel')->name('jadwalkepsek.excel');
+
+
+    Route::get('jadwal/pdf', 'Jadwalpdf')->name('jadwal.pdf');
+    Route::get('jadwal/excel', 'Jadwalexcel')->name('jadwal.excel');
+
+    Route::get('jadwalmapel/pdf', 'Jadwalmapelpdf')->name('jadwalmapel.pdf');
+    Route::get('jadwalmapel/excel', 'Jadwalmapelexcel')->name('jadwalmapel.excel');
+
+    Route::get('nilai/pdf', 'Nilaipdf')->name('nilai.pdf');
+    // Route::get('nilai/excel', 'Nilaiexcel')->name('nilai.excel');
+
+    Route::get('nilaimapel/pdf', 'Nilaimapelpdf')->name('nilaimapel.pdf');
+    // Route::get('nilaimapel/excel', 'Nilaimapelexcel')->name('nilaimapel.excel');
+
+    Route::get('nilaiwalas/pdf', 'Nilaiwalaspdf')->name('nilaiwalas.pdf');
+    // Route::get('nilaiwalas/excel', 'Nilaiwalasexcel')->name('nilaiwalas.excel');
+
+
+
+    Route::get('absensi/all/pdf', 'Absensiallpdf')->name('absensi.all.pdf');
+
+    Route::get('absensi/data/all/pdf', 'Absensidataallpdf')->name('absensi.dataall.pdf');
+
+    Route::get('absensi/guru/walas/pdf', 'Absensiguruwalaspdf')->name('absensi.guruwalas.pdf');
 });
 
 

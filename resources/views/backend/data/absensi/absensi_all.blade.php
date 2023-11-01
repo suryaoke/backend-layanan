@@ -84,17 +84,13 @@
         </div>
     </div>
 
-    
+
     <div class="col-span-2  mt-4">
 
-        <a class="btn btn-success btn-block" href=" ">
+        <a class="btn btn-primary btn-block" href="{{ route('absensi.all.pdf') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Excel
+                class="w-4 h-4"></i>&nbsp;Export Pdf
         </a>
-        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
-                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
-
     </div>
 
     <div class="page-content">
@@ -140,7 +136,7 @@
                                                                 <th class="whitespace-nowrap">Kelas</th>
                                                                 <th class="whitespace-nowrap">Tanggal</th>
                                                                 <th class="whitespace-nowrap">Kode Mapel</th>
-                                                                <th class="whitespace-nowrap">Nama Mapel</th>
+                                                                <th class="whitespace-nowrap">Mapel</th>
                                                                 <th class="whitespace-nowrap">Status</th>
                                                                 <th class="whitespace-nowrap">Ket</th>
 

@@ -12,13 +12,14 @@
     </div>
     <div class="col-span-2 mb-4 mt-4">
 
-        <a class="btn btn-success btn-block" href=" ">
+        <a class="btn btn-success btn-block" href="{{ route('siswa.excel') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
         </a>
-        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-warning"> <span
-                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
+        <a class="btn btn-primary btn-block" href="{{ route('siswa.pdf') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf
+        </a>
 
     </div>
     <div class="page-content">
