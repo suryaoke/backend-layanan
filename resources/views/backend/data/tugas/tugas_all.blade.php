@@ -35,7 +35,7 @@
                                             <div id="example-tab-5" class="tab-pane leading-relaxed active" role="tabpanel"
                                                 aria-labelledby="example-5-tab">
                                                 <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                                                   
+
                                                     <div class="col-span-12 sm:col-span-6">
 
                                                         <label for="modal-form-6" class="form-label  mb-4 mr-4">Mata
@@ -112,6 +112,12 @@
 
 
                                                                                 @foreach ($nilaiSiswaKd3 as $key => $item)
+                                                                                    @php
+                                                                                        $currentDateTime = date('n/j/Y:H:i:s');
+                                                                                        $format = 'n/j/Y:H:i:s';
+                                                                                        $currentDateTimeFormatted = DateTime::createFromFormat($format, $currentDateTime);
+                                                                                        $itemLastFormatted = DateTime::createFromFormat($format, $item->last);
+                                                                                    @endphp
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
                                                                                             {{ $key + 1 }} </td>
@@ -136,15 +142,27 @@
                                                                                         <td class="text-danger">
                                                                                             {{ $item->last }} </td>
                                                                                         <td class="text-success">
-                                                                                            Dikirim</td>
+                                                                                            @if ($item->tugas_upload != null)
+                                                                                                Dikirim
+                                                                                            @else
+                                                                                                -
+                                                                                            @endif
 
-                                                                                        <td class="whitespace-nowrap"><a
-                                                                                                href="{{ route('walas.edit', $item->id) }}"
-                                                                                                class="btn btn-success mr-1 mb-2">
-                                                                                                Upload
-                                                                                                <i data-lucide="edit"
-                                                                                                    class="w-4 h-4 ml-1"></i>
-                                                                                            </a></td>
+                                                                                        </td>
+
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            @if ($itemLastFormatted < $currentDateTimeFormatted)
+                                                                                                -
+                                                                                            @else
+                                                                                                <a data-tw-toggle="modal"
+                                                                                                    data-tw-target="#edit-pengetahuan-modal-preview-{{ $item->id }}"
+                                                                                                    class="btn btn-success mr-1 mb-2">
+                                                                                                    Upload
+                                                                                                    <i data-lucide="edit"
+                                                                                                        class="w-4 h-4 ml-1"></i>
+                                                                                                </a>
+                                                                                            @endif
+                                                                                        </td>
                                                                                     </tr>
                                                                                 @endforeach
                                                                             </tbody>
@@ -168,7 +186,7 @@
                                                 aria-labelledby="example-6-tab">
 
                                                 <div class="modal-body grid grid-cols-12 gap-4 gap-y-4">
-                                                   
+
                                                     <div class="col-span-12 ml-4 sm:col-span-6">
 
                                                         <label for="modal-form-6" class="form-label mb-4 mr-4">Mata
@@ -268,15 +286,22 @@
                                                                                         <td class="text-danger">
                                                                                             {{ $item->last }} </td>
                                                                                         <td class="text-success">
-                                                                                            Dikirim</td>
+                                                                                            @if ($item->tugas_upload != null)
+                                                                                                Dikirim
+                                                                                            @else
+                                                                                                -
+                                                                                            @endif
+                                                                                        </td>
 
                                                                                         <td class="whitespace-nowrap"><a
-                                                                                                href="{{ route('walas.edit', $item->id) }}"
+                                                                                                data-tw-toggle="modal"
+                                                                                                data-tw-target="#edit-keterampilan-modal-preview-{{ $item->id }}"
                                                                                                 class="btn btn-success mr-1 mb-2">
                                                                                                 Upload
                                                                                                 <i data-lucide="edit"
                                                                                                     class="w-4 h-4 ml-1"></i>
-                                                                                            </a></td>
+                                                                                            </a>
+                                                                                        </td>
                                                                                     </tr>
                                                                                 @endforeach
                                                                             </tbody>
@@ -337,6 +362,115 @@
     </script>
 
 
+    <!-- BEGIN: Edit Pengetahuan  -->
+
+    @foreach ($nilaiSiswaKd3 as $key => $item)
+        <div id="edit-pengetahuan-modal-preview-{{ $item->id }}" class="modal" tabindex="-1"
+            aria-labelledby="edit-pengetahuan-modal-preview-{{ $item->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content"> <!-- BEGIN: Modal Header -->
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan</h2>
+
+                    </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
+                    <form method="post" action="{{ route('tugaskd3.update') }}"
+                        onkeydown="return event.key != 'Enter';" enctype="multipart/form-data">
+                        @csrf
+
+                        <input type="hidden" name="id" id="" value="{{ $item->id }}">
+
+                        <div class="modal-body">
+                            <label for="modal-form-2" class="form-label">Keterangan Tugas :</label> <br>
+                            <Span> {{ $item->ket }} </Span>
+                        </div>
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="mr-4"> <a href="{{ asset('pdf_files/' . $item->tugas) }}">
+                                    <span>Tugas <i data-lucide="book"></i></span>
+                                </a></div>
+                            <div class="ml-8"> <a href="{{ asset('pdf_files/' . $item->materi) }}">
+                                    <span>materi <i data-lucide="book"></i></span>
+                                </a></div>
+                        </div>
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Upload Tugas</label>
+                                <input name="tugas_upload" type="file" class="form-control" required>
+                            </div>
 
 
+                        </div>
+                        <div class="mt-2 ml-4 mb-4">
+                            <span class="text-danger">
+                                Upload Tugas Hanya Bisa Sekali.</span>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" data-tw-dismiss="modal"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                        </div> <!-- END: Modal Footer -->
+
+                    </form>
+
+                </div>
+            </div>
+        </div> <!-- END: Modal Content Pengetahuan-->
+    @endforeach
+
+    <!-- BEGIN: Edit Keterampilan  -->
+
+    @foreach ($nilaiSiswaKd4 as $key => $item)
+        <div id="edit-keterampilan-modal-preview-{{ $item->id }}" class="modal" tabindex="-1"
+            aria-labelledby="edit-keterampilan-modal-preview-{{ $item->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content"> <!-- BEGIN: Modal Header -->
+                    <div class="modal-header">
+                        <h2 class="font-medium text-base mr-auto">Nilai Keterampilan</h2>
+
+                    </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
+                    <form method="post" action="{{ route('tugaskd4.update') }}"
+                        onkeydown="return event.key != 'Enter';" enctype="multipart/form-data">
+                        @csrf
+
+                        <input type="hidden" name="id" id="" value="{{ $item->id }}">
+
+                        <div class="modal-body">
+                            <label for="modal-form-2" class="form-label">Keterangan Tugas :</label> <br>
+                            <Span> {{ $item->ket }} </Span>
+                        </div>
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="mr-4"> <a href="{{ asset('pdf_files/' . $item->tugas) }}">
+                                    <span>Tugas <i data-lucide="book"></i></span>
+                                </a></div>
+                            <div class="ml-8"> <a href="{{ asset('pdf_files/' . $item->materi) }}">
+                                    <span>materi <i data-lucide="book"></i></span>
+                                </a></div>
+                        </div>
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+
+                            <div class="col-span-12 sm:col-span-12">
+                                <label for="modal-form-2" class="form-label">Upload Tugas</label>
+                                <input name="tugas_upload" type="file" class="form-control" required>
+                            </div>
+
+
+                        </div>
+                        <div class="mt-2 ml-4 mb-4">
+                            <span class="text-danger">
+                                Upload Tugas Hanya Bisa Sekali.</span>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="button" data-tw-dismiss="modal"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                        </div> <!-- END: Modal Footer -->
+
+                    </form>
+
+                </div>
+            </div>
+        </div> <!-- END: Modal Content Pengetahuan-->
+    @endforeach
 @endsection

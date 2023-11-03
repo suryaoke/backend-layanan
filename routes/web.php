@@ -164,6 +164,9 @@ Route::controller(TahunajarController::class)->middleware(['auth'])->group(funct
 // Tugas All Route
 Route::controller(TugasController::class)->middleware(['auth'])->group(function () {
     Route::get('/tugas/all', 'TugasSiswa')->name('tugas.siswa');
+
+    Route::post('/tugas/kd3', 'Tugaskd3Update')->name('tugaskd3.update');
+    Route::post('/tugas/kd4', 'Tugaskd4Update')->name('tugaskd4.update');
 });
 
 
