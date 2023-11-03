@@ -49,12 +49,12 @@
                                                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                         <thead>
                                                             <tr class=" alert-primary ">
-                                                                <th>No</th>
-                                                                <th>Kd</th>
-                                                                <th>Penilaian Harian</th>
-                                                                <th>Skema</th>
-                                                                <th>Status</th>
-                                                                <th>Action</th>
+                                                                <th class="whitespace-nowrap">No</th>
+                                                                <th class="whitespace-nowrap">Kd</th>
+                                                                <th class="whitespace-nowrap">Penilaian Harian</th>
+                                                                <th class="whitespace-nowrap">Skema</th>
+                                                                <th class="whitespace-nowrap">Status</th>
+                                                                <th class="whitespace-nowrap">Action</th>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($nilaikd3 as $key => $item)
@@ -66,35 +66,59 @@
                                                                         ->where('status', 'remedial')
                                                                         ->where('remedial', null)
                                                                         ->count();
+                                                                    $tugassiswa = App\Models\NilaisiswaKd3::where('id_nilaikd3', $item->id)
+                                                                        ->where('tugas_upload', '!=', null)
+                                                                        ->count();
+
+                                                                    $materi = App\Models\NilaisiswaKd3::where('id_nilaikd3', $item->id)->first();
 
                                                                 @endphp
                                                                 <tr>
-                                                                    <td> {{ $key + 1 }} - {{ $item->id }} </td>
-                                                                    <td>3. @if (isset($item['kd3']['urutan']))
+                                                                    <td class="whitespace-nowrap"> {{ $key + 1 }}</td>
+                                                                    <td class="whitespace-nowrap">3. @if (isset($item['kd3']['urutan']))
                                                                             {{ $item['kd3']['urutan'] }}
                                                                             @endif @if (isset($item['kd3']['ket']))
                                                                                 {{ $item['kd3']['ket'] }}
                                                                             @endif
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="whitespace-nowrap">
                                                                         Ph - @if (isset($item->ph))
                                                                             {{ $item->ph }}
                                                                         @endif <br>
                                                                         @if (isset($item->created_at))
                                                                             {{ $item->created_at }}
                                                                         @endif
-                                                                    </td>
-                                                                    <td>
-                                                                        @if ($item->skema == '1')
-                                                                            Tes Tertulis
-                                                                        @elseif ($item->skema == '2')
-                                                                            Tes Lisan
-                                                                        @elseif ($item->skema == '3')
-                                                                            Penugasan
-                                                                        @endif
 
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="whitespace-nowrap">
+                                                                        <div class="mb-1">
+                                                                            @if ($item->skema == '1')
+                                                                                Tes Tertulis
+                                                                            @elseif ($item->skema == '2')
+                                                                                Tes Lisan
+                                                                            @elseif ($item->skema == '3')
+                                                                                Penugasan
+                                                                            @endif
+
+                                                                        </div>
+                                                                        @if ($materi->materi != null)
+                                                                            <a href="{{ asset('pdf_files/' . $materi->materi) }}"
+                                                                                target="_blank"
+                                                                                style="display: flex; align-items: center; text-decoration: none;">
+                                                                                <span>Materi :</span> <i data-lucide="book"
+                                                                                    style="margin-right: 5px;"></i>
+                                                                            </a>
+                                                                        @endif
+                                                                        @if ($materi->tugas != null)
+                                                                            <a href="{{ asset('pdf_files/' . $materi->tugas) }}"
+                                                                                target="_blank"
+                                                                                style="display: flex; align-items: center; text-decoration: none;">
+                                                                                <span>Tugas :</span> <i data-lucide="book"
+                                                                                    style="margin-right: 5px;"></i>
+                                                                            </a>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="whitespace-nowrap">
                                                                         @if (isset($nilaisiswakd3belumdinilai))
                                                                             Tidak dinilai: {{ $nilaisiswakd3belumdinilai }}
                                                                         @else
@@ -105,9 +129,19 @@
                                                                             Remedial: {{ $nilaisiswakd3remedial }}
                                                                         @else
                                                                             Remedial: 0
+                                                                        @endif <br>
+                                                                        @if ($materi->tugas != null && $materi->materi != null)
+                                                                            @if (isset($tugassiswa))
+                                                                                Upload Tugas : {{ $tugassiswa }}
+                                                                            @else
+                                                                                Upload Tugas : 0
+                                                                            @endif <br>
+                                                                            Batas : <span
+                                                                                class="text-danger">{{ $materi->last }}</span>
                                                                         @endif
+
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="whitespace-nowrap">
                                                                         <a id="delete"
                                                                             href="{{ route('Nilaikd3.delete', $item->id) }}"
                                                                             class="btn btn-danger mr-1 mb-2">
@@ -166,12 +200,12 @@
                                                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                         <thead>
                                                             <tr class=" alert-primary ">
-                                                                <th>No</th>
-                                                                <th>Kd</th>
-                                                                <th>Penilaian Harian</th>
-                                                                <th>Skema</th>
-                                                                <th>Status</th>
-                                                                <th>Action</th>
+                                                                <th class="whitespace-nowrap">No</th>
+                                                                <th class="whitespace-nowrap">Kd</th>
+                                                                <th class="whitespace-nowrap">Penilaian Harian</th>
+                                                                <th class="whitespace-nowrap">Skema</th>
+                                                                <th class="whitespace-nowrap">Status</th>
+                                                                <th class="whitespace-nowrap">Action</th>
                                                         </thead>
                                                         <tbody>
                                                             @foreach ($nilaikd4 as $key => $item)
@@ -184,16 +218,23 @@
                                                                         ->where('remedial', null)
                                                                         ->count();
 
+                                                                    $tugassiswa = App\Models\NilaisiswaKd4::where('id_nilaikd4', $item->id)
+                                                                        ->where('tugas_upload', '!=', null)
+                                                                        ->count();
+
+                                                                    $materi = App\Models\NilaisiswaKd4::where('id_nilaikd4', $item->id)->first();
+
                                                                 @endphp
                                                                 <tr>
-                                                                    <td> {{ $key + 1 }} </td>
-                                                                    <td>4. @if (isset($item['kd4']['urutan']))
+                                                                    <td class="whitespace-nowrap"> {{ $key + 1 }}
+                                                                    </td>
+                                                                    <td class="whitespace-nowrap">4. @if (isset($item['kd4']['urutan']))
                                                                             {{ $item['kd4']['urutan'] }}
                                                                             @endif @if (isset($item['kd4']['ket']))
                                                                                 {{ $item['kd4']['ket'] }}
                                                                             @endif
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="whitespace-nowrap">
                                                                         Ph - @if (isset($item->ph))
                                                                             {{ $item->ph }}
                                                                         @endif <br>
@@ -201,21 +242,39 @@
                                                                             {{ $item->created_at }}
                                                                         @endif
                                                                     </td>
-                                                                    <td>
-                                                                        @if ($item->skema == '1')
-                                                                            Unjuk Kerja / Praktek
-                                                                        @elseif ($item->skema == '2')
-                                                                            Proyek
-                                                                        @elseif ($item->skema == '3')
-                                                                            Portofolio
-                                                                        @elseif ($item->skema == '4')
-                                                                            Produk
-                                                                        @elseif ($item->skema == '5')
-                                                                            Lainnya
+                                                                    <td class="whitespace-nowrap">
+                                                                        <div class="mb-1">
+                                                                            @if ($item->skema == '1')
+                                                                                Unjuk Kerja / Praktek
+                                                                            @elseif ($item->skema == '2')
+                                                                                Proyek
+                                                                            @elseif ($item->skema == '3')
+                                                                                Portofolio
+                                                                            @elseif ($item->skema == '4')
+                                                                                Produk
+                                                                            @elseif ($item->skema == '5')
+                                                                                Lainnya
+                                                                            @endif
+                                                                        </div>
+                                                                        @if ($materi->materi != null)
+                                                                            <a href="{{ asset('pdf_files/' . $materi->materi) }}"
+                                                                                target="_blank"
+                                                                                style="display: flex; align-items: center; text-decoration: none;">
+                                                                                <span>Materi :</span> <i data-lucide="book"
+                                                                                    style="margin-right: 5px;"></i>
+                                                                            </a>
+                                                                        @endif
+                                                                        @if ($materi->tugas != null)
+                                                                            <a href="{{ asset('pdf_files/' . $materi->tugas) }}"
+                                                                                target="_blank"
+                                                                                style="display: flex; align-items: center; text-decoration: none;">
+                                                                                <span>Tugas :</span> <i data-lucide="book"
+                                                                                    style="margin-right: 5px;"></i>
+                                                                            </a>
                                                                         @endif
 
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="whitespace-nowrap">
                                                                         @if (isset($nilaisiswakd4belumdinilai))
                                                                             Tidak dinilai: {{ $nilaisiswakd4belumdinilai }}
                                                                         @else
@@ -226,17 +285,29 @@
                                                                             Remedial: {{ $nilaisiswakd4remedial }}
                                                                         @else
                                                                             Remedial: 0
+                                                                        @endif <br>
+                                                                        @if ($materi->tugas != null && $materi->materi != null)
+                                                                            @if (isset($tugassiswa))
+                                                                                Upload Tugas : {{ $tugassiswa }}
+                                                                            @else
+                                                                                Upload Tugas : 0
+                                                                            @endif <br>
+                                                                            Batas : <span
+                                                                                class="text-danger">{{ $materi->last }}</span>
                                                                         @endif
+
                                                                     </td>
-                                                                    <td>
+                                                                    <td class="whitespace-nowrap">
                                                                         <a id="delete"
                                                                             href="{{ route('Nilaikd4.delete', $item->id) }}"
                                                                             class="btn btn-danger mr-1 mb-2">
-                                                                            <i data-lucide="trash" class="w-5 h-5"></i> </a>
+                                                                            <i data-lucide="trash" class="w-5 h-5"></i>
+                                                                        </a>
                                                                         <a data-tw-toggle="modal"
                                                                             data-tw-target="#edit-keterampilan-modal-preview-{{ $item->id }}"
                                                                             class="btn btn-primary mr-1 mb-2">
-                                                                            <i data-lucide="edit" class="w-5 h-5"></i> </a>
+                                                                            <i data-lucide="edit" class="w-5 h-5"></i>
+                                                                        </a>
                                                                         <br>
                                                                         <a data-tw-toggle="modal"
                                                                             data-tw-target="#nilaisiswa-kd4-{{ $item->id }}"
@@ -290,7 +361,6 @@
 
 
 
-
     <!-- BEGIN: Add Pengetahuan  -->
     <div id="pengetahuan-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
@@ -299,7 +369,8 @@
                     <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan</h2>
 
                 </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
-                <form method="post" action="{{ route('nilaikd3.store') }}" onkeydown="return event.key != 'Enter';">
+                <form method="post" action="{{ route('nilaikd3.store') }}" onkeydown="return event.key != 'Enter';"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" class="form-control" name="search" value="{{ $rombel->id }}">
                     <input type="hidden" name="id_seksi" id="" value="{{ $seksi->id }}">
@@ -308,9 +379,12 @@
                                 Penilaian</label>
                             <select name="skema" id="skema" class="tom-select w-full " required>
                                 <option value="">- Pilih Skema Penilaian -</option>
-                                <option value="1">Tes Tertulis</option>
-                                <option value="2">Tes Lisan</option>
-                                <option value="3">Penugasan</option>
+                                <option value="1">Unjuk Kerja / Praktek</option>
+                                <option value="2">Proyek</option>
+                                <option value="3">Portofolio</option>
+                                <option value="4">Produk</option>
+                                <option value="5">Lainnya</option>
+
 
                             </select>
                         </div>
@@ -337,26 +411,84 @@
                                     readonly>
                             @endif
 
-                            <div class="mt-2">
+                            <div class="mt-2 mb-4">
                                 <span class="text-danger">
                                     Pastikan data yang diinputkan benar.</span>
                             </div>
                         </div>
+                        <div class="col-span-12 sm:col-span-12 mb-8">
+                            <label for="modal-form-2" class="form-label">Tambahkan Tugas</label>
+                            <input id="remember-me" type="checkbox" class="form-check-input border ml-2"
+                                onchange="showHideElements()">
+                        </div>
+                        <div class="col-span-12 sm:col-span-6 mb-8" id="tanggal" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Batas Tanggal</label>
+                            <div class="relative  mx-auto">
+                                <div
+                                    class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
+                                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                                </div> <input type="text" class="datepicker form-control pl-12"
+                                    data-single-mode="true" placeholder="Tanggal" name="last">
+                            </div>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-6 mb-8" id="waktu" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Batas waktu</label>
+
+                            <input type="time" class=" form-control" placeholder="Tanggal" name="last1">
+                        </div>
+
+
+                        <div class="col-span-12 sm:col-span-12 mb-4" id="keteranganTugas" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Keterangan Tugas</label>
+                            <input id="ph1" name="ket" type="text" class="form-control">
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-6 mb-4" id="uploadSoal" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Upload Soal Tugas</label>
+                            <input id="ph2" name="tugas" type="file" class="form-control">
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-6 mb-4" id="uploadMateri" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Upload Materi</label>
+                            <input id="ph3" name="materi" type="file" class="form-control">
+                        </div>
+
 
 
                     </div> <!-- END: Modal Body --> <!-- BEGIN: Modal Footer -->
-                    <div class="modal-footer">
-
-                        <button type="button" data-tw-dismiss="modal"
+                    <div class="modal-footer "> <button type="button" data-tw-dismiss="modal"
                             class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
                         <button type="submit" class="btn btn-primary w-20">Save</button>
                     </div> <!-- END: Modal Footer -->
-
                 </form>
-
             </div>
+            <script>
+                function showHideElements() {
+                    var checkbox = document.getElementById("remember-me");
+                    var keteranganTugas = document.getElementById("keteranganTugas");
+                    var uploadSoal = document.getElementById("uploadSoal");
+                    var uploadMateri = document.getElementById("uploadMateri");
+                    var tanggal = document.getElementById("tanggal");
+                    var waktu = document.getElementById("waktu");
+
+                    if (checkbox.checked) {
+                        keteranganTugas.style.display = "block";
+                        uploadSoal.style.display = "block";
+                        uploadMateri.style.display = "block";
+                        tanggal.style.display = "block";
+                        waktu.style.display = "block";
+                    } else {
+                        keteranganTugas.style.display = "none";
+                        uploadSoal.style.display = "none";
+                        uploadMateri.style.display = "none";
+                        tanggal.style.display = "none";
+                        waktu.style.display = "none";
+                    }
+                }
+            </script>
         </div>
-    </div> <!-- END: Modal Content Pengetahuan-->
+    </div><!-- END: Modal Content Pengetahuan-->
 
 
     <!-- BEGIN: Edit Pengetahuan  -->
@@ -438,7 +570,8 @@
                     <h2 class="font-medium text-base mr-auto">Nilai Keterampilan</h2>
 
                 </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
-                <form method="post" action="{{ route('nilaikd4.store') }}" onkeydown="return event.key != 'Enter';">
+                <form method="post" action="{{ route('nilaikd4.store') }}" onkeydown="return event.key != 'Enter';"
+                    enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" class="form-control" name="search" value="{{ $rombel->id }}">
                     <input type="hidden" name="id_seksi" id="" value="{{ $seksi->id }}">
@@ -479,7 +612,49 @@
                                     readonly>
                             @endif
 
+                            <div class="mt-2 mb-4">
+                                <span class="text-danger">
+                                    Pastikan data yang diinputkan benar.</span>
+                            </div>
+                        </div>
 
+
+                        <div class="col-span-12 sm:col-span-12 mb-2">
+                            <label for="modal-form-2" class="form-label">Tambahkan Tugas</label>
+                            <input id="remember-me1" type="checkbox" class="form-check-input border ml-2"
+                                onchange="showHideElements1()">
+                        </div>
+
+                         <div class="col-span-12 sm:col-span-6 mb-8" id="tanggal1" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Batas Tanggal</label>
+                            <div class="relative  mx-auto">
+                                <div
+                                    class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
+                                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                                </div> <input type="text" class="datepicker form-control pl-12"
+                                    data-single-mode="true" placeholder="Tanggal" name="last">
+                            </div>
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-6 mb-8" id="waktu1" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Batas waktu</label>
+
+                            <input type="time" class=" form-control" placeholder="Tanggal" name="last1">
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-12 mb-4" id="keteranganTugas1" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Keterangan Tugas</label>
+                            <input name="ket" type="text" class="form-control">
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-6 mb-4" id="uploadSoal1" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Upload Soal Tugas</label>
+                            <input name="tugas" type="file" class="form-control">
+                        </div>
+
+                        <div class="col-span-12 sm:col-span-6 mb-4" id="uploadMateri1" style="display: none;">
+                            <label for="modal-form-2" class="form-label">Upload Materi</label>
+                            <input name="materi" type="file" class="form-control">
                         </div>
 
                     </div> <!-- END: Modal Body --> <!-- BEGIN: Modal Footer -->
@@ -489,6 +664,31 @@
                     </div> <!-- END: Modal Footer -->
                 </form>
             </div>
+
+            <script>
+                function showHideElements1() {
+                    var checkbox = document.getElementById("remember-me1");
+                    var keteranganTugas = document.getElementById("keteranganTugas1");
+                    var uploadSoal = document.getElementById("uploadSoal1");
+                    var uploadMateri = document.getElementById("uploadMateri1");
+                    var tanggal = document.getElementById("tanggal1");
+                    var waktu = document.getElementById("waktu1");
+
+                    if (checkbox.checked) {
+                        keteranganTugas.style.display = "block";
+                        uploadSoal.style.display = "block";
+                        uploadMateri.style.display = "block";
+                        tanggal.style.display = "block";
+                        waktu.style.display = "block";
+                    } else {
+                        keteranganTugas.style.display = "none";
+                        uploadSoal.style.display = "none";
+                        uploadMateri.style.display = "none";
+                        tanggal.style.display = "none";
+                        waktu.style.display = "none";
+                    }
+                }
+            </script>
         </div>
     </div> <!-- END: Modal Content Keterampilan-->
 
@@ -571,7 +771,6 @@
 
 
 
-
     <!-- BEGIN: Add nilai siswa pengetahuan-->
     <style>
         .modal-xl {
@@ -629,6 +828,7 @@
                                                         <th class="whitespace-nowrap">Nilai</th>
                                                         <th class="whitespace-nowrap">Status</th>
                                                         <th class="whitespace-nowrap">Remedial</th>
+                                                        <th class="whitespace-nowrap">Upload Tugas</th>
                                                         <th class="whitespace-nowrap">Feedback</th>
 
                                                     </tr>
@@ -644,13 +844,16 @@
                                                             @endphp
                                                             <tr>
 
-                                                                <td> {{ $key + 1 }} - {{ $item->id_nilaikd3 }} </td>
-                                                                <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
-                                                                <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
-                                                                <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
+                                                                <td class="whitespace-nowrap"> {{ $key + 1 }} </td>
+                                                                <td class="whitespace-nowrap">
+                                                                    {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
+                                                                <td class="whitespace-nowrap">
+                                                                    {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
+                                                                <td class="whitespace-nowrap">
+                                                                    {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
 
 
-                                                                <td>
+                                                                <td class="whitespace-nowrap">
                                                                     @if ($item->status == 'remedial')
                                                                         <input name="nilai[]" type="number"
                                                                             value="{{ $item->nilai }}"
@@ -682,7 +885,7 @@
                                                                 </td>
 
 
-                                                                <td>
+                                                                <td class="whitespace-nowrap">
                                                                     @if ($item->status == 'remedial')
                                                                         <input name="remedial[]" type="number"
                                                                             value="{{ $item->remedial }}"
@@ -694,7 +897,18 @@
                                                                     @endif
 
                                                                 </td>
-                                                                <td>
+                                                                <td class="whitespace-nowrap">
+
+                                                                    @if ($item->tugas_upload != null)
+                                                                        <a href="{{ asset('pdf_files/' . $item->tugas_upload) }}"
+                                                                            target="_blank"
+                                                                            style="display: flex; align-items: center; text-decoration: none;">
+                                                                            <span>Tugas :</span> <i data-lucide="book"
+                                                                                style="margin-right: 5px;"></i>
+                                                                        </a>
+                                                                    @endif
+                                                                </td>
+                                                                <td class="whitespace-nowrap">
                                                                     <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
                                                                 </td>
 
@@ -799,10 +1013,6 @@
     </script>
 
 
-
-
-
-
     <!-- BEGIN: Add nilai siswa pengetahuan-->
 
 
@@ -866,6 +1076,7 @@
                                                         <th class="whitespace-nowrap">Nilai</th>
                                                         <th class="whitespace-nowrap">Status</th>
                                                         <th class="whitespace-nowrap">Remedial</th>
+                                                        <th class="whitespace-nowrap">Upload Tugas</th>
                                                         <th class="whitespace-nowrap">Feedback</th>
 
                                                     </tr>
@@ -880,11 +1091,14 @@
                                                                 $kkm = App\Models\Kkm::where('id_kelas', $kelas->tingkat)->first();
                                                             @endphp
                                                             <tr>
-                                                                <td> {{ $key + 1 }} </td>
-                                                                <td> {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
-                                                                <td> {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
-                                                                <td> {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
-                                                                <td>
+                                                                <td class="whitespace-nowrap"> {{ $key + 1 }} </td>
+                                                                <td class="whitespace-nowrap">
+                                                                    {{ $item['rombelsiswa']['siswas']['nisn'] }} </td>
+                                                                <td class="whitespace-nowrap">
+                                                                    {{ $item['rombelsiswa']['siswas']['nama'] }} </td>
+                                                                <td class="whitespace-nowrap">
+                                                                    {{ $item['rombelsiswa']['siswas']['jk'] }} </td>
+                                                                <td class="whitespace-nowrap">
                                                                     @if ($item->status == 'remedial')
                                                                         <input name="nilai[]" type="number"
                                                                             value="{{ $item->nilai }}"
@@ -896,7 +1110,7 @@
                                                                             class="form-control" style="width: 100px;">
                                                                     @endif
                                                                 </td>
-                                                                <td>
+                                                                <td class="whitespace-nowrap">
                                                                     @if ($item->status == 'remedial')
                                                                         <input type="text" name="status[]"
                                                                             class="form-control"
@@ -915,7 +1129,7 @@
                                                                     @endif
                                                                 </td>
 
-                                                                <td>
+                                                                <td class="whitespace-nowrap">
                                                                     @if ($item->status == 'remedial')
                                                                         <input name="remedial[]" type="number"
                                                                             value="{{ $item->remedial }}"
@@ -927,7 +1141,17 @@
                                                                     @endif
 
                                                                 </td>
-                                                                <td>
+                                                                <td class="whitespace-nowrap">
+                                                                    @if ($item->tugas_upload != null)
+                                                                        <a href="{{ asset('pdf_files/' . $item->tugas_upload) }}"
+                                                                            target="_blank"
+                                                                            style="display: flex; align-items: center; text-decoration: none;">
+                                                                            <span>Tugas :</span> <i data-lucide="book"
+                                                                                style="margin-right: 5px;"></i>
+                                                                        </a>
+                                                                    @endif
+                                                                </td>
+                                                                <td class="whitespace-nowrap">
                                                                     <textarea class="form-control" name="feedback[]" cols="10" rows="2">{{ $item->feedback }}</textarea>
                                                                 </td>
 

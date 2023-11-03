@@ -24,6 +24,7 @@ use App\Models\Walas;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 
 class StandarkompetensiController extends Controller
 {
@@ -270,18 +271,35 @@ class StandarkompetensiController extends Controller
         $pengampu = Pengampu::where('id', optional($jadwal)->id_pengampu)->first();
         $rombel = Rombel::where('id_kelas', optional($pengampu)->kelas)->first();
 
-
-
-
-
-
         return view('backend.data.standar_kompetensi.nilaikd_all',  compact('rombel', 'pengampu', 'datanilaikd4', 'kd4', 'ki4', 'kd3', 'ki3', 'datanilaikd3', 'seksi', 'nilaikd3', 'nilaikd4'));
     } // end method
 
+
+
+    public function uploadPDF($pdfFile)
+    {
+        if ($pdfFile) {
+            $fileName = time() . '_' . $pdfFile->getClientOriginalName();
+            $filePath = public_path('pdf_files');
+
+            if (!File::isDirectory($filePath)) {
+                File::makeDirectory($filePath, 0777, true, true);
+            }
+
+            $pdfFile->move($filePath, $fileName);
+
+            return $fileName; // Mengembalikan hanya nama file.
+        }
+
+        return null; // Jika tidak ada file yang diunggah, kembalikan null.
+    }
+
+  
+
     public function Nilaikd3Store(Request $request)
     {
-        // Simpan data ke dalam tabel NilaiKd3
-        $nilaikd3 = NilaiKd3::create([
+
+        $nilaikd3 =  NilaiKd3::create([
             'id_kd3' => $request->id_kd3,
             'ph' => $request->ph,
             'id_seksi' => $request->id_seksi,
@@ -290,29 +308,43 @@ class StandarkompetensiController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-
         $search = $request->search;
         $rombelsiswa = Rombelsiswa::where('id_rombel', $search)->get();
+        $tugas = $request->file('tugas');
+        $materi = $request->file('materi');
+
+        // Memanggil fungsi untuk mengunggah file PDF.
+        $tugasFilePath = $this->uploadPDF($tugas);
+        $materiFilePath = $this->uploadPDF($materi);
+
+        $last = $request->last;
+        $last1 = $request->last1;
 
         foreach ($rombelsiswa as $row) {
 
             $nilaisiswakd3 = new  NilaisiswaKd3();
             $nilaisiswakd3->id_rombelsiswa = $row->id;
             $nilaisiswakd3->id_nilaikd3 = $nilaikd3->id;
+            $nilaisiswakd3->ket = $request->ket;
+            $nilaisiswakd3->last = $last.':'.$last1;
+            $nilaisiswakd3->tugas = $tugasFilePath;
+            $nilaisiswakd3->materi = $materiFilePath;
+
             $nilaisiswakd3->created_by = Auth::user()->id;
             $nilaisiswakd3->created_at = Carbon::now();
             $nilaisiswakd3->save();
         }
 
-        // Set notifikasi untuk ditampilkan kepada pengguna
         $notification = array(
-            'message' => 'NilaiKd3 Inserted Successfully',
+            'message' => 'NilaiKd3 Inserted SuccessFully',
             'alert-type' => 'success'
         );
-
-        // Redirect kembali ke halaman sebelumnya dengan notifikasi
         return redirect()->back()->with($notification);
     } // end method
+
+
+
+
 
     public function Nilaikd3Update(Request $request)
     {
@@ -351,11 +383,26 @@ class StandarkompetensiController extends Controller
         $search = $request->search;
         $rombelsiswa = Rombelsiswa::where('id_rombel', $search)->get();
 
+        $tugas = $request->file('tugas');
+        $materi = $request->file('materi');
+
+        // Memanggil fungsi untuk mengunggah file PDF.
+        $tugasFilePath = $this->uploadPDF($tugas);
+        $materiFilePath = $this->uploadPDF($materi);
+
+
+        $last = $request->last;
+        $last1 = $request->last1;
+
         foreach ($rombelsiswa as $row) {
 
             $nilaisiswakd4 = new  NilaisiswaKd4();
             $nilaisiswakd4->id_rombelsiswa = $row->id;
             $nilaisiswakd4->id_nilaikd4 = $nilaikd4->id;
+            $nilaisiswakd4->ket = $request->ket;
+            $nilaisiswakd4->last = $last . ':' . $last1;
+            $nilaisiswakd4->tugas = $tugasFilePath;
+            $nilaisiswakd4->materi = $materiFilePath;
             $nilaisiswakd4->created_by = Auth::user()->id;
             $nilaisiswakd4->created_at = Carbon::now();
             $nilaisiswakd4->save();
@@ -897,7 +944,7 @@ class StandarkompetensiController extends Controller
 
 
 
-        return view('backend.data.nilai.nilai_siswa', compact('nilaiSiswaKd4','nilaiSiswaKd3',));
+        return view('backend.data.nilai.nilai_siswa', compact('nilaiSiswaKd4', 'nilaiSiswaKd3',));
     } // end method
 
 }

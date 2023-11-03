@@ -19,6 +19,7 @@ use App\Http\Controllers\Pos\SeksiController;
 use App\Http\Controllers\Pos\SiswaController;
 use App\Http\Controllers\Pos\StandarkompetensiController;
 use App\Http\Controllers\Pos\TahunajarController;
+use App\Http\Controllers\Pos\TugasController;
 use App\Http\Controllers\Pos\WalasController;
 use App\Http\Controllers\Pos\UserController;
 use App\Http\Controllers\Pos\WaktuController;
@@ -158,6 +159,13 @@ Route::controller(TahunajarController::class)->middleware(['auth'])->group(funct
     Route::get('/tahunajar/edit/{id}', 'TahunajarEdit')->name('tahunajar.edit');
     Route::post('/tahunajar/update', 'TahunajarUpdate')->name('tahunajar.update');
 });
+
+
+// Tugas All Route
+Route::controller(TugasController::class)->middleware(['auth'])->group(function () {
+    Route::get('/tugas/all', 'TugasSiswa')->name('tugas.siswa');
+});
+
 
 
 // Walas All Route
