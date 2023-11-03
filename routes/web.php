@@ -5,6 +5,7 @@ use App\Http\Controllers\Pos\AbsensiController;
 use App\Http\Controllers\Pos\ExportController;
 use App\Http\Controllers\Pos\GuruController;
 use App\Http\Controllers\Pos\HariController;
+use App\Http\Controllers\Pos\InfoController;
 use App\Http\Controllers\Pos\JadwalmapelController;
 use App\Http\Controllers\Pos\JurusanController;
 use App\Http\Controllers\Pos\KelasController;
@@ -170,6 +171,17 @@ Route::controller(WalasController::class)->middleware(['auth'])->group(function 
 });
 
 
+
+Route::controller(InfoController::class)->middleware(['auth'])->group(function () {
+    Route::get('/info/all', 'InfoAll')->name('info.all');
+    Route::get('/info/add', 'InfoAdd')->name('info.add');
+    Route::post('/info/store', 'InfoStore')->name('info.store');
+    Route::get('/info/delete/{id}', 'InfoDelete')->name('info.delete');
+    Route::get('/info/edit/{id}', 'InfoEdit')->name('info.edit');
+    Route::post('/info/update', 'InfoUpdate')->name('info.update');
+});
+
+
 // Kkm All Route
 Route::controller(KkmController::class)->middleware(['auth'])->group(function () {
     Route::get('/kkm/all', 'KkmAll')->name('kkm.all');
@@ -226,6 +238,8 @@ Route::controller(JadwalmapelController::class)->middleware(['auth'])->group(fun
     Route::post('/jadwal/upadate/verifikasi/all', 'JadwalmapelverifikasiAll')->name('jadwalmapelverifikasiall.update');
     Route::post('/jadwalmapel/tolak/one/{id}', 'JadwalmapeltolakOne')->name('jadwalmapeltolakone.update');
     Route::get('/jadwalmapel/guru', 'JadwalmapelGuru')->name('jadwalmapel.guru');
+
+    Route::get('/jadwalmapel/siswa', 'JadwalmapelSiswa')->name('jadwalmapel.siswa');
 });
 
 
@@ -242,6 +256,8 @@ Route::controller(AbsensiController::class)->middleware(['auth'])->group(functio
     Route::get('/absensi/siswa/guruwalas', 'AbsensiSiswaguruwalas')->name('absensi.siswaguruwalas');
 
     Route::get('/absensi/data/all', 'AbsensiDataAll')->name('absensi.data.all');
+
+    Route::get('/absensi/data/siswa', 'AbsensiDataSiswa')->name('absensi.data.siswa');
 });
 
 
@@ -291,6 +307,8 @@ Route::controller(StandarkompetensiController::class)->middleware(['auth'])->gro
 
 
     Route::post('/sinkron/all', 'SinkronAll')->name('sinkron.all');
+
+    Route::get('/nilai/siswa/all', 'NilaiSiswa')->name('nilai.siswa');
 });
 
 
@@ -339,6 +357,15 @@ Route::controller(ExportController::class)->middleware(['auth'])->group(function
     Route::get('absensi/data/all/pdf', 'Absensidataallpdf')->name('absensi.dataall.pdf');
 
     Route::get('absensi/guru/walas/pdf', 'Absensiguruwalaspdf')->name('absensi.guruwalas.pdf');
+
+    Route::get('jadwalsiswa/pdf', 'Jadwalsiswapdf')->name('jadwalsiswa.pdf');
+    Route::get('jadwalsiswa/excel', 'Jadwalsiswaexcel')->name('jadwalsiswa.excel');
+
+
+
+    Route::get('absensi/data/siswa//pdf', 'Absensidatasiswapdf')->name('absensi.data.siswa.pdf');
+
+    Route::get('nilaisiswa/pdf', 'Nilaisiswapdf')->name('nilaisiswa.pdf');
 });
 
 

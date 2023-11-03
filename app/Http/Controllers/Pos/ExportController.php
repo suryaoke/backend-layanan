@@ -6,6 +6,7 @@ use App\Exports\GuruExport;
 use App\Exports\JadwalExport;
 use App\Exports\JadwalkepsekExport;
 use App\Exports\JadwalmapelExport;
+use App\Exports\JadwalsiswaExport;
 use App\Exports\OrangtuaExport;
 use App\Exports\SiswaExport;
 use App\Exports\SiswaWalasExport;
@@ -384,5 +385,91 @@ class ExportController extends Controller
         $pdf = PDF::loadView('backend.data.export.export_pdf_absensiguruwalas', compact('absensi'));
 
         return $pdf->download('absensisiswa.pdf');
+    }
+
+
+    public function Jadwalsiswapdf()
+    {
+        $userId = Auth::user()->id;
+
+        $jadwalmapel = Jadwalmapel::join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
+            ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+            ->where('status', '=', '2')
+            ->where('siswas.id_user', '=', $userId)
+            ->orderBy('kelas.tingkat', 'asc')
+            ->orderBy('kelas.nama', 'asc')
+            ->orderBy('haris.kode_hari', 'asc')
+            ->get();
+
+
+
+        $pdf = PDF::loadView('backend.data.export.export_pdf_jadwalmapel', ['jadwalmapel' => $jadwalmapel]); // Pastikan Anda mengirimkan data dalam bentuk array assosiatif
+        return $pdf->download('jadwal.pdf');
+    }
+
+    public function Jadwalsiswaexcel()
+    {
+        $userId = Auth::user()->id;
+
+        $jadwalmapel = Jadwalmapel::join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
+            ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+            ->where('status', '=', '2')
+            ->where('siswas.id_user', '=', $userId)
+            ->orderBy('kelas.tingkat', 'asc')
+            ->orderBy('kelas.nama', 'asc')
+            ->orderBy('haris.kode_hari', 'asc')
+            ->get();
+
+        $export = new JadwalsiswaExport($jadwalmapel);
+        return Excel::download($export, 'jadwal.xlsx');
+    }
+
+
+
+    public function Absensidatasiswapdf()
+    {
+
+        $userId = Auth::user()->id;
+        $absensi = Absensi::join('siswas', 'absensis.id_siswa', '=', 'siswas.id')
+            ->where('siswas.id_user', $userId)
+            ->select('absensis.*')
+            ->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
+            ->get();
+
+        $pdf = PDF::loadView('backend.data.export.export_pdf_absensidatasiswa', compact('absensi'));
+
+        return $pdf->download('absensisiswa.pdf');
+    }
+
+
+    public function Nilaisiswapdf()
+    {
+
+        $userId = Auth::user()->id;
+        $siswa = Siswa::where('id_user', $userId)->first();
+
+        $rombelSiswaIds = RombelSiswa::where('id_siswa', $siswa->id)->pluck('id')->toArray();
+        if ($rombelSiswaIds) {
+            $rombelSiswa = RombelSiswa::whereIn('id', $rombelSiswaIds)->get();
+            if ($rombelSiswa) {
+                $nilaiSiswaKd3 = NilaisiswaKd3::whereIn('id_rombelsiswa', $rombelSiswaIds)->get();
+                $nilaiSiswaKd4 = NilaisiswaKd4::whereIn('id_rombelsiswa', $rombelSiswaIds)->get();
+            }
+        }
+
+
+
+
+        $pdf = PDF::loadView('backend.data.export.export_pdf_nilai', compact('nilaiSiswaKd3', 'nilaiSiswaKd4'));
+
+        return $pdf->download('nilaisiswa.pdf');
     }
 }

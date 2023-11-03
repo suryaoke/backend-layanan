@@ -260,8 +260,28 @@ class AbsensiController extends Controller
         return redirect()->back()->with($notification);
     }
 
-    public function AbsensiSiswaGuruWalas()
+    public function AbsensiSiswaGuruWalas(Request $request)
     {
+        $searchHari = $request->input('searchhari');
+        $searchMapel = $request->input('searchmapel');
+        $query = Absensi::query();
+
+        // Filter berdasarkan nama hari
+        if (!empty($searchHari)) {
+            $query->where('tanggal', '=', $searchHari);
+        }
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('jadwalss', function ($lecturerQuery) use ($searchMapel) {
+                $lecturerQuery->whereHas('pengampus', function ($lecturerQuery1) use ($searchMapel) {
+                    $lecturerQuery1->whereHas('mapels', function ($courseQuery) use ($searchMapel) {
+                        $courseQuery->where('nama', 'LIKE', '%' . $searchMapel . '%');
+                    });
+                });
+            });
+        }
+
         $userId = Auth::user()->id;
 
         $guru = Guru::where('id_user', $userId)->first();
@@ -277,13 +297,7 @@ class AbsensiController extends Controller
                     $siswaIds = $rombelSiswa->pluck('id_siswa')->unique()->toArray();
                     $siswa = Siswa::whereIn('id', $siswaIds)->get();
                     if ($siswa) {
-                        $absensi = Absensi::whereIn('id_siswa', $siswaIds)->orderby('id', 'desc')->get();
-
-                        // $absensi = Absensi::join('siswas', 'absensis.id_siswa', '=', 'siswas.id')
-                        // ->whereIn('absensis.id_siswa', $siswaIds)
-                        // ->orderBy('absensis.id', 'desc')
-                        // ->orderBy('siswas.nama', 'asc')
-                        // ->get();
+                        $absensi = $query->whereIn('id_siswa', $siswaIds)->orderBy('id', 'desc')->get();
                     }
                 }
             }
@@ -293,6 +307,7 @@ class AbsensiController extends Controller
             'walas' => $walas,
             'siswa' => $siswa,
         ];
+
 
         return view('backend.data.absensi.absensi_guruwalas', compact('rombel', 'absensi', 'data', 'walas', 'siswa'));
     }
@@ -347,5 +362,48 @@ class AbsensiController extends Controller
         $kelas = Kelas::orderBy('tingkat')->get();
 
         return view('backend.data.absensi.absensi_data_all', compact('kelas', 'absensi', 'siswa1',));
+    } // end method
+
+
+    public function AbsensiDataSiswa(Request $request)
+    {
+
+        // Bagian search Data //
+        $searchHari = $request->input('searchhari');
+        $searchMapel = $request->input('searchmapel');
+
+
+
+        $query = Absensi::query();
+
+        // Filter berdasarkan nama hari
+        if (!empty($searchHari)) {
+            $query->where('tanggal', '=', $searchHari);
+        }
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('jadwalss', function ($lecturerQuery) use ($searchMapel) {
+                $lecturerQuery->whereHas('pengampus', function ($lecturerQuery1) use ($searchMapel) {
+                    $lecturerQuery1->whereHas('mapels', function ($courseQuery) use ($searchMapel) {
+                        $courseQuery->where('nama', 'LIKE', '%' . $searchMapel . '%');
+                    });
+                });
+            });
+        }
+
+
+        // End Bagian search Data //
+
+
+        $userId = Auth::user()->id;
+        $absensi = $query->join('siswas', 'absensis.id_siswa', '=', 'siswas.id')
+            ->where('siswas.id_user', $userId)
+            ->select('absensis.*')
+            ->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")
+            ->get();
+
+
+        return view('backend.data.absensi.absensi_datasiswa', compact('absensi',));
     } // end method
 }

@@ -100,16 +100,7 @@ class UserController extends Controller
     public function UserUpdate(Request $request)
     {
         $user_id = $request->id;
-        $existingUser = User::whereIn('role', [1, 2,])->first();
-
-        if ($existingUser && !in_array($request->role, [3, 4, 5, 6])) {
-            // If a user with role 1, 2, or 3 already exists, and the new user's role is not 4, 5, or 6, show an alert and redirect
-            $notification = [
-                'message' => 'Data Role Admin/Kepsek/Wakil Kurikulum Sudah Ada',
-                'alert-type' => 'error'
-            ];
-            return redirect()->back()->withInput()->with($notification);
-        }
+       
 
         if ($request->file('profile_image')) {
 
@@ -207,39 +198,39 @@ class UserController extends Controller
         return redirect()->back()->with($notification);
     } // End Method
 
-    // public function login(Request $request)
-    // {
+    public function login(Request $request)
+    {
 
-    //     try {
+        try {
 
-    //         //TODO: validate request
-    //         $request->validate([
-    //             'username' => 'required',
-    //             'password' => 'required',
-    //         ]);
+            //TODO: validate request
+            $request->validate([
+                'username' => 'required',
+                'password' => 'required',
+            ]);
 
-    //         // TODO: find user by email
-    //         $credentials = request(['username', 'password']);
-    //         if (!Auth::attempt($credentials)) {
-    //             return ResponseFormatter::error('Unauthorized', 401);
-    //         }
-    //         $user = User::where('username', $request->username)->first();
-    //         if (!Hash::check($request->password, $user->password)) {
-    //             throw new Exception('Invalid password');
-    //         }
+            // TODO: find user by email
+            $credentials = request(['username', 'password']);
+            if (!Auth::attempt($credentials)) {
+                return ResponseFormatter::error('Unauthorized', 401);
+            }
+            $user = User::where('username', $request->username)->first();
+            if (!Hash::check($request->password, $user->password)) {
+                throw new Exception('Invalid password');
+            }
 
-    //         // TODO: Generate token
-    //         $toketResult = $user->createToken('authToken')->plainTextToken;
+            // TODO: Generate token
+            $toketResult = $user->createToken('authToken')->plainTextToken;
 
-    //         // TODO: Return response.
-    //         return ResponseFormatter::success([
-    //             'access_token' => $toketResult,
-    //             'token_type' => 'Bearer',
-    //             'user' => $user,
+            // TODO: Return response.
+            return ResponseFormatter::success([
+                'access_token' => $toketResult,
+                'token_type' => 'Bearer',
+                'user' => $user,
 
-    //         ], 'Login success');
-    //     } catch (Exception $error) {
-    //         return ResponseFormatter::error('Authication Failed');
-    //     }
-    // }
+            ], 'Login success');
+        } catch (Exception $error) {
+            return ResponseFormatter::error('Authication Failed');
+        }
+    }
 }

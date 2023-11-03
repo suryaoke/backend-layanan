@@ -29,7 +29,7 @@
                     @elseif($editData->role == '2')
                         Kepsek
                     @elseif($editData->role == '3')
-                        Wakil Kurikulum
+                      Operator
                     @elseif($editData->role == '4')
                         Guru
                     @elseif($editData->role == '5')

@@ -63,6 +63,8 @@
             $jadwal = App\Models\Guru::where('id_user', $userId)->value('id');
         }
 
+        $info = App\Models\Info::orderby('created_at', 'asc')->get();
+
     @endphp
 
     <div class="grid grid-cols-12 gap-6">
@@ -312,7 +314,6 @@
                                 </div>
                             </div>
                         </div>
-
                     @endif
                     {{--  // end bagian  kepsek //  --}}
 
@@ -646,12 +647,12 @@
                                                                         <td> {{ $mapel->nama }} </td>
                                                                         <td>
                                                                             @foreach ($nilaikd3 as $nilai)
-                                                                              Ph{{ $nilai->ph }},
+                                                                                Ph{{ $nilai->ph }},
                                                                             @endforeach
                                                                         </td>
                                                                         <td>
                                                                             @foreach ($nilaikd4 as $nilai)
-                                                                               Ph {{ $nilai->ph }},
+                                                                                Ph {{ $nilai->ph }},
                                                                             @endforeach
                                                                         </td>
                                                                     </tr>
@@ -679,5 +680,51 @@
             </div>
         </div>
 
+    </div>
+    </span>
+
+    <div class="mx-6 pb-8 mt-12 ">
+
+        <div class="responsive-mode">
+            @foreach ($info as $key => $item)
+                <div class="px-2">
+                    <div class="intro-y col-span-12 sm:col-span-6 2xl:col-span-4">
+                        <div class="box">
+                            <div class="p-5">
+                                <div
+                                    class="h-40 2xl:h-56 image-fit rounded-md overflow-hidden before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black before:to-black/10">
+
+                                    <img src="{{ !empty($item->image) ? url('uploads/admin_images/' . $item->image) : url('uploads/no_image.jpg') }}"
+                                        class="rounded-md" alt="User Image">
+
+                                    @if ($item->created_at && $item->id === App\Models\Info::latest()->first()->id)
+                                        <span
+                                            class="absolute top-0 bg-pending/80 text-white text-xs m-5 px-2 py-1 rounded z-10">New</span>
+                                    @endif
+
+
+                                    <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
+                                        {{ $item->nama }} </div>
+                                </div>
+                                <div class="text-slate-600 dark:text-slate-500 mt-5">
+                                    <p> {{ $item->ket }} </p>
+                                </div>
+                            </div>
+                            @if ($item->link != null)
+                                <div
+                                    class="flex justify-center lg:justify-end items-center p-5 border-t border-slate-200/60 dark:border-darkmode-400">
+                                    <a class="flex items-center text-primary mr-auto" href="{{ $item->link }}"> <i
+                                            data-lucide="eye" class="w-4 h-4 mr-1"></i> Preview </a>
+
+                                </div>
+                            @endif
+
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
+
+        </div>
     </div>
 @endsection

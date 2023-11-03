@@ -1,7 +1,7 @@
 @extends('admin.admin_master')
 @section('admin')
 
-    <div class="col-span-2 mb-4 mt-4">
+    <div class="col-span-2 mt-4">
 
         {{--  <a class="btn btn-success btn-block" href="{{ route('siswa.excel') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
@@ -172,6 +172,8 @@
                                                                                     </th>
                                                                                     <th class="whitespace-nowrap">NISN</th>
                                                                                     <th class="whitespace-nowrap">Mapel
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">Kelas
                                                                                     </th>
                                                                                     <th class="whitespace-nowrap">Kelas
                                                                                     </th>

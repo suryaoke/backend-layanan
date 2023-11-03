@@ -5,17 +5,18 @@
 
 <head>
     <meta charset="utf-8">
-    <link href="{{ asset('backend/dist/images/logo.svg') }}" rel="shortcut icon">
+    <link href="{{ asset('backend/dist/images/man1.png') }}" rel="shortcut icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
         content="Midone admin is super flexible, powerful, clean & modern responsive tailwind admin template with unlimited possibilities.">
     <meta name="keywords"
         content="admin template, Midone Admin Template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="LEFT4CODE">
-    <title>Login - Midone - Tailwind HTML Admin Template</title>
+    <title>Login - SIAKAD MAN 1 Kota Padang</title>
     <!-- BEGIN: CSS Assets-->
     <link rel="stylesheet" href="{{ asset('backend/dist/css/app.css') }}" />
     <!-- END: CSS Assets-->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css">
 </head>
 <!-- END: Head -->
 
@@ -24,21 +25,21 @@
         <div class="block xl:grid grid-cols-2 gap-4">
             <!-- BEGIN: Login Info -->
             <div class="hidden xl:flex flex-col min-h-screen">
-                <a href="" class="-intro-x flex items-center pt-5">
-                    <img alt="Midone - HTML Admin Template" class="w-6"
-                        src="{{ asset('backend/dist/images/logo.svg') }}">
-                    <span class="text-white text-lg ml-3"> Rubick </span>
+                <a href="{{ url('/') }}" class="-intro-x flex items-center pt-5">
+                    <img alt="Midone - HTML Admin Template" class="w-12"
+                        src="{{ asset('backend/dist/images/man1.png') }}">
+                    <span class="text-white text-lg ml-3">SIAKAD MAN 1 Kota Padang </span>
                 </a>
-                <div class="my-auto">
-                    <img alt="Midone - HTML Admin Template" class="-intro-x w-1/2 -mt-16"
-                        src="{{ asset('backend/dist/images/illustration.svg') }}">
+                <div class="my-auto ">
+                    <img width="370px" alt="Midone - HTML Admin Template" class="-intro-x -mt-16"
+                        src="{{ asset('backend/dist/images/layanan.png') }}">
                     <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">
-                        A few more clicks to
+                        Sistem Informasi Akademik
                         <br>
-                        sign in to your account.
+                        MAN 1 Kota Padang.
                     </div>
-                    <div class="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400">Manage all your
-                        e-commerce accounts in one place</div>
+                    <div class="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400"> Menuju Sistem
+                        Digital 2023</div>
                 </div>
             </div>
             <!-- END: Login Info -->
@@ -77,13 +78,7 @@
             <!-- END: Login Form -->
         </div>
     </div>
-    <!-- BEGIN: Dark Mode Switcher-->
-    <div data-url="login-dark-login.html"
-        class="dark-mode-switcher cursor-pointer shadow-md fixed bottom-0 right-0 box border rounded-full w-40 h-12 flex items-center justify-center z-50 mb-10 mr-10">
-        <div class="mr-4 text-slate-600 dark:text-slate-200">Dark Mode</div>
-        <div class="dark-mode-switcher__toggle border"></div>
-    </div>
-    <!-- END: Dark Mode Switcher-->
+ 
 
     <!-- BEGIN: JS Assets-->
     <script src="{{ asset('backend/dist/js/app.js') }}"></script>

@@ -30,7 +30,6 @@ class StandarkompetensiController extends Controller
     public function SkAll($id)
     {
 
-
         $ki3 = Ki3::where('id_seksi', $id)->get();
         $idki3 = Ki3::where('id_seksi', $id)->first();
         $ki4 = Ki4::where('id_seksi', $id)->get();
@@ -843,4 +842,62 @@ class StandarkompetensiController extends Controller
         );
         return redirect()->back()->with($notification);
     } // end method
+
+
+    public function NilaiSiswa(Request $request)
+    {
+
+        $searchMapel = $request->input('searchmapel');
+        $searchMapel1 = $request->input('searchmapel1');
+        $query = NilaisiswaKd3::query();
+        $query1 = NilaisiswaKd4::query();
+
+        if (!empty($searchMapel)) {
+            $query->whereHas('nilaikd3', function ($nilaiQuery) use ($searchMapel) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        if (!empty($searchMapel1)) {
+            $query1->whereHas('nilaikd4', function ($nilaiQuery) use ($searchMapel1) {
+                $nilaiQuery->whereHas('seksis', function ($seksiQuery) use ($searchMapel1) {
+                    $seksiQuery->whereHas('jadwalmapels', function ($jadwalQuery) use ($searchMapel1) {
+                        $jadwalQuery->whereHas('pengampus', function ($pengampuQuery) use ($searchMapel1) {
+                            $pengampuQuery->whereHas('mapels', function ($mapelQuery) use ($searchMapel1) {
+                                $mapelQuery->where('id', 'LIKE', '%' . $searchMapel1 . '%');
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+
+        $userId = Auth::user()->id;
+        $siswa = Siswa::where('id_user', $userId)->first();
+
+        $rombelSiswaIds = RombelSiswa::where('id_siswa', $siswa->id)->pluck('id')->toArray();
+        if ($rombelSiswaIds) {
+            $rombelSiswa = RombelSiswa::whereIn('id', $rombelSiswaIds)->get();
+            if ($rombelSiswa) {
+                $nilaiSiswaKd3 = $query->whereIn('id_rombelsiswa', $rombelSiswaIds)->get();
+                $nilaiSiswaKd4 = $query1->whereIn('id_rombelsiswa', $rombelSiswaIds)->get();
+            }
+        }
+
+
+
+
+
+        return view('backend.data.nilai.nilai_siswa', compact('nilaiSiswaKd4','nilaiSiswaKd3',));
+    } // end method
+
 }

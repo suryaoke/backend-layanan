@@ -3,11 +3,11 @@
     <div class="intro-y flex flex-col  mt-8 sm:flex-row items-center ">
 
         <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a class="btn btn-primary btn-block mr-4" href="{{ route('absensi.guruwalas.pdf') }}">
+            <a class="btn btn-primary btn-block mr-4" href="{{ route('absensi.data.siswa.pdf') }}">
                 <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                     class="w-4 h-4"></i>&nbsp;Export Pdf
             </a>
-            <form role="form" action="{{ route('absensi.siswaguruwalas') }}" method="get" class="sm:flex">
+            <form role="form" action="{{ route('absensi.data.siswa') }}" method="get" class="sm:flex">
 
                 <div class="flex-1 sm:mr-2">
                     <div class="form-group">
@@ -33,7 +33,7 @@
                     <button type="submit" class="btn btn-default">Search</button>
                 </div>
                 <div class="sm:ml-2">
-                    <a href="{{ route('absensi.siswaguruwalas') }}" class="btn btn-danger">Clear</a>
+                    <a href="{{ route('absensi.data.siswa') }}" class="btn btn-danger">Clear</a>
                 </div>
             </form>
 
@@ -49,10 +49,7 @@
                             <div class="intro-y box mt-5">
                                 <div
                                     class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-                                    <h2 class="font-medium text-base mr-auto">
-                                        Absensi Kelas : {{ $rombel['kelass']['tingkat'] }}{{ $rombel['kelass']['nama'] }}
-                                        {{ $rombel['kelass']['jurusans']['nama'] }}
-                                    </h2>
+
 
                                 </div>
                                 <div id="link-tab" class="p-5">
@@ -89,6 +86,7 @@
                                                                                     <th>No</th>
                                                                                     <th>Nama</th>
                                                                                     <th>NISN</th>
+                                                                                    <th>Kelas</th>
                                                                                     <th>Jk</th>
                                                                                     <th>Tanggal</th>
                                                                                     <th>Mapel</th>
@@ -112,7 +110,9 @@
 
                                                                                         <td>{{ $item->siswass->nama }}</td>
                                                                                         <td>{{ $item->siswass->nisn }}</td>
-
+                                                                                        <td> {{ $kelas->tingkat }}{{ $kelas->nama }}
+                                                                                            {{ $kelas['jurusans']['nama'] }}
+                                                                                        </td>
                                                                                         <td>{{ $item->siswass->jk }}</td>
                                                                                         <td>{{ $item->tanggal }}</td>
                                                                                         <td>{{ $item->jadwalss->pengampus->mapels->nama }}
@@ -169,6 +169,7 @@
                                                                                     <th>No</th>
                                                                                     <th>Nama</th>
                                                                                     <th>NISN</th>
+                                                                                    <th>Kelas</th>
                                                                                     <th>Jk</th>
                                                                                     <th>Hadir</th>
                                                                                     <th>Sakit</th>
@@ -202,7 +203,9 @@
 
                                                                                         <td>{{ $item->siswass->nama }}</td>
                                                                                         <td>{{ $item->siswass->nisn }}</td>
-
+                                                                                        <td> {{ $kelas->tingkat }}{{ $kelas->nama }}
+                                                                                            {{ $kelas['jurusans']['nama'] }}
+                                                                                        </td>
                                                                                         <td>{{ $item->siswass->jk }}</td>
                                                                                         <td class="text-success">
                                                                                             {{ $absensihadir }}</td>
