@@ -68,11 +68,13 @@ class JadwalmapelController extends Controller
 
 
         $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
             ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
             ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
             ->orderBy('kelas.tingkat', 'asc')
             ->orderBy('kelas.nama', 'asc')
             ->orderBy('haris.kode_hari', 'asc')
+            ->orderBy('waktus.range', 'asc')
             ->get();
 
         $hari = Hari::orderby('kode_hari', 'asc')->get();
@@ -319,6 +321,7 @@ class JadwalmapelController extends Controller
         // End Bagian search Data //
 
         $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
             ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
             ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
             ->where('status', '>=', 1)
@@ -326,6 +329,7 @@ class JadwalmapelController extends Controller
             ->orderBy('kelas.tingkat', 'asc')
             ->orderBy('kelas.nama', 'asc')
             ->orderBy('haris.kode_hari', 'asc')
+            ->orderBy('waktus.range', 'asc')
             ->get();
 
 
@@ -434,6 +438,7 @@ class JadwalmapelController extends Controller
 
         $jadwalmapel = $query
             ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
             ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
             ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
             ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
@@ -442,6 +447,7 @@ class JadwalmapelController extends Controller
             ->orderBy('kelas.tingkat', 'asc')
             ->orderBy('kelas.nama', 'asc')
             ->orderBy('haris.kode_hari', 'asc')
+            ->orderBy('waktus.range', 'asc')
             ->get();
 
 
@@ -458,7 +464,7 @@ class JadwalmapelController extends Controller
         $searchHari = $request->input('searchhari');
         $searchGuru = $request->input('searchguru');
         $searchMapel = $request->input('searchmapel');
-      
+
 
         $query = Jadwalmapel::query();
 
@@ -487,12 +493,13 @@ class JadwalmapelController extends Controller
             });
         }
 
-      
+
         // End Bagian search Data //
 
         $userId = Auth::user()->id;
 
         $jadwalmapel = $query
+            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
             ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
             ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
             ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
@@ -504,6 +511,7 @@ class JadwalmapelController extends Controller
             ->orderBy('kelas.tingkat', 'asc')
             ->orderBy('kelas.nama', 'asc')
             ->orderBy('haris.kode_hari', 'asc')
+            ->orderBy('waktus.range', 'asc')
             ->get();
 
 

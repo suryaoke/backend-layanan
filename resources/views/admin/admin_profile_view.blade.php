@@ -28,7 +28,7 @@
                 <div class="flex flex-col justify-center items-center lg:items-start mt-4">
                     <div class="truncate sm:whitespace-normal flex items-center"> <i data-lucide="mail"
                             class="w-4 h-4 mr-2"></i> {{ $adminData->email }} </div>
-                  
+
                 </div>
             </div>
 
@@ -37,7 +37,7 @@
             <li id="profile-tab" class="nav-item" role="presentation">
                 <a href="{{ route('edit.profile') }}" class="nav-link py-4 flex items-center active"
                     data-tw-target="#profile" aria-controls="profile" aria-selected="true" role="tab"> <i
-                        class="w-4 h-4 mr-2" data-lucide="user"></i> Update Profile </a>
+                        class="w-4 h-4 mr-2" data-lucide="user"></i> Edit Profile </a>
             </li>
             <li id="change-password-tab" class="nav-item" role="presentation">
                 <a href="{{ route('change.password') }}" class="nav-link py-4 flex items-center"

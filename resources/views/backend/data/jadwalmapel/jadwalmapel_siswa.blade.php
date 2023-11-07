@@ -44,7 +44,7 @@
                         value="{{ request('searchmapel') }}">
                 </div>
             </div>
-          
+
             <div class="sm:ml-1">
                 <button type="submit" class="btn btn-default">Search</button>
             </div>
@@ -117,9 +117,9 @@
                                     @endphp
 
                                     <tr>
-                                        <td align="center">{{ $key + 1 }}</td>
+                                        <td align="center">{{ $key + 1 }} </td>
                                         <td style="white-space: nowrap;" class="text-primary">
-                                            {{ $item->kode_jadwalmapel }}
+                                            {{ $item->kode_jadwalmapel }} -{{ $item->id_pengampu }}
                                         </td>
                                         <td style="white-space: nowrap;" class="text-primary">
                                             {{ $item['pengampus']['kode_pengampu'] }} </td>

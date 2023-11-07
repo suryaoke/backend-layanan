@@ -1,12 +1,13 @@
 @extends('admin.admin_master')
 @section('admin')
-    <div class="col-span-2  mt-4">
-        {{--  
-        <a class="btn btn-success btn-block" href="{{ route('siswa.excel') }} ">
+
+    <div class="col-span-2 mt-4">
+
+        {{--  <a class="btn btn-success btn-block" href="{{ route('siswa.excel') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
         </a>  --}}
-        <a class="btn btn-primary btn-block" href="{{ route('nilaiwalas.pdf') }} ">
+        <a class="btn btn-primary btn-block" href="{{ route('nilai.pdf') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Pdf
         </a>
@@ -19,14 +20,6 @@
                     <div class="card overflow-x-auto">
                         <div class="card-body">
                             <div class="intro-y box mt-5">
-                                <div
-                                    class="flex flex-col sm:flex-row items-center p-5 border-b border-slate-200/60 dark:border-darkmode-400">
-                                    <h2 class="font-medium text-base mr-auto">
-                                        Nilai Harian Kelas :
-                                        {{ $rombel['kelass']['tingkat'] }}{{ $rombel['kelass']['nama'] }}
-                                        {{ $rombel['kelass']['jurusans']['nama'] }}
-                                    </h2>
-                                </div>
 
 
                                 <div id="link-tab" class="p-5">
@@ -75,64 +68,51 @@
                                                                     }
                                                                 @endphp
 
-                                                                @if (isset($nilaikd3) && is_array($nilaikd3))
-                                                                    <div id="faq-accordion-2"
-                                                                        class="accordion accordion-boxed">
-                                                                        @foreach ($nilaikd3 as $nilai)
-                                                                            @if (isset($nilai->ph) && isset($nilai['kd3']['urutan']) && isset($nilai['kd3']['ket']))
-                                                                                <div class="accordion-item">
-                                                                                    <div id="faq-accordion-content-6"
-                                                                                        class="accordion-header">
-                                                                                        <button
-                                                                                            class="accordion-button collapsed"
-                                                                                            type="button"
-                                                                                            data-tw-toggle="collapse"
-                                                                                            data-tw-target="#faq-accordion-collapse-6"
-                                                                                            aria-expanded="false"
-                                                                                            aria-controls="faq-accordion-collapse-6">
-                                                                                            PH {{ $nilai->ph }}
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div id="faq-accordion-collapse-6"
-                                                                                        class="accordion-collapse collapse"
-                                                                                        aria-labelledby="faq-accordion-content-6"
-                                                                                        data-tw-parent="#faq-accordion-2">
-                                                                                        <div
-                                                                                            class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
-                                                                                            3.{{ $nilai['kd3']['urutan'] }}
-                                                                                            {{ $nilai['kd3']['ket'] }}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            @endif
-                                                                        @endforeach
+                                                                <div id="faq-accordion-2" class="accordion accordion-boxed">
+                                                                    <div class="accordion-item">
+                                                                        <div id="faq-accordion-content-6"
+                                                                            class="accordion-header">
+                                                                            <button class="accordion-button collapsed"
+                                                                                type="button" data-tw-toggle="collapse"
+                                                                                data-tw-target="#faq-accordion-collapse-6"
+                                                                                aria-expanded="false"
+                                                                                aria-controls="faq-accordion-collapse-6">
+                                                                                PH {{ $nilaikd3->ph }}
+                                                                            </button>
+                                                                        </div>
+                                                                        <div id="faq-accordion-collapse-6"
+                                                                            class="accordion-collapse collapse"
+                                                                            aria-labelledby="faq-accordion-content-6"
+                                                                            data-tw-parent="#faq-accordion-2">
+                                                                            <div
+                                                                                class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
+                                                                                3.{{ $nilaikd3['kd3']['urutan'] }}
+                                                                                {{ $nilaikd3['kd3']['ket'] }}
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                @else
-                                                                    <div class="show flex items-center mt-2 ml-4 text-danger"
-                                                                        role="alert">
-                                                                        <i data-lucide="alert-octagon"
-                                                                            class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran
-                                                                        dan Kelas
-                                                                    </div>
-                                                                @endif
-
+                                                                </div>
                                                                 <div class="mt-1"></div>
                                                             @endforeach
                                                         @else
                                                             <div class=" show flex items-center mt-2 ml-4 text-danger"
                                                                 role="alert"> <i data-lucide="alert-octagon"
-                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran </div>
+                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran dan Kelas
+                                                            </div>
                                                         @endif
                                                     </div>
-                                                    <div class="col-span-12 ml-4 sm:col-span-6">
+                                                    <div class="col-span-12 sm:col-span-6">
 
-                                                        <label for="modal-form-6" class="form-label mt-6 mb-4">Mata
+                                                        <label for="modal-form-6" class="form-label mt-6 mb-4 mr-4">Mata
                                                             Pelajaran</label>
+                                        
 
                                                         <form role="form" action="{{ route('NilaiSiswaGuruWalas.all') }}"
-                                                            method="get" class="sm:flex">
+                                                            method="get" class="sm:flex" enctype="multipart/form-data"
+                                                            id="myForm">
 
-                                                            <select name="searchmapel" class="tom-select w-full" required>
+                                                            <select name="searchmapel" class="tom-select w-full mr-4"
+                                                                required>
                                                                 <option value="">Pilih Mata Pelajaran</option>
                                                                 @foreach ($nilaiSiswaKd3 as $item)
                                                                     <option
@@ -145,6 +125,8 @@
 
 
                                                             </select>
+                                                          
+
 
                                                             <div class="sm:ml-1">
                                                                 <button type="submit"
@@ -170,14 +152,22 @@
                                                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                                             <thead>
                                                                                 <tr class="alert-primary">
-                                                                                    <th>No</th>
+                                                                                    <th class="whitespace-nowrap">No</th>
 
-                                                                                    <th>Nama Siswa</th>
-                                                                                    <th>NISN</th>
-                                                                                    <th>Mapel</th>
+                                                                                    <th class="whitespace-nowrap">Nama
+                                                                                        Siswa
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">NISN</th>
+                                                                                    <th class="whitespace-nowrap">Mapel
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">Kelas
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">Kelas
+                                                                                    </th>
 
 
                                                                                     @php
+                                                                                        $index = 1;
                                                                                         $printedPhValues = [];
                                                                                     @endphp
 
@@ -187,7 +177,9 @@
                                                                                         @endphp
 
                                                                                         @if ($nilaikd && !in_array($nilaikd->ph, $printedPhValues))
-                                                                                            <th>PH {{ $nilaikd->ph }}
+                                                                                            <th class="whitespace-nowrap">
+                                                                                                PH
+                                                                                                {{ $nilaikd->ph }}
                                                                                             </th>
                                                                                             @php
                                                                                                 $printedPhValues[] = $nilaikd->ph;
@@ -223,17 +215,26 @@
                                                                                     @endphp
 
                                                                                     <tr>
-                                                                                        <td>{{ $key + 1 }} </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $index }} </td>
 
-                                                                                        <td>{{ $item['rombelsiswa']['siswas']['nama'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nama'] }}
                                                                                         </td>
-                                                                                        <td>{{ $item['rombelsiswa']['siswas']['nisn'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nisn'] }}
                                                                                         </td>
-                                                                                        <td>{{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                                                                        </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['tingkat'] }}
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['nama'] }}
+                                                                                            {{ $item['nilaikd3']['seksis']['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}
                                                                                         </td>
 
                                                                                         @foreach ($printedPhValues as $phValue)
-                                                                                            <td>
+                                                                                            <td class="whitespace-nowrap">
                                                                                                 @foreach ($nilaiSiswaKd3 as $nilai)
                                                                                                     @if (
                                                                                                         $nilai->nilaikd3->ph == $phValue &&
@@ -253,6 +254,9 @@
                                                                                                 @endforeach
                                                                                             </td>
                                                                                         @endforeach
+                                                                                        @php
+                                                                                            $index++; // Increment index setelah setiap iterasi
+                                                                                        @endphp
                                                                                     </tr>
                                                                                 @endforeach
                                                                             </tbody>
@@ -300,78 +304,64 @@
                                                                     }
                                                                 @endphp
 
-                                                                @if (isset($nilaikd4) && is_array($nilaikd4))
-                                                                    <div id="faq-accordion-2"
-                                                                        class="accordion accordion-boxed">
-                                                                        @foreach ($nilaikd4 as $nilai)
-                                                                            @if (isset($nilai->ph) && isset($nilai['kd4']['urutan']) && isset($nilai['kd4']['ket']))
-                                                                                <div class="accordion-item">
-                                                                                    <div id="faq-accordion-content-6"
-                                                                                        class="accordion-header">
-                                                                                        <button
-                                                                                            class="accordion-button collapsed"
-                                                                                            type="button"
-                                                                                            data-tw-toggle="collapse"
-                                                                                            data-tw-target="#faq-accordion-collapse-6"
-                                                                                            aria-expanded="false"
-                                                                                            aria-controls="faq-accordion-collapse-6">
-                                                                                            PH {{ $nilai->ph }}
-                                                                                        </button>
-                                                                                    </div>
-                                                                                    <div id="faq-accordion-collapse-6"
-                                                                                        class="accordion-collapse collapse"
-                                                                                        aria-labelledby="faq-accordion-content-6"
-                                                                                        data-tw-parent="#faq-accordion-2">
-                                                                                        <div
-                                                                                            class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
-                                                                                            4.{{ $nilai['kd4']['urutan'] }}
-                                                                                            {{ $nilai['kd4']['ket'] }}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            @endif
-                                                                        @endforeach
+                                                                <div id="faq-accordion-2"
+                                                                    class="accordion accordion-boxed">
+                                                                    <div class="accordion-item">
+                                                                        <div id="faq-accordion-content-6"
+                                                                            class="accordion-header">
+                                                                            <button class="accordion-button collapsed"
+                                                                                type="button" data-tw-toggle="collapse"
+                                                                                data-tw-target="#faq-accordion-collapse-6"
+                                                                                aria-expanded="false"
+                                                                                aria-controls="faq-accordion-collapse-6">
+                                                                                PH {{ $nilaikd4->ph }}
+                                                                            </button>
+                                                                        </div>
+                                                                        <div id="faq-accordion-collapse-6"
+                                                                            class="accordion-collapse collapse"
+                                                                            aria-labelledby="faq-accordion-content-6"
+                                                                            data-tw-parent="#faq-accordion-2">
+                                                                            <div
+                                                                                class="accordion-body text-slate-600 dark:text-slate-500 leading-relaxed">
+                                                                                4.{{ $nilaikd4['kd4']['urutan'] }}
+                                                                                {{ $nilaikd4['kd4']['ket'] }}
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                @else
-                                                                    <div class="show flex items-center mt-2 ml-4 text-danger"
-                                                                        role="alert">
-                                                                        <i data-lucide="alert-octagon"
-                                                                            class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran
-                                                                        dan Kelas
-                                                                    </div>
-                                                                @endif
-
+                                                                </div>
                                                                 <div class="mt-1"></div>
                                                             @endforeach
                                                         @else
                                                             <div class=" show flex items-center mt-2 ml-4 text-danger"
                                                                 role="alert"> <i data-lucide="alert-octagon"
-                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran </div>
+                                                                    class="w-4 h-4 mr-2"></i> Pilih Mata Pelajaran dan
+                                                                Kelas </div>
                                                         @endif
                                                     </div>
                                                     <div class="col-span-12 ml-4 sm:col-span-6">
 
-                                                        <label for="modal-form-6" class="form-label mt-6 mb-4">Mata
+                                                        <label for="modal-form-6" class="form-label mt-6 mb-4 mr-4">Mata
                                                             Pelajaran</label>
+                  
 
-                                                        <form role="form"
-                                                            action="{{ route('NilaiSiswaGuruWalas.all') }}"
+                                                        <form role="form" action="{{ route('NilaiSiswaGuruWalas.all') }}"
                                                             method="get" class="sm:flex">
-                                                            @if ($nilaiSiswaKd4)
-                                                                <select name="searchmapel1" class="tom-select w-full"
-                                                                    required>
-                                                                    <option value="">Pilih Mata Pelajaran</option>
-                                                                    @foreach ($nilaiSiswaKd4 as $item)
-                                                                        @if (isset($item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['id']) &&
-                                                                                isset($item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama']))
-                                                                            <option
-                                                                                value="{{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['id'] }}">
-                                                                                {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
-                                                                            </option>
-                                                                        @endif
-                                                                    @endforeach
-                                                                </select>
-                                                            @endif
+
+                                                            <select name="searchmapel1" class="tom-select w-full mr-4"
+                                                                required>
+                                                                <option value="">Pilih Mata Pelajaran</option>
+                                                                @foreach ($nilaiSiswaKd4 as $item)
+                                                                    <option
+                                                                        value="{{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['id'] }}">
+
+                                                                        {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+
+
+                                                        
 
                                                             <div class="sm:ml-1">
                                                                 <button type="submit"
@@ -393,17 +383,18 @@
                                                             <div class="col-12">
                                                                 <div class="card overflow-x-auto">
                                                                     <div class="card-body">
-                                                                        <table id="datatable" class="table table-sm"
+                                                                        <table id="datatable1" class="table table-sm"
                                                                             style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                                             <thead>
                                                                                 <tr class="alert-primary">
-                                                                                    <th>No</th>
-
-                                                                                    <th>Nama Siswa</th>
-                                                                                    <th>NISN</th>
-                                                                                    <th>Mapel</th>
-
-
+                                                                                    <th class="whitespace-nowrap">No</th>
+                                                                                    <th class="whitespace-nowrap">Nama
+                                                                                        Siswa</th>
+                                                                                    <th class="whitespace-nowrap">NISN</th>
+                                                                                    <th class="whitespace-nowrap">Mapel
+                                                                                    </th>
+                                                                                    <th class="whitespace-nowrap">Kelas
+                                                                                    </th>
                                                                                     @php
                                                                                         $printedPhValues = [];
                                                                                     @endphp
@@ -414,7 +405,8 @@
                                                                                         @endphp
 
                                                                                         @if ($nilaikd && !in_array($nilaikd->ph, $printedPhValues))
-                                                                                            <th>PH {{ $nilaikd->ph }}
+                                                                                            <th class="whitespace-nowrap">
+                                                                                                PH {{ $nilaikd->ph }}
                                                                                             </th>
                                                                                             @php
                                                                                                 $printedPhValues[] = $nilaikd->ph;
@@ -425,6 +417,7 @@
                                                                             </thead>
                                                                             <tbody>
                                                                                 @php
+                                                                                    $index = 1;
                                                                                     $checkedData = [];
                                                                                 @endphp
 
@@ -450,26 +443,26 @@
                                                                                     @endphp
 
                                                                                     <tr>
-                                                                                        <td>{{ $key + 1 }} </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $index }} </td>
 
-                                                                                        @if (isset($item['rombelsiswa']['siswas']['nama']))
-                                                                                            <td>{{ $item['rombelsiswa']['siswas']['nama'] }}
-                                                                                            </td>
-                                                                                        @endif
-
-                                                                                        @if (isset($item['rombelsiswa']['siswas']['nisn']))
-                                                                                            <td>{{ $item['rombelsiswa']['siswas']['nisn'] }}
-                                                                                            </td>
-                                                                                        @endif
-
-                                                                                        @if (isset($item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama']))
-                                                                                            <td>{{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
-                                                                                            </td>
-                                                                                        @endif
-
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nama'] }}
+                                                                                        </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['rombelsiswa']['siswas']['nisn'] }}
+                                                                                        </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['mapels']['nama'] }}
+                                                                                        </td>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['tingkat'] }}
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['nama'] }}
+                                                                                            {{ $item['nilaikd4']['seksis']['jadwalmapels']['pengampus']['kelass']['jurusans']['nama'] }}
+                                                                                        </td>
 
                                                                                         @foreach ($printedPhValues as $phValue)
-                                                                                            <td>
+                                                                                            <td class="whitespace-nowrap">
                                                                                                 @foreach ($nilaiSiswaKd4 as $nilai)
                                                                                                     @if (
                                                                                                         $nilai->nilaikd4->ph == $phValue &&
@@ -489,6 +482,9 @@
                                                                                                 @endforeach
                                                                                             </td>
                                                                                         @endforeach
+                                                                                        @php
+                                                                                            $index++; // Increment index setelah setiap iterasi
+                                                                                        @endphp
                                                                                     </tr>
                                                                                 @endforeach
                                                                             </tbody>
@@ -510,7 +506,7 @@
 
 
                                             </div>
-                                        </div>
+                                        </div> --
                                     </div>
                                     <div class="source-code hidden">
                                         <button data-target="#copy-link-tab"
@@ -547,4 +543,8 @@
             });
         });
     </script>
+
+
+
+
 @endsection

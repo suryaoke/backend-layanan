@@ -707,7 +707,8 @@
                                         {{ $item->nama }} </div>
                                 </div>
                                 <div class="text-slate-600 dark:text-slate-500 mt-5">
-                                    <p> {{ $item->ket }} </p>
+                                    <p> {{ $item->ket }} </p> <br>
+                                    <span > {{$item->created_at}} </span>
                                 </div>
                             </div>
                             @if ($item->link != null)

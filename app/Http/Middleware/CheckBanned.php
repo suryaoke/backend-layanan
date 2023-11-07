@@ -32,6 +32,20 @@ class CheckBanned
             return redirect()->route('login')->with($notification);
         }
 
+        if (auth()->check() && (auth()->user()->role == '5')) {
+            Auth::logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+            $notification = array(
+                'message' => 'Akun Pengguna Hanya Dapat Diakses di Aplikasi Mobile',
+                'alert-type' => 'warning'
+            );
+
+            return redirect()->route('login')->with($notification);
+        }
+
         return $next($request);
     }
 }

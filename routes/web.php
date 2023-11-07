@@ -429,3 +429,4 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/messages/updateSettings', [MessagesController::class, 'updateSettings'])->name('messages.updateSettings');
     Route::post('/messages/setActiveStatus', [MessagesController::class, 'setActiveStatus'])->name('messages.setActiveStatus');
 });
+

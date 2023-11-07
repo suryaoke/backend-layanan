@@ -113,10 +113,8 @@
 
                                                                                 @foreach ($nilaiSiswaKd3 as $key => $item)
                                                                                     @php
-                                                                                        $currentDateTime = date('n/j/Y:H:i:s');
-                                                                                        $format = 'n/j/Y:H:i:s';
-                                                                                        $currentDateTimeFormatted = DateTime::createFromFormat($format, $currentDateTime);
-                                                                                        $itemLastFormatted = DateTime::createFromFormat($format, $item->last);
+                                                                                        $now = Carbon\Carbon::now();
+                                                                                        $lastDate = Carbon\Carbon::createFromFormat('j/n/Y:H:i', $item->last);
                                                                                     @endphp
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
@@ -151,9 +149,9 @@
                                                                                         </td>
 
                                                                                         <td class="whitespace-nowrap">
-                                                                                            @if ($itemLastFormatted < $currentDateTimeFormatted)
+                                                                                            @if ($lastDate < $now)
                                                                                                 -
-                                                                                            @else
+                                                                                            @elseif($item->tugas_upload == null)
                                                                                                 <a data-tw-toggle="modal"
                                                                                                     data-tw-target="#edit-pengetahuan-modal-preview-{{ $item->id }}"
                                                                                                     class="btn btn-success mr-1 mb-2">
@@ -262,6 +260,10 @@
                                                                             <tbody>
 
                                                                                 @foreach ($nilaiSiswaKd4 as $key => $item)
+                                                                                    @php
+                                                                                        $now1 = Carbon\Carbon::now();
+                                                                                        $lastDate1 = Carbon\Carbon::createFromFormat('j/n/Y:H:i', $item->last);
+                                                                                    @endphp
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
                                                                                             {{ $key + 1 }} </td>
@@ -293,14 +295,18 @@
                                                                                             @endif
                                                                                         </td>
 
-                                                                                        <td class="whitespace-nowrap"><a
-                                                                                                data-tw-toggle="modal"
-                                                                                                data-tw-target="#edit-keterampilan-modal-preview-{{ $item->id }}"
-                                                                                                class="btn btn-success mr-1 mb-2">
-                                                                                                Upload
-                                                                                                <i data-lucide="edit"
-                                                                                                    class="w-4 h-4 ml-1"></i>
-                                                                                            </a>
+                                                                                        <td class="whitespace-nowrap">
+                                                                                            @if ($lastDate1 < $now1)
+                                                                                                -
+                                                                                            @elseif($item->tugas_upload == null)
+                                                                                                <a data-tw-toggle="modal"
+                                                                                                    data-tw-target="#edit-pengetahuan-modal-preview-{{ $item->id }}"
+                                                                                                    class="btn btn-success mr-1 mb-2">
+                                                                                                    Upload
+                                                                                                    <i data-lucide="edit"
+                                                                                                        class="w-4 h-4 ml-1"></i>
+                                                                                                </a>
+                                                                                            @endif
                                                                                         </td>
                                                                                     </tr>
                                                                                 @endforeach
@@ -395,7 +401,8 @@
 
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Upload Tugas</label>
-                                <input name="tugas_upload" type="file" class="form-control" required>
+                                <input name="tugas_upload" type="file" accept=".pdf" class="form-control" required>
+                                <span>file pdf.</span>
                             </div>
 
 
@@ -451,7 +458,9 @@
 
                             <div class="col-span-12 sm:col-span-12">
                                 <label for="modal-form-2" class="form-label">Upload Tugas</label>
-                                <input name="tugas_upload" type="file" class="form-control" required>
+                                <input name="tugas_upload" type="file" accept=".pdf" class="form-control" required>
+                               
+                                <span>file pdf</span>
                             </div>
 
 

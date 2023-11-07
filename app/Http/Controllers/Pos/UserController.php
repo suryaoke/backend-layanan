@@ -100,7 +100,7 @@ class UserController extends Controller
     public function UserUpdate(Request $request)
     {
         $user_id = $request->id;
-       
+
 
         if ($request->file('profile_image')) {
 
@@ -198,39 +198,64 @@ class UserController extends Controller
         return redirect()->back()->with($notification);
     } // End Method
 
+
+
+
     public function login(Request $request)
     {
-
         try {
-
-            //TODO: validate request
+            // Validate request
             $request->validate([
                 'username' => 'required',
                 'password' => 'required',
             ]);
 
-            // TODO: find user by email
-            $credentials = request(['username', 'password']);
-            if (!Auth::attempt($credentials)) {
-                return ResponseFormatter::error('Unauthorized', 401);
-            }
+            // Find user by username
             $user = User::where('username', $request->username)->first();
+
+            if (!$user) {
+                return ResponseFormatter::error('User not found', 404);
+            }
+
+            if ($user->role != 5) {
+
+                return ResponseFormatter::error('Unauthorized. Hanya bisa akses di web.', 401);
+            }
+
+
             if (!Hash::check($request->password, $user->password)) {
                 throw new Exception('Invalid password');
             }
 
-            // TODO: Generate token
-            $toketResult = $user->createToken('authToken')->plainTextToken;
+            // Generate token
+            $tokenResult = $user->createToken('authToken')->plainTextToken;
 
-            // TODO: Return response.
-            return ResponseFormatter::success([
-                'access_token' => $toketResult,
-                'token_type' => 'Bearer',
+            // Add token and token_type to the user object
+            $user->token = $tokenResult;
+            $user->token_type = 'Bearer';
+
+            // Remove the token and token_type from the root of the response
+            $response = [
                 'user' => $user,
+            ];
 
-            ], 'Login success');
+            return ResponseFormatter::success($response, 'Login success');
         } catch (Exception $error) {
-            return ResponseFormatter::error('Authication Failed');
+            return ResponseFormatter::error('Authentication Failed');
         }
+    }
+
+
+    public function Logout(Request $request)
+    {
+        $token = $request->user()->currentAccessToken()->delete();
+        return ResponseFormatter::success($token, 'Logout success');
+    }
+
+
+    public function fetch(Request $request)
+    {
+        $user = $request->user();
+        return ResponseFormatter::success($user, 'Logout success');
     }
 }

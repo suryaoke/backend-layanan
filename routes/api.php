@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\AbsensiController;
+use App\Http\Controllers\Api\InfoController;
+use App\Http\Controllers\Api\JadwalmapelController;
+use App\Http\Controllers\Api\SiswaController;
 use App\Http\Controllers\Pos\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,7 +33,13 @@ Route::name('auth.')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [UserController::class, 'logout'])->name('logout');
         Route::get('user', [UserController::class, 'fetch'])->name('fetch');
+        Route::get('siswa', [SiswaController::class, 'siswaAll']);
+        Route::get('absensi', [AbsensiController::class, 'absensiSiswa']);
+        Route::get('absensi/data', [AbsensiController::class, 'absensiDataSiswa']);
+        Route::get('jadwalmapel', [JadwalmapelController::class, 'jadwalMapel']);
     });
 });
 
-Route::get('/jabatan', [JabatanController::class, 'index']);
+Route::get('info', [InfoController::class, 'infoAll']);
+
+Route::get('/admin-images/{imageName}', [InfoController::class, 'show']);
