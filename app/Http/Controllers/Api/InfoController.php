@@ -27,4 +27,20 @@ class InfoController extends Controller
 
         return response()->json(['message' => 'Image not found.'], 404);
     }
+
+    public function pdf($imageName)
+    {
+        $path = public_path() . '/pdf_files/' . $imageName;
+
+        if (file_exists($path)) {
+            $file = file_get_contents($path);
+            $type = mime_content_type($path);
+
+            return response($file)
+                ->header('Content-Type', $type)
+                ->header('Content-Disposition', 'inline; filename="' . $imageName . '"');
+        }
+
+        return response()->json(['message' => 'PDF not found.'], 404);
+    }
 }

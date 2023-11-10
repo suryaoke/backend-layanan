@@ -7,10 +7,12 @@ use App\Helpers\ResponseFormatter;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Image;
@@ -212,6 +214,8 @@ class UserController extends Controller
 
             // Find user by username
             $user = User::where('username', $request->username)->first();
+            $user->last =  Carbon::now();
+            $user->save();
 
             if (!$user) {
                 return ResponseFormatter::error('User not found', 404);
@@ -258,4 +262,53 @@ class UserController extends Controller
         $user = $request->user();
         return ResponseFormatter::success($user, 'Logout success');
     }
+
+
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return response()->json(['message' => $status], 200);
+        } else {
+            return response()->json(['error' => $status], 400);
+        }
+    }
+
+    public function updateUser(Request $request)
+    {
+        try {
+            // Validate request
+           
+            $user = Auth::user();
+
+            // Update user information
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->username = $request->username;
+
+            // Check if a new password is provided
+            if (!empty($request->password)) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->save();
+
+            // Prepare success response
+            $response = [
+                'user' => $user,
+            ];
+
+            return ResponseFormatter::success($response, 'User updated successfully');
+        } catch (Exception $error) {
+            return ResponseFormatter::error('Failed to update user');
+        }
+    }
+
 }

@@ -119,7 +119,7 @@
                                     <tr>
                                         <td align="center">{{ $key + 1 }} </td>
                                         <td style="white-space: nowrap;" class="text-primary">
-                                            {{ $item->kode_jadwalmapel }} -{{ $item->id_pengampu }}
+                                            {{ $item->kode_jadwalmapel }} 
                                         </td>
                                         <td style="white-space: nowrap;" class="text-primary">
                                             {{ $item['pengampus']['kode_pengampu'] }} </td>

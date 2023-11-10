@@ -23,7 +23,6 @@ class JadwalmapelController extends Controller
         try {
             $userId = Auth::id();
 
-            $userId = Auth::id();
 
             // Find the corresponding student record with the provided user ID
             $ortu = OrangTua::where('id_user', $userId)->first();
@@ -34,7 +33,15 @@ class JadwalmapelController extends Controller
 
             $pengampuId =   $pengampu->pluck('id')->toArray();
             $jadwalmapel = Jadwalmapel::whereIn('id_pengampu', $pengampuId)
-                ->orderby('id', 'desc')->get();
+
+                ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+                ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
+                ->orderBy('kelas.tingkat', 'asc')
+                ->orderBy('kelas.nama', 'asc')
+                ->orderBy('haris.kode_hari', 'asc')
+                ->orderBy('waktus.range', 'asc')->get();
 
             $responseJadwal = [];
             foreach ($jadwalmapel as $jadwalmapelId) {

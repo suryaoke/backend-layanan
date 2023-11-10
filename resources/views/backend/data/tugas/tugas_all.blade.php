@@ -112,10 +112,6 @@
 
 
                                                                                 @foreach ($nilaiSiswaKd3 as $key => $item)
-                                                                                    @php
-                                                                                        $now = Carbon\Carbon::now();
-                                                                                        $lastDate = Carbon\Carbon::createFromFormat('j/n/Y:H:i', $item->last);
-                                                                                    @endphp
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
                                                                                             {{ $key + 1 }} </td>
@@ -149,17 +145,15 @@
                                                                                         </td>
 
                                                                                         <td class="whitespace-nowrap">
-                                                                                            @if ($lastDate < $now)
-                                                                                                -
-                                                                                            @elseif($item->tugas_upload == null)
-                                                                                                <a data-tw-toggle="modal"
-                                                                                                    data-tw-target="#edit-pengetahuan-modal-preview-{{ $item->id }}"
-                                                                                                    class="btn btn-success mr-1 mb-2">
-                                                                                                    Upload
-                                                                                                    <i data-lucide="edit"
-                                                                                                        class="w-4 h-4 ml-1"></i>
-                                                                                                </a>
-                                                                                            @endif
+
+                                                                                            <a data-tw-toggle="modal"
+                                                                                                data-tw-target="#edit-pengetahuan-modal-preview-{{ $item->id }}"
+                                                                                                class="btn btn-success mr-1 mb-2">
+                                                                                                Upload
+                                                                                                <i data-lucide="edit"
+                                                                                                    class="w-4 h-4 ml-1"></i>
+                                                                                            </a>
+
                                                                                         </td>
                                                                                     </tr>
                                                                                 @endforeach
@@ -260,10 +254,6 @@
                                                                             <tbody>
 
                                                                                 @foreach ($nilaiSiswaKd4 as $key => $item)
-                                                                                    @php
-                                                                                        $now1 = Carbon\Carbon::now();
-                                                                                        $lastDate1 = Carbon\Carbon::createFromFormat('j/n/Y:H:i', $item->last);
-                                                                                    @endphp
                                                                                     <tr>
                                                                                         <td class="whitespace-nowrap">
                                                                                             {{ $key + 1 }} </td>
@@ -296,17 +286,15 @@
                                                                                         </td>
 
                                                                                         <td class="whitespace-nowrap">
-                                                                                            @if ($lastDate1 < $now1)
-                                                                                                -
-                                                                                            @elseif($item->tugas_upload == null)
-                                                                                                <a data-tw-toggle="modal"
-                                                                                                    data-tw-target="#edit-pengetahuan-modal-preview-{{ $item->id }}"
-                                                                                                    class="btn btn-success mr-1 mb-2">
-                                                                                                    Upload
-                                                                                                    <i data-lucide="edit"
-                                                                                                        class="w-4 h-4 ml-1"></i>
-                                                                                                </a>
-                                                                                            @endif
+
+                                                                                            <a data-tw-toggle="modal"
+                                                                                                data-tw-target="#edit-keterampilan-modal-preview-{{ $item->id }}"
+                                                                                                class="btn btn-success mr-1 mb-2">
+                                                                                                Upload
+                                                                                                <i data-lucide="edit"
+                                                                                                    class="w-4 h-4 ml-1"></i>
+                                                                                            </a>
+
                                                                                         </td>
                                                                                     </tr>
                                                                                 @endforeach
@@ -371,6 +359,10 @@
     <!-- BEGIN: Edit Pengetahuan  -->
 
     @foreach ($nilaiSiswaKd3 as $key => $item)
+        @php
+            $now = Carbon\Carbon::now();
+            $lastDate = Carbon\Carbon::createFromFormat('j/n/Y:H:i', $item->last);
+        @endphp
         <div id="edit-pengetahuan-modal-preview-{{ $item->id }}" class="modal" tabindex="-1"
             aria-labelledby="edit-pengetahuan-modal-preview-{{ $item->id }}" aria-hidden="true">
             <div class="modal-dialog">
@@ -399,12 +391,19 @@
                         </div>
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
 
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Upload Tugas</label>
-                                <input name="tugas_upload" type="file" accept=".pdf" class="form-control" required>
-                                <span>file pdf.</span>
-                            </div>
+                            @if ($lastDate < $now && $item->tugas_upload != null)
+                                <a href="{{ asset('pdf_files/' . $item->tugas_upload) }}">
+                                    <span>Tugas Upload <i data-lucide="book"></i></span>
+                                </a>
+                            @elseif($item->tugas_upload == null)
+                                <div class="col-span-12 sm:col-span-12">
+                                    <label for="modal-form-2" class="form-label">Upload Tugas</label>
+                                    <input name="tugas_upload" type="file" accept=".pdf" class="form-control"
+                                        required>
 
+                                    <span>file pdf</span>
+                                </div>
+                            @endif
 
                         </div>
                         <div class="mt-2 ml-4 mb-4">
@@ -413,9 +412,12 @@
                         </div>
                         <div class="modal-footer">
 
-                            <button type="button" data-tw-dismiss="modal"
-                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                            @if ($lastDate < $now)
+                            @elseif($item->tugas_upload == null)
+                                <button type="button" data-tw-dismiss="modal"
+                                    class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                                <button type="submit" class="btn btn-primary w-20">Save</button>
+                            @endif
                         </div> <!-- END: Modal Footer -->
 
                     </form>
@@ -428,6 +430,10 @@
     <!-- BEGIN: Edit Keterampilan  -->
 
     @foreach ($nilaiSiswaKd4 as $key => $item)
+        @php
+            $now1 = Carbon\Carbon::now();
+            $lastDate1 = Carbon\Carbon::createFromFormat('j/n/Y:H:i', $item->last);
+        @endphp
         <div id="edit-keterampilan-modal-preview-{{ $item->id }}" class="modal" tabindex="-1"
             aria-labelledby="edit-keterampilan-modal-preview-{{ $item->id }}" aria-hidden="true">
             <div class="modal-dialog">
@@ -455,13 +461,19 @@
                                 </a></div>
                         </div>
                         <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            @if ($lastDate1 < $now1)
+                                <a href="{{ asset('pdf_files/' . $item->tugas_upload) }}">
+                                    <span>Tugas Upload <i data-lucide="book"></i></span>
+                                </a>
+                            @elseif($item->tugas_upload == null)
+                                <div class="col-span-12 sm:col-span-12">
+                                    <label for="modal-form-2" class="form-label">Upload Tugas</label>
+                                    <input name="tugas_upload" type="file" accept=".pdf" class="form-control"
+                                        required>
 
-                            <div class="col-span-12 sm:col-span-12">
-                                <label for="modal-form-2" class="form-label">Upload Tugas</label>
-                                <input name="tugas_upload" type="file" accept=".pdf" class="form-control" required>
-                               
-                                <span>file pdf</span>
-                            </div>
+                                    <span>file pdf</span>
+                                </div>
+                            @endif
 
 
                         </div>
@@ -470,12 +482,13 @@
                                 Upload Tugas Hanya Bisa Sekali.</span>
                         </div>
                         <div class="modal-footer">
-
-                            <button type="button" data-tw-dismiss="modal"
-                                class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
-                            <button type="submit" class="btn btn-primary w-20">Save</button>
+                            @if ($lastDate1 < $now1)
+                            @elseif($item->tugas_upload == null)
+                                <button type="button" data-tw-dismiss="modal"
+                                    class="btn btn-outline-secondary w-20 mr-1">Cancel</button>
+                                <button type="submit" class="btn btn-primary w-20">Save</button>
+                            @endif
                         </div> <!-- END: Modal Footer -->
-
                     </form>
 
                 </div>

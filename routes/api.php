@@ -4,10 +4,11 @@ use App\Http\Controllers\Api\AbsensiController;
 use App\Http\Controllers\Api\InfoController;
 use App\Http\Controllers\Api\JadwalmapelController;
 use App\Http\Controllers\Api\SiswaController;
+use App\Http\Controllers\Api\StandarKompetensiController;
 use App\Http\Controllers\Pos\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Pos\JabatanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -37,9 +38,21 @@ Route::name('auth.')->group(function () {
         Route::get('absensi', [AbsensiController::class, 'absensiSiswa']);
         Route::get('absensi/data', [AbsensiController::class, 'absensiDataSiswa']);
         Route::get('jadwalmapel', [JadwalmapelController::class, 'jadwalMapel']);
+        Route::get('kd3', [StandarKompetensiController::class, 'Kd3']);
+        Route::get('kd4', [StandarKompetensiController::class, 'Kd4']);
+        Route::get('tugas/kd3', [StandarKompetensiController::class, 'tugasKd3']);
+        Route::get('tugas/kd4', [StandarKompetensiController::class, 'tugasKd4']);
+        Route::put('/update-user', [UserController::class, 'updateUser']);
     });
 });
 
 Route::get('info', [InfoController::class, 'infoAll']);
 
 Route::get('/admin-images/{imageName}', [InfoController::class, 'show']);
+Route::get('/pdf/{imageName}', [InfoController::class, 'pdf']);
+
+Route::middleware('guest')->group(
+    function () {
+        Route::post('forgotpassword', [UserController::class, 'forgotPassword'])->name('forgotpassword');
+    }
+);

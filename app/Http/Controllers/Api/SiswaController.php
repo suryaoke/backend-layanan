@@ -10,6 +10,7 @@ use App\Models\OrangTua;
 use App\Models\Rombel;
 use App\Models\Rombelsiswa;
 use App\Models\Siswa;
+use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -35,10 +36,13 @@ class SiswaController extends Controller
                 $rombelData = Rombel::find($rombelsiswaData->id_rombel);
                 $kelasData = Kelas::find($rombelData->id_kelas);
                 $jurusanData = Jurusan::find($kelasData->id_jurusan);
+                $userData = User::find($siswaId->id_user);
 
 
                 $siswaId->kelas = $kelasData;
-                $siswaId->jurusan =       $jurusanData;
+
+                $siswaId->jurusan = $jurusanData;
+                $siswaId->user = $userData;
 
                 $responseSiswa[] = $siswaId;
             }

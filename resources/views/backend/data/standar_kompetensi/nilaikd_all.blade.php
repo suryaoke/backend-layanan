@@ -428,7 +428,7 @@
                                     class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
                                     <i data-lucide="calendar" class="w-4 h-4"></i>
                                 </div> <input type="text" class="datepicker form-control pl-12"
-                                    data-single-mode="true" placeholder="Tanggal" name="last">
+                                    data-single-mode="true" placeholder="Tanggal" name="last" value="null">
                             </div>
                         </div>
 
@@ -625,14 +625,14 @@
                                 onchange="showHideElements1()">
                         </div>
 
-                         <div class="col-span-12 sm:col-span-6 mb-8" id="tanggal1" style="display: none;">
+                        <div class="col-span-12 sm:col-span-6 mb-8" id="tanggal1" style="display: none;">
                             <label for="modal-form-2" class="form-label">Batas Tanggal</label>
                             <div class="relative  mx-auto">
                                 <div
                                     class="absolute rounded-l w-10 h-full flex items-center justify-center bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800 dark:text-slate-400">
                                     <i data-lucide="calendar" class="w-4 h-4"></i>
                                 </div> <input type="text" class="datepicker form-control pl-12"
-                                    data-single-mode="true" placeholder="Tanggal" name="last">
+                                    data-single-mode="true" placeholder="Tanggal" name="last" value="null">
                             </div>
                         </div>
 
