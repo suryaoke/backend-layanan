@@ -15,10 +15,10 @@
 
                     <input type="hidden" name="id4" value="{{ $idki4->id }}">
                     <input type="hidden" class="form-control" name="ket4" value="{{ $idki4->ket }}">
-
+{{--  
                     <button type="submit" class="btn btn-warning mr-1 mb-2"> Sinkronkan Data<i
                             data-loading-icon="spinning-circles" data-color="white" class="w-4 h-4 ml-2"></i>
-                    </button>
+                    </button>  --}}
                 </form>
 
 

@@ -171,6 +171,32 @@ class ExportController extends Controller
         return $pdf->download('jadwal.pdf');
     }
 
+
+
+    public function JadwalkepsekpdfCustom(Request $request)
+    {
+        $kelas =  $request->input('kelas');
+        $semester =  $request->input('semester');
+
+        $jadwalmapel = Jadwalmapel::join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->where('status', '>=', 1)
+            ->where('status', '<=', 3)
+            ->orderBy('kelas.tingkat', 'asc')
+            ->orderBy('kelas.nama', 'asc')
+            ->orderBy('haris.kode_hari', 'asc')
+            ->where('pengampus.kelas', $kelas)
+            ->where('mapels.semester', $semester)
+            ->get();
+
+        $pdf = PDF::loadView('backend.data.export.export_pdf_jadwal', ['jadwalmapel' => $jadwalmapel]); // Pastikan Anda mengirimkan data dalam bentuk array assosiatif
+        return $pdf->download('jadwal.pdf');
+    }
+
+
+
     public function Jadwalkepsekexcel()
     {
         $jadwalmapel = Jadwalmapel::join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
@@ -201,6 +227,31 @@ class ExportController extends Controller
         $pdf = PDF::loadView('backend.data.export.export_pdf_jadwal', ['jadwalmapel' => $jadwalmapel]); // Pastikan Anda mengirimkan data dalam bentuk array assosiatif
         return $pdf->download('jadwal.pdf');
     }
+
+
+
+    public function JadwalpdfCustom(Request $request)
+    {
+        $kelas =  $request->input('kelas');
+        $semester =  $request->input('semester');
+
+        $jadwalmapel = Jadwalmapel::join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->orderBy('kelas.tingkat', 'asc')
+            ->orderBy('kelas.nama', 'asc')
+            ->orderBy('haris.kode_hari', 'asc')
+            ->where('pengampus.kelas', $kelas)
+            ->where('mapels.semester', $semester)
+            ->get();
+
+        $pdf = PDF::loadView('backend.data.export.export_pdf_jadwal', ['jadwalmapel' => $jadwalmapel]); // Pastikan Anda mengirimkan data dalam bentuk array assosiatif
+        return $pdf->download('jadwal.pdf');
+    }
+
+
+
 
     public function Jadwalexcel()
     {

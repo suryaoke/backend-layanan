@@ -12,7 +12,7 @@
     <meta name="keywords"
         content="admin template, Midone Admin Template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="LEFT4CODE">
-    <title>Login - SIAKAD MAN 1 Kota Padang</title>
+    <title>Forgotpassword - SIAKAD MAN 1 Kota Padang</title>
     <!-- BEGIN: CSS Assets-->
     <link rel="stylesheet" href="{{ asset('backend/dist/css/app.css') }}" />
     <!-- END: CSS Assets-->
@@ -49,7 +49,7 @@
                 <div
                     class="my-auto mx-auto xl:ml-20 bg-white dark:bg-darkmode-600 xl:bg-transparent px-5 sm:px-8 py-8 xl:p-0 rounded-md shadow-md xl:shadow-none w-full sm:w-3/4 lg:w-2/4 xl:w-auto">
                     <h2 class="intro-x font-bold text-2xl xl:text-3xl text-center xl:text-left">
-                        Reset Password
+                        Forgot Password
                     </h2>
 
                     <div class="intro-x mt-2 text-slate-400 xl:hidden text-center">A few more clicks to sign in to
@@ -68,7 +68,7 @@
                                 type="submit">Send Email</button>
                             <a href="{{ route('login') }}"
                                 class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
-                                Sig In</a>
+                                Login</a>
                         </div>
                     </form>
                     <div class="intro-x mt-10 xl:mt-24 text-slate-600 dark:text-slate-500 text-center xl:text-left">
@@ -78,10 +78,33 @@
             <!-- END: Login Form -->
         </div>
     </div>
- 
+
 
     <!-- BEGIN: JS Assets-->
     <script src="{{ asset('backend/dist/js/app.js') }}"></script>
+
+    <!-- Pastikan ini ada di halaman Anda -->
+    <!-- Pastikan ini ada di halaman Anda -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+    <script>
+        // Periksa apakah ada notifikasi dalam sesi
+        @if (session('notification'))
+            // Ganti properti 'alert-type' menjadi 'type'
+            @php
+                $notification = session('notification');
+                $notification['type'] = $notification['alert-type'];
+                unset($notification['alert-type']);
+            @endphp
+
+            // Tampilkan notifikasi menggunakan SweetAlert
+            Swal.fire({
+                text: "{{ $notification['message'] }}",
+                icon: "{{ $notification['type'] }}",
+            });
+        @endif
+    </script>
+
     <!-- END: JS Assets-->
 </body>
 

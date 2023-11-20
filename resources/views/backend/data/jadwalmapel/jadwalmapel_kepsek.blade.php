@@ -78,10 +78,10 @@
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
         </a>
-        <a class="btn btn-primary btn-block" href="{{ route('jadwalkepsek.pdf') }} ">
-            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf
-        </a>
+
+        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-primary"> <span
+                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
+                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
 
 
     </div>
@@ -277,6 +277,89 @@
 
 
 
+
+    <!-- BEGIN: Modal PDF-->
+
+    <div id="pdf-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"> <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
+                        class="w-8 h-8 text-slate-400"></i> </a>
+                <!-- BEGIN: Modal Header -->
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Export Pdf Jadwal Mapel</h2>
+                    <div class="dropdown sm:hidden"> <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"
+                            aria-expanded="false" data-tw-toggle="dropdown"> <i data-lucide="more-horizontal"
+                                class="w-5 h-5 text-slate-500"></i> </a>
+                        <div class="dropdown-menu w-40">
+
+                        </div>
+                    </div>
+                </div> <!-- END: Modal Header -->
+                <!-- BEGIN: Modal Body -->
+
+                <form method="post" action="{{ route('jadwalkepsekcustom.pdf') }}">
+                    @csrf
+                    <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                        <div class="col-span-12 sm:col-span-6"> <label for="edit-jam">Kelas </label>
+                            <select name="kelas" id="lecturers_id" class="form-control w-full" required>
+                                <option value="">Pilih Kelas</option>
+                                @php
+                                    $addedClassRooms = [];
+                                @endphp
+                                @foreach ($jadwalmapel as $key => $jadwalmapels)
+                                    @if (!in_array($jadwalmapels->pengampus->kelas, $addedClassRooms))
+                                        <option value="{{ $jadwalmapels->pengampus->kelas }}">
+                                            {{ $jadwalmapels->pengampus->kelass->tingkat }}
+                                            {{ $jadwalmapels->pengampus->kelass->nama }}
+                                            {{ $jadwalmapels->pengampus->kelass->jurusans->nama }}
+                                        </option>
+                                        @php
+                                            $addedClassRooms[] = $jadwalmapels->pengampus->kelas;
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            </select>
+
+                        </div>
+                        <div class="col-span-12 sm:col-span-6">
+                            <label for="edit-jam">Semester </label>
+                            <select name="semester" id="edit-jam" class="form-control w-full" required>
+                                <option value="">Pilih Semester</option>
+                                @php
+                                    $addedSemesters = [];
+                                @endphp
+                                @foreach ($jadwalmapel->unique('pengampus.mapels.semester') as $jadwalmapels)
+                                    @if (!in_array($jadwalmapels->pengampus->mapels->semester, $addedSemesters))
+                                        <option value="{{ $jadwalmapels->pengampus->mapels->semester }}">
+                                            {{ $jadwalmapels->pengampus->mapels->tahunajars->semester }}
+                                            {{ $jadwalmapels->pengampus->mapels->tahunajars->tahun }}
+
+                                        </option>
+                                        @php
+                                            $addedSemesters[] = $jadwalmapels->pengampus->mapels->semester;
+                                        @endphp
+                                    @endif
+                                @endforeach
+                            </select>
+
+                        </div>
+
+                    </div> <!-- END: Modal Body -->
+                    <!-- BEGIN: Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary w-20">Custom</button>
+                </form>
+                <a href=" {{ route('jadwalkepsek.pdf') }}" type="button" data-tw-dismiss="modal"
+                    class="btn btn-outline-secondary w-20 mr-1">All</a>
+            </div>
+
+
+
+
+        </div>
+    </div>
+
+    <!-- BEGIN: Modal PDF-->
 
 
     <!-- Masukkan jQuery sebelum kode JavaScript Anda -->

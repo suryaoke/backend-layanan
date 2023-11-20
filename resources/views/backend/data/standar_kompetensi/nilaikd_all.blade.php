@@ -23,13 +23,13 @@
                                             <li id="example-5-tab" class="nav-item flex-1" role="presentation">
                                                 <button class="nav-link w-full py-2 active" data-tw-toggle="pill"
                                                     data-tw-target="#example-tab-5" type="button" role="tab"
-                                                    aria-controls="example-tab-5" aria-selected="true">KD 3 - Pengetahuan
+                                                    aria-controls="example-tab-5" aria-selected="true">KI 3 - Pengetahuan
                                                 </button>
                                             </li>
                                             <li id="example-6-tab" class="nav-item flex-1" role="presentation">
                                                 <button class="nav-link w-full py-2" data-tw-toggle="pill"
                                                     data-tw-target="#example-tab-6" type="button" role="tab"
-                                                    aria-controls="example-tab-6" aria-selected="false"> KD 4 - Keterampilan
+                                                    aria-controls="example-tab-6" aria-selected="false"> KI 4 - Keterampilan
                                                 </button>
                                             </li>
                                         </ul>
@@ -50,7 +50,7 @@
                                                         <thead>
                                                             <tr class=" alert-primary ">
                                                                 <th class="whitespace-nowrap">No</th>
-                                                                <th class="whitespace-nowrap">Kd</th>
+                                                                <th >Kd</th>
                                                                 <th class="whitespace-nowrap">Penilaian Harian</th>
                                                                 <th class="whitespace-nowrap">Skema</th>
                                                                 <th class="whitespace-nowrap">Status</th>
@@ -75,7 +75,7 @@
                                                                 @endphp
                                                                 <tr>
                                                                     <td class="whitespace-nowrap"> {{ $key + 1 }}</td>
-                                                                    <td class="whitespace-nowrap">3. @if (isset($item['kd3']['urutan']))
+                                                                    <td >3. @if (isset($item['kd3']['urutan']))
                                                                             {{ $item['kd3']['urutan'] }}
                                                                             @endif @if (isset($item['kd3']['ket']))
                                                                                 {{ $item['kd3']['ket'] }}
@@ -200,8 +200,7 @@
                                                         style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                         <thead>
                                                             <tr class=" alert-primary ">
-                                                                <th class="whitespace-nowrap">No</th>
-                                                                <th class="whitespace-nowrap">Kd</th>
+                                                                <th>Kd</th>
                                                                 <th class="whitespace-nowrap">Penilaian Harian</th>
                                                                 <th class="whitespace-nowrap">Skema</th>
                                                                 <th class="whitespace-nowrap">Status</th>
@@ -228,7 +227,7 @@
                                                                 <tr>
                                                                     <td class="whitespace-nowrap"> {{ $key + 1 }}
                                                                     </td>
-                                                                    <td class="whitespace-nowrap">4. @if (isset($item['kd4']['urutan']))
+                                                                    <td >4. @if (isset($item['kd4']['urutan']))
                                                                             {{ $item['kd4']['urutan'] }}
                                                                             @endif @if (isset($item['kd4']['ket']))
                                                                                 {{ $item['kd4']['ket'] }}

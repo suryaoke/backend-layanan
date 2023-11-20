@@ -20,3 +20,6 @@ class Kd3 extends Model
         return $this->belongsTo(Ki3::class, 'id_ki3', 'id');
     }
 }
+
+
+

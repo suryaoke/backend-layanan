@@ -73,7 +73,7 @@ class StandarkompetensiController extends Controller
         // Mengupdate semua ki3 dengan id_mapel dan tingkat yang sama
         foreach ($ki3s_with_same_mapel_and_tingkat as $ki3_item) {
             $ki3_item->update([
-                'ket' => $request->ket,
+                'ket' => substr($request->ket, 0, 255),
                 'updated_by' => Auth::user()->id,
                 'updated_at' => Carbon::now(),
             ]);
@@ -110,7 +110,7 @@ class StandarkompetensiController extends Controller
         // Mengupdate semua ki4 dengan id_mapel dan tingkat yang sama
         foreach ($ki4s_with_same_mapel_and_tingkat as $ki4_item) {
             $ki4_item->update([
-                'ket' => $request->ket,
+                'ket' => substr($request->ket, 0, 255),
                 'updated_by' => Auth::user()->id,
                 'updated_at' => Carbon::now(),
             ]);
@@ -158,7 +158,7 @@ class StandarkompetensiController extends Controller
             Kd3::insert([
                 'id_ki3' => $ki3->id,
                 'urutan' => $request->urutan,
-                'ket' => $request->ket,
+                'ket' => substr($request->ket, 0, 255),
                 'created_by' => Auth::user()->id,
                 'created_at' => Carbon::now(),
             ]);
@@ -168,7 +168,7 @@ class StandarkompetensiController extends Controller
         Kd3::insert([
             'id_ki3' => $request->id_ki3,
             'urutan' => $request->urutan,
-            'ket' => $request->ket,
+            'ket' => substr($request->ket, 0, 255),
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
         ]);
@@ -217,7 +217,7 @@ class StandarkompetensiController extends Controller
             Kd4::insert([
                 'id_ki4' => $ki4->id,
                 'urutan' => $request->urutan,
-                'ket' => $request->ket,
+                'ket' => substr($request->ket, 0, 255),
                 'created_by' => Auth::user()->id,
                 'created_at' => Carbon::now(),
             ]);
@@ -227,7 +227,7 @@ class StandarkompetensiController extends Controller
         Kd4::insert([
             'id_ki4' => $request->id_ki4,
             'urutan' => $request->urutan,
-            'ket' => $request->ket,
+            'ket' => substr($request->ket, 0, 255),
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
         ]);
@@ -294,7 +294,7 @@ class StandarkompetensiController extends Controller
         return null; // Jika tidak ada file yang diunggah, kembalikan null.
     }
 
-  
+
 
     public function Nilaikd3Store(Request $request)
     {
@@ -326,7 +326,7 @@ class StandarkompetensiController extends Controller
             $nilaisiswakd3->id_rombelsiswa = $row->id;
             $nilaisiswakd3->id_nilaikd3 = $nilaikd3->id;
             $nilaisiswakd3->ket = $request->ket;
-            $nilaisiswakd3->last = $last.':'.$last1;
+            $nilaisiswakd3->last = $last . ':' . $last1;
             $nilaisiswakd3->tugas = $tugasFilePath;
             $nilaisiswakd3->materi = $materiFilePath;
 

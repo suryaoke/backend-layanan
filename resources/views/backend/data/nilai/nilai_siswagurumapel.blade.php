@@ -175,8 +175,7 @@
                                                                                     </th>
                                                                                     <th class="whitespace-nowrap">Kelas
                                                                                     </th>
-                                                                                    <th class="whitespace-nowrap">Kelas
-                                                                                    </th>
+                                                                                   
 
 
                                                                                     @php

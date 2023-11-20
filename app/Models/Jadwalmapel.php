@@ -47,6 +47,4 @@ class Jadwalmapel extends Model
     {
         return $this->belongsTo(Tahunajar::class, 'semester');
     }
-
-
 }

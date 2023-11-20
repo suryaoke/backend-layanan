@@ -67,15 +67,29 @@ class JadwalmapelController extends Controller
 
 
 
-        $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+        // $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+        //     ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
+        //     ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+        //     ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
+        //     ->orderBy('kelas.tingkat', 'asc')
+        //     ->orderBy('kelas.nama', 'asc')
+        //     ->orderBy('haris.kode_hari', 'asc')
+        //     ->orderBy('waktus.range', 'asc')
+        //     ->get();
+
+        $jadwalmapel = $query->select('kelas.id as kelas_id', 'jadwalmapels.*')
+            ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
             ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
             ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-            ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
-            ->orderBy('kelas.tingkat', 'asc')
-            ->orderBy('kelas.nama', 'asc')
-            ->orderBy('haris.kode_hari', 'asc')
-            ->orderBy('waktus.range', 'asc')
+            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
+            ->orderBy('kelas.tingkat')
+            ->orderBy('kelas.nama')
+            ->orderBy('haris.kode_hari')
+            ->orderBy('waktus.range')
             ->get();
+
+
+
 
         $hari = Hari::orderby('kode_hari', 'asc')->get();
 
@@ -320,16 +334,28 @@ class JadwalmapelController extends Controller
         }
         // End Bagian search Data //
 
-        $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+        // $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+        //     ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
+        //     ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+        //     ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
+        //     ->where('status', '>=', 1)
+        //     ->where('status', '<=', 3)
+        //     ->orderBy('kelas.tingkat', 'asc')
+        //     ->orderBy('kelas.nama', 'asc')
+        //     ->orderBy('haris.kode_hari', 'asc')
+        //     ->orderBy('waktus.range', 'asc')
+        //     ->get();
+        $jadwalmapel = $query->select('kelas.id as kelas_id', 'jadwalmapels.*')
+            ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
             ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
             ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
             ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
             ->where('status', '>=', 1)
             ->where('status', '<=', 3)
-            ->orderBy('kelas.tingkat', 'asc')
-            ->orderBy('kelas.nama', 'asc')
-            ->orderBy('haris.kode_hari', 'asc')
-            ->orderBy('waktus.range', 'asc')
+            ->orderBy('kelas.tingkat')
+            ->orderBy('kelas.nama')
+            ->orderBy('haris.kode_hari')
+            ->orderBy('waktus.range')
             ->get();
 
 

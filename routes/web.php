@@ -231,7 +231,7 @@ Route::controller(PengampuController::class)->middleware(['auth'])->group(functi
     Route::get('/pengampu/all', 'PengampuAll')->name('pengampu.all');
     Route::get('/pengampu/add', 'PengampuAdd')->name('pengampu.add');
     Route::post('/pengampu/store', 'PengampuStore')->name('pengampu.store');
-    Route::get('/pengampu/delete{id}', 'PengampuDelete')->name('pengampu.delete');
+    Route::get('/pengampu/delete/{id}', 'PengampuDelete')->name('pengampu.delete');
     Route::get('/pengampu/edit/{id}', 'PengampuEdit')->name('pengampu.edit');
     Route::post('/pengampu/update', 'PengampuUpdate')->name('pengampu.update');
 });
@@ -240,7 +240,7 @@ Route::controller(PengampuController::class)->middleware(['auth'])->group(functi
 Route::controller(JadwalmapelController::class)->middleware(['auth'])->group(function () {
     Route::get('/jadwalmapel/all', 'JadwalmapelAll')->name('jadwalmapel.all');
     Route::post('/jadwalmapel/store', 'JadwalmapelStore')->name('jadwalmapel.store');
-    Route::get('/jadwalmapel/delete{id}', 'JadwalmapelDelete')->name('jadwalmapel.delete');
+    Route::get('/jadwalmapel/delete/{id}', 'JadwalmapelDelete')->name('jadwalmapel.delete');
     Route::post('/jadwalmapel/update/{id}', 'JadwalmapelUpdate')->name('jadwalmapel.update');
     Route::post('/jadwalmapel/status/one/{id}', 'JadwalmapelstatusOne')->name('jadwalmapelstatusone.update');
     Route::post('/jadwal/upadate/status/all', 'JadwalmapelstatusAll')->name('jadwalmapelstatusall.update');
@@ -343,10 +343,12 @@ Route::controller(ExportController::class)->middleware(['auth'])->group(function
     Route::get('siswawalas/excel', 'Siswawalasexcel')->name('siswawalas.excel');
 
     Route::get('jadwalkepsek/pdf', 'Jadwalkepsekpdf')->name('jadwalkepsek.pdf');
+    Route::post('jadwalkepsek/pdf/custom', 'JadwalkepsekpdfCustom')->name('jadwalkepsekcustom.pdf');
     Route::get('jadwalkepsek/excel', 'Jadwalkepsekexcel')->name('jadwalkepsek.excel');
 
 
     Route::get('jadwal/pdf', 'Jadwalpdf')->name('jadwal.pdf');
+    Route::post('jadwal/pdf/cutom', 'JadwalpdfCustom')->name('jadwalcutom.pdf');
     Route::get('jadwal/excel', 'Jadwalexcel')->name('jadwal.excel');
 
     Route::get('jadwalmapel/pdf', 'Jadwalmapelpdf')->name('jadwalmapel.pdf');
@@ -429,4 +431,3 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/messages/updateSettings', [MessagesController::class, 'updateSettings'])->name('messages.updateSettings');
     Route::post('/messages/setActiveStatus', [MessagesController::class, 'setActiveStatus'])->name('messages.setActiveStatus');
 });
-
