@@ -383,8 +383,6 @@
                                 <option value="3">Portofolio</option>
                                 <option value="4">Produk</option>
                                 <option value="5">Lainnya</option>
-
-
                             </select>
                         </div>
                         <div class="col-span-12 sm:col-span-12"> <label for="modal-form-2" class="form-label">Kompetensi

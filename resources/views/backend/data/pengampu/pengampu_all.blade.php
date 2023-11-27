@@ -38,7 +38,7 @@
                                         <th style="white-space: nowrap;">Mata Pelajaran</th>
                                         <th style="white-space: nowrap;">Kode Mapel</th>
                                         <th>Kelas</th>
-                                        {{--  <th>Kurikulum</th>  --}}
+                                       
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
@@ -55,8 +55,7 @@
                                             <td style="white-space: nowrap;"> {{ $item['kelass']['tingkat'] }}
                                                 {{ $item['kelass']['nama'] }}
                                                 {{ $item['kelass']['jurusans']['nama'] }} </td>
-                                            {{--  <td> {{ $item->kurikulum }} </td>  --}}
-
+                                         
 
                                             <td>
                                                 <a id="delete" href="{{ route('pengampu.delete', $item->id) }}"

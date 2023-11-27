@@ -673,9 +673,80 @@
                             {{--  // end bagian  guru //  --}}
                         </div>
                     @endif
+
+
+                    {{--  // bagian  siswa //  --}}
+                    @if (Auth::user()->role == '6')
+                        @php
+                            $userId = Auth::user()->id;
+                            $siswa = App\Models\Siswa::where('id_user', $userId)->first();
+
+                            $rombelSiswaIds = App\Models\Rombelsiswa::where('id_siswa', $siswa->id)
+                                ->pluck('id')
+                                ->toArray();
+                            if ($rombelSiswaIds) {
+                                $rombelSiswa = App\Models\RombelSiswa::whereIn('id', $rombelSiswaIds)->get();
+                                if ($rombelSiswa) {
+                                    $nilaiSiswaKd3 = App\Models\NilaisiswaKd3::whereIn('id_rombelsiswa', $rombelSiswaIds)
+                                        ->whereNotNull('tugas')
+                                        ->whereNotNull('materi')
+                                        ->count();
+                                    $nilaiSiswaKd4 = App\Models\NilaisiswaKd4::whereIn('id_rombelsiswa', $rombelSiswaIds)
+                                        ->whereNotNull('tugas')
+                                        ->whereNotNull('materi')
+                                        ->count();
+                                }
+                            }
+                            $tugassiswa = $nilaiSiswaKd3 + $nilaiSiswaKd4;
+
+                            $jadwalmapelsiswa = App\Models\Jadwalmapel::join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
+                                ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
+                                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                                ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
+                                ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
+                                ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+                                ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+                                ->where('status', '=', '2')
+                                ->where('siswas.id_user', '=', $userId)
+                                ->orderBy('kelas.tingkat', 'asc')
+                                ->orderBy('kelas.nama', 'asc')
+                                ->orderBy('haris.kode_hari', 'asc')
+                                ->orderBy('waktus.range', 'asc')
+                                ->count();
+
+                        @endphp
+                        <div class="grid grid-cols-12 gap-6 mt-3">
+                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div class="report-box zoom-in">
+                                    <div class="box p-5">
+                                        <div class="flex">
+                                            <i data-lucide="file" class="report-box__icon text-pending"></i>
+
+                                        </div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwalmapelsiswa }}</div>
+                                        <div class="text-base text-slate-500 mt-1">Jadwal Mata Pelajaran</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
+                                <div class="report-box zoom-in">
+                                    <div class="box p-5">
+                                        <div class="flex">
+                                            <i data-lucide="file" class="report-box__icon text-primary"></i>
+
+                                        </div>
+                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $tugassiswa }}</div>
+                                        <div class="text-base text-slate-500 mt-1">Tugas Harian</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    {{--  // end bagian  siswa //  --}}
+
                 </div>
                 <!-- END: General Report -->
-
 
             </div>
         </div>
@@ -708,7 +779,7 @@
                                 </div>
                                 <div class="text-slate-600 dark:text-slate-500 mt-5">
                                     <p> {{ $item->ket }} </p> <br>
-                                    <span > {{$item->created_at}} </span>
+                                    <span> {{ $item->created_at }} </span>
                                 </div>
                             </div>
                             @if ($item->link != null)

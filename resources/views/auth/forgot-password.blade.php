@@ -52,9 +52,7 @@
                         Forgot Password
                     </h2>
 
-                    <div class="intro-x mt-2 text-slate-400 xl:hidden text-center">A few more clicks to sign in to
-                        your
-                        account. Manage all your e-commerce accounts in one place</div>
+                    <div class="intro-x mt-2 text-slate-400 xl:hidden text-center"></div>
                     <form method="POST" action="{{ route('password.email') }}">
                         @csrf
                         <div class="intro-x mt-8">

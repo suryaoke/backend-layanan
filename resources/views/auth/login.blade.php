@@ -53,7 +53,7 @@
                         Login
                     </h2>
                     <div class="intro-x mt-2 text-slate-400 xl:hidden text-center">
-                        Manage all your services in one place</div>
+                    </div>
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
                         <div class="intro-x mt-8">
@@ -64,20 +64,15 @@
                                 class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password"
                                 required>
                         </div>
-
-
                         <div class=" intro-x float-right mt-4 text-primary">
                             <a href="{{ route('password.request') }}">Forgot Password?</a>
                         </div>
-
                         <div class="intro-x mt-5 xl:mt-8 text-center xl:text-left">
                             <button class="btn btn-primary py-3 px-4 w-full xl:w-32 xl:mr-3 align-top"
                                 type="submit">Login</button>
-
                             {{--  <a href="{{ route('register') }}"
                                 class="btn btn-outline-secondary py-3 px-4 w-full xl:w-32 mt-3 xl:mt-0 align-top">
                                 Register</a>  --}}
-
                         </div>
                     </form>
                     <div class="intro-x mt-10 xl:mt-24 text-slate-600 dark:text-slate-500 text-center xl:text-left">

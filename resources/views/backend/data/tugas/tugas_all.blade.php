@@ -356,7 +356,7 @@
     </script>
 
 
-    <!-- BEGIN: Edit Pengetahuan  -->
+    <!-- BEGIN: Tugas Pengetahuan  -->
 
     @foreach ($nilaiSiswaKd3 as $key => $item)
         @php
@@ -368,7 +368,7 @@
             <div class="modal-dialog">
                 <div class="modal-content"> <!-- BEGIN: Modal Header -->
                     <div class="modal-header">
-                        <h2 class="font-medium text-base mr-auto">Nilai Pengetahuan</h2>
+                        <h2 class="font-medium text-base mr-auto">Tugas Pengetahuan</h2>
 
                     </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
                     <form method="post" action="{{ route('tugaskd3.update') }}"
@@ -427,7 +427,7 @@
         </div> <!-- END: Modal Content Pengetahuan-->
     @endforeach
 
-    <!-- BEGIN: Edit Keterampilan  -->
+    <!-- BEGIN: Tugas Keterampilan  -->
 
     @foreach ($nilaiSiswaKd4 as $key => $item)
         @php
@@ -439,7 +439,7 @@
             <div class="modal-dialog">
                 <div class="modal-content"> <!-- BEGIN: Modal Header -->
                     <div class="modal-header">
-                        <h2 class="font-medium text-base mr-auto">Nilai Keterampilan</h2>
+                        <h2 class="font-medium text-base mr-auto">Tugas Keterampilan</h2>
 
                     </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
                     <form method="post" action="{{ route('tugaskd4.update') }}"
