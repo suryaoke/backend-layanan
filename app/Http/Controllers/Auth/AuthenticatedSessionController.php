@@ -34,13 +34,7 @@ class AuthenticatedSessionController extends Controller
         $user->last =  Carbon::now();
         $user->save();
 
-        $notification = array(
-            'message' => 'User Login Successfully',
-            'alert-type' => 'success'
-        );
-
-
-        return redirect()->intended(RouteServiceProvider::HOME)->with($notification);
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

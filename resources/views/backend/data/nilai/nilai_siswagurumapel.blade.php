@@ -7,7 +7,7 @@
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Excel
         </a>  --}}
-        <a class="btn btn-primary btn-block" href="{{ route('nilai.pdf') }} ">
+        <a class="btn btn-primary btn-block" href="{{ route('nilaimapel.pdf') }} ">
             <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
                 class="w-4 h-4"></i>&nbsp;Export Pdf
         </a>
@@ -175,7 +175,7 @@
                                                                                     </th>
                                                                                     <th class="whitespace-nowrap">Kelas
                                                                                     </th>
-                                                                                   
+
 
 
                                                                                     @php
@@ -357,7 +357,8 @@
                                                         <label for="modal-form-6"
                                                             class="form-label mt-6 mb-4 ml-8">Kelas</label>
 
-                                                        <form role="form" action="{{ route('NilaiSiswaGuruMapel.all') }}"
+                                                        <form role="form"
+                                                            action="{{ route('NilaiSiswaGuruMapel.all') }}"
                                                             method="get" class="sm:flex">
 
                                                             <select name="searchmapel1" class="tom-select w-full mr-4"

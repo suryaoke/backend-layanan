@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Data Jadwal Mata Pelajaran</title>
+    <title>Jadwal Mata Pelajaran</title>
     <style>
         table {
             border-collapse: collapse;
@@ -26,14 +26,14 @@
 </head>
 
 <body>
-    <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;">Data Jadwal Mata Pelajaran
+    <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;">Jadwal Mata Pelajaran
     </h3>
     <p>{{ $time }}</p>
 
     <table>
         <thead>
             <tr>
-                <th>No</th>
+                
                 <th style="white-space: nowrap;">Seksi</th>
                 <th style="white-space: nowrap;">Kode</th>
                 <th style="white-space: nowrap;">Hari</th>
@@ -48,7 +48,7 @@
         </thead>
         <tbody>
 
-            @foreach ($jadwalmapel as $key => $item)
+            @foreach ($jadwalmapel as $item)
                 @php
                     $pengampuid = App\Models\Pengampu::find($item->id_pengampu);
                     $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
@@ -57,7 +57,7 @@
                 @endphp
 
                 <tr>
-                    <td align="center">{{ $key + 1 }}</td>
+                 
                     <td class="text-primary">
                         {{ $item->kode_jadwalmapel }}
                     </td>

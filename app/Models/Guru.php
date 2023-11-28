@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Guru extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $guarded = [];
 
     public function pengampu()
@@ -27,6 +28,6 @@ class Guru extends Model
 
     public function walass()
     {
-        return $this->belongsTo(Walas::class, 'id' , 'id_guru');
+        return $this->belongsTo(Walas::class, 'id', 'id_guru');
     }
 }

@@ -59,10 +59,9 @@
                         <div class="intro-x mt-8">
                             <input type="text" id="username" name="username"
                                 class="intro-x login__input form-control py-3 px-4 block" placeholder="Username"
-                                required>
+                                >
                             <input id="password" name="password" type="password"
-                                class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password"
-                                required>
+                                class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password">
                         </div>
                         <div class=" intro-x float-right mt-4 text-primary">
                             <a href="{{ route('password.request') }}">Forgot Password?</a>
