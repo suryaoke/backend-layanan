@@ -31,6 +31,20 @@
         </div>
 
         <div class="mt-3">
+            <label>Tempat dan Tanggal Lahir</label>
+            <div class="flex flex-col sm:flex-row mt-2">
+                <div class="form-check mr-2">
+                    <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                        placeholder="Masukkan Tempat Lahir" name="tempat" id="tempat">
+                </div>
+                <div class="form-check mr-2 mt-2 sm:mt-0">
+                    <input type="date" class="intro-x login__input form-control py-3 px-4 block mt-1" name="tanggal"
+                        id="tanggal">
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-3">
             <label>Jenis Kelamin</label>
             <div class="flex flex-col sm:flex-row mt-2">
                 <div class="form-check mr-2">
@@ -43,22 +57,26 @@
                 </div>
             </div>
         </div>
-        @if (Auth::user()->role == '1')
-            <div class="mt-4">
-                <label for=""> Username</label>
-                <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
-                    <option value="">Pilih Username</option>
-                    <option value="0">Kosong</option>
-                    @foreach ($user as $item)
-                        <option value="{{ $item->id }}">{{ $item->username }}</option>
-                    @endforeach
-                </select>
-            </div>
-        @endif
+        <div class="mt-3">
+            <label>Username</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                placeholder="Masukkan Username" name="username" id="username" title="Please enter only numbers" required>
+        </div>
+
+
+        <input value="12345678" type="hidden" class="intro-x login__input form-control py-3 px-4 block mt-1"
+            placeholder="Masukkan Password" name="password" id="password">
+
+        <input value="12345678" type="hidden" class="intro-x login__input form-control py-3 px-4 block mt-1"
+            placeholder="Masukkan Password" name="password_confirmation" id="password_confirmation">
+
+
+
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
-            <a href="{{ route('siswa.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "
+            <a href="{{ route('siswa.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top "
                 type="submit">Cancel</a>
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
+            
 
         </div>
     </form>
@@ -76,11 +94,18 @@
                     nisn: {
                         required: true,
                     },
-                    
+
                     jk: {
                         required: true,
                     },
-                    id_user: {
+                    username: {
+                        required: true,
+                    },
+
+                    tempat: {
+                        required: true,
+                    },
+                    tanggal: {
                         required: true,
                     },
                 },
@@ -91,12 +116,18 @@
                     nisn: {
                         required: 'Please Enter Your NISN',
                     },
-                   
+
                     jk: {
                         required: 'Please Select Your Jenis Kelamin',
                     },
-                    id_user: {
+                    username: {
                         required: 'Please Select Your Username',
+                    },
+                    tempat: {
+                        required: 'Please Select Your Tempat',
+                    },
+                    tanggal: {
+                        required: 'Please Select Your Tanggal',
                     },
                 },
                 errorElement: 'span',

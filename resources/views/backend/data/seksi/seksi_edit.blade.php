@@ -121,9 +121,10 @@
 
 
         <div class="mt-2">
-            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('seksi.all') }}">Cancel
+             <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-2 align-top" href="{{ route('seksi.all') }}">Cancel
             </a>
+            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+           
         </div>
 
     </form>

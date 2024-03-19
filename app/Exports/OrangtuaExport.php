@@ -3,90 +3,26 @@
 namespace App\Exports;
 
 
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use App\Models\Jadwalmapel;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class OrangtuaExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithStyles
+
+
+class OrangtuaExport implements FromView
 {
     protected $orangtua;
-    protected $counter = 1;
+
     public function __construct($orangtua)
     {
         $this->orangtua = $orangtua;
     }
 
-    public function collection()
+    public function view(): View
     {
-        return $this->orangtua;
-    }
-    public function map($orangtua): array
-    {
-
-        return [
-            'No' => $this->counter++,
-            'Kode Orangtua' => isset($orangtua->kode_ortu) ? $orangtua->kode_ortu : '',
-            'Nama' => isset($orangtua->nama) ? $orangtua->nama : '',
-            'No Hp' => isset($orangtua->no_hp) ? $orangtua->no_hp : '',
-            'Username' => isset($orangtua->users->username) ? $orangtua->users->username : '',
-            'Nama Siswa' => isset($orangtua->siswas->nama) ? $orangtua->siswas->nama : '',
-
-        ];
-    }
-
-
-    public function headings(): array
-    {
-        return [
-            'No',
-            'kode Orangtua',
-            'Nama',
-            'No Hp',
-            'Username',
-            'Nama Siswa',
-
-        ];
-    }
-    public function styles(Worksheet $sheet)
-    {
-        $sheet->getStyle('A1:F1')->applyFromArray([
-            'font' => [
-                'bold' => true,
-            ],
-            'alignment' => [
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-            ],
+        return view('backend.data.orangtua.excel', [
+            'orangtua' => $this->orangtua
         ]);
-
-        $sheet->getStyle('A1:F1')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-        $highestRow = $sheet->getHighestRow();
-        $highestColumn = $sheet->getHighestColumn();
-
-        $sheet->getStyle('A2:' . $highestColumn . $highestRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-        return [
-            'A1:F1' => [
-                'font' => [
-                    'bold' => true,
-                ],
-                'alignment' => [
-                    'horizontal' => Alignment::HORIZONTAL_CENTER,
-                ],
-            ],
-            'A2:' . $highestColumn . $highestRow => [
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => Border::BORDER_THIN,
-                        'color' => ['argb' => '000000'],
-                    ],
-                ],
-            ],
-        ];
     }
 }

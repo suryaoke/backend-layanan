@@ -81,23 +81,12 @@
             <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
-        <div class="mt-4">
-            <label for="kurikulum">Kurikulum</label>
-
-            <div class="input-group mt-1">
-                <div id="input-group-email" class="input-group-text">
-                    <i data-lucide="file"></i>
-                </div>
-                <input type="text" class="intro-x login__input form-control py-3 px-4 block " name="kurikulum"
-                    id="kurikulum" value="2013" readonly>
-            </div>
-            <span id="error-kurikulum" class="text-sm text-red-600"></span>
-        </div>
 
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
-            <a href="{{ route('pengampu.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top"
+            <a href="{{ route('pengampu.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top"
                 type="submit">Cancel</a>
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
+
         </div>
 
     </form>
@@ -119,9 +108,7 @@
                     kelas: {
                         required: true,
                     },
-                    kurikulum: {
-                        required: true,
-                    },
+
                 },
                 messages: {
                     // Your form validation messages
@@ -134,9 +121,7 @@
                     kelas: {
                         required: 'Please Enter Your Kelas',
                     },
-                    kurikulum: {
-                        required: 'Please Enter Your Kurikulum',
-                    },
+
                 },
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',

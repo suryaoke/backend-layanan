@@ -23,7 +23,7 @@ class AbsensiController extends Controller
 
             $ortu = OrangTua::where('id_user', $userId)->first();
             $siswa = Siswa::find($ortu->id_siswa);
-            $absensi = Absensi::where('id_siswa', $siswa->id)->limit(7)->get();
+            $absensi = Absensi::where('id_siswa', $siswa->id)->orderByRaw("STR_TO_DATE(tanggal, '%d/%m/%Y') DESC")->limit(7)->get();
 
             $responseAbsensi = [];
             foreach ($absensi as $absen) {

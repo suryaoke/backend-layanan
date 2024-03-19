@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers\Pos;
 
+use App\Exports\JadwalmapelguruExport;
+use App\Exports\JadwalmapelsExport;
+use App\Exports\JadwalmapelskepsekExport;
 use App\Http\Controllers\Controller;
-use App\Models\Guru;
 use App\Models\Hari;
 use App\Models\Jadwalmapel;
 use App\Models\Kelas;
 use App\Models\Mapel;
+use App\Models\OrangTua;
 use App\Models\Pengampu;
+use App\Models\Rombel;
+use App\Models\Rombelsiswa;
 use App\Models\Ruangan;
+use App\Models\Siswa;
+use App\Models\Tahunajar;
 use App\Models\Waktu;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class JadwalmapelController extends Controller
 {
@@ -27,6 +34,7 @@ class JadwalmapelController extends Controller
         $searchGuru = $request->input('searchguru');
         $searchMapel = $request->input('searchmapel');
         $searchKelas = $request->input('searchkelas');
+        $searchTahun = $request->input('searchtahun');
 
         $query = Jadwalmapel::query();
 
@@ -63,33 +71,58 @@ class JadwalmapelController extends Controller
                 });
             });
         }
+
+        if (!empty($searchTahun)) {
+            $query->whereHas('tahun', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
         // End Bagian search Data //
 
+        $tanggalSaatIni = Carbon::now();
+
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
 
 
-        // $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
-        //     ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
-        //     ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-        //     ->join('kelas', 'pengampus.kelas',    '=',    'kelas.id')
-        //     ->orderBy('kelas.tingkat', 'asc')
-        //     ->orderBy('kelas.nama', 'asc')
-        //     ->orderBy('haris.kode_hari', 'asc')
-        //     ->orderBy('waktus.range', 'asc')
-        //     ->get();
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
 
-        $jadwalmapel = $query->select('kelas.id as kelas_id', 'jadwalmapels.*')
-            ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
-            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
-            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
-            ->orderBy('kelas.tingkat')
-            ->orderBy('kelas.nama')
-            ->orderBy('haris.kode_hari')
-            ->orderBy('waktus.range')
-            ->get();
+            $jadwalmapel = $query
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
 
+            $jadwal = $jadwalmapel->first();
+        } elseif ($searchTahun) {
 
+            $jadwalmapel = $query
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } else {
 
+            $jadwalmapel = $query
+
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->where('id_tahunajar', $tahunAjarSaatIni->id)
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        }
 
         $hari = Hari::orderby('kode_hari', 'asc')->get();
 
@@ -97,18 +130,35 @@ class JadwalmapelController extends Controller
         $ruangan = Ruangan::all();
 
         $mapel = Mapel::all();
+        $tahunajar = Tahunajar::all();
 
         $pengampu = Pengampu::orderby('id', 'asc')
-            ->whereNotIn('id', function ($query) {
-                $query->select('id_pengampu')
-                    ->from('jadwalmapels');
-            })
+            // ->whereNotIn('id', function ($query) {
+            //     $query->select('id_pengampu')
+            //         ->from('jadwalmapels');
+            // })
+            ->get();
+
+
+        $datatahun = Tahunajar::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('jadwalmapels')
+                ->whereRaw('jadwalmapels.id_tahunajar = tahunajars.id');
+        })->orderby('id', 'desc')
             ->get();
 
 
 
-        $kelas = Kelas::orderBy('tingkat')->get();
-        return view('backend.data.jadwalmapel.jadwalmapel_all', compact('kelas', 'pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
+        $kelas = Kelas::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('pengampus')
+                ->join('jadwalmapels', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->whereRaw('pengampus.kelas = kelas.id');
+        })->orderBy('id', 'desc')
+            ->get();
+
+
+        return view('backend.data.jadwalmapel.jadwalmapel_all', compact('datatahun', 'jadwal', 'tahunajar', 'kelas', 'pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
     } // end method
 
 
@@ -137,6 +187,7 @@ class JadwalmapelController extends Controller
                 'id_hari' => $request->id_hari,
                 'id_waktu' => $request->id_waktu,
                 'id_ruangan' => $request->id_ruangan,
+                'id_tahunajar' => $request->id_tahunajar,
                 'status' => '0',
                 'created_by' => Auth::user()->id,
                 'created_at' => Carbon::now(),
@@ -168,6 +219,7 @@ class JadwalmapelController extends Controller
                     'id_pengampu' => $request->id_pengampu,
                     'id_hari' => $request->id_hari,
                     'id_waktu' => $request->id_waktu,
+                    'id_tahunajar' => $request->id_tahunajar,
                     'id_ruangan' => $request->id_ruangan,
                     'status' => '0',
                     'created_by' => Auth::user()->id,
@@ -187,6 +239,7 @@ class JadwalmapelController extends Controller
                 'id_hari' => $request->id_hari,
                 'id_waktu' => $request->id_waktu,
                 'id_ruangan' => $request->id_ruangan,
+                'id_tahunajar' => $request->id_tahunajar,
                 'status' => '0',
                 'created_by' => Auth::user()->id,
                 'created_at' => Carbon::now(),
@@ -232,6 +285,8 @@ class JadwalmapelController extends Controller
         $jadwalmapel->id_hari = $request->input('id_hari');
         $jadwalmapel->id_waktu = $request->input('id_waktu');
         $jadwalmapel->id_ruangan = $request->input('id_ruangan');
+        $jadwalmapel->id_tahunajar = $request->input('id_tahunajar');
+
         // Tambahkan pembaruan lain sesuai kebutuhan Anda
 
         // Menyimpan perubahan ke dalam database
@@ -296,6 +351,7 @@ class JadwalmapelController extends Controller
         $searchGuru = $request->input('searchguru');
         $searchMapel = $request->input('searchmapel');
         $searchKelas = $request->input('searchkelas');
+        $searchTahun = $request->input('searchtahun');
 
         $query = Jadwalmapel::query();
 
@@ -332,32 +388,71 @@ class JadwalmapelController extends Controller
                 });
             });
         }
+
+        if (!empty($searchTahun)) {
+            $query->whereHas('tahun', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
         // End Bagian search Data //
 
-        // $jadwalmapel = $query->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
-        //     ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
-        //     ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-        //     ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
-        //     ->where('status', '>=', 1)
-        //     ->where('status', '<=', 3)
-        //     ->orderBy('kelas.tingkat', 'asc')
-        //     ->orderBy('kelas.nama', 'asc')
-        //     ->orderBy('haris.kode_hari', 'asc')
-        //     ->orderBy('waktus.range', 'asc')
-        //     ->get();
-        $jadwalmapel = $query->select('kelas.id as kelas_id', 'jadwalmapels.*')
-            ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
-            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
-            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
-            ->where('status', '>=', 1)
-            ->where('status', '<=', 3)
-            ->orderBy('kelas.tingkat')
-            ->orderBy('kelas.nama')
-            ->orderBy('haris.kode_hari')
-            ->orderBy('waktus.range')
-            ->get();
+        $tanggalSaatIni = Carbon::now();
 
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
+
+
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
+
+            $jadwalmapel = $query
+                ->where('status', '>=', 1)
+                ->where('status', '<=', 3)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } elseif ($searchTahun) {
+
+            $jadwalmapel = $query
+                ->where('status', '>=', 1)
+                ->where('status', '<=', 3)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } else {
+
+
+            $jadwalmapel = $query
+                ->where('status', '>=', 1)
+                ->where('status', '<=', 3)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->where('id_tahunajar', $tahunAjarSaatIni->id)
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        }
+
+
+        $datatahun = Tahunajar::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('jadwalmapels')
+                ->whereRaw('jadwalmapels.id_tahunajar = tahunajars.id');
+        })->orderby('id', 'desc')
+            ->get();
 
         $hari = Hari::all();
 
@@ -367,8 +462,14 @@ class JadwalmapelController extends Controller
         $mapel = Mapel::all();
 
         $pengampu = Pengampu::all();
-        $kelas = Kelas::orderBy('tingkat')->get();
-        return view('backend.data.jadwalmapel.jadwalmapel_kepsek', compact('kelas', 'pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
+        $kelas = Kelas::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('pengampus')
+                ->join('jadwalmapels', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->whereRaw('pengampus.kelas = kelas.id');
+        })->orderBy('id', 'desc')
+            ->get();
+        return view('backend.data.jadwalmapel.jadwalmapel_kepsek', compact('datatahun', 'jadwal', 'kelas', 'pengampu', 'ruangan', 'mapel',  'hari', 'waktu',  'jadwalmapel'));
     } // end method
 
 
@@ -422,6 +523,7 @@ class JadwalmapelController extends Controller
         $searchGuru = $request->input('searchguru');
         $searchMapel = $request->input('searchmapel');
         $searchKelas = $request->input('searchkelas');
+        $searchTahun = $request->input('searchtahun');
 
         $query = Jadwalmapel::query();
 
@@ -459,27 +561,91 @@ class JadwalmapelController extends Controller
             });
         }
         // End Bagian search Data //
+        if (!empty($searchTahun)) {
+            $query->whereHas('tahun', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
+        $tanggalSaatIni = Carbon::now();
 
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
+
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
+
+            $userId = Auth::user()->id;
+
+            $jadwalmapel = $query
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+                ->where('status', '=', '2')
+                ->where('gurus.id_user', '=', $userId)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } elseif ($searchTahun) {
+
+
+            $userId = Auth::user()->id;
+
+            $jadwalmapel = $query
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+                ->where('status', '=', '2')
+                ->where('gurus.id_user', '=', $userId)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } else {
+
+            $userId = Auth::user()->id;
+
+            $jadwalmapel = $query
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+                ->where('status', '=', '2')
+                ->where('gurus.id_user', '=', $userId)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->where('id_tahunajar', $tahunAjarSaatIni->id)
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        }
+
+
+        $datatahun = Tahunajar::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('jadwalmapels')
+                ->whereRaw('jadwalmapels.id_tahunajar = tahunajars.id');
+        })->orderby('id', 'desc')
+            ->get();
         $userId = Auth::user()->id;
 
-        $jadwalmapel = $query
-            ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
-            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
-            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
-            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
-            ->where('status', '=', '2')
-            ->where('gurus.id_user', '=', $userId)
-            ->orderBy('kelas.tingkat', 'asc')
-            ->orderBy('kelas.nama', 'asc')
-            ->orderBy('haris.kode_hari', 'asc')
-            ->orderBy('waktus.range', 'asc')
+        $kelas = Kelas::whereExists(function ($query) use ($userId) {
+            $query->select(DB::raw(1))
+                ->from('pengampus')
+                ->join('jadwalmapels', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+                ->where('gurus.id_user', '=', $userId)
+                ->whereRaw('pengampus.kelas = kelas.id');
+        })->orderBy('id', 'desc')
             ->get();
-
-
-
-        $kelas = Kelas::orderBy('tingkat')->get();
-        return view('backend.data.jadwalmapel.jadwalmapel_guru', compact('kelas', 'jadwalmapel'));
+        return view('backend.data.jadwalmapel.jadwalmapel_guru', compact('jadwal', 'datatahun', 'kelas', 'jadwalmapel'));
     } // end method
 
 
@@ -490,7 +656,7 @@ class JadwalmapelController extends Controller
         $searchHari = $request->input('searchhari');
         $searchGuru = $request->input('searchguru');
         $searchMapel = $request->input('searchmapel');
-
+        $searchTahun = $request->input('searchtahun');
 
         $query = Jadwalmapel::query();
 
@@ -519,31 +685,310 @@ class JadwalmapelController extends Controller
             });
         }
 
+        if (!empty($searchTahun)) {
+            $query->whereHas('tahun', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
 
         // End Bagian search Data //
 
-        $userId = Auth::user()->id;
+        $tanggalSaatIni = Carbon::now();
 
-        $jadwalmapel = $query
-            ->join('waktus', 'jadwalmapels.id_waktu', '=', 'waktus.id')
-            ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
-            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-            ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
-            ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
-            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
-            ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
-            ->where('status', '=', '2')
-            ->where('siswas.id_user', '=', $userId)
-            ->orderBy('kelas.tingkat', 'asc')
-            ->orderBy('kelas.nama', 'asc')
-            ->orderBy('haris.kode_hari', 'asc')
-            ->orderBy('waktus.range', 'asc')
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
+
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
+
+            $userId = Auth::user()->id;
+
+            $jadwalmapel = $query
+
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+
+                ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
+                ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+                ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+                ->where('status', '=', '2')
+                ->where('siswas.id_user', '=', $userId)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } elseif ($searchTahun) {
+
+
+            $userId = Auth::user()->id;
+
+            $jadwalmapel = $query
+
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+
+                ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
+                ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+                ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+                ->where('status', '=', '2')
+                ->where('siswas.id_user', '=', $userId)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } else {
+
+            $userId = Auth::user()->id;
+
+            $jadwalmapel = $query
+
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+
+                ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
+                ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+                ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+                ->where('status', '=', '2')
+                ->where('siswas.id_user', '=', $userId)
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->where('id_tahunajar', $tahunAjarSaatIni->id)
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        }
+
+
+        $datatahun = Tahunajar::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('jadwalmapels')
+                ->whereRaw('jadwalmapels.id_tahunajar = tahunajars.id');
+        })->orderby('id', 'desc')
             ->get();
 
 
-
-        $kelas = Kelas::orderBy('tingkat')->get();
-        return view('backend.data.jadwalmapel.jadwalmapel_siswa', compact('kelas', 'jadwalmapel'));
+        $kelas = Kelas::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('pengampus')
+                ->join('jadwalmapels', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->whereRaw('pengampus.kelas = kelas.id');
+        })->orderBy('id', 'desc')
+            ->get();
+        return view('backend.data.jadwalmapel.jadwalmapel_siswa', compact('jadwal', 'datatahun', 'kelas', 'jadwalmapel'));
     } // end method
 
+
+    public function JadwalmapelOrtu(Request $request)
+    {
+
+        // Bagian search Data //
+        $searchHari = $request->input('searchhari');
+        $searchGuru = $request->input('searchguru');
+        $searchMapel = $request->input('searchmapel');
+        $searchTahun = $request->input('searchtahun');
+
+        $query = Jadwalmapel::query();
+
+        // Filter berdasarkan nama hari 
+        if (!empty($searchHari)) {
+            $query->whereHas('haris', function ($lecturerQuery) use ($searchHari) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchHari . '%');
+            });
+        }
+
+        // Filter berdasarkan nama guru 
+        if (!empty($searchGuru)) {
+            $query->whereHas('pengampus', function ($teachQuery) use ($searchGuru) {
+                $teachQuery->whereHas('gurus', function ($courseQuery) use ($searchGuru) {
+                    $courseQuery->where('nama', 'LIKE', '%' .   $searchGuru . '%');
+                });
+            });
+        }
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('pengampus', function ($teachQuery) use ($searchMapel) {
+                $teachQuery->whereHas('mapels', function ($courseQuery) use ($searchMapel) {
+                    $courseQuery->where('nama', 'LIKE', '%' .   $searchMapel . '%');
+                });
+            });
+        }
+
+        if (!empty($searchTahun)) {
+            $query->whereHas('tahun', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
+        // End Bagian search Data //
+
+        $tanggalSaatIni = Carbon::now();
+
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
+
+            $userId = Auth::user()->id;
+
+            $ortu = OrangTua::where('id_user', $userId)->first();
+            $siswa = Siswa::where('id', $ortu->id_siswa)->first();
+            $rombelsiswa = Rombelsiswa::where('id_siswa', $siswa->id)->first();
+            $rombel = Rombel::where('id', $rombelsiswa->id_rombel)->first();
+            $pengampu = Pengampu::where('kelas', $rombel->id_kelas)->get();
+
+            $pengampuId =   $pengampu->pluck('id')->toArray();
+
+
+            $jadwalmapel = $query
+                ->whereIn('id_pengampu', $pengampuId)
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->where('status', '=', '2')
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } elseif ($searchTahun) {
+
+
+            $userId = Auth::user()->id;
+
+            $ortu = OrangTua::where('id_user', $userId)->first();
+            $siswa = Siswa::where('id', $ortu->id_siswa)->first();
+            $rombelsiswa = Rombelsiswa::where('id_siswa', $siswa->id)->first();
+            $rombel = Rombel::where('id', $rombelsiswa->id_rombel)->first();
+            $pengampu = Pengampu::where('kelas', $rombel->id_kelas)->get();
+
+            $pengampuId =   $pengampu->pluck('id')->toArray();
+
+
+            $jadwalmapel = $query
+                ->whereIn('id_pengampu', $pengampuId)
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->where('status', '=', '2')
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        } else {
+
+            $userId = Auth::user()->id;
+
+            $ortu = OrangTua::where('id_user', $userId)->first();
+            $siswa = Siswa::where('id', $ortu->id_siswa)->first();
+            $rombelsiswa = Rombelsiswa::where('id_siswa', $siswa->id)->first();
+            $rombel = Rombel::where('id', $rombelsiswa->id_rombel)->first();
+            $pengampu = Pengampu::where('kelas', $rombel->id_kelas)->get();
+
+            $pengampuId =   $pengampu->pluck('id')->toArray();
+
+
+            $jadwalmapel = $query
+                ->whereIn('id_pengampu', $pengampuId)
+                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->where('status', '=', '2')
+                ->orderBy('id_hari')
+                ->orderBy('id_Waktu', 'desc')
+                ->where('id_tahunajar', $tahunAjarSaatIni->id)
+                ->get();
+            $jadwal = $jadwalmapel->first();
+        }
+
+
+        $datatahun = Tahunajar::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('jadwalmapels')
+                ->whereRaw('jadwalmapels.id_tahunajar = tahunajars.id');
+        })->orderby('id', 'desc')
+            ->get();
+
+        $kelas = Kelas::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('pengampus')
+                ->join('jadwalmapels', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+                ->whereRaw('pengampus.kelas = kelas.id');
+        })->orderBy('id', 'desc')
+            ->get();
+        return view('backend.data.jadwalmapel.jadwalmapel_ortu', compact('jadwal', 'datatahun', 'kelas', 'jadwalmapel'));
+    } // end method
+
+
+
+    public function JadwalmapelsExport(Request $request)
+    {
+        $tahunId =  $request->input('tahun');
+
+        $jadwalmapel = Jadwalmapel::orderBy('id_hari')
+            ->orderBy('id_Waktu', 'desc')
+            ->where('id_tahunajar', $tahunId)
+            ->get();
+        $jadwal = $jadwalmapel->first();
+        $tahun = Tahunajar::where('id', $tahunId)->first();
+
+        $fileName = 'Jadwal Mata Pelajaran MAN 1 Kota Padang Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
+        return Excel::download(new JadwalmapelsExport($jadwalmapel, $jadwal), $fileName);
+    }
+
+    public function JadwalmapelguruExport(Request $request)
+    {
+        $tahunId =  $request->input('tahun');
+        $userId = Auth::user()->id;
+        $jadwalmapel = Jadwalmapel::join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('gurus', 'pengampus.id_guru', '=', 'gurus.id')
+            ->where('status', '=', '2')
+            ->where('gurus.id_user', '=', $userId)
+            ->orderBy('id_hari')
+            ->orderBy('id_Waktu', 'desc')
+            ->where('id_tahunajar', $tahunId)
+            ->get();
+
+        $jadwal = $jadwalmapel->first();
+        $tahun = Tahunajar::where('id', $tahunId)->first();
+
+        $fileName = 'Jadwal Mata Pelajaran MAN 1 Kota Padang Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
+
+
+        return Excel::download(new JadwalmapelguruExport($jadwalmapel, $jadwal), $fileName);
+    }
+
+
+
+
+    public function JadwalmapelskepsekExport(Request $request)
+    {
+        $tahunId = $request->input('tahun');
+
+        $jadwalmapel = Jadwalmapel::orderBy('id_hari')
+            ->orderBy('id_waktu', 'desc')
+            ->where('status', '>=', 1)
+            ->where('status', '<=', 3)
+            ->where('id_tahunajar', $tahunId)
+            ->get();
+        $jadwal = $jadwalmapel->first();
+        $tahun = Tahunajar::where('id', $tahunId)->first();
+
+        $fileName = 'Jadwal Mata Pelajaran MAN 1 Kota Padang Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
+
+        return Excel::download(new JadwalmapelskepsekExport($jadwalmapel, $jadwal), $fileName);
+    }
 }

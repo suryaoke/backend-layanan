@@ -112,11 +112,35 @@
             <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
+        <div class="mt-4">
+            <label for="">Tahun Ajar</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="file"></i>
+                </div>
+                <select name="id_tahunjar" id="id_tahunjar" class="tom-select  w-full " required>
+                    <option value="">Pilih Tahun Ajar</option>
+                    @foreach ($tahun as $item)
+                        <option value="{{ $item->id }}">
+
+                            {{ $item->semester }} - {{ $item->tahun }} </option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>
+
+
 
         <div class="mt-4">
-            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('rombel.all') }}">Cancel
+            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-2 align-top" href="{{ route('rombel.all') }}">Cancel
             </a>
+            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+
         </div>
     </form>
 
@@ -140,6 +164,10 @@
                     'id_siswa[]': {
                         required: true,
                     },
+
+                    'id_tahunjar': {
+                        required: true,
+                    },
                 },
                 messages: {
                     kode_rombel: {
@@ -153,6 +181,9 @@
                     },
                     'id_siswa[]': {
                         required: 'Please Enter Your Siswa',
+                    },
+                'id_tahunjar': {
+                        required: 'Please Enter Your Tahun Ajar',
                     },
                 },
                 errorElement: 'span',

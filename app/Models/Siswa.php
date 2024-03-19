@@ -12,10 +12,6 @@ class Siswa extends Model
     protected $guarded = [];
 
 
-    public function absensi1()
-    {
-        return $this->hasMany(Absensi::class, 'siswa');
-    }
 
     public function users()
     {

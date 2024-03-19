@@ -91,8 +91,9 @@
             <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
         <div class="mt-4">
+              <a href="{{ route('kelas.all') }}" class="btn btn-danger h-10 w-full xl:w-32 xl:mr-2 align-top">Cancel</a>
             <button class="btn btn-primary  h-10 w-full xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a href="{{ route('kelas.all') }}" class="btn btn-danger h-10 w-full xl:w-32 xl:mr-3 align-top">Cancel</a>
+          
         </div>
 
     </form>

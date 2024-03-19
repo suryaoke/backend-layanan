@@ -40,18 +40,19 @@
                 placeholder="Masukkan No HP" name="no_hp" id="no_hp" pattern="[0-9]+"
                 title="Please enter only numbers" required>
         </div>
-        @if (Auth::user()->role == '1')
-            <div class="mt-4">
-                <label for=""> Username</label>
-                <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
-                    <option value="">Pilih Username</option>
-                    <option value="0">Kosong</option>
-                    @foreach ($user as $item)
-                        <option value="{{ $item->id }}">{{ $item->username }}</option>
-                    @endforeach
-                </select>
-            </div>
-        @endif
+        <div class="mt-3">
+            <label>Username</label>
+            <input type="text" class="intro-x login__input form-control py-3 px-4 block mt-1"
+                placeholder="Masukkan Username" name="username" id="username" title="Please enter only numbers" required>
+        </div>
+
+
+        <input value="12345678" type="hidden" class="intro-x login__input form-control py-3 px-4 block mt-1"
+            placeholder="Masukkan Password" name="password" id="password">
+
+        <input value="12345678" type="hidden" class="intro-x login__input form-control py-3 px-4 block mt-1"
+            placeholder="Masukkan Password" name="password_confirmation" id="password_confirmation">
+
 
         <div class="mt-4">
             <label for=""> Siswa</label>
@@ -66,9 +67,9 @@
 
 
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
-            <a href="{{ route('orangtua.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "
+             <a href="{{ route('orangtua.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top "
                 type="submit">Cancel</a>
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
 
         </div>
 
@@ -89,7 +90,7 @@
                         required: true,
                         digits: true,
                     },
-                    id_user: {
+                    username: {
                         required: true,
                     },
                     id_siswa: {
@@ -107,7 +108,7 @@
                         required: 'Please Enter Your No HP',
                         digits: 'Please enter only numbers',
                     },
-                    id_user: {
+                    username: {
                         required: 'Please Enter Your Username',
                     },
                     id_siswa: {

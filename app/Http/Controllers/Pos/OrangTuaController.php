@@ -2,19 +2,24 @@
 
 namespace App\Http\Controllers\Pos;
 
+use App\Exports\OrangtuaExport;
 use App\Http\Controllers\Controller;
+use App\Imports\OrangTuaImport;
 use App\Models\OrangTua;
 use App\Models\Siswa;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrangTuaController extends Controller
 {
     public function OrtuAll()
     {
-        $ortu = OrangTua::latest()->get();
+        $ortu = OrangTua::orderby('nama')->get();
 
         return view('backend.data.orangtua.orangtua_all', compact('ortu'));
     } // end method
@@ -33,20 +38,34 @@ class OrangTuaController extends Controller
     public function OrtuStore(Request $request)
     {
 
-        // $this->validate($request, [
-        //     'kode_gr' => 'required|max:50|unique:gurus,kode_gr',
-        // ]);
 
-        OrangTua::insert([
+        $orangtua = [
             'kode_ortu' => $request->kode_ortu,
             'nama' => $request->nama,
-            'id_user' => $request->id_user,
             'id_siswa' => $request->id_siswa,
             'no_hp' => $request->no_hp,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
+        ];
 
-        ]);
+        $user = null;
+
+        if ($request->has('username') && $request->username !== null) {
+            // Membuat email unik dengan menggunakan waktu saat ini
+            $email =  time() . '@example.com';
+
+            $user = User::create([
+                'name' => $request->nama,
+                'username' => $request->username,
+                'email' => $email,
+                'profile_image' => '',
+                'role' => 5,
+                'status' => 1,
+                'password' => Hash::make($request->password),
+            ]);
+            $orangtua['id_user'] = $user->id;
+        }
+        $orangtuaData = OrangTua::create($orangtua);
 
         $notification = array(
             'message' => 'Orang Tua Inserted SuccessFully',
@@ -57,34 +76,49 @@ class OrangTuaController extends Controller
 
     public function OrtuEdit($id)
     {
-        $siswa = Siswa::latest()->get();
+
         $ortu  = OrangTua::findOrFail($id);
         $orangtuaIds = OrangTua::pluck('id_user')->toArray();
+
         $user = User::where('role', '5')
-            ->whereNotIn('id',$orangtuaIds)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('orang_tuas')
+                    ->whereRaw('orang_tuas.id_user = users.id');
+            })
             ->get();
+
+
+
+        $siswa = Siswa::whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('orang_tuas')
+                    ->whereRaw('orang_tuas.id_siswa = siswas.id');
+            })
+            ->get();
+
         return view('backend.data.orangtua.orangtua_edit', compact('ortu', 'user', 'siswa'));
     }
     public function OrtuUpdate(Request $request)
     {
 
-        // $this->validate($request, [
-        //     'kode_gr' => 'required|max:50|unique:gurus,kode_gr',
-        // ]);
-
-
-        $ortu_id = $request->id;
-        OrangTua::findOrFail($ortu_id)->update([
+        $orangtua = OrangTua::findOrFail($request->id);
+        $orangtua->update([
             'kode_ortu' => $request->kode_ortu,
             'nama' => $request->nama,
-            'id_user' => $request->id_user,
             'id_siswa' => $request->id_siswa,
+            'id_user' => $request->id_user,
             'no_hp' => $request->no_hp,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 
         ]);
-
+        if ($request->has('username')) {
+            User::where('id', $orangtua->id_user)->update([
+                'username' => $request->username,
+                'name'  => $orangtua->nama,
+            ]);
+        }
         $notification = array(
             'message' => 'Orang Tua Updated SuccessFully',
             'alert-type' => 'success'
@@ -101,5 +135,33 @@ class OrangTuaController extends Controller
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
+    }
+
+    public function orangTuaImport(Request $request)
+    {
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataOrangtua', $namfile);
+            Excel::import(new OrangTuaImport, public_path('/DataOrangtua/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Orang Tua Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->route('orangtua.all')->with($notification);
+    }
+
+    public function OrangtuaExport(Request $request)
+    {
+
+
+        $orangtua = OrangTua::get();
+
+        return Excel::download(new OrangtuaExport($orangtua), 'Data Orangtua.xlsx');
     }
 }

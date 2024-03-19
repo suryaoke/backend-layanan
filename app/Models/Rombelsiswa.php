@@ -23,4 +23,6 @@ class Rombelsiswa extends Model
     {
         return $this->belongsTo(Rombel::class, 'id_rombel', 'id');
     }
+
+    
 }

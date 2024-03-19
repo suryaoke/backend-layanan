@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Pos;
 
+use App\Exports\SeksiExport;
 use App\Http\Controllers\Controller;
+use App\Models\CatataWalas;
 use App\Models\Guru;
 use App\Models\Jadwalmapel;
 use App\Models\Kd3;
@@ -15,34 +17,119 @@ use App\Models\NilaiKd4;
 use App\Models\NilaisiswaKd3;
 use App\Models\NilaisiswaKd4;
 use App\Models\Pengampu;
+use App\Models\Rapor;
 use App\Models\Rombel;
+use App\Models\Rombelsiswa;
 use App\Models\Seksi;
 use App\Models\Tahunajar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 use PhpParser\Node\Stmt\Else_;
 
 class SeksiController extends Controller
 {
-    public function SeksiAll()
+    public function SeksiAll(Request $request)
     {
 
-        $seksi = Seksi::orderBy('id', 'asc')->get();
+        $searchSeksi = $request->input('searchseksi');
+        $searchGuru = $request->input('searchguru');
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
+        $searchTahun = $request->input('searchtahun');
+
+        $query = Seksi::query();
 
 
-        return view('backend.data.seksi.seksi_all', compact('seksi'));
+        // Filter berdasarkan nama hari 
+        if (!empty($searchSeksi)) {
+            $query->where('kode_seksi', '=', $searchSeksi);
+        }
+
+        // Filter berdasarkan nama guru 
+
+        if (!empty($searchGuru)) {
+            $query->whereHas('jadwalmapels', function ($teachQuery) use ($searchGuru) {
+                $teachQuery->whereHas('pengampus', function ($courseQuery) use ($searchGuru) {
+
+                    $courseQuery->whereHas('gurus', function ($course1Query) use ($searchGuru) {
+
+                        $course1Query->where('nama', 'LIKE', '%' .   $searchGuru . '%');
+                    });
+                });
+            });
+        }
+
+
+        // Filter berdasarkan nama mata Pelajaran jika searchcourse tidak kosong
+        if (!empty($searchMapel)) {
+            $query->whereHas('jadwalmapels', function ($teachQuery) use ($searchMapel) {
+                $teachQuery->whereHas('pengampus', function ($courseQuery) use ($searchMapel) {
+
+                    $courseQuery->whereHas('mapels', function ($course1Query) use ($searchMapel) {
+
+                        $course1Query->where('nama', 'LIKE', '%' .   $searchMapel . '%');
+                    });
+                });
+            });
+        }
+
+
+
+        // Filter berdasarkan nama kelas jika searchclass tidak kosong
+        if (!empty($searchKelas)) {
+            $query->whereHas('rombels', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchKelas) {
+                    $courseQuery->where('id', 'LIKE', '%' .  $searchKelas . '%');
+                });
+            });
+        }
+
+        if (!empty($searchTahun)) {
+            $query->whereHas('semesters', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
+        // End Bagian search Data //
+
+
+
+        $seksi = $query->orderBy('id', 'asc')->get();
+
+        $datatahun = Tahunajar::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('seksis')
+                ->whereRaw('seksis.semester = tahunajars.id');
+        })->orderby('id', 'desc')
+            ->get();
+
+
+
+        $kelas = Kelas::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('rombels')
+                ->join('seksis', 'seksis.id_rombel', '=', 'rombels.id')
+                ->whereRaw('rombels.id_kelas = kelas.id');
+        })->orderBy('id', 'desc')
+            ->get();
+
+
+        return view('backend.data.seksi.seksi_all', compact('kelas', 'seksi', 'datatahun'));
     } // end method
 
     public function SeksiAdd()
     {
 
-        $guru = Guru::orderBy('kode_gr', 'asc')->get();
-        $kelas = Kelas::orderBy('nama', 'asc')->get();
+
+
         $semester = Tahunajar::orderBy('tahun', 'asc')->get();
         $rombel = Rombel::orderBy('id', 'asc')->get();
-        $jadwalmapel = Jadwalmapel::where('status', '2')->orderBy('id', 'asc')->get();
-        return view('backend.data.seksi.seksi_add', compact('jadwalmapel', 'rombel', 'semester', 'guru', 'kelas'));
+
+
+
+        return view('backend.data.seksi.seksi_add', compact('rombel', 'semester'));
     } // end method
 
 
@@ -51,21 +138,20 @@ class SeksiController extends Controller
 
         $semester = $request->semester;
         $id_rombel = $request->id_rombel;
-        $id_jadwal = $request->id_jadwal;
 
         // Pastikan tidak ada kombinasi yang sama dari semester, id_rombel, dan id_jadwal
-        $existingSeksi = Seksi::where('semester', $semester)
-            ->where('id_rombel', $id_rombel)
-            ->where('id_jadwal', $id_jadwal)
-            ->first();
+        // $existingSeksi = Seksi::where('semester', $semester)
+        //     ->where('id_rombel', $id_rombel)
 
-        if ($existingSeksi) {
-            $notification = array(
-                'message' => 'Kombinasi data seksi sudah ada..!!',
-                'alert-type' => 'warning'
-            );
-            return redirect()->back()->with($notification);
-        }
+        //     ->first();
+
+        // if ($existingSeksi) {
+        //     $notification = array(
+        //         'message' => 'Kombinasi data seksi sudah ada..!!',
+        //         'alert-type' => 'warning'
+        //     );
+        //     return redirect()->back()->with($notification);
+        // }
 
 
         $tanggal = Carbon::now()->toDateString(); // '2023-10-17'
@@ -73,41 +159,51 @@ class SeksiController extends Controller
         // Menghasilkan 6 karakter acak yang terdiri dari huruf besar, huruf kecil, dan angka
         $kode_acak = substr(str_shuffle('0123456789'), 0, 4);
         $kode_seksi = $tanggal_tanpa_strip . '.' . $kode_acak;
+        $rombel = Rombel::where('id', $request->id_rombel)->first();
 
 
-        Seksi::insert([
-            'semester' => $request->semester,
-            'id_rombel' => $request->id_rombel,
-            'kode_seksi' => $kode_seksi,
-            'id_jadwal' => $request->id_jadwal,
-            'created_by' => Auth::user()->id,
-            'created_at' => Carbon::now(),
-        ]);
+        $jadwal = Jadwalmapel::join(
+            'pengampus',
+            'pengampus.id',
+            '=',
+            'jadwalmapels.id_pengampu',
+        )
+            ->join('rombels', 'rombels.id_kelas', '=', 'pengampus.kelas')
+            ->where('rombels.id', $rombel->id)
+            ->where('id_tahunajar', $rombel->id_tahunjar)
+            ->where('status', '2')
+            ->select('jadwalmapels.*')
+            ->whereNotExists(function ($query) {
+                $query
+                    ->select(DB::raw(1))
+                    ->from('seksis')
+                    ->whereRaw('seksis.id_jadwal = jadwalmapels.id');
+            })
+            ->get();
+
+
+
+
+        foreach ($jadwal as $jadwals) {
+
+
+            Seksi::insert([
+                'semester' => $request->semester,
+                'id_rombel' => $request->id_rombel,
+                'kode_seksi' => $kode_seksi,
+                'id_jadwal' => $jadwals->id,
+                'created_by' => Auth::user()->id,
+                'created_at' => Carbon::now(),
+            ]);
+        }
+
+
 
         $notification = array(
             'message' => 'Seksi Inserted SuccessFully',
             'alert-type' => 'success'
         );
 
-        // Memasukkan data ke model Kd setelah menyimpan data ke model Seksi
-        $seksi = Seksi::where('semester', $semester)
-            ->where('id_rombel', $id_rombel)
-            ->where('id_jadwal', $id_jadwal)
-            ->first();
-
-        Ki3::insert([
-            'id_seksi' => $seksi->id,
-            'tahunajar' => $seksi->semester, // Pastikan $seksi->id sudah didefinisikan dengan benar
-            'created_by' => Auth::user()->id,
-            'created_at' => Carbon::now(),
-        ]);
-
-        Ki4::insert([
-            'id_seksi' => $seksi->id,
-            'tahunajar' => $seksi->semester, // Pastikan $seksi->id sudah didefinisikan dengan benar
-            'created_by' => Auth::user()->id,
-            'created_at' => Carbon::now(),
-        ]);
 
 
         return redirect()->route('seksi.all')->with($notification);
@@ -160,42 +256,31 @@ class SeksiController extends Controller
             return redirect()->back()->with($notification);
         }
 
-        $ki3 = Ki3::where('id_seksi', $id)->first();
-        $ki4 = Ki4::where('id_seksi', $id)->first();
-
-        if ($ki3) {
-            Kd3::where('id_ki3', $ki3->id)->delete();
-        }
-        if ($ki4) {
-            Kd4::where('id_ki4', $ki4->id)->delete();
-        }
-
-        $nilaikd3 = NilaiKd3::where('id_seksi', $id)->get();
-        $nilaikd4 = NilaiKd4::where('id_seksi', $id)->get();
-
-        if ($nilaikd3) {
-            foreach ($nilaikd3 as $data) {
-                NilaisiswaKd3::where('id_nilaikd3', $data->id)->delete();
-            }
-        }
-        if ($nilaikd4) {
-            foreach ($nilaikd4 as $data) {
-                NilaisiswaKd4::where('id_nilaikd4', $data->id)->delete();
-            }
-        }
 
 
         // Delete related entries
         $seksi->delete();
-        Ki3::where('id_seksi', $id)->delete();
-        Ki4::where('id_seksi', $id)->delete();
-        NilaiKd3::where('id_seksi', $id)->delete();
-        NilaiKd4::where('id_seksi', $id)->delete();
 
         $notification = array(
             'message' => 'Seksi Deleted Successfully',
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
+    }
+
+    public function SeksiExport(Request $request)
+    {
+        $tahun =  $request->input('tahun');
+
+        $seksi = Seksi::orderBy('id')
+            ->where('semester', $tahun)
+            ->get();
+        $dataseksi = $seksi->first();
+        $tahundata = Tahunajar::where('id', $tahun)->first();
+
+        $fileName = 'Data Seksi' . ' ' . 'Tahun Ajar' . ' ' . $tahundata->tahun . ' Semester ' . $tahundata->semester . '.xlsx';
+
+
+        return Excel::download(new SeksiExport($seksi, $dataseksi), $fileName);
     }
 }

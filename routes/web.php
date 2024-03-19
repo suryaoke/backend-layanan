@@ -1,25 +1,27 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\Pos\AbsensiController;
+use App\Http\Controllers\Pos\CatatanController;
+use App\Http\Controllers\Pos\EkstraController;
 use App\Http\Controllers\Pos\ExportController;
 use App\Http\Controllers\Pos\GuruController;
 use App\Http\Controllers\Pos\HariController;
-use App\Http\Controllers\Pos\InfoController;
 use App\Http\Controllers\Pos\JadwalmapelController;
 use App\Http\Controllers\Pos\JurusanController;
 use App\Http\Controllers\Pos\KelasController;
 use App\Http\Controllers\Pos\KkmController;
 use App\Http\Controllers\Pos\MapelController;
+use App\Http\Controllers\Pos\NilaiController;
 use App\Http\Controllers\Pos\OrangTuaController;
 use App\Http\Controllers\Pos\PengampuController;
+use App\Http\Controllers\Pos\PresensiController;
+use App\Http\Controllers\Pos\PrestasiController;
 use App\Http\Controllers\Pos\RombelController;
 use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SeksiController;
+use App\Http\Controllers\Pos\SikapController;
 use App\Http\Controllers\Pos\SiswaController;
-use App\Http\Controllers\Pos\StandarkompetensiController;
 use App\Http\Controllers\Pos\TahunajarController;
-use App\Http\Controllers\Pos\TugasController;
 use App\Http\Controllers\Pos\WalasController;
 use App\Http\Controllers\Pos\UserController;
 use App\Http\Controllers\Pos\WaktuController;
@@ -62,6 +64,11 @@ Route::controller(UserController::class)->middleware(['auth'])->group(function (
     Route::post('/user/reset', 'UserReset')->name('user.reset');
     Route::get('/user/tidak/aktif{id}', 'UserTidakAktif')->name('user.tidak.aktif');
     Route::get('/user/aktif{id}', 'UserAktif')->name('user.aktif');
+    Route::post('/user/upload', 'userImport')->name('user.upload');
+
+    Route::get('/user/delete{id}', 'UserDelete')->name('user.delete');
+
+    Route::get('user/excel', 'UserExport')->name('user.excel');
 });
 
 
@@ -73,6 +80,10 @@ Route::controller(GuruController::class)->middleware(['auth'])->group(function (
     Route::get('/guru/edit/{id}', 'GuruEdit')->name('guru.edit');
     Route::post('/guru/update', 'GuruUpdate')->name('guru.update');
     Route::get('/guru/delete{id}', 'GuruDelete')->name('guru.delete');
+
+    Route::post('/guru/upload', 'guruImport')->name('guru.upload');
+
+    Route::get('guru/excel', 'GuruExport')->name('guru.excel');
 });
 
 // Mapel All Route
@@ -83,6 +94,11 @@ Route::controller(MapelController::class)->middleware(['auth'])->group(function 
     Route::get('/mapel/edit/{id}', 'MapelEdit')->name('mapel.edit');
     Route::post('/mapel/update', 'MapelUpdate')->name('mapel.update');
     Route::get('/mapel/delete{id}', 'MapelDelete')->name('mapel.delete');
+
+    Route::post('/mapel/upload', 'mapelImport')->name('mapel.upload');
+
+
+    Route::get('mapel/excel', 'MapelExport')->name('mapel.excel');
 });
 
 // Siswa All Route
@@ -97,6 +113,13 @@ Route::controller(SiswaController::class)->middleware(['auth'])->group(function 
     Route::get('/siswa/profile', 'SiswaProfile')->name('siswa.profile');
     Route::get('/siswa/guru', 'SiswaGuru')->name('siswa.guru');
     Route::get('/siswa/guruwalas', 'SiswaGuruwalas')->name('siswa.guruwalas');
+
+    Route::post('/siswa/upload', 'siswaImport')->name('siswa.upload');
+    Route::get('/siswa/walas/edit/{id}', 'SiswaWalasEdit')->name('siswa.walas.edit');
+    Route::post('/siswa/walas/update', 'SiswaWalasUpdate')->name('siswa.walas.update');
+
+    Route::post('siswa/walas/excel', 'SiswaWalasExport')->name('siswawalas.excel');
+    Route::get('siswa/excel', 'SiswaExport')->name('siswa.excel');
 });
 
 // Kelas All Route
@@ -161,15 +184,6 @@ Route::controller(TahunajarController::class)->middleware(['auth'])->group(funct
 });
 
 
-// Tugas All Route
-Route::controller(TugasController::class)->middleware(['auth'])->group(function () {
-    Route::get('/tugas/all', 'TugasSiswa')->name('tugas.siswa');
-
-    Route::post('/tugas/kd3', 'Tugaskd3Update')->name('tugaskd3.update');
-    Route::post('/tugas/kd4', 'Tugaskd4Update')->name('tugaskd4.update');
-});
-
-
 
 // Walas All Route
 Route::controller(WalasController::class)->middleware(['auth'])->group(function () {
@@ -182,15 +196,6 @@ Route::controller(WalasController::class)->middleware(['auth'])->group(function 
 });
 
 
-
-Route::controller(InfoController::class)->middleware(['auth'])->group(function () {
-    Route::get('/info/all', 'InfoAll')->name('info.all');
-    Route::get('/info/add', 'InfoAdd')->name('info.add');
-    Route::post('/info/store', 'InfoStore')->name('info.store');
-    Route::get('/info/delete/{id}', 'InfoDelete')->name('info.delete');
-    Route::get('/info/edit/{id}', 'InfoEdit')->name('info.edit');
-    Route::post('/info/update', 'InfoUpdate')->name('info.update');
-});
 
 
 // Kkm All Route
@@ -211,6 +216,8 @@ Route::controller(RombelController::class)->middleware(['auth'])->group(function
     Route::get('/rombel/delete/{id}', 'RombelDelete')->name('rombel.delete');
     Route::get('/rombel/edit/{id}', 'RombelEdit')->name('rombel.edit');
     Route::post('/rombel/update/{id}', 'RombelUpdate')->name('rombel.update');
+
+    Route::post('rombel/excel', 'RombelExport')->name('rombel.excel');
 });
 
 
@@ -223,6 +230,8 @@ Route::controller(SeksiController::class)->middleware(['auth'])->group(function 
     Route::get('/seksi/edit/{id}', 'SeksiEdit')->name('seksi.edit');
     Route::post('/seksi/update', 'SeksiUpdate')->name('seksi.update');
     Route::get('/get-jadwalmapel/{id_kelas}', 'getJadwalmapel')->name('getjadwal.mapel');
+
+    Route::post('seksi/excel', 'SeksiExport')->name('seksi.excel');
 });
 
 
@@ -234,6 +243,12 @@ Route::controller(PengampuController::class)->middleware(['auth'])->group(functi
     Route::get('/pengampu/delete/{id}', 'PengampuDelete')->name('pengampu.delete');
     Route::get('/pengampu/edit/{id}', 'PengampuEdit')->name('pengampu.edit');
     Route::post('/pengampu/update', 'PengampuUpdate')->name('pengampu.update');
+
+    Route::get('pengampu/upload/excel', 'PengampuExport')->name('pengampu.upload.excel');
+
+    Route::post('/pengampu/upload', 'pengampuImport')->name('pengampu.upload');
+
+    Route::get('pengampu/excel', 'PengampuExportt')->name('pengampu.excel');
 });
 
 // Jadwal Mapel All Route
@@ -248,28 +263,24 @@ Route::controller(JadwalmapelController::class)->middleware(['auth'])->group(fun
     Route::post('/jadwalmapel/verifikasi/one/{id}', 'JadwalmapelverifikasiOne')->name('jadwalmapelverifikasione.update');
     Route::post('/jadwal/upadate/verifikasi/all', 'JadwalmapelverifikasiAll')->name('jadwalmapelverifikasiall.update');
     Route::post('/jadwalmapel/tolak/one/{id}', 'JadwalmapeltolakOne')->name('jadwalmapeltolakone.update');
+
     Route::get('/jadwalmapel/guru', 'JadwalmapelGuru')->name('jadwalmapel.guru');
 
     Route::get('/jadwalmapel/siswa', 'JadwalmapelSiswa')->name('jadwalmapel.siswa');
+
+    Route::get('/jadwalmapel/ortu', 'JadwalmapelOrtu')->name('jadwalmapel.ortu');
+
+    Route::post('jadwalmapels/excel', 'JadwalmapelsExport')->name('jadal.mapels.excel');
+
+    Route::post('jadwalmapels/guru/excel', 'JadwalmapelguruExport')->name('jadwalmapels.guru.excel');
+
+
+    Route::get('jadwalmapels/ortu/excel', 'JadwalmapelortuExport')->name('jadwalmapels.ortu.excel');
+
+    Route::post('jadwalmapels/kepsek/excel', 'JadwalmapelskepsekExport')->name('jadal.mapels.kepsek');
 });
 
 
-
-// Abensi All Route
-Route::controller(AbsensiController::class)->middleware(['auth'])->group(function () {
-    Route::get('/absensi/all', 'AbsensiAll')->name('absensi.all');
-    Route::get('/absensi/add', 'AbsensiAdd')->name('absensi.add');
-    Route::post('/absensi/store', 'AbsensiStore')->name('absensi.store');
-    Route::get('/absensi/search', 'searchAbsensi')->name('absensi.search');
-    Route::get('/absensi/siswa', 'AbsensiSiswa')->name('absensi.siswa');
-    Route::post('/absensi/siswa/store', 'AbsensiSiswaStore')->name('absensi.siswa.store');
-    Route::get('/absensi/delete{id}', 'AbsensiDelete')->name('absensi.delete');
-    Route::get('/absensi/siswa/guruwalas', 'AbsensiSiswaguruwalas')->name('absensi.siswaguruwalas');
-
-    Route::get('/absensi/data/all', 'AbsensiDataAll')->name('absensi.data.all');
-
-    Route::get('/absensi/data/siswa', 'AbsensiDataSiswa')->name('absensi.data.siswa');
-});
 
 
 
@@ -282,107 +293,164 @@ Route::controller(OrangTuaController::class)->middleware(['auth'])->group(functi
     Route::post('/ortu/update', 'OrtuUpdate')->name('orangtua.update');
     Route::get('/ortu/delete{id}', 'OrtuDelete')->name('orangtua.delete');
     Route::get('/ambil-mata-pelajaran/{id_pengampu}', 'ambilMataPelajaran');
+
+    Route::post('/ortu/upload', 'orangTuaImport')->name('orangtua.upload');
+
+
+
+    Route::get('orangtua/excel', 'OrangtuaExport')->name('orangtua.excel');
 });
 
 
-// Standar Komptensi All
-Route::controller(StandarkompetensiController::class)->middleware(['auth'])->group(function () {
-    Route::get('/sk/all/{id}', 'SkAll')->name('sk.all');
-
-    Route::post('/ki3/update', 'Ki3Update')->name('ki3.update');
-    Route::post('/ki4/update', 'Ki4Update')->name('ki4.update');
-    Route::post('/kd3/store', 'Kd3Store')->name('kd3.store');
-    Route::post('/kd4/store', 'Kd4Store')->name('kd4.store');
-
-    Route::get('/kd3/delete/{id}/{urutan}', 'Kd3Delete')->name('kd3.delete');
-    Route::get('/kd4/delete/{id}/{urutan}', 'Kd4Delete')->name('kd4.delete');
-
-    Route::get('/nilaikd/all/{id}', 'NilaikdAll')->name('nilaikd.all');
-
-    Route::post('/Nilaikd3/store', 'Nilaikd3Store')->name('nilaikd3.store');
-    Route::post('/Nilaikd4/store', 'Nilaikd4Store')->name('nilaikd4.store');
-
-    Route::get('/nilaikd3/delete{id}', 'Nilaikd3Delete')->name('Nilaikd3.delete');
-    Route::get('/nilaikd4/delete{id}', 'Nilaikd4Delete')->name('Nilaikd4.delete');
-
-    Route::post('/nilaisiswakd3/update', 'Nilaisiswakd3Update')->name('Nilaisiswakd3.update');
-    Route::post('/nilaisiswakd4/update', 'Nilaisiswakd4Update')->name('Nilaisiswakd4.update');
-
-    Route::get('/nilaisiswaguruwalas/all', 'NilaiSiswaGuruWalas')->name('NilaiSiswaGuruWalas.all');
-    Route::get('/nilaisiswagurumapel/all', 'NilaiSiswaGuruMapel')->name('NilaiSiswaGuruMapel.all');
-
-    Route::post('/Nilaikd3/update', 'Nilaikd3Update')->name('nilaikd3.update');
-    Route::post('/Nilaikd4/update', 'Nilaikd4Update')->name('nilaikd4.update');
-
-    Route::get('/nilaisiswa/all', 'NilaiSiswaAll')->name('NilaiSiswa.all');
-
-
-    Route::post('/sinkron/all', 'SinkronAll')->name('sinkron.all');
-
-    Route::get('/nilai/siswa/all', 'NilaiSiswa')->name('nilai.siswa');
-});
 
 
 
 
 // Export All Route
 Route::controller(ExportController::class)->middleware(['auth'])->group(function () {
-    Route::get('user/pdf', 'Userpdf')->name('user.pdf');
-    Route::get('user/excel', 'Userexcel')->name('user.excel');
-
-    Route::get('guru/pdf', 'Gurupdf')->name('guru.pdf');
-    Route::get('guru/excel', 'Guruexcel')->name('guru.excel');
-
-    Route::get('orangtua/pdf', 'Orangtuapdf')->name('orangtua.pdf');
-    Route::get('orangtua/excel', 'Orangtuaexcel')->name('orangtua.excel');
-
-    Route::get('siswa/pdf', 'Siswapdf')->name('siswa.pdf');
-    Route::get('siswa/excel', 'Siswaexcel')->name('siswa.excel');
-
-    Route::get('siswawalas/pdf', 'Siswawalaspdf')->name('siswawalas.pdf');
-    Route::get('siswawalas/excel', 'Siswawalasexcel')->name('siswawalas.excel');
-
-    Route::get('jadwalkepsek/pdf', 'Jadwalkepsekpdf')->name('jadwalkepsek.pdf');
-    Route::post('jadwalkepsek/pdf/custom', 'JadwalkepsekpdfCustom')->name('jadwalkepsekcustom.pdf');
-    Route::get('jadwalkepsek/excel', 'Jadwalkepsekexcel')->name('jadwalkepsek.excel');
 
 
-    Route::get('jadwal/pdf', 'Jadwalpdf')->name('jadwal.pdf');
-    Route::post('jadwal/pdf/cutom', 'JadwalpdfCustom')->name('jadwalcutom.pdf');
-    Route::get('jadwal/excel', 'Jadwalexcel')->name('jadwal.excel');
-
-    Route::get('jadwalmapel/pdf', 'Jadwalmapelpdf')->name('jadwalmapel.pdf');
-    Route::get('jadwalmapel/excel', 'Jadwalmapelexcel')->name('jadwalmapel.excel');
-
-    Route::get('nilai/pdf', 'Nilaipdf')->name('nilai.pdf');
-    // Route::get('nilai/excel', 'Nilaiexcel')->name('nilai.excel');
-
-    Route::get('nilaimapel/pdf', 'Nilaimapelpdf')->name('nilaimapel.pdf');
-    // Route::get('nilaimapel/excel', 'Nilaimapelexcel')->name('nilaimapel.excel');
-
-    Route::get('nilaiwalas/pdf', 'Nilaiwalaspdf')->name('nilaiwalas.pdf');
-    // Route::get('nilaiwalas/excel', 'Nilaiwalasexcel')->name('nilaiwalas.excel');
+    Route::post('jadwalsiswa/pdf', 'Jadwalsiswapdf')->name('jadwalsiswa.pdf');
 
 
 
-    Route::get('absensi/all/pdf', 'Absensiallpdf')->name('absensi.all.pdf');
+    Route::post('jadwalortu/pdf', 'Jadwalortupdf')->name('jadwalortu.pdf');
 
-    Route::get('absensi/data/all/pdf', 'Absensidataallpdf')->name('absensi.dataall.pdf');
-
-    Route::get('absensi/guru/walas/pdf', 'Absensiguruwalaspdf')->name('absensi.guruwalas.pdf');
-
-    Route::get('jadwalsiswa/pdf', 'Jadwalsiswapdf')->name('jadwalsiswa.pdf');
-    Route::get('jadwalsiswa/excel', 'Jadwalsiswaexcel')->name('jadwalsiswa.excel');
-
-
-
-    Route::get('absensi/data/siswa//pdf', 'Absensidatasiswapdf')->name('absensi.data.siswa.pdf');
-
-    Route::get('nilaisiswa/pdf', 'Nilaisiswapdf')->name('nilaisiswa.pdf');
 });
 
 
-// routes/web.php
+// Presensi All Route
+Route::controller(PresensiController::class)->middleware(['auth'])->group(function () {
+    Route::get('/presensi/all', 'PresensiAll')->name('presensi.all');
+
+    Route::post('presensi/excel', 'PresensiExport')->name('presensi.excel');
+
+    Route::post('/presensi/upload', 'presensiImport')->name('presensi.upload');
+    Route::post('/presensi/import', 'presensiUploadExport')->name('presensi.import');
+
+    Route::post('presensi/update', 'PresensiUpdate')->name('presensi.update');
+});
+
+
+// Catatan All Route
+Route::controller(CatatanController::class)->middleware(['auth'])->group(function () {
+    Route::get('/catatan/all', 'CatatanAll')->name('catatan.all');
+
+    Route::post('catatan/excel', 'CatatanExport')->name('catatan.excel');
+
+    Route::post('/catatan/upload', 'catatanImport')->name('catatan.upload');
+    Route::post('/catatan/import', 'catatanUploadExport')->name('catatan.import');
+
+    Route::post('catatan/update', 'CatatanUpdate')->name('catatan.update');
+});
+
+Route::controller(PrestasiController::class)->middleware(['auth'])->group(function () {
+    Route::get('/prestasi/all', 'PrestasiAll')->name('prestasi.all');
+
+    Route::post('prestasi/excel', 'PrestasiExport')->name('prestasi.excel');
+
+    Route::post('/prestasi/upload', 'prestasiImport')->name('prestasi.upload');
+    Route::post('/prestasi/import', 'prestasiUploadExport')->name('prestasi.import');
+
+    Route::post('prestasi/update', 'PrestasiUpdate')->name('prestasi.update');
+});
+
+
+Route::controller(EkstraController::class)->middleware(['auth'])->group(function () {
+    Route::get('/ekstra/all', 'EkstraAll')->name('ekstra.all');
+
+    Route::post('ekstra/excel', 'EkstraExport')->name('ekstra.excel');
+
+    Route::post('/ekstra/upload', 'ekstraImport')->name('ekstra.upload');
+    Route::post('/ekstra/import', 'ekstraUploadExport')->name('ekstra.import');
+
+    Route::post('ekstra/update', 'EkstraUpdate')->name('ekstra.update');
+});
+
+
+Route::controller(SikapController::class)->middleware(['auth'])->group(function () {
+    Route::get('/sikap/all', 'SikapAll')->name('sikap.all');
+
+    Route::post('sosial/excel', 'SosialExport')->name('sosial.excel');
+
+    Route::post('/sosial/upload', 'sosialImport')->name('sosial.upload');
+    Route::post('/sosial/import', 'sosialUploadExport')->name('sosial.import');
+
+    Route::post('sosial/update', 'SikapSosialUpdate')->name('sosial.update');
+
+
+    Route::post('spiritual/excel', 'SpiritualExport')->name('spiritual.excel');
+
+    Route::post('spiritual/update', 'SikapSpiritualUpdate')->name('spiritual.update');
+    Route::post('/spiritual/import', 'SpiritualUploadExport')->name('spiritual.import');
+
+    Route::post('/spiritual/upload', 'spiritualImport')->name('spiritual.upload');
+});
+
+
+Route::controller(NilaiController::class)->middleware(['auth'])->group(function () {
+    Route::get('/nilai/all/{id}', 'NilaiAll')->name('nilai.all');
+
+    Route::get('/nilai/alll/{id}', 'NilaiAlll')->name('nilai.alll');
+
+    Route::get('/nilai/pengetahuan/harian/{id}', 'NilaiHarianPengetahuanAdd')->name('nilai.pengetahuan.harian');
+
+    Route::get('/nilai/pengetahuan/akhir/{id}', 'NilaiAkhirPengetahuanAdd')->name('nilai.pengetahuan.akhir');
+
+    Route::post('/nilai/pengetahuan/harian/store', 'NilaiHarianPengetahuanStore')->name('nilai.pengetahuan.harian.store');
+
+    Route::get('/nilai/pengetahuan/harian/delete/{id}', 'NilaiHarianPengetahuanDelete')->name('nilai.pengetahuan.harian.delete');
+
+    Route::post('/nilai/pengetahuan/harian/update', 'NilaiHarianPengetahuanUpdate')->name('nilai.pengetahuan.harian.update');
+
+    Route::post('/nilai/pengetahuan/akhir/store', 'NilaiAkhirPengetahuanStore')->name('nilai.pengetahuan.akhir.store');
+
+    Route::post('/nilai/pengetahuan/akhir/update', 'NilaiAkhirPengetahuanUpdate')->name('nilai.pengetahuan.akhir.update');
+
+    Route::get('/nilai/pengetahuan/akhir/delete/{id}', 'NilaiAkhirPengetahuanDelete')->name('nilai.pengetahuan.akhir.delete');
+
+
+    Route::get('/nilai/keterampilan/portofolio/{id}', 'NilaiPortofolioKeterampilanAdd')->name('nilai.keterampilan.portofolio');
+
+    Route::get('/nilai/keterampilan/proyek/{id}', 'NilaiProyekKeterampilanAdd')->name('nilai.keterampilan.proyek');
+
+    Route::get('/nilai/keterampilan/unjukkerja/{id}', 'NilaiUnjukkerjaKeterampilanAdd')->name('nilai.keterampilan.unjukkerja');
+
+    Route::post('/nilai/keterampilan/portofolio/store', 'NilaiPortofolioKeterampilanStore')->name('nilai.keterampilan.portofolio.store');
+
+    Route::post('/nilai/keterampilan/portofolio/update', 'NilaiPortofolioKeterampilanUpdate')->name('nilai.keterampilan.portofolio.update');
+
+    Route::get('/nilai/keterampilan/portofolio/delete/{id}', 'NilaiPortofolioKeterampilanDelete')->name('nilai.keterampilan.portofolio.delete');
+
+
+    Route::post('/nilai/keterampilan/proyek/store', 'NilaiProyekKeterampilanStore')->name('nilai.keterampilan.proyek.store');
+
+    Route::post('/nilai/keterampilan/proyek/update', 'NilaiProyekKeterampilanUpdate')->name('nilai.keterampilan.proyek.update');
+
+    Route::get('/nilai/keterampilan/proyek/delete/{id}', 'NilaiProyekKeterampilanDelete')->name('nilai.keterampilan.proyek.delete');
+
+
+    Route::post('/nilai/keterampilan/unjukkerja/store', 'NilaiUnjukkerjaKeterampilanStore')->name('nilai.keterampilan.unjukkerja.store');
+
+    Route::post('/nilai/keterampilan/unjukkerja/update', 'NilaiUnjukkerjaKeterampilanUpdate')->name('nilai.keterampilan.unjukkerja.update');
+
+    Route::get('/nilai/keterampilan/unjukkerja/delete/{id}', 'NilaiUnjukkerjaKeterampilanDelete')->name('nilai.keterampilan.unjukkerja.delete');
+
+
+    Route::post('pengetahuan/excel', 'PengetahuanExport')->name('pengetahuan.excel');
+
+    Route::post('keterampilan/excel', 'KeterampilanExport')->name('keterampilan.excel');
+
+    Route::post('pengetahuan/harian/excel', 'PengetahuanHarianExport')->name('pengetahuan.harian.excel');
+
+    Route::post('pengetahuan/akhir/excel', 'PengetahuanAkhirExport')->name('pengetahuan.akhir.excel');
+
+    Route::post('keterampilan/portofolio/excel', 'KeterampilanPortofolioExport')->name('keterampilan.portofolio.excel');
+
+    Route::post('keterampilan/proyek/excel', 'KeterampilanProyekExport')->name('keterampilan.proyek.excel');
+
+    Route::post('keterampilan/unjukkerja/excel', 'KeterampilanUnjukkerjaExport')->name('keterampilan.unjukkerja.excel');
+});
 
 
 

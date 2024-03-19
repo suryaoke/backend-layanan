@@ -29,7 +29,7 @@
                     @elseif($editData->role == '2')
                         Kepsek
                     @elseif($editData->role == '3')
-                      Operator
+                        Wakil Kurikulum
                     @elseif($editData->role == '4')
                         Guru
                     @elseif($editData->role == '5')
@@ -41,7 +41,7 @@
 
                 <option value="1">Admin</option>
                 <option value="2">Kepsek</option>
-                <option value="3">Operator</option>
+                <option value="3">Wakil Kurikulum</option>
                 <option value="4">Guru</option>
                 <option value="5">Orang Tua</option>
                 <option value="6">Siswa</option>
@@ -62,9 +62,12 @@
         </div>
 
         <div class="mt-2">
-            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('user.all') }}">Cancel
+            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-2 align-top" href="{{ route('user.all') }}">Cancel
             </a>
+            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-2 align-top" type="submit">Save</button>
+
+
+
         </div>
 
     </form>

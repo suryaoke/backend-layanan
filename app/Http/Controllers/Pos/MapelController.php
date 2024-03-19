@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers\Pos;
 
+use App\Exports\MapelExport;
 use App\Http\Controllers\Controller;
+use App\Imports\MapelImport;
 use App\Models\Jurusan;
 use App\Models\Mapel;
 use App\Models\Tahunajar;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MapelController extends Controller
 {
@@ -41,7 +44,8 @@ class MapelController extends Controller
             'id_jurusan' => $request->id_jurusan,
             'jenis' => $request->jenis,
             'jp' => $request->jp,
-            'semester' => $request->semester,
+
+            'type' => $request->type,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
 
@@ -73,7 +77,7 @@ class MapelController extends Controller
             'id_jurusan' => $request->id_jurusan,
             'jenis' => $request->jenis,
             'jp' => $request->jp,
-            'semester' => $request->semester,
+            'type' => $request->type,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 
@@ -95,5 +99,33 @@ class MapelController extends Controller
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
+    }
+
+    public function mapelImport(Request $request)
+    {
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataMapel', $namfile);
+            Excel::import(new MapelImport, public_path('/DataMapel/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Mapel Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->route('mapel.all')->with($notification);
+    }
+
+    public function MapelExport(Request $request)
+    {
+
+
+        $mapel = Mapel::orderby('nama')->get();
+
+        return Excel::download(new MapelExport($mapel), 'Data Mapel.xlsx');
     }
 }

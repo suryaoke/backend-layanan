@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers\Pos;
 
+use App\Exports\GuruExport;
 use App\Http\Controllers\Controller;
+use App\Imports\GuruImport;
+use App\Imports\UserImport;
 use App\Models\Guru;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GuruController extends Controller
 {
@@ -32,59 +38,97 @@ class GuruController extends Controller
     } // end method
     public function GuruStore(Request $request)
     {
-
         $this->validate($request, [
             'kode_gr' => 'required|max:50|unique:gurus,kode_gr',
-
+            'nama' => 'required',
+            'no_hp' => 'required',
+            'password' => 'required|min:8',
         ]);
 
-        Guru::insert([
+        $guruData = [
             'kode_gr' => $request->kode_gr,
             'nama' => $request->nama,
             'no_hp' => $request->no_hp,
-            'id_user' => $request->id_user,
-            'created_by' => Auth::user()->id,
+            'created_by' => Auth::id(),
             'created_at' => Carbon::now(),
+        ];
 
-        ]);
+        $user = null;
 
+        if ($request->has('username') && $request->username !== null) {
+            // Membuat email unik dengan menggunakan waktu saat ini
+            $email =  time() . '@example.com';
+
+            $user = User::create([
+                'name' => $request->nama,
+                'username' => $request->username,
+                'email' => $email,
+                'profile_image' => '',
+                'role' => 4,
+                'status' => 1,
+                'password' => Hash::make($request->password),
+            ]);
+            $guruData['id_user'] = $user->id;
+        }
+        $guru = Guru::create($guruData);
         $notification = array(
-            'message' => 'Guru Inserted SuccessFully',
+            'message' => 'Guru Inserted Successfully',
             'alert-type' => 'success'
         );
         return redirect()->route('guru.all')->with($notification);
     }
+
 
     public function GuruEdit($id)
     {
         $guru = Guru::findOrFail($id);
-        $guruIds = Guru::pluck('id_user')->toArray();
+
         $user = User::where('role', '4')
-            ->whereNotIn('id', $guruIds)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('gurus')
+                    ->whereRaw('gurus.id_user = users.id');
+            })
             ->get();
+        // Mendapatkan semua user yang belum digunakan pada tabel guru
+
+
         return view('backend.data.guru.guru_edit', compact('guru', 'user'));
     }
+
     public function GuruUpdate(Request $request)
     {
+        $this->validate($request, [
+            'kode_gr' => 'required|max:50',
+            'nama' => 'required',
+            'no_hp' => 'required',
 
+        ]);
 
-        $guru_id = $request->id;
-        Guru::findOrFail($guru_id)->update([
+        $guru = Guru::findOrFail($request->id);
+        $guru->update([
             'kode_gr' => $request->kode_gr,
             'nama' => $request->nama,
             'no_hp' => $request->no_hp,
             'id_user' => $request->id_user,
-            'updated_by' => Auth::user()->id,
-            'updated_at' => Carbon::now(),
-
+            'updated_by' => Auth::id(),
+            'updated_at' => now(),
         ]);
 
-        $notification = array(
-            'message' => 'Guru Updated SuccessFully',
+        if ($request->has('username')) {
+            User::where('id', $guru->id_user)->update([
+                'username' => $request->username,
+                'name'  => $guru->nama,
+            ]);
+        }
+
+        $notification = [
+            'message' => 'Guru Updated Successfully',
             'alert-type' => 'success'
-        );
+        ];
         return redirect()->route('guru.all')->with($notification);
     }
+
 
     public function GuruDelete($id)
     {
@@ -95,5 +139,34 @@ class GuruController extends Controller
             'alert-type' => 'success'
         );
         return redirect()->back()->with($notification);
+    }
+
+    public function guruImport(Request $request)
+    {
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataGuru', $namfile);
+            Excel::import(new GuruImport, public_path('/DataGuru/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Guru Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->route('guru.all')->with($notification);
+    }
+
+
+    public function GuruExport(Request $request)
+    {
+
+
+        $guru = Guru::get();
+
+        return Excel::download(new GuruExport($guru), 'Data Guru.xlsx');
     }
 }

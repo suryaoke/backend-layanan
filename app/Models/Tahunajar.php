@@ -9,4 +9,11 @@ class Tahunajar extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    // Dalam model Tahunajar
+    public function rombels()
+    {
+        return $this->hasMany(Rombel::class, 'id_tahunjar', 'id');
+    }
+
 }

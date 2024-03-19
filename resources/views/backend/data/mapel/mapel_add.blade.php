@@ -86,26 +86,6 @@
         </div>
 
 
-        <div class="mt-4">
-            <label for="">Semester</label>
-
-            <div class="mt-1 flex">
-                <div
-                    class="z-30 rounded-l w-10 flex items-center justify-center
-             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
-              dark:text-slate-400 -mr-1">
-                    <i data-lucide="tag"></i>
-                </div>
-                <select name="semester" id="semester" class="tom-select w-full " required>
-                    <option value="">Pilih Semester</option>
-                    @foreach ($tahunajar as $item)
-                        <option value="{{ $item->id }}">{{ $item->semester }}-{{ $item->tahun }}</option>
-                    @endforeach
-                </select>
-
-            </div>
-            <span id="error-kelas" class="text-sm text-red-600"></span>
-        </div>
 
 
 
@@ -150,11 +130,33 @@
             <span id="error-kelas" class="text-sm text-red-600"></span>
         </div>
 
+        <div class="mt-4">
+            <label for="">Type</label>
+
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="file"></i>
+                </div>
+                <select name="type" id="type" class="tom-select w-full " required>
+                    <option value="">Select Type</option>
+                    <option value="Teori">Teori</option>
+                    <option value="Pratikum">Pratikum</option>
+
+
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>
+
 
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
-            <a href="{{ route('mapel.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top"
+
+            <a href="{{ route('mapel.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top"
                 type="submit">Cancel</a>
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
         </div>
 
     </form>
@@ -176,13 +178,14 @@
                     jp: {
                         required: true,
                     },
-                    semester: {
-                        required: true,
-                    },
+
                     id_jurusan: {
                         required: true,
                     },
                     jenis: {
+                        required: true,
+                    },
+                    type: {
                         required: true,
                     },
 
@@ -198,13 +201,14 @@
                     jp: {
                         required: 'Please Enter Your JP',
                     },
-                    semester: {
-                        required: 'Please Enter Your Semester',
-                    },
+
                     id_jurusan: {
                         required: 'Please Enter Your Jurusan',
                     },
                     jenis: {
+                        required: 'Please Enter Your Jenis',
+                    },
+                    type: {
                         required: 'Please Enter Your Jenis',
                     },
 

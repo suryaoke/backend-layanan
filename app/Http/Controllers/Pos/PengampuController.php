@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Pos;
 
+use App\Exports\PengampuExport;
+use App\Exports\PengampuUploadExport;
 use App\Http\Controllers\Controller;
+use App\Imports\PengampuImport;
 use App\Models\Guru;
 use App\Models\Jadwalmapel;
 use App\Models\Jurusan;
@@ -14,16 +17,43 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PengampuController extends Controller
 {
-    public function PengampuAll()
+    public function PengampuAll(Request $request)
     {
 
-        //$suppliers = Supplier::all();
-        $pengampu = Pengampu::latest()->get();
+        $searchGuru = $request->input('searchguru');
+        $searchMapel = $request->input('searchmapel');
+        $searchKelas = $request->input('searchkelas');
 
-        return view('backend.data.pengampu.pengampu_all', compact('pengampu'));
+        $query = Pengampu::query();
+
+        if (!empty($searchGuru)) {
+            $query->whereHas('gurus', function ($lecturerQuery) use ($searchGuru) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchGuru . '%');
+            });
+        }
+
+        if (!empty($searchMapel)) {
+            $query->whereHas('mapels', function ($lecturerQuery) use ($searchMapel) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchMapel . '%');
+            });
+        }
+
+        if (!empty($searchKelas)) {
+            $query->whereHas('kelass', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
+            });
+        }
+
+        //$suppliers = Supplier::all();
+        $pengampu = $query->latest()->get();
+
+        $kelas = Kelas::orderBy('tingkat')->get();
+
+        return view('backend.data.pengampu.pengampu_all', compact('pengampu', 'kelas'));
     } // end method
 
     public function PengampuAdd()
@@ -76,7 +106,7 @@ class PengampuController extends Controller
             'id_guru' => $request->id_guru,
             'id_mapel' => $request->id_mapel,
             'kelas' => $request->kelas,
-            'kurikulum' => $request->kurikulum,
+
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
         ]);
@@ -111,7 +141,7 @@ class PengampuController extends Controller
             'id_guru' => $request->id_guru,
             'id_mapel' => $request->id_mapel,
             'kelas' => $request->kelas,
-            'kurikulum' => $request->kurikulum,
+
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 
@@ -142,5 +172,38 @@ class PengampuController extends Controller
             );
             return redirect()->back()->with($notification);
         }
+    }
+
+    public function PengampuExport(Request $request)
+    {
+        return Excel::download(new PengampuUploadExport, 'Template Pengampu.xlsx');
+    }
+
+    public function pengampuImport(Request $request)
+    {
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataPengampu', $namfile);
+            Excel::import(new PengampuImport, public_path('/DataPengampu/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Pengampu Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->route('pengampu.all')->with($notification);
+    }
+
+    public function PengampuExportt(Request $request)
+    {
+
+
+        $pengampu = Pengampu::orderby('id')->get();
+
+        return Excel::download(new PengampuExport($pengampu), 'Data Pengampu Mata Pelajaran.xlsx');
     }
 }

@@ -3,91 +3,28 @@
 namespace App\Exports;
 
 
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithMapping;
-use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
-use Maatwebsite\Excel\Concerns\WithStyles;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use App\Models\Siswa;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
 
-class SiswaWalasExport implements FromCollection, WithMapping, WithHeadings, ShouldAutoSize, WithStyles
+
+
+class SiswaWalasExport implements FromView
 {
-    protected $siswa;
-    protected $counter = 1;
-    public function __construct($siswa)
+    protected $rombelsiswa;
+    protected $tahun;
+
+    public function __construct($rombelsiswa, $tahun)
     {
-        $this->siswa = $siswa;
+        $this->rombelsiswa = $rombelsiswa;
+        $this->tahun = $tahun;
     }
 
-    public function collection()
+    public function view(): View
     {
-        return $this->siswa;
-    }
-    public function map($siswa): array
-    {
-        
-
-        return [
-            'No' => $this->counter++,
-            'Nama' => isset($siswa->nama) ? $siswa->nama : '',
-            'Nisn' => isset($siswa->nisn) ? $siswa->nisn : '',
-            'Jk' => isset($siswa->jk) ? $siswa->jk : '',
-            'Username' => isset($siswa->users->username) ? $siswa->users->username : '',
-        
-
-        ];
-    }
-
-
-    public function headings(): array
-    {
-        return [
-            'No',
-            'Nama',
-            'Nisn',
-            'No Hp',
-            'Username',
-   
-
-        ];
-    }
-    public function styles(Worksheet $sheet)
-    {
-        $sheet->getStyle('A1:E1')->applyFromArray([
-            'font' => [
-                'bold' => true,
-            ],
-            'alignment' => [
-                'horizontal' => Alignment::HORIZONTAL_CENTER,
-            ],
+        return view('backend.data.siswa.excel', [
+            'rombelsiswa' => $this->rombelsiswa,
+            'tahun' => $this->tahun
         ]);
-
-        $sheet->getStyle('A1:E1')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-        $highestRow = $sheet->getHighestRow();
-        $highestColumn = $sheet->getHighestColumn();
-
-        $sheet->getStyle('A2:' . $highestColumn . $highestRow)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-        return [
-            'A1:E1' => [
-                'font' => [
-                    'bold' => true,
-                ],
-                'alignment' => [
-                    'horizontal' => Alignment::HORIZONTAL_CENTER,
-                ],
-            ],
-            'A2:' . $highestColumn . $highestRow => [
-                'borders' => [
-                    'allBorders' => [
-                        'borderStyle' => Border::BORDER_THIN,
-                        'color' => ['argb' => '000000'],
-                    ],
-                ],
-            ],
-        ];
     }
 }

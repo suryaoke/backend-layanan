@@ -29,29 +29,37 @@
             <input type="text" value="{{ $ortu->no_hp }}" class="intro-x login__input form-control py-3 px-4 block "
                 placeholder="Nomor HP" name="no_hp" id="no_hp">
         </div>
-        @if (Auth::user()->role == '1')
-            <div class="mt-4">
-                <label for=""> Username</label>
-                <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
 
-                    @if ($ortu->id_user == '0')
-                        <option value="0">Kosong</option>
-                    @else
-                        <option value="{{ $ortu->id_user }}">{{ $ortu['users']['name'] }}</option>
-                    @endif
-
-                    @foreach ($user as $item)
-                        <option value="{{ $item->id }}">{{ $item->username }}</option>
-                    @endforeach
-                </select>
+        @if ($ortu->id_user != '0' && $ortu->id_user != null)
+            <div class="mt-3">
+                <label>Username</label>
+                <input type="text" value="{{ $ortu['users']['username'] }}"
+                    class="intro-x login__input form-control py-3 px-4 block " placeholder="Masukkan Username "
+                    name="username" id="username">
+                <input type="hidden" value="{{ $ortu->id_user }}"
+                    class="intro-x login__input form-control py-3 px-4 block " name="id_user" id="id_user">
             </div>
+        @endif
+
+        @if ($ortu->id_user == '0' || $ortu->id_user == null)
+
+            @if (Auth::user()->role == '1')
+                <div class="mt-3"> <label>Username</label>
+                    <select name="id_user" id="id_user" class="tom-select w-full mt-1" required>
+                        <option value="0">Kosong</option>
+                        @foreach ($user as $item)
+                            <option value="{{ $item->id }}">{{ $item->username }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            @endif
         @endif
 
         <div class="mt-4">
             <label for=""> Siswa</label>
             <select name="id_siswa" id="id_siswa" class="tom-select w-full mt-1" required>
 
-                @if ($ortu->id_siswa == '0')
+                @if ($ortu->id_siswa == '0' || $ortu->id_siswa == null)
                     <option value="0">Kosong</option>
                 @else
                     <option value="{{ $ortu->id_siswa }}">{{ $ortu['siswas']['nama'] }}</option>
@@ -64,9 +72,10 @@
 
         <!-- Add other input fields as needed -->
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
-            <a href="{{ route('orangtua.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "
+            <a href="{{ route('orangtua.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top "
                 type="submit">Cancel</a>
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
+
 
         </div>
 
@@ -86,7 +95,7 @@
                         required: true,
                         digits: true,
                     },
-                    id_user: {
+                    username: {
                         required: true,
                     },
                     id_siswa: {
@@ -104,7 +113,7 @@
                         required: 'Please Enter Your No HP',
                         digits: 'Please enter only numbers',
                     },
-                    id_user: {
+                    username: {
                         required: 'Please Enter Your Username',
                     },
                     id_siswa: {

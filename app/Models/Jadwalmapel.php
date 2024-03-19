@@ -47,4 +47,14 @@ class Jadwalmapel extends Model
     {
         return $this->belongsTo(Tahunajar::class, 'semester');
     }
+
+    public function tahun()
+    {
+        return $this->belongsTo(Tahunajar::class, 'id_tahunajar');
+    }
+    public function waktuss()
+    {
+        return $this->belongsTo(Waktu::class, 'id_waktu');
+    }
+    
 }

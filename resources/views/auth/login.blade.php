@@ -13,7 +13,7 @@
     <meta name="keywords"
         content="admin template, Midone Admin Template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="LEFT4CODE">
-    <title>Login - SIAKAD MAN 1 Kota Padang</title>
+    <title>Login - MAN 1 Kota Padang</title>
     <!-- BEGIN: CSS Assets-->
     <link rel="stylesheet" href="{{ asset('backend/dist/css/app.css') }}" />
     <!-- END: CSS Assets-->
@@ -27,17 +27,16 @@
             <!-- BEGIN: Login Info -->
             <div class="hidden xl:flex flex-col min-h-screen">
                 <a href="{{ url('/') }}" class="-intro-x flex items-center pt-5">
-                    <img alt="Midone - HTML Admin Template" class="w-12"
+                    <img alt="Midone - HTML Admin Template" class="w-20"
                         src="{{ asset('backend/dist/images/man1.png') }}">
-                    <span class="text-white text-lg ml-3">SIAKAD MAN 1 Kota Padang </span>
+                    <span class="text-white text-2xl ml-3 "> MAN 1 Kota Padang </span>
                 </a>
                 <div class="my-auto ">
                     <img width="370px" alt="Midone - HTML Admin Template" class="-intro-x -mt-16"
                         src="{{ asset('backend/dist/images/layanan.png') }}">
                     <div class="-intro-x text-white font-medium text-4xl leading-tight mt-10">
-                        Sistem Informasi Akademik
-                        <br>
-                        MAN 1 Kota Padang.
+                        Penjadwalan Mata Pelajaran <br>
+                        dan Pengolahan Nilai <br> MAN 1 Kota Padang.
                     </div>
                     <div class="-intro-x mt-5 text-lg text-white text-opacity-70 dark:text-slate-400"> Menuju Sistem
                         Digital 2023</div>
@@ -58,8 +57,7 @@
                         @csrf
                         <div class="intro-x mt-8">
                             <input type="text" id="username" name="username"
-                                class="intro-x login__input form-control py-3 px-4 block" placeholder="Username"
-                                >
+                                class="intro-x login__input form-control py-3 px-4 block" placeholder="Username">
                             <input id="password" name="password" type="password"
                                 class="intro-x login__input form-control py-3 px-4 block mt-4" placeholder="Password">
                         </div>

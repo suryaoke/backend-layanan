@@ -37,4 +37,14 @@ class Rombel extends Model
     {
         return $this->belongsTo(Siswa::class, 'id_siswa', 'id');
     }
+
+    public function tahuns()
+    {
+        return $this->belongsTo(Tahunajar::class, 'id_tahunjar', 'id');
+    }
+
+    public function seksis()
+    {
+        return $this->belongsTo(Seksi::class, 'id_rombel', 'id');
+    }
 }

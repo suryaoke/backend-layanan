@@ -26,60 +26,142 @@
 </head>
 
 <body>
-    <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;">Jadwal Mata Pelajaran
+    <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;">JADWAL MATA PELAJARAN
     </h3>
-    <p>{{ $time }}</p>
+    <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;">MAN 1 Kota Padang
+    </h3>
+    <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;" >Tahun Pelajaran {{$datajadwal->tahun->tahun}} Semester {{$datajadwal->tahun->semester}}
+    </h3>
 
-    <table>
+
+    <table id="datatable1" class="table table-bordered mt-4">
         <thead>
             <tr>
-                
-                <th style="white-space: nowrap;">Seksi</th>
-                <th style="white-space: nowrap;">Kode</th>
-                <th style="white-space: nowrap;">Hari</th>
-                <th style="white-space: nowrap;">Waktu</th>
-                <th style="white-space: nowrap;">Guru</th>
-                <th style="white-space: nowrap;">Mapel</th>
-                <th style="white-space: nowrap;">Kelas</th>
-                <th style="white-space: nowrap;">JP</th>
-                <th style="white-space: nowrap;">Ruang</th>
-                <th style="white-space: nowrap;">Semester</th>
+                <th class="btn-secondary" style="width:100px  ; border: 2px solid black; text-align: center;">Hari</th>
+                <th class="btn-secondary" style="width:100px  ; border: 2px solid black; text-align: center;">Waktu</th>
+                @php
+                    $kelasGroups = collect();
+                @endphp
+                @foreach ($jadwalmapel as $key => $jadwal)
+                    @php
+                        $kelas = $jadwal->pengampus->kelas;
+                        if (!$kelasGroups->has($kelas)) {
+                            $kelasGroups->put($kelas, collect());
+                        }
+                        $kelasGroups[$kelas]->push($jadwal);
+                    @endphp
+                @endforeach
+                @php
+                    $kelasGroups = $kelasGroups->sortKeys();
+                @endphp
+                @foreach ($kelasGroups as $kelas => $jadwalByClass)
+                    @php
+                        $tingkat = App\Models\Kelas::where('id', $kelas)->first();
+                    @endphp
+                    <th colspan="3" class="btn-secondary"
+                        style="width:100px  ; border: 2px solid black; text-align: center;">
+                        {{ $tingkat->tingkat }} {{ $tingkat->nama }}
+                        {{ $tingkat['jurusans']['nama'] }}
+                    </th>
+                @endforeach
+            </tr>
+            <tr>
+                <th class="btn-secondary" style="width:100px  ; border: 2px solid black;"></th>
+                <th class="btn-secondary" style="width:100px  ; border: 2px solid black;"></th>
+                @foreach ($kelasGroups as $kelas => $jadwalByClass)
+                    <th style="white-space: nowrap; width:100px  ; border: 2px solid black; text-align: center;"
+                        class="btn-primary">
+                        Kode Guru</th>
+                    <th style=" white-space: nowrap; width:100px  ; border: 2px solid black; text-align: center;"
+                        class="btn-primary">
+                        Kode Mapel</th>
+                    <th style="white-space: nowrap; width:100px  ; border: 2px solid black; text-align: center;"
+                        class="btn-primary">
+                        Ruangan</th>
+                @endforeach
             </tr>
         </thead>
         <tbody>
 
-            @foreach ($jadwalmapel as $item)
+            @php
+                $hariGroups = collect();
+            @endphp
+            @foreach ($jadwalmapel as $key => $jadwal)
                 @php
-                    $pengampuid = App\Models\Pengampu::find($item->id_pengampu);
-                    $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
-                    $guruid = App\Models\Guru::find($pengampuid->id_guru);
-                    $kelas = App\Models\Kelas::find($pengampuid->kelas);
-                @endphp
+                    // Mengelompokkan data berdasarkan hari
 
-                <tr>
-                 
-                    <td class="text-primary">
-                        {{ $item->kode_jadwalmapel }}
-                    </td>
-                    <td class="text-primary">
-                        {{ $item->pengampus->kode_pengampu }} </td>
-                    <td> {{ $item->haris->nama }} </td>
-                    <td> {{ $item->waktus->range }} </td>
-                    <td> {{ $guruid->nama }} </td>
-                    <td> {{ $mapelid->nama }} </td>
-                    <td> {{ $kelas->tingkat }} {{ $kelas->nama }}
-                        {{ $kelas->jurusans->nama }}
-                    </td>
-                    <td> {{ $mapelid->jp }} </td>
-                    <td> {{ $item->ruangans->kode_ruangan }} </td>
-                    <td>
-                        {{ $mapelid->tahunajars->semester }}-
-                        {{ $mapelid->tahunajars->tahun }}
-                    </td>
-                </tr>
+                    $hari1 = $jadwal->id_hari;
+                    if (!$hariGroups->has($hari1)) {
+                        $hariGroups->put($hari1, collect());
+                    }
+                    $hariGroups[$hari1]->push($jadwal);
+
+                @endphp
             @endforeach
-        </tbody>
-    </table>
+            @foreach ($hariGroups as $hari1 => $jadwalByDay)
+                @php
+                    $haridata = App\Models\Hari::find($hari1);
+                    $harijumlah = count($jadwalByDay);
+                    $printedTimeSlots = []; // Initialize array to keep track of printed time slots
+                    $uniqueTimes = $jadwalByDay->unique('id_waktu');
+                    $harijumlah = count($uniqueTimes);
+                @endphp
+                @foreach ($jadwalByDay as $index => $jadwal)
+                    @php
+                        $timeSlot = $jadwal->waktus->range; // Get the time slot
+                    @endphp
+                    {{-- Check if the time slot has been printed already --}}
+                    @if (!in_array($timeSlot, $printedTimeSlots))
+                        <tr>
+                            @if ($index === 0)
+                                <td style="width:100px  ; border: 2px solid black;" rowspan="{{ $harijumlah }}"
+                                    class="btn-secondary">
+                                    {{ $haridata->nama }}
+                                </td>
+                            @endif
+                            <td style="width:100px  ; border: 2px solid black;" class="bg-warning">
+                                {{ $timeSlot }}
+                            </td>
+                            {{-- Loop through kelasGroups to display kode guru for each class --}}
+                            @foreach ($kelasGroups as $kelas => $jadwalByClass)
+                                @php
+                                    $kode_guru = ''; // Initialize kode guru as empty string
+                                    $kode_mapel = ''; // Initialize kode mapel as empty string
+                                    $kode_ruangan = ''; // Initialize kode ruangan as empty string
+                                @endphp
+                                @foreach ($jadwalByClass as $jadwalKelas)
+                                    {{-- Check if the jadwal belongs to the current iteration's class and time slot --}}
+                                    @if ($jadwalKelas->waktus->range === $timeSlot && $jadwalKelas->id_hari === $jadwal->id_hari)
+                                        {{-- Assign the kode guru if the jadwal belongs to the current iteration's class and time slot --}}
+                                        @php
+                                            $kode_guru = $jadwalKelas->pengampus->gurus->kode_gr;
+                                            $kode_mapel = $jadwalKelas->pengampus->mapels->kode_mapel;
+                                            $kode_ruangan = $jadwalKelas->ruangans->kode_ruangan;
+
+                                        @endphp
+                                        {{-- Break the inner loop --}}
+                                    @break
+                                @endif
+                            @endforeach
+                            {{-- Display the kode guru --}}
+                            <td style="width:100px  ; border: 2px solid black;">{{ $kode_guru }}
+                            </td>
+                            <td style="width:100px  ; border: 2px solid black;">{{ $kode_mapel }}</td>
+                            <td style="width:100px  ; border: 2px solid black;">{{ $kode_ruangan }}</td>
+                        @endforeach
+                    </tr>
+                    {{-- Add the printed time slot to the printedTimeSlots array --}}
+                    @php
+                        $printedTimeSlots[] = $timeSlot;
+                    @endphp
+                @endif
+            @endforeach
+        @endforeach
+
+
+    </tbody>
+</table>
+
 </body>
 
 </html>

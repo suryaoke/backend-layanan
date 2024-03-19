@@ -25,9 +25,10 @@
         </div>
 
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
-            <a href="{{ route('admin.profile') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top"
+             <a href="{{ route('admin.profile') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top"
                 type="submit">Cancel</a>
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
+           
         </div>
     </form>
 

@@ -51,18 +51,19 @@
                 <option value="">Pilih Role</option>
                 <option value="1">Admin</option>
                 <option value="2">Kepsek</option>
-                <option value="3">Operator</option>
+                <option value="3">Wakil Kurikulum</option>
                 <option value="4">Guru</option>
                 <option value="5">Orang Tua</option>
                 <option value="6">Siswa</option>
             </select>
         </div>
         <div class="mt-4">
-            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
-
-            <a href="{{ route('user.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-3 align-top "
+             <a href="{{ route('user.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top "
                 type="submit">Cancel</a>
 
+            <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top mb-1" type="submit">Save </button>
+
+           
         </div>
 
     </form>

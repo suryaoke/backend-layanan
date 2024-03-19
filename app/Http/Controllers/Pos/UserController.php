@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers\Pos;
 
+use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseFormatter;
+use App\Imports\UserImport;
+use App\Models\Guru;
+use App\Models\OrangTua;
+use App\Models\Siswa;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception;
@@ -16,6 +21,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use Image;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
@@ -23,7 +29,7 @@ class UserController extends Controller
 
     public function UserAll()
     {
-        $users = User::orderBy('role')->get();
+        $users = User::orderBy('role')->orderby('name')->get();
 
         return view('backend.master.user.user_all', compact('users',));
     } // End Method
@@ -285,7 +291,7 @@ class UserController extends Controller
     {
         try {
             // Validate request
-           
+
             $user = Auth::user();
 
             // Update user information
@@ -311,4 +317,61 @@ class UserController extends Controller
         }
     }
 
+    public function userImport(Request $request)
+    {
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataUser', $namfile);
+            Excel::import(new UserImport, public_path('/DataUser/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'User Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->route('user.all')->with($notification);
+    }
+
+    public function UserDelete($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        $datasiswa = Siswa::where('id_user', $id)->first();
+        if ($datasiswa) {
+            $datasiswa->id_user = 0;
+            $datasiswa->save();
+        }
+
+        $dataguru = Guru::where('id_user', $id)->first();
+        if ($dataguru) {
+            $dataguru->id_user = 0;
+            $dataguru->save();
+        }
+
+        $dataorangtua = OrangTua::where('id_user', $id)->first();
+        if ($dataorangtua) {
+            $dataorangtua->id_user = 0;
+            $dataorangtua->save();
+        }
+
+        $notification = array(
+            'message' => 'User Deleted Successfully',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+
+    public function UserExport(Request $request)
+    {
+
+
+        $user = User::get();
+
+        return Excel::download(new UserExport($user), 'Data Akun Pengguna.xlsx');
+    }
 }

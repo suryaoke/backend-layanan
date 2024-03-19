@@ -1,25 +1,29 @@
-
 @extends('admin.admin_master')
 @section('admin')
     <div class="mb-3 intro-y flex flex-col sm:flex-row items-center mt-8">
         <h1 class="text-lg font-medium mr-auto">
-            User All
+            Data Akun Pengguna All
         </h1>
-        <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('user.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
 
-        </div>
     </div>
+
     <div class="col-span-2 mb-4 mt-4">
 
-        <a class="btn btn-success btn-block" href="{{ route('user.excel') }} ">
-            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Excel
+        <a class="btn btn-pending btn-block" href="{{ route('user.excel') }} ">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="download"
+                class="w-5 h-5"></i>&nbsp;Export
         </a>
-        <a class="btn btn-primary btn-block" href="{{ route('user.pdf') }} ">
-            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf
-        </a>
+
+        <a href="javascript:;" class="btn btn-success btn-block" data-tw-toggle="modal"
+            data-tw-target="#header-footer-modal-preview">
+            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="upload"
+                class="w-5 h-5"></i>&nbsp;Upload</a>
+
+        @if (Auth::user()->role == '1' || Auth::user()->role == '3')
+            <a href="{{ route('user.add') }}" class="btn btn-primary btn-block"> <span
+                    class="glyphicon glyphicon-download"></span> </span> <i data-lucide="plus-square"
+                    class="w-5 h-5"></i>&nbsp;Tambah Data</a>
+        @endif
 
     </div>
     <div class="page-content">
@@ -28,8 +32,7 @@
                 <div class="col-12">
                     <div class="card overflow-x-auto">
                         <div class="card-body">
-                            <table id="datatable" class="table table-sm"
-                                style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <table id="datatable" class="table table-bordered">
                                 <thead>
                                     <tr>
                                         <th class="whitespace-nowrap">No</th>
@@ -47,7 +50,8 @@
                                     @foreach ($users as $key => $item)
                                         <tr>
                                             <td class="whitespace-nowrap"> {{ $key + 1 }} </td>
-                                            <td class="whitespace-nowrap"> {{ $item->name }} </td>
+                                            <td class="whitespace-nowrap" style="text-transform: capitalize;">
+                                                {{ $item->name }} </td>
                                             <td class="whitespace-nowrap"> {{ $item->username }} </td>
                                             <td class="whitespace-nowrap">
                                                 <img src="{{ !empty($item->profile_image) ? url('uploads/admin_images/' . $item->profile_image) : url('backend/dist/images/profile-user.png') }}"
@@ -62,7 +66,7 @@
                                                 @elseif($item->role == '2')
                                                     <span class="text-danger">Kepala Sekolah</span>
                                                 @elseif($item->role == '3')
-                                                    <span class="text-warning">Operator</span>
+                                                    <span class="text-warning">Wakil Kurikulum</span>
                                                 @elseif($item->role == '4')
                                                     <span class="text-success">Guru</span>
                                                 @elseif($item->role == '5')
@@ -93,21 +97,26 @@
 
                                             </td>
                                             <td class="whitespace-nowrap">
+                                                <a href="{{ route('user.delete', $item->id) }}"
+                                                    class="btn btn-danger mr-1 mb-2" title="Delete" id="delete">
+                                                    <i data-lucide="trash" class="w-4 h-4"></i>
+                                                </a>
                                                 @if ($item->status == '1')
                                                     <a href="{{ route('user.tidak.aktif', $item->id) }}"
-                                                        class="btn btn-danger mr-1 mb-2" title="Inactive">
+                                                        class="btn btn-warning mr-1 mb-2" title="Inactive">
                                                         <i data-lucide="x-circle" class="w-4 h-4"></i> </a>
                                                 @elseif($item->status == '0')
                                                     <a href="{{ route('user.aktif', $item->id) }}"
-                                                        class="btn btn-success mr-1 mb-2" title="Active">
+                                                        class="btn btn-primary mr-1 mb-2" title="Active">
                                                         <i data-lucide="check-circle" class="w-4 h-4"></i> </a>
                                                 @endif
 
 
                                                 <a href="{{ route('user.view', $item->id) }}"
-                                                    class="btn btn-primary mr-1 mb-2" title="Edit Profile">
+                                                    class="btn btn-success mr-1 mb-2" title="Edit Profile">
                                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
+
                                             </td>
 
                                         </tr>
@@ -122,4 +131,45 @@
             </div>
         </div> <!-- end col -->
     </div> <!-- end row -->
+
+
+    <!-- BEGIN: Modal Toggle -->
+    <!-- END: Modal Toggle --> <!-- BEGIN: Modal Content -->
+    <div id="header-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"> <!-- BEGIN: Modal Header -->
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Upload Data Akun Pengguna</h2> <a
+                        href="{{ asset('/template/Template Pengguna.xlsx') }}"
+                        class="btn btn-outline-secondary hidden sm:flex"> <i data-lucide="download"
+                            class="w-4 h-4 mr-2"></i>
+                        Template </a>
+
+                </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
+                <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                    <div class="col-span-12 sm:col-span-12">
+                        <form
+                            data-file-types="application/vnd.ms-excel|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            class="dropzone flex justify-center items-center" action="{{ route('user.upload') }}"
+                            method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="fallback"> <input name="file" type="file" /> </div>
+
+                            <div class="dz-message" data-dz-message>
+                                <div class="text-center">
+                                    <img alt="Midone - HTML Admin Template" class="w-10 mx-auto"
+                                        src="{{ asset('backend/dist/images/excel.png') }}">
+                                    <div class="text-lg font-medium">Drop files here or click to upload.</div>
+                                </div>
+                            </div>
+                    </div>
+
+                </div> <!-- END: Modal Body --> <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer"> <a href="{{ route('siswa.all') }}" data-tw-dismiss="modal"
+                        class="btn btn-danger w-20 mr-1">Cancel</a> <button type="submit"
+                        class="btn btn-primary w-20">Save</button> </div> <!-- END: Modal Footer -->
+                </form>
+            </div>
+        </div>
+    </div> <!-- END: Modal Content -->
 @endsection

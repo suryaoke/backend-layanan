@@ -32,7 +32,7 @@
                 <select name="semester" id="semester" class="tom-select  w-full " required>
                     <option value="">Pilih Kelas</option>
                     @foreach ($semester as $item)
-                        <option value="{{ $item->id }}">{{ $item->semester }} / {{ $item->tahun }}</option>
+                        <option value="{{ $item->id }}">{{ $item->semester }} - {{ $item->tahun }}</option>
                     @endforeach
                 </select>
             </div>
@@ -52,29 +52,58 @@
                 </div>
                 <select name="id_rombel" id="id_rombel" class="tom-select w-full" required>
                     <option value="">Pilih Rombel</option>
+
                     @foreach ($rombel as $item)
                         @php
-                            $pengampus = App\Models\Pengampu::where('kelas', $item->id_kelas)->get();
+
+                            $jadwals = App\Models\Jadwalmapel::join(
+                                'pengampus',
+                                'pengampus.id',
+                                '=',
+                                'jadwalmapels.id_pengampu',
+                            )
+                                ->join('rombels', 'rombels.id_kelas', '=', 'pengampus.kelas')
+                                ->where('rombels.id', $item->id)
+                                ->where('id_tahunajar', $item->id_tahunjar)
+                                ->where('status', '2')
+                                ->select('jadwalmapels.*')
+                                ->whereNotExists(function ($query) {
+                                    $query
+                                        ->select(DB::raw(1))
+                                        ->from('seksis')
+                                        ->whereRaw('seksis.id_jadwal = jadwalmapels.id');
+                                })
+                                ->get();
+
                             $jadwalsData = [];
                             $mapelsData = [];
-                            $kodeData = [];
+                            $seksiData = [];
                             $guruData = [];
-                            foreach ($pengampus as $peng) {
-                                $jadwals = App\Models\Jadwalmapel::where('id_pengampu', $peng->id)->where('status','2')->get();
-                                foreach ($jadwals as $jadwal) {
-                                    $jadwalsData[] = $jadwal->id;
-                                    $mapelsData[] = $jadwal->pengampus->mapels->nama;
-                                    $kodeData[] = $jadwal->kode_jadwalmapel;
-                                    $guruData[] = $jadwal->pengampus->gurus->nama;
-                                }
+                            $kodeData = [];
+                            $kelasData = [];
+
+                            foreach ($jadwals as $jadwal) {
+                                $jadwalsData[] = $jadwal->id;
+                                $mapelsData[] = $jadwal->pengampus->mapels->nama;
+                                $seksiData[] = $jadwal->kode_jadwalmapel;
+                                $guruData[] = $jadwal->pengampus->gurus->nama;
+                                $kodeData[] = $jadwal->pengampus->kode_pengampu;
+                                $kelasData[] =
+                                    $jadwal->pengampus->kelass->tingkat .
+                                    '' .
+                                    $jadwal->pengampus->kelass->nama .
+                                    '' .
+                                    $jadwal->pengampus->kelass->jurusans->nama;
                             }
                         @endphp
                         <option value="{{ $item->id }}" data-jadwal="{{ json_encode($jadwalsData) }}"
-                            data-mapel="{{ json_encode($mapelsData) }}" data-kode="{{ json_encode($kodeData) }}"
-                            data-guru="{{ json_encode($guruData) }}">
-               
+                            data-mapel="{{ json_encode($mapelsData) }}" data-seksi="{{ json_encode($seksiData) }}"
+                            data-guru="{{ json_encode($guruData) }}" data-kode="{{ json_encode($kodeData) }}"
+                            data-kelas="{{ json_encode($kelasData) }}">
+
                             {{ $item->kelass->tingkat }}
                             {{ $item->kelass->nama }} {{ $item->kelass->jurusans->nama }}
+                            - {{ $item->tahuns->semester }} - {{ $item->tahuns->tahun }}
                         </option>
                     @endforeach
                 </select>
@@ -86,30 +115,35 @@
         </div>
 
 
+
         <div class="mt-4">
-            <label for="">Jadwal Mata Pelajaran</label>
 
-            <div class="mt-1 flex">
-                <div
-                    class="z-30 rounded-l w-10 flex items-center justify-center
-             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
-              dark:text-slate-400 -mr-1">
-                    <i data-lucide="book"></i>
-                </div>
+            <div class="mt-1">
+                <table id="datatable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="px-4 py-2">Seksi</th>
+                            <th class="px-4 py-2">Kode</th>
+                            <th class="px-4 py-2">Mata Pelajaran</th>
+                            <th class="px-4 py-2">Guru</th>
+                            <th class="px-4 py-2">Kelas</th>
 
-                <select name="id_jadwal" id="id_jadwal" class="form-control" required>
-                </select>
-
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Data mata pelajaran akan diisi di sini -->
+                    </tbody>
+                </table>
             </div>
-            <span id="error-kelas" class="text-sm text-red-600"></span>
+            <span id="error-matpel" class="text-sm text-red-600"></span>
         </div>
 
 
-
         <div class="mt-4">
-            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
-            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-3 align-top" href="{{ route('seksi.all') }}">Cancel
+            <a class="btn btn-danger mt-2 w-full h-10 xl:w-32 xl:mr-2 align-top" href="{{ route('seksi.all') }}">Cancel
             </a>
+            <button class="btn btn-primary mt-2  w-full  h-10  xl:w-32 xl:mr-3 align-top" type="submit">Save</button>
+
         </div>
     </form>
 
@@ -164,20 +198,6 @@
         });
     </script>
 
-    <script>
-        // Menambahkan event listener ke dropdown mata pelajaran
-        document.getElementById("id_jadwal").addEventListener("change", function() {
-            // Mendapatkan nilai kelas dari data-kelas yang terkait dengan option yang dipilih
-            var selectedOption = this.options[this.selectedIndex];
-            var guru = selectedOption.getAttribute("data-guru");
-
-            // Memasukkan nilai kelas ke input kelas
-            document.getElementById("guru").value = guru;
-
-        });
-    </script>
-
-
 
     <script>
         document.getElementById("id_rombel").addEventListener("change", function() {
@@ -185,23 +205,33 @@
 
             var pengampusData = JSON.parse(selectedOption.getAttribute("data-jadwal"));
             var mapelsData = JSON.parse(selectedOption.getAttribute("data-mapel"));
-            var kodeData = JSON.parse(selectedOption.getAttribute("data-kode"));
+            var seksiData = JSON.parse(selectedOption.getAttribute("data-seksi"));
             var guruData = JSON.parse(selectedOption.getAttribute("data-guru"));
+            var kodeData = JSON.parse(selectedOption.getAttribute("data-kode"));
+            var kelasData = JSON.parse(selectedOption.getAttribute("data-kelas"));
 
-            var selectJadwal = document.getElementById("id_jadwal");
-            selectJadwal.innerHTML = ''; // menghapus opsi sebelumnya
+            var tableBody = document.getElementById("table-body");
+            tableBody.innerHTML = ''; // Menghapus data sebelumnya dari tabel
 
             if (pengampusData) {
                 for (var i = 0; i < pengampusData.length; i++) {
-                    var option = document.createElement("option");
-                    option.text =  mapelsData[i] + " - Seksi: " + kodeData[i];
-                    option.value = pengampusData[i];
-                    selectJadwal.add(option);
+                    var row = tableBody.insertRow();
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+
+                    cell1.innerHTML = seksiData[i];
+                    cell2.innerHTML = kodeData[i];
+                    cell3.innerHTML = mapelsData[i];
+                    cell4.innerHTML = guruData[i];
+                    cell5.innerHTML = kelasData[i];
+
                 }
             }
         });
     </script>
-
 
 
 

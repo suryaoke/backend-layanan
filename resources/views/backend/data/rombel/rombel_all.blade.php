@@ -4,77 +4,187 @@
         <h1 class="text-lg font-medium mr-auto" style="font-size: 20px">
             Data Rombongan Belajar All
         </h1>
-        <div class="w-full sm:w-auto flex mt-4 sm:mt-0">
-            <a href="{{ route('rombel.add') }}" class="btn btn-primary shadow-md mr-2">Tambah Data</a>
 
-        </div>
     </div>
-    <div class="grid grid-cols-12 gap-6 mt-5">
 
-        <!-- BEGIN: Users Layout -->
-        @foreach ($rombel as $key => $item)
-            @php
-                $walas = App\Models\Walas::where('id', $item->id_walas)->first();
-                if ($walas) {
-                    $guru = App\Models\Guru::where('id', $walas->id_guru)->first();
-                    if ($guru) {
-                        $user = App\Models\User::where('id', $guru->id_user)->first();
-                    }
-                }
+    <div class="mb-4 intro-y flex flex-col sm:flex-row items-center mt-4">
 
-                $rombelsiswa = App\Models\Rombelsiswa::where('id_rombel', $item->id)->count();
+        <form role="form" action="{{ route('rombel.all') }}" method="get" class="sm:flex">
 
-            @endphp
-            {{--  @if (isset($user) && isset($guru) && isset($walas))  --}}
-                <div class="intro-y col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3">
-                    <div class="box">
-                        <div class="p-3">
-                            <div
-                                class="h-40 2xl:h-56 image-fit rounded-md overflow-hidden before:block before:absolute before:w-full before:h-full before:top-0 before:left-0 before:z-10 before:bg-gradient-to-t before:from-black before:to-black/10">
-                                <img alt="Midone - HTML Admin Template" class="rounded-md"
-                                    src="{{ !empty($user->profile_image) ? url('uploads/admin_images/' . $user->profile_image) : url('backend/dist/images/profile-user.png') }}">
-                                <div class="absolute bottom-0 text-white px-5 pb-6 z-10">
-                                    <a href="" class="block font-medium text-base">{{ $guru->nama }}</a>
-                                    <span class="text-white/90 text-xs mt-3">{{ $guru->kode_gr }}</span>
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+
+                    <select name="searchkelas" class="form-select w-full">
+                        <option value="">Kelas</option>
+                        @foreach ($kelas as $item)
+                            <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                                {{ $item->jurusans->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+
+                    <select name="searchtahun" class="form-select w-full">
+                        <option value="">Tahun Ajar</option>
+                        @foreach ($datatahun as $item)
+                            <option value="{{ $item->id }}">{{ $item->semester }} -
+                                {{ $item->tahun }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="sm:ml-1">
+                <button type="submit" class="btn btn-default">Search</button>
+            </div>
+            <div class="sm:ml-2">
+
+                <a href="{{ route('rombel.all') }}" class="btn btn-danger">Clear</a>
+
+            </div>
+        </form>
+    </div>
+
+    <div class="col-span-2 mb-4 mt-4">
+        @if ($rombelsiswa && $rombelsiswa->rombels)
+            <a href="{{ route('rombel.delete', $rombelsiswa->rombels->id) }}" id="delete"
+                class="btn btn-danger btn-block">
+                <span class="glyphicon glyphicon-download"></span> <i data-lucide="trash" class="w-5 h-5"></i>&nbsp;Rombel
+            </a>
+            <a class="btn btn-pending btn-block" data-tw-toggle="modal" data-tw-target="#excel-modal-preview">
+                <span class="glyphicon glyphicon-download"></span> <i data-lucide="download"
+                    class="w-4 h-4"></i>&nbsp;Export
+            </a>
+            <a href="{{ route('rombel.edit', $rombelsiswa->rombels->id) }}" class="btn btn-success btn-block">
+                <span class="glyphicon glyphicon-download"></span> <i data-lucide="edit" class="w-5 h-5"></i>&nbsp;Edit Data
+            </a>
+        @endif
+        <a href="{{ route('rombel.add') }}" class="btn btn-primary btn-block">
+            <span class="glyphicon glyphicon-download"></span> <i data-lucide="plus-square" class="w-5 h-5"></i>&nbsp;Tambah
+            Data
+        </a>
+      
+    </div>
+
+    @if (isset(
+            $rombelsiswa['rombels']['tahuns'],
+            $rombelsiswa['rombels']['kelass'],
+            $rombelsiswa['rombels']['kelass']['jurusans'],
+            $rombelsiswa['rombels']['walass']['gurus']))
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card overflow-x-auto">
+                            <div class="card-body">
+
+                                <div class="intro-y alert alert-primary show mb-2 " role="alert">
+                                    <span>
+                                        Semester {{ $rombelsiswa['rombels']['tahuns']['semester'] }}
+                                        Tahun Ajar {{ $rombelsiswa['rombels']['tahuns']['tahun'] }} | Kelas :
+                                        {{ $rombelsiswa->rombels->kelass->tingkat }}
+                                        {{ $rombelsiswa->rombels->kelass->nama }}
+                                        {{ $rombelsiswa->rombels->kelass->jurusans->nama }} | Wali Kelas:
+                                        {{ $rombelsiswa->rombels->walass->gurus->nama }}
+                                    </span>
                                 </div>
+                                <table id="datatable" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="whitespace-nowrap">No</th>
+                                            <th class="whitespace-nowrap">Nama</th>
+                                            <th class="whitespace-nowrap">Nisn</th>
+                                            <th class="whitespace-nowrap">Jk</th>
+                                            <th class="whitespace-nowrap">Kelas</th>
+
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($rombelsiswaa as $key => $item)
+                                            <tr>
+                                                <td class="whitespace-nowrap"> {{ $key + 1 }} </td>
+                                                <td class="whitespace-nowrap">
+                                                    {{ $item->siswas->nama }}
+                                                </td>
+                                                <td class="whitespace-nowrap">
+                                                    {{ $item->siswas->nisn }}
+                                                </td>
+                                                <td class="whitespace-nowrap">
+                                                    {{ $item->siswas->jk }}
+                                                </td>
+                                                <td class="whitespace-nowrap">
+                                                    {{ $item->rombels->kelass->tingkat }}
+                                                    {{ $item->rombels->kelass->nama }}
+                                                    {{ $item->rombels->kelass->jurusans->nama }}
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
+
+
+                                    </tbody>
+                                </table>
+
                             </div>
-                            <div class="text-slate-600 dark:text-slate-500 mt-5">
-                                <div class="flex items-center ">
-                                    <div class="mr-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="lucide lucide-user-square-2">
-                                            <path d="M18 21a6 6 0 0 0-12 0" />
-                                            <circle cx="12" cy="11" r="4" />
-                                            <rect width="18" height="18" x="3" y="3" rx="2" />
-                                        </svg>
-                                    </div>
-                                    Wali Kelas: {{ $item->kelass->tingkat }} {{ $item->kelass->nama }}
-                                    {{ $item->kelass->jurusans->nama }}
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <i data-lucide="users" class="w-4 h-4 mr-2"></i> Siswa: {{ $rombelsiswa }} Orang
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="flex justify-center lg:justify-end items-center p-5 border-t border-slate-200/60 dark:border-darkmode-400">
-                            <a class="flex items-center text-success mr-3" href="{{ route('rombel.edit', $item->id) }}">
-                                <i data-lucide="check-square" class="w-4 h-4 mr-1"></i> Edit
-                            </a>
-                            <a id="delete" class="flex items-center text-danger"
-                                href="{{ route('rombel.delete', $item->id) }}" data-tw-toggle="modal"
-                                data-tw-target="#delete-confirmation-modal">
-                                <i data-lucide="trash-2" class="w-4 h-4 mr-1"></i> Delete
-                            </a>
                         </div>
                     </div>
                 </div>
-            {{--  @endif  --}}
-        @endforeach
+            </div> <!-- end col -->
+        </div>
+    @endif
 
+    <!-- BEGIN: Modal Excel-->
+
+    <div id="excel-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- BEGIN: Modal Header -->
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Export Rombongan Belajar</h2>
+                    <div class="dropdown sm:hidden"> <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"
+                            aria-expanded="false" data-tw-toggle="dropdown"> <i data-lucide="more-horizontal"
+                                class="w-5 h-5 text-slate-500"></i> </a>
+                        <div class="dropdown-menu w-40">
+                        </div>
+                    </div>
+                </div> <!-- END: Modal Header -->
+                <!-- BEGIN: Modal Body -->
+
+                <form method="post" action="{{ route('rombel.excel') }}">
+                    @csrf
+                    <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                        <div class="col-span-12 sm:col-span-6"> <label for="edit-jam">Pilih Kelas </label>
+                            <select name="kelas" id="kelas" class="form-select w-full" required>
+
+                                @foreach ($kelas as $item)
+                                    <option value="{{ $item->id }}"> {{ $item->tingkat }}{{ $item->nama }}
+                                        {{ $item['jurusans']['nama'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-span-12 sm:col-span-6"> <label for="edit-jam">Pilih Tahun Ajar </label>
+                            <select name="tahun" id="tahun" class="form-select w-full" required>
+
+                                @foreach ($datatahun as $item)
+                                    <option value="{{ $item->id }}">{{ $item->semester }} -
+                                        {{ $item->tahun }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <!-- BEGIN: Modal Footer -->
+                    <div class="modal-footer">
+                        <a href="{{ route('rombel.all') }}" class="btn btn-outline-secondary w-20 mr-1">Cancel</a>
+                        <button type="submit" class="btn btn-primary w-20">Export</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-   <div class="mt-8">{{ $rombel->links() }}</div>  
+    <!-- BEGIN: Modal Excel -->
 @endsection

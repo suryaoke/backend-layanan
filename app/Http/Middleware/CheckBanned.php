@@ -32,23 +32,7 @@ class CheckBanned
             }
 
             // Attempt to authenticate the user
-            if (Auth::attempt($credentials)) {
-                // Authentication successful, create a success response
-                $notification = array(
-                    'message' => 'User Login Successfully',
-                    'alert-type' => 'success'
-                );
-
-                return redirect()->route('dashboard')->with($notification);
-            } else {
-                // Authentication failed, create an error response
-                $notification = array(
-                    'message' => 'Username or Password Salah..!!',
-                    'alert-type' => 'error'
-                );
-
-                return redirect()->route('login')->with($notification);
-            }
+          
         }
 
         // Continue with the existing checks for banned and role conditions
@@ -64,17 +48,17 @@ class CheckBanned
             return redirect()->route('login')->with($notification);
         }
 
-        if (auth()->check() && (auth()->user()->role == '5')) {
-            Auth::logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
-            $notification = array(
-                'message' => 'Akun Pengguna Hanya Dapat Diakses di Aplikasi Mobile',
-                'alert-type' => 'warning'
-            );
+        // if (auth()->check() && (auth()->user()->role == '5')) {
+        //     Auth::logout();
+        //     $request->session()->invalidate();
+        //     $request->session()->regenerateToken();
+        //     $notification = array(
+        //         'message' => 'Akun Pengguna Hanya Dapat Diakses di Aplikasi Mobile',
+        //         'alert-type' => 'warning'
+        //     );
 
-            return redirect()->route('login')->with($notification);
-        }
+        //     return redirect()->route('login')->with($notification);
+        // }
 
         return $next($request);
     }

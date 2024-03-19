@@ -19,179 +19,363 @@
             /* Optional: Untuk menengahkan ikon dan teks secara vertikal jika dibutuhkan */
         }
     </style>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script> <!-- Include jQuery Validation plugin -->
-    <h1 class="text-lg font-medium mb-4 mt-4">Jadwal Mata Pelajaran All</h1>
-
-    <div class="mb-4 intro-y flex flex-col sm:flex-row items-center mt-4">
-
-        <form role="form" action="{{ route('jadwalmapel.all') }}" method="get" class="sm:flex">
-            <div class="flex-1 sm:mr-2">
-                <div class="form-group">
-                    <input type="text" name="searchhari" class="form-control" placeholder="Hari"
-                        value="{{ request('searchhari') }}">
-                </div>
-            </div>
-            <div class="flex-1 sm:mr-2">
-                <div class="form-group">
-                    <input type="text" name="searchguru" class="form-control" placeholder="Nama Guru"
-                        value="{{ request('searchguru') }}">
-                </div>
-            </div>
-            <div class="flex-1 sm:mr-2">
-                <div class="form-group">
-                    <input type="text" name="searchmapel" class="form-control" placeholder="Mata Pelajaran"
-                        value="{{ request('searchmapel') }}">
-
-                </div>
-            </div>
-            <div class="flex-1 sm:mr-2">
-                <div class="form-group">
-
-                    <select name="searchkelas" class="form-select w-full">
-                        <option value="">Kelas</option>
-                        @foreach ($kelas as $item)
-                            <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
-                                {{ $item->jurusans->nama }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
-            <div class="sm:ml-1">
-                <button type="submit" class="btn btn-default">Search</button>
-            </div>
-            <div class="sm:ml-2">
-
-                <a href="{{ route('jadwalmapel.all') }}" class="btn btn-danger">Clear</a>
-
-            </div>
-        </form>
-    </div>
-    {{--  // End Bagian search //  --}}
-
-    <div class="col-span-2 mb-4 mt-4">
-        <a class="btn btn-primary btn-block" data-tw-toggle="modal" data-tw-target="#button-modal-preview">
-            <span class="glyphicon glyphicon-download"></span> <i data-lucide="send" class="w-4 h-4"></i>&nbsp;Kirim
-            Jadwal Mapel All
-        </a>
-
-        <a class="btn btn-outline-success btn-block ml-2" data-tw-toggle="modal" data-tw-target="#add-jadwalmapels-modal">
-            <span class="glyphicon glyphicon-download"></span> Tambah Jadwal Mapel
-        </a>
-        <a class="btn btn-success btn-block" href="{{ route('jadwal.excel') }} ">
-            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Excel
-        </a>
 
 
-        <a href="javascript:;" data-tw-toggle="modal" data-tw-target="#pdf-modal-preview" class="btn btn-primary"> <span
-                class="glyphicon glyphicon-download"></span> </span> <i data-lucide="printer"
-                class="w-4 h-4"></i>&nbsp;Export Pdf</a>
-    </div>
 
-    <div class="page-content">
+    <div class="page-content mt-4">
         <div class="container-fluid">
             <div class="row">
+
                 <div class="col-12">
-                    <div class="overflow-x-auto">
-                        <table id="datatable" class="table table-sm"
-                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                            <thead>
-                                <tr>
+                    <ul class="nav nav-boxed-tabs" role="tablist">
+                        <li id="example-5-tab" class="nav-item flex-1" role="presentation"> <button
+                                class="nav-link w-full py-2 active" data-tw-toggle="pill" data-tw-target="#example-tab-5"
+                                type="button" role="tab" aria-controls="example-tab-3" aria-selected="true"> REKAP
+                                JADWAL MAPEL </button> </li>
+                        <li id="example-5-tab" class="nav-item flex-1" role="presentation"> <button
+                                class="nav-link w-full py-2" data-tw-toggle="pill" data-tw-target="#example-tab-6"
+                                type="button" role="tab" aria-controls="example-tab-4" aria-selected="false">
+                                RUBAH JADWAL MAPEL </button> </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class=" intro-y flex flex-col sm:flex-row items-center mt-4">
 
-                                    <th>No.</th>
-                                    <th style="white-space: nowrap;">Seksi</th>
-                                    <th style="white-space: nowrap;">Kode</th>
-                                    <th>Hari</th>
-                                    <th>Waktu</th>
-                                    <th style="white-space: nowrap;">Guru</th>
-                                    <th style="white-space: nowrap;">Mata Pelajaran</th>
-                                    <th>Kelas</th>
-                                    <th>JP</th>
-                                    <th>Kode Ruangan</th>
-                                    <th>Semester</th>
-                                    <th>Kurikulum</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($jadwalmapel as $key => $item)
-                                    @php
-                                        $pengampuid = App\Models\Pengampu::find($item->id_pengampu);
-                                        $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
-                                        $guruid = App\Models\Guru::find($pengampuid->id_guru);
-                                        $kelas = App\Models\Kelas::find($pengampuid->kelas);
-                                    @endphp
-
-                                    <tr>
-                                        <td align="center">{{ $key + 1 }} </td>
-                                        <td style="white-space: nowrap;" class="text-primary">
-                                            {{ $item->kode_jadwalmapel }}
-                                        </td>
-                                        <td style="white-space: nowrap;" class="text-primary">
-                                            {{ $item['pengampus']['kode_pengampu'] }} </td>
-                                        <td> {{ $item['haris']['nama'] }} </td>
-                                        <td> {{ $item['waktus']['range'] }} </td>
-                                        <td style="white-space: nowrap;"> {{ $guruid->nama }} </td>
-                                        <td style="white-space: nowrap;"> {{ $mapelid->nama }} </td>
-                                        <td style="white-space: nowrap;"> {{ $kelas->tingkat }} {{ $kelas->nama }}
-                                            {{ $kelas['jurusans']['nama'] }}
-                                        </td>
-                                        <td> {{ $mapelid->jp }} </td>
-                                        <td> {{ $item['ruangans']['kode_ruangan'] }} </td>
-                                        <td style="white-space: nowrap;">
-                                            {{ $mapelid['tahunajars']['semester'] }}-
-                                            {{ $mapelid['tahunajars']['tahun'] }}
-                                        </td>
-
-                                        <td> {{ $pengampuid->kurikulum }} </td>
-                                        <td>
-                                            @if ($item->status == '0')
-                                                <span class="btn btn-outline-warning">Proses Penjadwalan</span>
-                                            @elseif($item->status == '1')
-                                                <span class="btn btn-outline-pending">Menunggu Verifikasi</span>
-                                            @elseif($item->status == '2')
-                                                <span class="btn btn-outline-success">Kirim</span>
-                                            @elseif($item->status == '3')
-                                                <span class="btn btn-outline-danger">Ditolak</span>
-                                            @endif
-
-                                        </td>
-                                        <td>
-
-                                            <a id="delete" href="{{ route('jadwalmapel.delete', $item->id) }}"
-                                                class="btn btn-danger mr-1 mb-2">
-                                                <i data-lucide="trash" class="w-4 h-4"></i>
-                                            </a>
-
-                                            <a href="javascript:;" data-tw-toggle="modal"
-                                                data-tw-target="#edit-jadwalmapels-modal-{{ $item->id }}"
-                                                class="btn btn-primary mb-2">
-                                                <i data-lucide="edit" class="w-4 h-4 mb"></i>
-                                            </a>
-
-                                            @if ($item->status == '0' || $item->status == '3')
-                                                <a href="javascript:;" data-tw-toggle="modal"
-                                                    data-tw-target="#kirim-jadwalmapels-modal-{{ $item->id }}"
-                                                    class="btn btn-primary">
-                                                    <i data-lucide="send" class="w-4 h-4"></i>
-                                                </a>
-                                            @endif
-
-                                        </td>
-
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+            <form role="form" action="{{ route('jadwalmapel.all') }}" method="get" class="sm:flex">
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <input type="text" name="searchhari" class="form-control" placeholder="Hari"
+                            value="{{ request('searchhari') }}">
+                    </div>
+                </div>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <input type="text" name="searchguru" class="form-control" placeholder="Nama Guru"
+                            value="{{ request('searchguru') }}">
+                    </div>
+                </div>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+                        <input type="text" name="searchmapel" class="form-control" placeholder="Mata Pelajaran"
+                            value="{{ request('searchmapel') }}">
 
                     </div>
                 </div>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+
+                        <select name="searchkelas" class="form-select w-full">
+                            <option value="">Kelas</option>
+                            @foreach ($kelas as $item)
+                                <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                                    {{ $item->jurusans->nama }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="flex-1 sm:mr-2">
+                    <div class="form-group">
+
+                        <select name="searchtahun" class="form-select w-full">
+                            <option value="">Tahun Ajar</option>
+                            @foreach ($datatahun as $item)
+                                <option value="{{ $item->id }}">{{ $item->semester }} -
+                                    {{ $item->tahun }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="sm:ml-1">
+                    <button type="submit" class="btn btn-default">Search</button>
+                </div>
+                <div class="sm:ml-2">
+
+                    <a href="{{ route('jadwalmapel.all') }}" class="btn btn-danger">Clear</a>
+
+                </div>
+            </form>
+        </div>
+        {{--  // End Bagian search //  --}}
+
+
+        <div class="col-span-2 mb-4 mt-4 intro-y flex flex-col sm:flex-row">
+            <div class="sm:ml-1">
+
+                <a class="btn btn-pending btn-block" data-tw-toggle="modal" data-tw-target="#excel-modal-preview">
+                    <span class="glyphicon glyphicon-download"></span> <i data-lucide="download"
+                        class="w-4 h-4"></i>&nbsp;Export
+
+                </a>
             </div>
+            <div class="sm:ml-1">
+                <a class="btn btn-success btn-block" data-tw-toggle="modal" data-tw-target="#button-modal-preview">
+                    <span class="glyphicon glyphicon-download"></span> <i data-lucide="send" class="w-4 h-4"></i>&nbsp;Kirim
+                    Jadwal
+                </a>
+            </div>
+            <div class="sm:ml-1">
+                @if (Auth::user()->role == '1' || Auth::user()->role == '3')
+                    <a data-tw-toggle="modal" data-tw-target="#add-jadwalmapels-modal" class="btn btn-primary btn-block">
+                        <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="plus-square"
+                            class="w-5 h-5"></i>&nbsp;Tambah Data</a>
+                @endif
+            </div>
+
+
+        </div>
+
+        <div class="col-span-2 mb-2 mt-4">
+            @if (
+                !empty($jadwal) &&
+                    isset($jadwal['tahun']) &&
+                    isset($jadwal['tahun']['semester']) &&
+                    isset($jadwal['tahun']['tahun']))
+                Semester {{ $jadwal['tahun']['semester'] }}
+                Tahun Ajar {{ $jadwal['tahun']['tahun'] }}
+            @endif
+
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <div class="tab-content mt-4">
+            <div id="example-tab-5" class="tab-pane leading-relaxed active" role="tabpanel" aria-labelledby="example-5-tab">
+
+                <table id="datatable1" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center " style="background-color: rgb(187,191,195)">Hari</th>
+                            <th class="text-center "style="background-color: rgb(187,191,195)">Waktu</th>
+                            @php
+                                $kelasGroups = collect();
+                            @endphp
+                            @foreach ($jadwalmapel as $key => $jadwal)
+                                @php
+                                    $kelas = $jadwal->pengampus->kelas;
+                                    if (!$kelasGroups->has($kelas)) {
+                                        $kelasGroups->put($kelas, collect());
+                                    }
+                                    $kelasGroups[$kelas]->push($jadwal);
+
+                                @endphp
+                            @endforeach
+                            @php
+                                $kelasGroups = $kelasGroups->sortKeys();
+                            @endphp
+                            @foreach ($kelasGroups as $kelas => $jadwalByClass)
+                                @php
+                                    $tingkat = App\Models\Kelas::where('id', $kelas)->first();
+                                @endphp
+                                <th colspan="3" class="text-center " style="background-color: rgb(187,191,195)">
+                                    {{ $tingkat->tingkat }} {{ $tingkat->nama }}
+                                    {{ $tingkat['jurusans']['nama'] }}
+                                </th>
+                            @endforeach
+                        </tr>
+                        <tr>
+                            <th class="text-center "style="background-color: rgb(187,191,195)"></th>
+                            <th class="text-center "style="background-color: rgb(187,191,195)"></th>
+                            @foreach ($kelasGroups as $kelas => $jadwalByClass)
+                                <th style="white-space: nowrap;" class="btn-primary">
+                                    Kode Guru</th>
+                                <th style=" white-space: nowrap;" class="btn-primary">
+                                    Kode Mapel</th>
+                                <th style="white-space: nowrap;" class="btn-primary">
+                                    Ruangan</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @php
+                            $hariGroups = collect();
+                        @endphp
+                        @foreach ($jadwalmapel as $key => $jadwal)
+                            @php
+                                // Mengelompokkan data berdasarkan hari
+
+                                $hari1 = $jadwal->id_hari;
+                                if (!$hariGroups->has($hari1)) {
+                                    $hariGroups->put($hari1, collect());
+                                }
+                                $hariGroups[$hari1]->push($jadwal);
+
+                            @endphp
+                        @endforeach
+                        @foreach ($hariGroups as $hari1 => $jadwalByDay)
+                            @php
+                                $haridata = App\Models\Hari::find($hari1);
+                                $harijumlah = count($jadwalByDay);
+                                $printedTimeSlots = []; // Initialize array to keep track of printed time slots
+                                $uniqueTimes = $jadwalByDay->unique('id_waktu');
+                                $harijumlah = count($uniqueTimes);
+                            @endphp
+                            @foreach ($jadwalByDay as $index => $jadwal)
+                                @php
+                                    $timeSlot = $jadwal->waktus->range; // Get the time slot
+                                @endphp
+                                {{-- Check if the time slot has been printed already --}}
+                                @if (!in_array($timeSlot, $printedTimeSlots))
+                                    <tr>
+                                        @if ($index === 0)
+                                            <td rowspan="{{ $harijumlah }}" style="background-color: rgb(187,191,195)">
+                                                {{ $haridata->nama }}
+                                            </td>
+                                        @endif
+                                        <td style="white-space: nowrap;" class="bg-warning">
+                                            {{ $timeSlot }}
+                                        </td>
+                                        {{-- Loop through kelasGroups to display kode guru for each class --}}
+                                        @foreach ($kelasGroups as $kelas => $jadwalByClass)
+                                            @php
+                                                $kode_guru = ''; // Initialize kode guru as empty string
+                                                $kode_mapel = ''; // Initialize kode mapel as empty string
+                                                $kode_ruangan = ''; // Initialize kode ruangan as empty string
+                                            @endphp
+                                            @foreach ($jadwalByClass as $jadwalKelas)
+                                                {{-- Check if the jadwal belongs to the current iteration's class and time slot --}}
+                                                @if ($jadwalKelas->waktus->range === $timeSlot && $jadwalKelas->id_hari === $jadwal->id_hari)
+                                                    {{-- Assign the kode guru if the jadwal belongs to the current iteration's class and time slot --}}
+                                                    @php
+                                                        $kode_guru = $jadwalKelas->pengampus->gurus->kode_gr;
+                                                        $kode_mapel = $jadwalKelas->pengampus->mapels->kode_mapel;
+                                                        $kode_ruangan = $jadwalKelas->ruangans->kode_ruangan;
+
+                                                    @endphp
+                                                    {{-- Break the inner loop --}}
+                                                @break
+                                            @endif
+                                        @endforeach
+                                        {{-- Display the kode guru --}}
+                                        <td>{{ $kode_guru }}
+                                        </td>
+                                        <td>{{ $kode_mapel }}</td>
+                                        <td>{{ $kode_ruangan }}</td>
+                                    @endforeach
+                                </tr>
+                                {{-- Add the printed time slot to the printedTimeSlots array --}}
+                                @php
+                                    $printedTimeSlots[] = $timeSlot;
+                                @endphp
+                            @endif
+                        @endforeach
+                    @endforeach
+
+                </tbody>
+            </table>
+
+        </div>
+        <div id="example-tab-6" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-6-tab">
+            <table id="datatable" class="table table-bordered">
+                <thead>
+                    <tr>
+
+                        <th>No.</th>
+                        <th style="white-space: nowrap;">Seksi
+                        </th>
+                        <th style="white-space: nowrap;">Kode
+                        </th>
+                        <th>Hari</th>
+                        <th>Waktu</th>
+                        <th style="white-space: nowrap;">Guru
+                        </th>
+                        <th style="white-space: nowrap;">Mata
+                            Pelajaran</th>
+                        <th>Kelas</th>
+                        <th>JP</th>
+                        <th>Kode Ruangan</th>
+                        <th>Semester</th>
+
+                        <th>Status</th>
+                        <th>Action</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($jadwalmapel as $key => $item)
+                        @php
+                            $pengampuid = App\Models\Pengampu::find($item->id_pengampu);
+                            $mapelid = App\Models\Mapel::find($pengampuid->id_mapel);
+                            $guruid = App\Models\Guru::find($pengampuid->id_guru);
+                            $kelas = App\Models\Kelas::find($pengampuid->kelas);
+                        @endphp
+
+                        <tr>
+                            <td align="center">
+                                {{ $key + 1 }} </td>
+                            <td style="white-space: nowrap;" class="text-primary">
+                                {{ $item->kode_jadwalmapel }}
+                            </td>
+                            <td style="white-space: nowrap;" class="text-primary">
+                                {{ $item['pengampus']['kode_pengampu'] }}
+                            </td>
+                            <td> {{ $item['haris']['nama'] }}
+                            </td>
+                            <td> {{ $item['waktus']['range'] }}
+                            </td>
+                            <td style="white-space: nowrap;">
+                                {{ $guruid->nama }} </td>
+                            <td style="white-space: nowrap;">
+                                {{ $mapelid->nama }} </td>
+                            <td style="white-space: nowrap;">
+                                {{ $kelas->tingkat }}
+                                {{ $kelas->nama }}
+                                {{ $kelas['jurusans']['nama'] }}
+                            </td>
+                            <td> {{ $mapelid->jp }} </td>
+                            <td> {{ $item['ruangans']['kode_ruangan'] }}
+                            </td>
+                            <td style="white-space: nowrap;">
+                                {{ $item['tahun']['semester'] }}
+                                - {{ $item['tahun']['tahun'] }}
+                            </td>
+
+                            <td>
+                                @if ($item->status == '0')
+                                    <span class="btn btn-outline-warning">Proses
+                                        Penjadwalan</span>
+                                @elseif($item->status == '1')
+                                    <span class="btn btn-outline-pending">Menunggu
+                                        Verifikasi</span>
+                                @elseif($item->status == '2')
+                                    <span class="btn btn-outline-success">Kirim</span>
+                                @elseif($item->status == '3')
+                                    <span class="btn btn-outline-danger">Ditolak</span>
+                                @endif
+
+                            </td>
+                            <td>
+
+                                <a id="delete" href="{{ route('jadwalmapel.delete', $item->id) }}"
+                                    class="btn btn-danger mr-1 mb-2">
+                                    <i data-lucide="trash" class="w-4 h-4"></i>
+                                </a>
+
+                                <a href="javascript:;" data-tw-toggle="modal"
+                                    data-tw-target="#edit-jadwalmapels-modal-{{ $item->id }}"
+                                    class="btn btn-primary mb-2">
+                                    <i data-lucide="edit" class="w-4 h-4 mb"></i>
+                                </a>
+
+                                @if ($item->status == '0' || $item->status == '3')
+                                    <a href="javascript:;" data-tw-toggle="modal"
+                                        data-tw-target="#kirim-jadwalmapels-modal-{{ $item->id }}"
+                                        class="btn btn-primary">
+                                        <i data-lucide="send" class="w-4 h-4"></i>
+                                    </a>
+                                @endif
+
+                            </td>
+
+
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+
         </div>
     </div>
 
@@ -243,7 +427,7 @@
                                                     <th>Mata Pelajaran</th>
                                                     <th>Kelas</th>
                                                     <th>Jp</th>
-                                                    <th>Kurikulum</th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -289,6 +473,20 @@
                                     <option value="">Pilih Ruangan</option>
                                     @foreach ($ruangan as $item)
                                         <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <!-- Tahun Ajar -->
+                            <div class="col-span-12 sm:col-span-4">
+                                <div class="mb-2">
+                                    <label for="edit-ruangan">Tahun Ajar</label>
+                                </div>
+                                <select name="id_tahunajar" id="id_tahunajar" class="form-control w-full" required>
+                                    <option value="">Pilih Tahun Ajar</option>
+                                    @foreach ($tahunajar as $item)
+                                        <option value="{{ $item->id }}">{{ $item->semester }} -
+                                            {{ $item->tahun }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -377,7 +575,7 @@
                     const cell3 = newRow.insertCell(2);
                     const cell4 = newRow.insertCell(3);
                     const cell5 = newRow.insertCell(4);
-                    const cell6 = newRow.insertCell(5);
+
 
                     cell1.textContent = "{{ $item->kode_pengampu }}"; // Kode Pengampu
                     cell2.textContent = "{{ $item->gurus->nama }}"; // Nama Guru (berdasarkan relasi)
@@ -385,7 +583,7 @@
                     cell4.textContent =
                         "{{ $item->kelass->tingkat }} {{ $item->kelass->nama }} {{ $item->kelass->jurusans->nama }}"; // Kelas
                     cell5.textContent = "{{ $item->mapels->jp }}"; // Jp
-                    cell6.textContent = "{{ $item->kurikulum }}"; // Kurikulum
+
                 }
             @endforeach
         });
@@ -425,7 +623,7 @@
                                                         <th>Nama Guru</th>
                                                         <th>Mata Pelajaran</th>
                                                         <th>Kelas</th>
-                                                        <th>Kurikulum</th>
+
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -443,7 +641,7 @@
                                                         <td> {{ $pengampuid['kelass']['tingkat'] }}
                                                             {{ $pengampuid['kelass']['nama'] }}
                                                             {{ $pengampuid['kelass']['jurusans']['nama'] }} </td>
-                                                        <td> {{ $pengampuid->kurikulum }} </td>
+
 
                                                 </tbody>
                                             </table>
@@ -483,9 +681,27 @@
                                         <label for="edit-ruangan">Ruangan</label>
                                     </div>
                                     <select name="id_ruangan" id="id_ruangan" class="form-control w-full" required>
-                                        <option value="{{ $item->id_ruangan }}">{{ $item['ruangans']['nama'] }}</option>
+                                        <option value="{{ $item->id_ruangan }}">{{ $item['ruangans']['nama'] }}
+                                        </option>
                                         @foreach ($ruangan as $item3)
                                             <option value="{{ $item3->id }}">{{ $item3->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <!-- Tahun Ajar -->
+                                <div class="col-span-12 sm:col-span-4">
+                                    <div class="mb-2">
+                                        <label for="edit-ruangan">Tahun Ajar</label>
+                                    </div>
+                                    <select name="id_tahunajar" id="id_tahunajar" class="form-control w-full"
+                                        required>
+                                        <option value=" {{ $item->id_tahunajar }} ">
+                                            {{ $item->tahun->semester }} - {{ $item->tahun->tahun }}</option>
+                                        @foreach ($tahunajar as $item)
+                                            <option value="{{ $item->id }}">
+                                                {{ $item->semester }}/{{ $item->tahun }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -537,7 +753,48 @@
 
     <!-- END: Modal Kirim Jadwal All Content -->
 
+    <!-- BEGIN: Modal Excel-->
 
+    <div id="excel-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- BEGIN: Modal Header -->
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Export Jadwal Mapel</h2>
+                    <div class="dropdown sm:hidden"> <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"
+                            aria-expanded="false" data-tw-toggle="dropdown"> <i data-lucide="more-horizontal"
+                                class="w-5 h-5 text-slate-500"></i> </a>
+                        <div class="dropdown-menu w-40">
+                        </div>
+                    </div>
+                </div> <!-- END: Modal Header -->
+                <!-- BEGIN: Modal Body -->
+
+                <form method="post" action="{{ route('jadal.mapels.excel') }}">
+                    @csrf
+                    <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                        <div class="col-span-12 sm:col-span-6"> <label for="edit-jam">Pilih Tahun Ajar </label>
+                            <select name="tahun" id="tahun" class="form-select w-full" required>
+
+                                @foreach ($datatahun as $item)
+                                    <option value="{{ $item->id }}">{{ $item->semester }} -
+                                        {{ $item->tahun }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div> <!-- END: Modal Body -->
+                    <!-- BEGIN: Modal Footer -->
+                    <div class="modal-footer">
+                        <a href="{{ route('jadwalmapel.all') }}"
+                            class="btn btn-outline-secondary w-20 mr-1">Cancel</a>
+                        <button type="submit" class="btn btn-primary w-20">Export</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- BEGIN: Modal Excel -->
 
     <!-- BEGIN: Modal Kirim Jadwal Satuan-->
     @foreach ($jadwalmapel as $item)
@@ -574,90 +831,6 @@
 
 
 
-    <!-- BEGIN: Modal PDF-->
-
-    <div id="pdf-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content"> <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
-                        class="w-8 h-8 text-slate-400"></i> </a>
-                <!-- BEGIN: Modal Header -->
-                <div class="modal-header">
-                    <h2 class="font-medium text-base mr-auto">Export Pdf Jadwal Mapel</h2>
-                    <div class="dropdown sm:hidden"> <a class="dropdown-toggle w-5 h-5 block" href="javascript:;"
-                            aria-expanded="false" data-tw-toggle="dropdown"> <i data-lucide="more-horizontal"
-                                class="w-5 h-5 text-slate-500"></i> </a>
-                        <div class="dropdown-menu w-40">
-
-                        </div>
-                    </div>
-                </div> <!-- END: Modal Header -->
-                <!-- BEGIN: Modal Body -->
-
-                <form method="post" action="{{ route('jadwalcutom.pdf') }}">
-                    @csrf
-                    <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
-                        <div class="col-span-12 sm:col-span-6"> <label for="edit-jam">Kelas </label>
-                            <select name="kelas" id="lecturers_id" class="form-control w-full" required>
-                                <option value="">Pilih Kelas</option>
-                                @php
-                                    $addedClassRooms = [];
-                                @endphp
-                                @foreach ($jadwalmapel as $key => $jadwalmapels)
-                                    @if (!in_array($jadwalmapels->pengampus->kelas, $addedClassRooms))
-                                        <option value="{{ $jadwalmapels->pengampus->kelas }}">
-                                            {{ $jadwalmapels->pengampus->kelass->tingkat }}
-                                            {{ $jadwalmapels->pengampus->kelass->nama }}
-                                            {{ $jadwalmapels->pengampus->kelass->jurusans->nama }}
-                                        </option>
-                                        @php
-                                            $addedClassRooms[] = $jadwalmapels->pengampus->kelas;
-                                        @endphp
-                                    @endif
-                                @endforeach
-                            </select>
-
-                        </div>
-                        <div class="col-span-12 sm:col-span-6">
-                            <label for="edit-jam">Semester </label>
-                            <select name="semester" id="edit-jam" class="form-control w-full" required>
-                                <option value="">Pilih Semester</option>
-                                @php
-                                    $addedSemesters = [];
-                                @endphp
-                                @foreach ($jadwalmapel->unique('pengampus.mapels.semester') as $jadwalmapels)
-                                    @if (!in_array($jadwalmapels->pengampus->mapels->semester, $addedSemesters))
-                                        <option value="{{ $jadwalmapels->pengampus->mapels->semester }}">
-                                            {{ $jadwalmapels->pengampus->mapels->tahunajars->semester }}
-                                            {{ $jadwalmapels->pengampus->mapels->tahunajars->tahun }}
-
-                                        </option>
-                                        @php
-                                            $addedSemesters[] = $jadwalmapels->pengampus->mapels->semester;
-                                        @endphp
-                                    @endif
-                                @endforeach
-                            </select>
-
-                        </div>
-
-                    </div> <!-- END: Modal Body -->
-                    <!-- BEGIN: Modal Footer -->
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary w-20">Custom</button>
-                </form>
-                <a href=" {{ route('jadwal.pdf') }}" type="button" data-tw-dismiss="modal"
-                    class="btn btn-outline-secondary w-20 mr-1">All</a>
-            </div>
-
-
-
-
-        </div>
-    </div>
-
-    <!-- BEGIN: Modal PDF-->
-
-
     <!-- Masukkan jQuery sebelum kode JavaScript Anda -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -666,6 +839,11 @@
         $('#myAction').change(function() {
             var action = $(this).val();
             window.location = action;
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#datatable1').DataTable();
         });
     </script>
 @endsection
