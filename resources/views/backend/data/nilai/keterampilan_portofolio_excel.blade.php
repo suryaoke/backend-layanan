@@ -1,27 +1,42 @@
   <table id="datatable" class="table table-bordered">
       <thead>
+          @php
+              $kdValues = App\Models\Nilai::select('kd')
+                  ->where('id_seksi', $id)
+                  ->where('type_nilai', 3)
+                  ->where('type_keterampilan', 1)
+                  ->groupBy('kd')
+                  ->get();
+              $kdValuess = $kdValues->count();
+          @endphp
           <tr>
-              <th class="whitespace-nowrap">No</th>
-              <th class="whitespace-nowrap">NISN</th>
-              <th class="whitespace-nowrap">Nama</th>
-              <th class="whitespace-nowrap">Jk</th>
-              <th class="whitespace-nowrap">Kelas</th>
-              @php
-                  $kdValues = App\Models\Nilai::select('kd')
-                      ->where('id_seksi', $id)
-                      ->where('type_nilai', 3)
-                      ->where('type_keterampilan', 1)
-                      ->groupBy('kd')
-                      ->get();
-              @endphp
+              <th colspan="{{ $kdValuess * 2 + 5 }}"
+                  style="border: 2px solid black; text-align: center; font-weight: bold;">
+                  Data Nilai Keterampilan Portofolio Siswa</th>
+          </tr>
+          <tr>
+              <th colspan="{{ $kdValuess * 2 + 5 }}"
+                  style="border: 2px solid black; text-align: center; font-weight: bold;">
+                  Semester
+                  {{ $tahun->semester }} Tahun Ajar {{ $tahun->tahun }} </th>
+          </tr>
+          <tr>
+              <th style="width:40px  ; border: 2px solid black; text-align: center;">No</th>
+              <th style="width:100px  ; border: 2px solid black; text-align: center;">NISN</th>
+              <th style="width:100px  ; border: 2px solid black; text-align: center;">Nama</th>
+              <th style="width:100px  ; border: 2px solid black; text-align: center;">Jk</th>
+              <th style="width:100px  ; border: 2px solid black; text-align: center;">Kelas</th>
+
               @if ($kdValues->count() > 0)
                   @foreach ($kdValues as $kdItem)
-                      <th class="whitespace-nowrap">KD {{ $kdItem->kd }}
-
+                      <th style="width:100px  ; border: 2px solid black; text-align: center;">KD {{ $kdItem->kd }}
+                      </th>
+                      <th style="width:200px  ; border: 2px solid black; text-align: center;">Materi KD
+                          {{ $kdItem->kd }}
                       </th>
                   @endforeach
               @else
-                  <th class="whitespace-nowrap">KD</th>
+                  <th style="width:100px  ; border: 2px solid black; text-align: center;">KD</th>
               @endif
 
           </tr>
@@ -30,11 +45,11 @@
 
           @foreach ($rombelsiswa as $key => $item)
               <tr>
-                  <td class="whitespace-nowrap">{{ $key + 1 }}</td>
-                  <td class="whitespace-nowrap">{{ $item->siswas->nisn }}</td>
-                  <td class="whitespace-nowrap">{{ $item->siswas->nama }}</td>
-                  <td class="whitespace-nowrap">{{ $item->siswas->jk }}</td>
-                  <td class="whitespace-nowrap">
+                  <td style="width:40px  ; border: 2px solid black; text-align: center;">{{ $key + 1 }}</td>
+                  <td style="width:100px  ; border: 2px solid black; text-align: center;">{{ $item->siswas->nisn }}</td>
+                  <td style="width:100px  ; border: 2px solid black; text-align: center;">{{ $item->siswas->nama }}</td>
+                  <td style="width:100px  ; border: 2px solid black; text-align: center;">{{ $item->siswas->jk }}</td>
+                  <td style="width:100px  ; border: 2px solid black; text-align: center;">
                       {{ $item->rombels->kelass->tingkat }}
                       {{ $item->rombels->kelass->nama }}
                       {{ $item->rombels->kelass->jurusans->nama }}
@@ -42,7 +57,7 @@
 
                   @if ($kdValues->count() > 0)
                       @foreach ($kdValues as $kdItem)
-                          <td class="whitespace-nowrap">
+                          <td style="width:100px  ; border: 2px solid black; text-align: center;">
                               @php
                                   $nilai = App\Models\Nilai::where('id_rombelsiswa', $item->id)
                                       ->where('type_nilai', 3)
@@ -55,10 +70,23 @@
                               @else
                                   -
                               @endif
+                          <td style="width2100px  ; border: 2px solid black; text-align: center;">
+                              @php
+                                  $nilai = App\Models\Nilai::where('id_rombelsiswa', $item->id)
+                                      ->where('type_nilai', 3)
+                                      ->where('kd', $kdItem->kd)
+                                      ->where('type_keterampilan', 1)
+                                      ->first();
+                              @endphp
+                              @if ($nilai)
+                                  {{ $nilai->catatan_keterampilan }}
+                              @else
+                                  -
+                              @endif
                           </td>
                       @endforeach
                   @else
-                      <td class="whitespace-nowrap">-</td>
+                      <td style="width:100px  ; border: 2px solid black; text-align: center;">-</td>
                   @endif
               </tr>
           @endforeach

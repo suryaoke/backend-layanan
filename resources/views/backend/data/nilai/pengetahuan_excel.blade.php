@@ -1,16 +1,24 @@
    <table id="datatable" class="table table-bordered">
        <thead>
            <tr>
-               <th class="whitespace-nowrap">No</th>
-               <th class="whitespace-nowrap">NISN</th>
-               <th class="whitespace-nowrap">Nama</th>
-               <th class="whitespace-nowrap">Jk</th>
-               <th class="whitespace-nowrap">Kelas</th>
-               <th class="whitespace-nowrap">Harian</th>
-               <th class="whitespace-nowrap">PAS</th>
-               <th class="whitespace-nowrap">Rapor</th>
-               <th class="whitespace-nowrap">Predikat</th>
-               <th class="whitespace-nowrap">Deskripsi</th>
+               <th colspan="10" style="border: 2px solid black; text-align: center; font-weight: bold;">
+                   Data Nilai Pengetahuan Siswa</th>
+           </tr>
+           <tr>
+               <th colspan="10" style="border: 2px solid black; text-align: center; font-weight: bold;">Semester
+                   {{ $tahun->semester }} Tahun Ajar {{ $tahun->tahun }} </th>
+           </tr>
+           <tr>
+               <th style="width:40px  ; border: 2px solid black; text-align: center;">No</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">NISN</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">Nama</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">Jk</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">Kelas</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">Harian</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">PAS</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">Rapor</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">Predikat</th>
+               <th style="width:100px  ; border: 2px solid black; text-align: center;">Deskripsi</th>
 
 
            </tr>
@@ -54,29 +62,34 @@
                    }
                @endphp
                <tr>
-                   <td class="whitespace-nowrap">{{ $key + 1 }}</td>
-                   <td class="whitespace-nowrap"> {{ $item->siswas->nisn }} </td>
-                   <td class="whitespace-nowrap"> {{ $item->siswas->nama }} </td>
-                   <td class="whitespace-nowrap"> {{ $item->siswas->jk }} </td>
-                   <td class="whitespace-nowrap"> {{ $item->rombels->kelass->tingkat }}
+                   <td style="width:40px  ; border: 2px solid black; text-align: center;">{{ $key + 1 }}</td>
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;"> {{ $item->siswas->nisn }}
+                   </td>
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;"> {{ $item->siswas->nama }}
+                   </td>
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;"> {{ $item->siswas->jk }}
+                   </td>
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;">
+                       {{ $item->rombels->kelass->tingkat }}
                        {{ $item->rombels->kelass->nama }}
                        {{ $item->rombels->kelass->jurusans->nama }}</td>
-                   <td class="whitespace-nowrap">
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;">
 
                        {{ $nilaiharian_bulat }}
 
 
                    </td>
-                   <td class="whitespace-nowrap">
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;">
                        @if ($nilaipas)
                            {{ $nilaipas->nilai_pengetahuan_akhir }}
                        @else
                            -
                        @endif
                    </td>
-                   <td class="whitespace-nowrap"> {{ $rapor_bulat }} </td>
-                   <td class="whitespace-nowrap"> {{ $predikat }} </td>
-                   <td class="whitespace-nowrap"> {{ $item->siswas->jk }} </td>
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;"> {{ $rapor_bulat }} </td>
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;"> {{ $predikat }} </td>
+                   <td style="width:100px  ; border: 2px solid black; text-align: center;"> {{ $item->siswas->jk }}
+                   </td>
                </tr>
            @endforeach
        </tbody>

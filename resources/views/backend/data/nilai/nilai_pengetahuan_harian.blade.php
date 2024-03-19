@@ -187,12 +187,14 @@
                         <div class="mb-2 grid grid-cols-12">
                             <input type="hidden" name="id_seksi" value="{{ $dataseksi->id }}" id="">
 
-                            PH: <input style="width: 60px;" type="number" name="ph" class="form-control ml-8">
+                            PH: <input style="width: 60px;" type="number" name="ph" class="form-control ml-8"
+                                required>
                         </div>
 
                         <div class="mb-1">Materi: </div>
                         <div class="mb-2">
-                            <textarea name="catatan_pengetahuan" id="" style="width: 350px;" rows="4" class="form-control "></textarea>
+                            <textarea name="catatan_pengetahuan" id="" style="width: 350px;" rows="4" class="form-control "
+                                required></textarea>
 
                         </div>
 

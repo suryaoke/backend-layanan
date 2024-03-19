@@ -11,6 +11,8 @@ use App\Exports\PengetahuanAkhirExport;
 use App\Exports\PengetahuanExport;
 use App\Exports\PengetahuanHarianExport;
 use App\Http\Controllers\Controller;
+use App\Models\Jurusan;
+use App\Models\Kelas;
 use App\Models\Nilai;
 use App\Models\Rombel;
 use App\Models\Rombelsiswa;
@@ -784,7 +786,7 @@ class NilaiController extends Controller
 
     public function PengetahuanExport(Request $request)
     {
-        // $tahun =  $request->input('tahun');
+
         $id = $request->input('id');
 
         $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
@@ -794,13 +796,26 @@ class NilaiController extends Controller
             ->select('rombelsiswas.*')
             ->get();
 
-        return Excel::download(new PengetahuanExport($rombelsiswa, $id), 'Pengetahuan.xlsx');
+
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+
+        $fileName = 'Data Nilai Pengetahuan Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
+
+
+
+        return Excel::download(new PengetahuanExport($rombelsiswa, $id, $tahun), $fileName);
     }
 
 
     public function KeterampilanExport(Request $request)
     {
-        // $tahun =  $request->input('tahun');
+
         $id = $request->input('id');
 
         $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
@@ -810,12 +825,23 @@ class NilaiController extends Controller
             ->get();
 
 
-        return Excel::download(new KeterampilanExport($rombelsiswa, $id), 'Keterampilan.xlsx');
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+
+        $fileName = 'Data Nilai Keterampilan Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
+
+
+        return Excel::download(new KeterampilanExport($rombelsiswa, $id, $tahun), $fileName);
     }
 
     public function PengetahuanHarianExport(Request $request)
     {
-        // $tahun =  $request->input('tahun');
+
         $id = $request->input('id');
 
         $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
@@ -825,7 +851,17 @@ class NilaiController extends Controller
             ->select('rombelsiswas.*')
             ->get();
 
-        return Excel::download(new PengetahuanHarianExport($rombelsiswa, $id), 'Pengetahuan Harian.xlsx');
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+
+        $fileName = 'Data Nilai Pengetahuan Harian Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
+
+        return Excel::download(new PengetahuanHarianExport($rombelsiswa, $id, $tahun), $fileName);
     }
 
     public function PengetahuanAkhirExport(Request $request)
@@ -840,13 +876,23 @@ class NilaiController extends Controller
             ->select('rombelsiswas.*')
             ->get();
 
-        return Excel::download(new PengetahuanAkhirExport($rombelsiswa, $id), 'Pengetahuan Akhir.xlsx');
+
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+
+        $fileName = 'Data Nilai Pengetahuan PAS Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
+
+        return Excel::download(new PengetahuanAkhirExport($rombelsiswa, $id, $tahun), $fileName);
     }
 
 
     public function KeterampilanPortofolioExport(Request $request)
     {
-        // $tahun =  $request->input('tahun');
         $id = $request->input('id');
 
         $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
@@ -854,9 +900,18 @@ class NilaiController extends Controller
             ->where('seksis.id', $id)
             ->select('rombelsiswas.*')
             ->get();
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+
+        $fileName = 'Data Nilai Keterampilan Portofolio Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
 
 
-        return Excel::download(new KeterampilanPortofolioExport($rombelsiswa, $id), 'Keterampilan Portofolio.xlsx');
+        return Excel::download(new KeterampilanPortofolioExport($rombelsiswa, $id, $tahun), $fileName);
     }
 
     public function KeterampilanProyekExport(Request $request)
@@ -869,9 +924,18 @@ class NilaiController extends Controller
             ->where('seksis.id', $id)
             ->select('rombelsiswas.*')
             ->get();
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+
+        $fileName = 'Data Nilai Keterampilan Proyek Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
 
 
-        return Excel::download(new KeterampilanProyekExport($rombelsiswa, $id), 'Keterampilan Proyek.xlsx');
+        return Excel::download(new KeterampilanProyekExport($rombelsiswa, $id, $tahun), $fileName);
     }
 
     public function KeterampilanUnjukkerjaExport(Request $request)
@@ -884,8 +948,17 @@ class NilaiController extends Controller
             ->where('seksis.id', $id)
             ->select('rombelsiswas.*')
             ->get();
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+
+        $fileName = 'Data Nilai Pengetahuan Unjuk Kerja Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
 
 
-        return Excel::download(new KeterampilanUnjukkerjaExport($rombelsiswa, $id), 'Keterampilan Unjuk Kerja.xlsx');
+        return Excel::download(new KeterampilanUnjukkerjaExport($rombelsiswa, $id), $fileName);
     }
 }

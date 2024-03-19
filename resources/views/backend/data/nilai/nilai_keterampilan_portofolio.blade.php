@@ -189,12 +189,14 @@
                         <div class="mb-2 grid grid-cols-12">
                             <input type="hidden" name="id_seksi" value="{{ $dataseksi->id }}" id="">
 
-                            KD: <input style="width: 60px;" type="number" name="kd" class="form-control ml-8">
+                            KD: <input style="width: 60px;" type="number" name="kd" class="form-control ml-8"
+                                required>
                         </div>
 
                         <div class="mb-1">Materi: </div>
                         <div class="mb-2">
-                            <textarea name="catatan_keterampilan" id="" style="width: 350px;" rows="4" class="form-control "></textarea>
+                            <textarea name="catatan_keterampilan" id="" style="width: 350px;" rows="4" class="form-control "
+                                required></textarea>
 
                         </div>
 
@@ -391,7 +393,7 @@
     <!-- END: Modal Content -->
 
 
-     {{--  /Export portofolio  --}}
+    {{--  /Export portofolio  --}}
 
     <div id="excel-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">

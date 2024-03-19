@@ -15,11 +15,13 @@ class KeterampilanProyekExport implements FromView
 
     protected $rombelsiswa;
     protected $id;
+    protected $tahun;
 
-    public function __construct($rombelsiswa, $id)
+    public function __construct($rombelsiswa, $id, $tahun)
     {
         $this->rombelsiswa = $rombelsiswa;
         $this->id = $id;
+        $this->tahun = $tahun;
     }
 
     public function view(): View
@@ -27,6 +29,7 @@ class KeterampilanProyekExport implements FromView
         return view('backend.data.nilai.keterampilan_proyek_excel', [
             'rombelsiswa' => $this->rombelsiswa,
             'id' => $this->id,
+            'tahun' => $this->tahun,
         ]);
     }
 }
