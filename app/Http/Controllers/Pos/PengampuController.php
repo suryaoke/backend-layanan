@@ -27,6 +27,7 @@ class PengampuController extends Controller
         $searchGuru = $request->input('searchguru');
         $searchMapel = $request->input('searchmapel');
         $searchKelas = $request->input('searchkelas');
+        $searchKode = $request->input('searchkode');
 
         $query = Pengampu::query();
 
@@ -47,11 +48,20 @@ class PengampuController extends Controller
                 $lecturerQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
             });
         }
+        if (!empty($searchKode)) {
+            $query->where('kode_pengampu', '=', $searchKode);
+        }
 
         //$suppliers = Supplier::all();
         $pengampu = $query->latest()->get();
 
-        $kelas = Kelas::orderBy('tingkat')->get();
+
+
+        $kelas = Kelas::whereIn('id', function ($query) {
+            $query->select('kelas')
+                ->from('pengampus');
+        })->orderBy('tingkat')
+            ->get();
 
         return view('backend.data.pengampu.pengampu_all', compact('pengampu', 'kelas'));
     } // end method

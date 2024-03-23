@@ -15,14 +15,53 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class MapelController extends Controller
 {
-    public function MapelAll()
+    public function MapelAll(request $request)
     {
 
-        //$suppliers = Supplier::all();
-        $mapel = Mapel::orderByRaw('-induk DESC')->orderBy('kode_mapel', 'asc')->get();
+        $searchKode = $request->input('searchkode');
+        $searchInduk = $request->input('searchinduk');
+        $searchNama = $request->input('searchnama');
+        $searchJp = $request->input('searchjp');
+        $searchJurusan = $request->input('searchjurusan');
+        $searchKelompok = $request->input('searchkelompok');
+        $searchType = $request->input('searchtype');
 
+        $query = Mapel::query();
 
-        return view('backend.data.mapel.mapel_all', compact('mapel'));
+        if (!empty($searchKode)) {
+            $query->where('kode_mapel', '=', $searchKode);
+        }
+        if (!empty($searchInduk)) {
+            $query->where('induk', '=', $searchInduk);
+        }
+        if (!empty($searchNama)) {
+            $query->where('nama', '=', $searchNama);
+        }
+        if (!empty($searchJp)) {
+            $query->where('jp', '=', $searchJp);
+        }
+        if (!empty($searchJurusan)) {
+            $query->whereHas('jurusans', function ($lecturerQuery) use ($searchJurusan) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchJurusan . '%');
+            });
+        }
+
+        if (!empty($searchKelompok)) {
+            $query->where('jenis', '=', $searchKelompok);
+        }
+        if (!empty($searchType)) {
+            $query->where('type', '=', $searchType);
+        }
+
+        $mapel = $query->orderByRaw('-induk DESC')->orderBy('kode_mapel', 'asc')->get();
+       
+        $jurusan = Jurusan::whereIn('id', function ($query) {
+            $query->select('id_jurusan')
+            ->from('mapels');
+        })->orderBy('nama')
+            ->get();
+
+        return view('backend.data.mapel.mapel_all', compact('mapel', 'jurusan'));
     } // end method
 
     public function MapelAdd()

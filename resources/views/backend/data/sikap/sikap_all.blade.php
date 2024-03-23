@@ -35,6 +35,47 @@
 
         <div class="tab-content mt-5">
             <div id="example-tab-3" class="tab-pane leading-relaxed active" role="tabpanel" aria-labelledby="example-3-tab">
+                <div class="ml-1">
+                    <form role="form" action="{{ route('sikap.all') }}" method="get" class="flex">
+                        <div class="flex-1 mr-1">
+                            <div class="form-group">
+                                <input type="text" name="searchnama" class="form-control" placeholder="Nama"
+                                    value="{{ request('searchnama') }}">
+
+                            </div>
+                        </div>
+                        <div class="flex-1 mr-1">
+                            <div class="form-group">
+                                <input type="text" name="searchnisn" class="form-control" placeholder="Nisn"
+                                    value="{{ request('searchnisn') }}">
+
+                            </div>
+                        </div>
+                        <div class="flex-1 mr-1">
+                            <div class="form-group">
+                                <input type="text" name="searchjk" class="form-control" placeholder="Jk"
+                                    value="{{ request('searchjk') }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select name="searchtahun" class="form-select w-full">
+                                <option value="">Tahun Ajar</option>
+                                @foreach ($datatahun as $item)
+                                    <option value="{{ $item->id }}">{{ $item->semester }} - {{ $item->tahun }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="ml-1">
+                            <button type="submit" class="btn btn-default">Search</button>
+                        </div>
+
+                        <div class="ml-2">
+                            <a href="{{ route('sikap.all') }}" class="btn btn-danger">Clear</a>
+                        </div>
+                    </form>
+                </div>
                 <div class="flex mb-4 mt-4">
 
                     <a class="btn btn-pending btn-block mr-1" data-tw-toggle="modal" data-tw-target="#excel-modal-preview">
@@ -53,35 +94,17 @@
                         class="btn btn-primary btn-block"> <span class="glyphicon glyphicon-download mr-1"></span> </span>
                         <i data-lucide="edit" class="w-5 h-5"></i>&nbsp;
                         Nilai</a>
-                    <div class="ml-1">
-                        <form role="form" action="{{ route('sikap.all') }}" method="get" class="flex">
-                            <div class="form-group">
-                                <select name="searchtahun" class="form-select w-full">
-                                    <option value="">Tahun Ajar</option>
-                                    @foreach ($datatahun as $item)
-                                        <option value="{{ $item->id }}">{{ $item->semester }} - {{ $item->tahun }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
 
-                            <div class="ml-1">
-                                <button type="submit" class="btn btn-default">Search</button>
-                            </div>
-
-                            <div class="ml-2">
-                                <a href="{{ route('sikap.all') }}" class="btn btn-danger">Clear</a>
-                            </div>
-                        </form>
-                    </div>
 
 
                 </div>
+
                 <div class="mb-4 mt-4">
-                    Semester {{ $rapors['tahun']['semester'] }}
-                    Tahun Ajar {{ $rapors['tahun']['tahun'] }}
+                    @if ($rapors && isset($rapors['tahun']))
+                        Semester {{ $rapors['tahun']['semester'] }}
+                        Tahun Ajar {{ $rapors['tahun']['tahun'] }}
+                    @endif
                 </div>
-
 
                 <table id="datatable" class="table table-bordered">
                     <thead>
@@ -89,6 +112,7 @@
                             <th class="whitespace-nowrap">No</th>
                             <th class="whitespace-nowrap">NISN</th>
                             <th class="whitespace-nowrap">Nama</th>
+                            <th class="whitespace-nowrap">Jk</th>
                             <th class="whitespace-nowrap">Kelas</th>
                             <th class="whitespace-nowrap">Kejujuran</th>
                             <th class="whitespace-nowrap">Kedisiplinan</th>
@@ -111,6 +135,13 @@
                                 </td>
                                 <td style="white-space: nowrap; text-transform: capitalize;">
                                     {{ $item->rombelsiswas->siswas->nama }}
+                                </td>
+                                <td class="whitespace-nowrap">
+                                    @if ($item->rombelsiswas->siswas->jk == 'L')
+                                        L
+                                    @elseif ($item->rombelsiswas->siswas->jk == 'P')
+                                        P
+                                    @endif
                                 </td>
                                 <td style="white-space: nowrap; text-transform: capitalize;">
                                     {{ $item->rombelsiswas->rombels->kelass->tingkat }}
@@ -176,9 +207,51 @@
                 </table>
             </div>
             <div id="example-tab-4" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-4-tab">
+                <div class="ml-1">
+                    <form role="form" action="{{ route('sikap.all') }}" method="get" class="flex">
+                        <div class="flex-1 mr-1">
+                            <div class="form-group">
+                                <input type="text" name="searchnama" class="form-control" placeholder="Nama"
+                                    value="{{ request('searchnama') }}">
+
+                            </div>
+                        </div>
+                        <div class="flex-1 mr-1">
+                            <div class="form-group">
+                                <input type="text" name="searchnisn" class="form-control" placeholder="Nisn"
+                                    value="{{ request('searchnisn') }}">
+
+                            </div>
+                        </div>
+                        <div class="flex-1 mr-1">
+                            <div class="form-group">
+                                <input type="text" name="searchjk" class="form-control" placeholder="Jk"
+                                    value="{{ request('searchjk') }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <select name="searchtahun" class="form-select w-full">
+                                <option value="">Tahun Ajar</option>
+                                @foreach ($datatahun as $item)
+                                    <option value="{{ $item->id }}">{{ $item->semester }} - {{ $item->tahun }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="ml-1">
+                            <button type="submit" class="btn btn-default">Search</button>
+                        </div>
+
+                        <div class="ml-2">
+                            <a href="{{ route('sikap.all') }}" class="btn btn-danger">Clear</a>
+                        </div>
+                    </form>
+                </div>
                 <div class="flex mb-4 mt-4">
 
-                    <a class="btn btn-pending btn-block mr-1" data-tw-toggle="modal" data-tw-target="#excel1-modal-preview">
+                    <a class="btn btn-pending btn-block mr-1" data-tw-toggle="modal"
+                        data-tw-target="#excel1-modal-preview">
                         <span class="glyphicon glyphicon-download"></span> <i data-lucide="download"
                             class="w-5 h-5"></i>&nbsp;Export
                     </a>
@@ -194,33 +267,15 @@
                         class="btn btn-primary btn-block"> <span class="glyphicon glyphicon-download mr-1"></span> </span>
                         <i data-lucide="edit" class="w-5 h-5"></i>&nbsp;Nilai
                     </a>
-                    <div class="ml-1">
-                        <form role="form" action="{{ route('sikap.all') }}" method="get" class="flex">
-                            <div class="form-group">
-                                <select name="searchtahun" class="form-select w-full">
-                                    <option value="">Tahun Ajar</option>
-                                    @foreach ($datatahun as $item)
-                                        <option value="{{ $item->id }}">{{ $item->semester }} - {{ $item->tahun }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="ml-1">
-                                <button type="submit" class="btn btn-default">Search</button>
-                            </div>
-
-                            <div class="ml-2">
-                                <a href="{{ route('sikap.all') }}" class="btn btn-danger">Clear</a>
-                            </div>
-                        </form>
-                    </div>
 
 
                 </div>
+
                 <div class="mb-4 mt-4">
-                    Semester {{ $rapors['tahun']['semester'] }}
-                    Tahun Ajar {{ $rapors['tahun']['tahun'] }}
+                    @if ($rapors && isset($rapors['tahun']))
+                        Semester {{ $rapors['tahun']['semester'] }}
+                        Tahun Ajar {{ $rapors['tahun']['tahun'] }}
+                    @endif
                 </div>
 
 
@@ -230,6 +285,7 @@
                             <th class="whitespace-nowrap">No</th>
                             <th class="whitespace-nowrap">NISN</th>
                             <th class="whitespace-nowrap">Nama</th>
+                            <th class="whitespace-nowrap">Jk</th>
                             <th class="whitespace-nowrap">Kelas</th>
                             <th class="whitespace-nowrap">Berdoa</th>
                             <th class="whitespace-nowrap">Memberi Salam</th>
@@ -250,6 +306,13 @@
                                 </td>
                                 <td style="white-space: nowrap; text-transform: capitalize;">
                                     {{ $item->rombelsiswas->siswas->nama }}
+                                </td>
+                                <td class="whitespace-nowrap">
+                                    @if ($item->rombelsiswas->siswas->jk == 'L')
+                                        L
+                                    @elseif ($item->rombelsiswas->siswas->jk == 'P')
+                                        P
+                                    @endif
                                 </td>
                                 <td style="white-space: nowrap; text-transform: capitalize;">
                                     {{ $item->rombelsiswas->rombels->kelass->tingkat }}
@@ -422,6 +485,7 @@
                                         <th class="whitespace-nowrap">No</th>
                                         <th class="whitespace-nowrap">NISN</th>
                                         <th class="whitespace-nowrap">Nama</th>
+                                        <th class="whitespace-nowrap">Jk</th>
                                         <th class="whitespace-nowrap">Kelas</th>
 
                                         <th class="whitespace-nowrap">Kejujuran
@@ -504,6 +568,14 @@
                                             <td style="white-space: nowrap; text-transform: capitalize;">
                                                 {{ $item->rombelsiswas->siswas->nama }}
                                             </td>
+                                            <td class="whitespace-nowrap">
+                                                @if ($item->rombelsiswas->siswas->jk == 'L')
+                                                    L
+                                                @elseif ($item->rombelsiswas->siswas->jk == 'P')
+                                                    P
+                                                @endif
+                                            </td>
+
                                             <td style="white-space: nowrap; text-transform: capitalize;">
                                                 {{ $item->rombelsiswas->rombels->kelass->tingkat }}
                                                 {{ $item->rombelsiswas->rombels->kelass->nama }}
@@ -828,6 +900,7 @@
                                         <th class="whitespace-nowrap">No</th>
                                         <th class="whitespace-nowrap">NISN</th>
                                         <th class="whitespace-nowrap">Nama</th>
+                                        <th class="whitespace-nowrap">Jk</th>
                                         <th class="whitespace-nowrap">Kelas</th>
 
                                         <th class="whitespace-nowrap">Berdoa
@@ -884,6 +957,13 @@
                                             </td>
                                             <td style="white-space: nowrap; text-transform: capitalize;">
                                                 {{ $item->rombelsiswas->siswas->nama }}
+                                            </td>
+                                            <td class="whitespace-nowrap">
+                                                @if ($item->rombelsiswas->siswas->jk == 'L')
+                                                    L
+                                                @elseif ($item->rombelsiswas->siswas->jk == 'P')
+                                                    P
+                                                @endif
                                             </td>
                                             <td style="white-space: nowrap; text-transform: capitalize;">
                                                 {{ $item->rombelsiswas->rombels->kelass->tingkat }}

@@ -17,9 +17,38 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class OrangTuaController extends Controller
 {
-    public function OrtuAll()
+    public function OrtuAll(request $request)
     {
-        $ortu = OrangTua::orderby('nama')->get();
+        $searchKode = $request->input('searchkode');
+        $searchNama = $request->input('searchnama');
+        $searchNohp = $request->input('searchnohp');
+        $searchUsername = $request->input('searchusername');
+        $searchSiswa = $request->input('searchsiswa');
+
+
+        $query = OrangTua::query();
+        if (!empty($searchKode)) {
+            $query->where('kode_ortu', '=', $searchKode);
+        }
+        if (!empty($searchNama)) {
+            $query->where('nama', '=', $searchNama);
+        }
+        if (!empty($searchNohp)) {
+            $query->where('no_hp', '=', $searchNohp);
+        }
+        if (!empty($searchUsername)) {
+            $query->whereHas('users', function ($lecturerQuery) use ($searchUsername) {
+                $lecturerQuery->where('username', 'LIKE', '%' . $searchUsername . '%');
+            });
+        }
+
+        if (!empty($searchSiswa)) {
+            $query->whereHas('siswas', function ($lecturerQuery) use ($searchSiswa) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchSiswa . '%');
+            });
+        }
+
+        $ortu = $query->orderby('nama')->get();
 
         return view('backend.data.orangtua.orangtua_all', compact('ortu'));
     } // end method
@@ -91,10 +120,10 @@ class OrangTuaController extends Controller
 
 
         $siswa = Siswa::whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('orang_tuas')
-                    ->whereRaw('orang_tuas.id_siswa = siswas.id');
-            })
+            $query->select(DB::raw(1))
+                ->from('orang_tuas')
+                ->whereRaw('orang_tuas.id_siswa = siswas.id');
+        })
             ->get();
 
         return view('backend.data.orangtua.orangtua_edit', compact('ortu', 'user', 'siswa'));

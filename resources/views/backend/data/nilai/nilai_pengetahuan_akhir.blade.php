@@ -52,7 +52,31 @@
                         <span class="glyphicon glyphicon-download mr-1"></span> </span>
                         <i data-lucide="edit" class="w-5 h-5"></i>&nbsp;Nilai</a>
                 @endif
+                <div class="flex ml-1">
 
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnama" class="form-control" placeholder="Nama"
+                                value="{{ request('searchnama') }}">
+
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnisn" class="form-control" placeholder="Nisn"
+                                value="{{ request('searchnisn') }}">
+
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchjk" class="form-control" placeholder="Jk"
+                                value="{{ request('searchjk') }}">
+                        </div>
+                    </div>
+
+
+                </div>
 
             </div>
             <div class="mb-4 mt-4">
@@ -67,26 +91,29 @@
                         <th class="whitespace-nowrap">No</th>
                         <th class="whitespace-nowrap">NISN</th>
                         <th class="whitespace-nowrap">Nama</th>
-                         <th class="whitespace-nowrap">Jk</th>
+                        <th class="whitespace-nowrap">Jk</th>
                         <th class="whitespace-nowrap">Kelas</th>
 
                         @if ($nilaiValues)
                             <th class="whitespace-nowrap">Nilai
-                                <div class="flex">
-                                    <div class="mr-2">
+                                @if ($nilaiValues->status == '0')
+                                    <div class="flex">
+                                        <div class="mr-2">
 
-                                        <a id="delete"
-                                            href="{{ route('nilai.pengetahuan.akhir.delete', $dataseksi->id) }}">
-                                            <i data-lucide="trash" class="w-4 h-4 text-red-500" style="color: red;"></i>
-                                        </a>
+                                            <a id="delete"
+                                                href="{{ route('nilai.pengetahuan.akhir.delete', $dataseksi->id) }}">
+                                                <i data-lucide="trash" class="w-4 h-4 text-red-500" style="color: red;"></i>
+                                            </a>
 
+                                        </div>
+                                        <div>
+                                            <a data-tw-toggle="modal" data-tw-target="#edit-footer-modal-preview">
+                                                <i data-lucide="edit" class="w-4 h-4 text-blue-500"
+                                                    style="color: green;"></i>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <a data-tw-toggle="modal" data-tw-target="#edit-footer-modal-preview">
-                                            <i data-lucide="edit" class="w-4 h-4 text-blue-500" style="color: green;"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                                @endif
 
 
                             </th>
@@ -130,6 +157,40 @@
                     @endforeach
                 </tbody>
             </table>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const searchNamaInput = document.querySelector('input[name="searchnama"]');
+                    const searchNisnInput = document.querySelector('input[name="searchnisn"]');
+                    const searchJkInput = document.querySelector('input[name="searchjk"]');
+                    const tableRows = document.querySelectorAll("#datatable tbody tr");
+
+                    function filterTable() {
+                        const searchNama = searchNamaInput.value.toLowerCase();
+                        const searchNisn = searchNisnInput.value.toLowerCase();
+                        const searchJk = searchJkInput.value.toLowerCase();
+
+                        tableRows.forEach(row => {
+                            const nama = row.cells[2].textContent.toLowerCase();
+                            const nisn = row.cells[1].textContent.toLowerCase();
+                            const jk = row.cells[3].textContent.toLowerCase();
+
+                            const namaMatch = nama.includes(searchNama);
+                            const nisnMatch = nisn.includes(searchNisn);
+                            const jkMatch = jk.includes(searchJk);
+
+                            if (namaMatch && nisnMatch && jkMatch) {
+                                row.style.display = "";
+                            } else {
+                                row.style.display = "none";
+                            }
+                        });
+                    }
+
+                    searchNamaInput.addEventListener("input", filterTable);
+                    searchNisnInput.addEventListener("input", filterTable);
+                    searchJkInput.addEventListener("input", filterTable);
+                });
+            </script>
 
 
         </div>
@@ -287,7 +348,6 @@
                                         <td style="white-space: nowrap; text-transform: capitalize;">
                                             @php
                                                 $nilai = App\Models\Nilai::where('id_seksi', $dataseksi->id)
-
                                                     ->where('type_nilai', 2)
                                                     ->where('id_rombelsiswa', $item->id)
                                                     ->first();

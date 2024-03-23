@@ -1,6 +1,6 @@
 <table id="datatable" class="table table-bordered">
     <thead>
-         <tr>
+        <tr>
             <th colspan="6" style="border: 2px solid black; text-align: center; font-weight: bold;">
                 Data Ekstrakulikuler Siswa</th>
         </tr>

@@ -116,6 +116,8 @@ class NilaiController extends Controller
             });
         }
 
+
+
         $tanggalSaatIni = Carbon::now();
 
         // Mendapatkan semester saat ini berdasarkan bulan
@@ -251,6 +253,7 @@ class NilaiController extends Controller
             $nilai->catatan_pengetahuan = $request->catatan_pengetahuan;
             $nilai->type_nilai = 1;
             $nilai->ph = $request->ph;
+            $nilai->status = 0;
             $nilai->save();
         }
 
@@ -315,6 +318,7 @@ class NilaiController extends Controller
             $nilai->id_tahunajar = $seksi->semester;
             $nilai->nilai_pengetahuan_akhir = $nilai_pengetahuan_akhir[$index];
             $nilai->type_nilai = 2;
+            $nilai->status = 0;
             $nilai->save();
         }
 
@@ -394,6 +398,7 @@ class NilaiController extends Controller
 
 
 
+
         $seksi = $query
 
             ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
@@ -455,6 +460,7 @@ class NilaiController extends Controller
             $nilai->type_nilai = 3;
             $nilai->kd = $request->kd;
             $nilai->type_keterampilan = 1;
+            $nilai->status = 0;
             $nilai->save();
         }
 
@@ -596,6 +602,7 @@ class NilaiController extends Controller
             $nilai->type_nilai = 3;
             $nilai->kd = $request->kd;
             $nilai->type_keterampilan = 2;
+            $nilai->status = 0;
             $nilai->save();
         }
 
@@ -734,6 +741,7 @@ class NilaiController extends Controller
             $nilai->type_nilai = 3;
             $nilai->kd = $request->kd;
             $nilai->type_keterampilan = 3;
+            $nilai->status = 0;
             $nilai->save();
         }
 
@@ -960,5 +968,192 @@ class NilaiController extends Controller
 
 
         return Excel::download(new KeterampilanUnjukkerjaExport($rombelsiswa, $id), $fileName);
+    }
+
+
+    public function KirimNilaiPengetahuan(Request $request)
+    {
+        $id = $request->input('id');
+        Nilai::where('id_seksi', $id)
+            ->whereIn('type_nilai', [1, 2])
+            ->update(['status' => 1]);
+
+        $notification = array(
+            'message' => 'Nilai Pengetahuan Berhasil Dikirim',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+
+    public function KirimNilaiKeterampilan(Request $request)
+    {
+        $id = $request->input('id');
+        Nilai::where('id_seksi', $id)
+            ->where('type_nilai', 3)
+            ->whereIn('type_keterampilan', [1, 2, 3])
+            ->update(['status' => 1]);
+
+        $notification = array(
+            'message' => 'Nilai Keterampilan Berhasil Dikirim',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+    public function BatalKirimNilaiPengetahuan(Request $request)
+    {
+        $id = $request->input('id');
+        Nilai::where('id_seksi', $id)
+            ->whereIn('type_nilai', [1, 2])
+            ->update(['status' => 0]);
+
+        $notification = array(
+            'message' => 'Nilai Pengetahuan Berhasil Dibatalkan',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+    public function BatalKirimNilaiKeterampilan(Request $request)
+    {
+        $id = $request->input('id');
+        Nilai::where('id_seksi', $id)
+            ->where('type_nilai', 3)
+            ->whereIn('type_keterampilan', [1, 2, 3])
+            ->update(['status' => 0]);
+
+        $notification = array(
+            'message' => 'Nilai Keterampilan Berhasil Dibatalkan',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+
+    public function StatusNilai(request $request)
+    {
+        $searchTahun = $request->input('searchtahun');
+        $searchmapel = $request->input('searchmapel');
+        $searchguru = $request->input('searchguru');
+        $query = Seksi::query();
+
+        if (!empty($searchTahun)) {
+            $query->whereHas('semesters', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
+        if (!empty($searchmapel)) {
+            $query->whereHas('jadwalmapels', function ($teachQuery) use ($searchmapel) {
+                $teachQuery->whereHas('pengampus', function ($courseQuery) use ($searchmapel) {
+                    $courseQuery->whereHas('mapels', function ($course1Query) use ($searchmapel) {
+                        $course1Query->where('nama', 'LIKE', '%' . $searchmapel . '%');
+                    });
+                });
+            });
+        }
+        if (!empty($searchguru)) {
+            $query->whereHas('jadwalmapels', function ($teachQuery) use ($searchguru) {
+                $teachQuery->whereHas('pengampus', function ($courseQuery) use ($searchguru) {
+                    $courseQuery->whereHas('gurus', function ($course1Query) use ($searchguru) {
+                        $course1Query->where('nama', 'LIKE', '%' . $searchguru . '%');
+                    });
+                });
+            });
+        }
+
+
+        $tanggalSaatIni = Carbon::now();
+
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
+
+        $userId = Auth::user()->id;
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
+
+            $seksi = $query
+
+                ->join('rombels', 'rombels.id', '=', 'seksis.id_rombel')
+                ->join('walas', 'walas.id', '=', 'rombels.id_walas')
+                ->join('gurus', 'gurus.id', '=', 'walas.id_guru')
+
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        } elseif ($searchTahun) {
+            $seksi = $query
+
+                ->join('rombels', 'rombels.id', '=', 'seksis.id_rombel')
+                ->join('walas', 'walas.id', '=', 'rombels.id_walas')
+                ->join('gurus', 'gurus.id', '=', 'walas.id_guru')
+
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        } else {
+            $seksi = $query
+
+                ->join('rombels', 'rombels.id', '=', 'seksis.id_rombel')
+                ->join('walas', 'walas.id', '=', 'rombels.id_walas')
+                ->join('gurus', 'gurus.id', '=', 'walas.id_guru')
+                ->where('seksis.semester', $tahunAjarSaatIni->id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        }
+
+
+        $datatahun = Tahunajar::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('seksis')
+                ->whereRaw('seksis.semester = tahunajars.id');
+        })->orderby('id', 'desc')
+            ->get();
+
+
+
+
+        return view('backend.data.nilai.status_nilai', compact('dataseksi', 'datatahun', 'seksi'));
+    } // end method
+
+    public function KunciNilai($id)
+    {
+
+        Nilai::where('id_seksi', $id)
+            ->whereIn('type_nilai', [1, 2, 3])
+
+            ->update(['status' => 2]);
+
+        $notification = array(
+            'message' => 'Nilai Berhasil Dikunci',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+    public function BukaKunciNilai($id)
+    {
+
+        Nilai::where('id_seksi', $id)
+            ->whereIn('type_nilai', [1, 2, 3])
+
+            ->update(['status' => 1]);
+
+        $notification = array(
+            'message' => 'Nilai Berhasil Dibuka',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 }

@@ -156,3 +156,66 @@
 
   </tbody>
 </table>
+
+
+<style>
+  .left {
+      text-align: left;
+  }
+
+  .right {
+      text-align: right;
+  }
+</style>
+@php
+    use Carbon\Carbon;
+    setlocale(LC_TIME, 'id_ID');
+    $tanggalSaatIni = Carbon::now();
+    $bulanIndonesia = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember',
+    ];
+@endphp
+
+<table>
+  <tr>
+      <th colspan="2" rowspan="8" class="left" style="text-transform: capitalize;">
+          <div class="">Mengetahui <br> Kepala Sekolah
+              <br>
+              <br><br><br><br>
+              @php
+                  $user = App\Models\User::where('role', '2')->first();
+
+              @endphp
+              {{ $user->name }}
+          </div>
+      </th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+     
+      <th colspan="2" rowspan="8" class="right" style="text-transform: capitalize;">
+          <div class="">Padang,
+              {{ $tanggalSaatIni->format('d ') . $bulanIndonesia[$tanggalSaatIni->month - 1] . $tanggalSaatIni->format(' Y') }}
+              <br> Mengetahui <br> Wali Kelas <br> <br> <br><br> @php
+
+                  $users = App\Models\User::where('role', '3')->first();
+
+              @endphp
+              {{ $users->name }}
+          </div>
+      </th>
+
+</table>

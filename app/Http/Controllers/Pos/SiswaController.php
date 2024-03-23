@@ -29,9 +29,32 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SiswaController extends Controller
 {
-    public function SiswaAll()
+    public function SiswaAll(request $request)
     {
-        $siswa = Siswa::orderBy('nama')
+
+        $searchNisn = $request->input('searchnisn');
+        $searchNama = $request->input('searchnama');
+        $searchJk = $request->input('searchjk');
+        $searchUsername = $request->input('searchusername');
+
+        $query = Siswa::query();
+        if (!empty($searchNisn)) {
+            $query->where('nisn', '=', $searchNisn);
+        }
+        if (!empty($searchNama)) {
+            $query->where('nama', '=', $searchNama);
+        }
+        if (!empty($searchJk)) {
+            $query->where('jk', '=', $searchJk);
+        }
+
+        if (!empty($searchUsername)) {
+            $query->whereHas('users', function ($lecturerQuery) use ($searchUsername) {
+                $lecturerQuery->where('username', 'LIKE', '%' . $searchUsername . '%');
+            });
+        }
+
+        $siswa = $query->orderBy('nama')
             ->get();
 
         return view('backend.data.siswa.siswa_all', compact('siswa'));
@@ -195,6 +218,9 @@ class SiswaController extends Controller
     {
 
         $searchTahun = $request->input('searchtahun');
+        $searchNisn = $request->input('searchnisn');
+        $searchNama = $request->input('searchnama');
+        $searchJk = $request->input('searchjk');
         $query = Rombelsiswa::query();
 
         if (!empty($searchTahun)) {
@@ -205,7 +231,22 @@ class SiswaController extends Controller
             });
         }
 
+        if (!empty($searchNisn)) {
+            $query->whereHas('siswas', function ($lecturerQuery) use ($searchNisn) {
+                $lecturerQuery->where('nisn', 'LIKE', '%' . $searchNisn . '%');
+            });
+        }
+        if (!empty($searchNama)) {
+            $query->whereHas('siswas', function ($lecturerQuery) use ($searchNama) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchNama . '%');
+            });
+        }
 
+        if (!empty($searchJk)) {
+            $query->whereHas('siswas', function ($lecturerQuery) use ($searchJk) {
+                $lecturerQuery->where('jk', 'LIKE', '%' . $searchJk . '%');
+            });
+        }
         $tanggalSaatIni = Carbon::now();
 
         // Mendapatkan semester saat ini berdasarkan bulan

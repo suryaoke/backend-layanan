@@ -33,11 +33,36 @@ class CatatanController extends Controller
     public function CatatanAll(request $request)
     {
         $searchTahun = $request->input('searchtahun');
+        $searchNisn = $request->input('searchnisn');
+        $searchNama = $request->input('searchnama');
+        $searchJk = $request->input('searchjk');
+
         $query = CatataWalas::query();
 
         if (!empty($searchTahun)) {
             $query->whereHas('tahun', function ($lecturerQuery) use ($searchTahun) {
                 $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
+        if (!empty($searchNisn)) {
+            $query->whereHas('rombelsiswas', function ($lecturerQuery) use ($searchNisn) {
+                $lecturerQuery->whereHas('siswas', function ($courseQuery) use ($searchNisn) {
+                    $courseQuery->where('nisn', 'LIKE', '%' .  $searchNisn . '%');
+                });
+            });
+        }
+        if (!empty($searchNama)) {
+            $query->whereHas('rombelsiswas', function ($lecturerQuery) use ($searchNama) {
+                $lecturerQuery->whereHas('siswas', function ($courseQuery) use ($searchNama) {
+                    $courseQuery->where('nama', 'LIKE', '%' .  $searchNama . '%');
+                });
+            });
+        }
+        if (!empty($searchJk)) {
+            $query->whereHas('rombelsiswas', function ($lecturerQuery) use ($searchJk) {
+                $lecturerQuery->whereHas('siswas', function ($courseQuery) use ($searchJk) {
+                    $courseQuery->where('jk', 'LIKE', '%' .  $searchJk . '%');
+                });
             });
         }
 

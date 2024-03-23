@@ -34,18 +34,49 @@
                     <span class="glyphicon glyphicon-download"></span> <i data-lucide="download"
                         class="w-5 h-5"></i>&nbsp;Export
                 </a>
+                @php
+                    $status = App\Models\Nilai::where('id_seksi', $dataseksi->id)
+                        ->where('type_nilai', 3)
+                        ->where('type_keterampilan', 3)
+                        ->first();
 
-                <a class="btn btn-success btn-block mr-1" data-tw-toggle="modal"
-                    data-tw-target="#nilai-footer-modal-preview">
-                    <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="download"
-                        class="w-5 h-5"></i>&nbsp;Upload</a>
+                @endphp
+                @if ($status == null || $status->status == '0')
+                    <a class="btn btn-success btn-block mr-1" data-tw-toggle="modal"
+                        data-tw-target="#nilai-footer-modal-preview">
+                        <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="download"
+                            class="w-5 h-5"></i>&nbsp;Upload</a>
+
+                    <a data-tw-toggle="modal" data-tw-target="#nilai-footer-modal-preview"
+                        class="btn btn-primary btn-block">
+                        <span class="glyphicon glyphicon-download mr-1"></span> </span>
+                        <i data-lucide="edit" class="w-5 h-5"></i>&nbsp;Nilai</a>
+                @endif
+                <div class="flex ml-1">
+
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnama" class="form-control" placeholder="Nama"
+                                value="{{ request('searchnama') }}">
+
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnisn" class="form-control" placeholder="Nisn"
+                                value="{{ request('searchnisn') }}">
+
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchjk" class="form-control" placeholder="Jk"
+                                value="{{ request('searchjk') }}">
+                        </div>
+                    </div>
 
 
-
-                <a data-tw-toggle="modal" data-tw-target="#nilai-footer-modal-preview" class="btn btn-primary btn-block">
-                    <span class="glyphicon glyphicon-download mr-1"></span> </span>
-                    <i data-lucide="edit" class="w-5 h-5"></i>&nbsp;Nilai</a>
-
+                </div>
 
             </div>
             <div class="mb-4 mt-4">
@@ -72,24 +103,26 @@
                         @if ($kdValues->count() > 0)
                             @foreach ($kdValues as $kdItem)
                                 <th class="whitespace-nowrap">KD {{ $kdItem->kd }}
-                                    <div class="flex">
-                                        <div class="mr-2">
+                                    @if ($status == null || $status->status == '0')
+                                        <div class="flex">
+                                            <div class="mr-2">
 
-                                            <a id="delete"
-                                                href="{{ route('nilai.keterampilan.unjukkerja.delete', ['id' => $kdItem->kd, 'id_seksi' => $dataseksi->id]) }}">
-                                                <i data-lucide="trash" class="w-4 h-4 text-red-500" style="color: red;"></i>
-                                            </a>
+                                                <a id="delete"
+                                                    href="{{ route('nilai.keterampilan.unjukkerja.delete', ['id' => $kdItem->kd, 'id_seksi' => $dataseksi->id]) }}">
+                                                    <i data-lucide="trash" class="w-4 h-4 text-red-500"
+                                                        style="color: red;"></i>
+                                                </a>
 
+                                            </div>
+                                            <div>
+                                                <a data-tw-toggle="modal"
+                                                    data-tw-target="#edit-footer-modal-preview-{{ $kdItem->kd }}">
+                                                    <i data-lucide="edit" class="w-4 h-4 text-blue-500"
+                                                        style="color: green;"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <a data-tw-toggle="modal"
-                                                data-tw-target="#edit-footer-modal-preview-{{ $kdItem->kd }}">
-                                                <i data-lucide="edit" class="w-4 h-4 text-blue-500"
-                                                    style="color: green;"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
+                                    @endif
 
                                 </th>
                             @endforeach
@@ -120,6 +153,7 @@
                                     <td class="whitespace-nowrap">
                                         @php
                                             $nilai = App\Models\Nilai::where('id_rombelsiswa', $item->id)
+                                                ->where('id_seksi', $dataseksi->id)
                                                 ->where('type_nilai', 3)
                                                 ->where('type_keterampilan', 3)
                                                 ->where('kd', $kdItem->kd)
@@ -140,7 +174,40 @@
                 </tbody>
             </table>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const searchNamaInput = document.querySelector('input[name="searchnama"]');
+                    const searchNisnInput = document.querySelector('input[name="searchnisn"]');
+                    const searchJkInput = document.querySelector('input[name="searchjk"]');
+                    const tableRows = document.querySelectorAll("#datatable tbody tr");
 
+                    function filterTable() {
+                        const searchNama = searchNamaInput.value.toLowerCase();
+                        const searchNisn = searchNisnInput.value.toLowerCase();
+                        const searchJk = searchJkInput.value.toLowerCase();
+
+                        tableRows.forEach(row => {
+                            const nama = row.cells[2].textContent.toLowerCase();
+                            const nisn = row.cells[1].textContent.toLowerCase();
+                            const jk = row.cells[3].textContent.toLowerCase();
+
+                            const namaMatch = nama.includes(searchNama);
+                            const nisnMatch = nisn.includes(searchNisn);
+                            const jkMatch = jk.includes(searchJk);
+
+                            if (namaMatch && nisnMatch && jkMatch) {
+                                row.style.display = "";
+                            } else {
+                                row.style.display = "none";
+                            }
+                        });
+                    }
+
+                    searchNamaInput.addEventListener("input", filterTable);
+                    searchNisnInput.addEventListener("input", filterTable);
+                    searchJkInput.addEventListener("input", filterTable);
+                });
+            </script>
 
         </div>
     </div>

@@ -33,6 +33,9 @@ class EkstraController extends Controller
     public function EkstraAll(request $request)
     {
         $searchTahun = $request->input('searchtahun');
+        $searchNisn = $request->input('searchnisn');
+        $searchNama = $request->input('searchnama');
+        $searchJk = $request->input('searchjk');
         $query = CatataWalas::query();
 
         if (!empty($searchTahun)) {
@@ -40,7 +43,27 @@ class EkstraController extends Controller
                 $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
             });
         }
-
+        if (!empty($searchNisn)) {
+            $query->whereHas('rombelsiswas', function ($lecturerQuery) use ($searchNisn) {
+                $lecturerQuery->whereHas('siswas', function ($courseQuery) use ($searchNisn) {
+                    $courseQuery->where('nisn', 'LIKE', '%' .  $searchNisn . '%');
+                });
+            });
+        }
+        if (!empty($searchNama)) {
+            $query->whereHas('rombelsiswas', function ($lecturerQuery) use ($searchNama) {
+                $lecturerQuery->whereHas('siswas', function ($courseQuery) use ($searchNama) {
+                    $courseQuery->where('nama', 'LIKE', '%' .  $searchNama . '%');
+                });
+            });
+        }
+        if (!empty($searchJk)) {
+            $query->whereHas('rombelsiswas', function ($lecturerQuery) use ($searchJk) {
+                $lecturerQuery->whereHas('siswas', function ($courseQuery) use ($searchJk) {
+                    $courseQuery->where('jk', 'LIKE', '%' .  $searchJk . '%');
+                });
+            });
+        }
         $tanggalSaatIni = Carbon::now();
 
         // Mendapatkan semester saat ini berdasarkan bulan
@@ -115,7 +138,7 @@ class EkstraController extends Controller
 
     public function EkstraExport(Request $request)
     {
-        $tahunId=  $request->input('tahun');
+        $tahunId =  $request->input('tahun');
         $userId = Auth::user()->id;
 
         $cttnwalas = CatataWalas::join('rombelsiswas', 'catata_walas.id_rombelsiswa', '=', 'rombelsiswas.id')
@@ -138,7 +161,7 @@ class EkstraController extends Controller
 
         $fileName = 'Data Nilai Ekstrakulikuler Siswa Kelas' . ' ' . $kelas->tingkat . $kelas->nama . $jurusan->nama . ' ' . 'Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.xlsx';
 
-        return Excel::download(new EkstraExport($cttnwalas,$tahun), $fileName);
+        return Excel::download(new EkstraExport($cttnwalas, $tahun), $fileName);
     }
 
 

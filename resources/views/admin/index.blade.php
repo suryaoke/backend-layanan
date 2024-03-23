@@ -69,8 +69,6 @@
             $jadwal = App\Models\Guru::where('id_user', $userId)->value('id');
         }
 
-      
-
     @endphp
 
     <div class="grid grid-cols-12 gap-6">
@@ -183,15 +181,6 @@
                         </div>
                         <!-- END: FAQ Content -->
                     </div>
-
-                    <div class="intro-y flex items-center h-10">
-                        <h2 class="text-lg font-medium truncate mr-5">
-                            General Report
-                        </h2>
-                        <a href="" class="ml-auto flex items-center text-primary">
-                            <i data-lucide="refresh-ccw" class="w-4 h-4 mr-3"></i> Reload Data </a>
-                    </div>
-
 
 
                     {{--  // bagian  admin //  --}}
@@ -467,57 +456,41 @@
                     @endif
                     {{--  // end bagian  wakil kurikulum //  --}}
 
-
+                    @php
+                        use Carbon\Carbon;
+                    @endphp
 
                     {{--  // bagian  Guru//  --}}
                     @if (Auth::user()->role == '4')
-                        <div class="grid grid-cols-12 gap-6 mt-3">
-                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-                                <div class="report-box zoom-in">
-                                    <div class="box p-5">
-                                        <div class="flex">
-                                            <i class="report-box__icon text-success">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="lucide lucide-calendar-days">
-                                                    <rect width="18" height="18" x="3" y="4" rx="2"
-                                                        ry="2" />
-                                                    <line x1="16" x2="16" y1="2" y2="6" />
-                                                    <line x1="8" x2="8" y1="2" y2="6" />
-                                                    <line x1="3" x2="21" y1="10" y2="10" />
-                                                    <path d="M8 14h.01" />
-                                                    <path d="M12 14h.01" />
-                                                    <path d="M16 14h.01" />
-                                                    <path d="M8 18h.01" />
-                                                    <path d="M12 18h.01" />
-                                                    <path d="M16 18h.01" />
-                                                </svg>
-                                            </i>
-                                        </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwalguru }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Jadwal Mapel</div>
-                                    </div>
-                                </div>
-                            </div>
+                        @php
 
-                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-                                <div class="report-box zoom-in">
-                                    <div class="box p-5">
-                                        <div class="flex">
-                                            <i data-lucide="users" class="report-box__icon text-primary"></i>
+                            $tanggalSaatIni = Carbon::now();
 
-                                        </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6"> 0</div>
-                                        <div class="text-base text-slate-500 mt-1">Siswa</div>
-                                    </div>
-                                </div>
-                            </div>
+                            // Mendapatkan semester saat ini berdasarkan bulan
+                            $semesterSaatIni =
+                                $tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6 ? 'Genap' : 'Ganjil';
 
-                        </div>
+                            // Mendapatkan tahun saat ini
+                            $tahunSaatIni = $tanggalSaatIni->format('Y');
 
-                        <div class="grid grid-cols-12 gap-6 mb-2 mt-8">
-                           
+                            // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+                            $tahunAjarSaatIni = App\Models\Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+                                ->where('semester', $semesterSaatIni)
+                                ->first();
+                            $userId = Auth::user()->id;
+                            $seksi = App\Models\Seksi::join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+
+                                ->where('seksis.semester', $tahunAjarSaatIni->id)
+                                ->where('gurus.id_user', '=', $userId)
+                                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                                ->get();
+
+                        @endphp
+
+                        <div class="grid grid-cols-12 gap-6 mb-2 ">
+
 
                             <div class="intro-y col-span-12 lg:col-span-8 xl:col-span-9 mb-2">
                                 <div class="intro-y box lg:mt-4">
@@ -543,63 +516,66 @@
                                                                     <th class="whitespace-nowrap">Keterampilan</th>
                                                                 </tr>
                                                             </thead>
-                                                            {{--  @foreach ($seksi as $key => $item)
+                                                            @foreach ($seksi as $key => $item)
                                                                 @php
-                                                                    $rombel = App\Models\Rombel::where(
-                                                                        'id',
-                                                                        $item->id_rombel,
-                                                                    )->first();
-                                                                    $kelas = App\Models\Kelas::where(
-                                                                        'id',
-                                                                        $rombel->id_kelas,
-                                                                    )->first();
-                                                                    $jurusan = App\Models\Jurusan::where(
-                                                                        'id',
-                                                                        $kelas->id_jurusan,
-                                                                    )->first();
-                                                                    $jadwal = App\Models\Jadwalmapel::where(
-                                                                        'id',
-                                                                        $item->id_jadwal,
-                                                                    )->first();
-                                                                    $pengampu = App\Models\Pengampu::where(
-                                                                        'id',
-                                                                        $jadwal->id_pengampu,
-                                                                    )->first();
-                                                                    $mapel = App\Models\Mapel::where(
-                                                                        'id',
-                                                                        $pengampu->id_mapel,
-                                                                    )->first();
-                                                                    $idseksi = $item->id; // jika $item adalah satu objek
-                                                                    $nilaikd3 = App\Models\NilaiKd3::where(
+                                                                    $nilaipengetahuan = App\Models\Nilai::where(
                                                                         'id_seksi',
-                                                                        $idseksi,
-                                                                    )->get();
-                                                                    $nilaikd4 = App\Models\NilaiKd4::where(
+                                                                        $item->id,
+                                                                    )
+                                                                        ->whereIn('type_nilai', [1, 2])
+                                                                        ->first();
+                                                                    $nilaiketerampilan = App\Models\Nilai::where(
                                                                         'id_seksi',
-                                                                        $idseksi,
-                                                                    )->get();
+                                                                        $item->id,
+                                                                    )
+                                                                        ->where('type_nilai', 3)
+                                                                        ->first();
                                                                 @endphp
                                                                 <tbody>
 
                                                                     <tr>
-                                                                        <td> {{ $kelas->tingkat }} {{ $kelas->nama }}
-                                                                            {{ $jurusan->nama }} - {{ $item->id }}
-                                                                        </td>
-                                                                        <td> {{ $mapel->nama }} </td>
                                                                         <td>
-                                                                            @foreach ($nilaikd3 as $nilai)
-                                                                                Ph{{ $nilai->ph }},
-                                                                            @endforeach
+
+                                                                            {{ $item->jadwalmapels->pengampus->kelass->tingkat }}
+                                                                            {{ $item->jadwalmapels->pengampus->kelass->nama }}
+                                                                            {{ $item->jadwalmapels->pengampus->kelass->jurusans->nama }}
                                                                         </td>
+                                                                        <td> {{ $item->jadwalmapels->pengampus->mapels->nama }}
+                                                                        </td>
+
                                                                         <td>
-                                                                            @foreach ($nilaikd4 as $nilai)
-                                                                                Ph {{ $nilai->ph }},
-                                                                            @endforeach
+                                                                            @if ($nilaipengetahuan)
+                                                                                @if ($nilaipengetahuan->status == 0)
+                                                                                    <i data-lucide="x"
+                                                                                        class="text-danger"></i>
+                                                                                @elseif ($nilaipengetahuan->status == 1 || $nilaipengetahuan->status == 2)
+                                                                                    <i data-lucide="check"
+                                                                                        class="text-success"></i>
+                                                                                @endif
+                                                                            @else
+                                                                                <i data-lucide="x"
+                                                                                    class="text-danger"></i>
+                                                                            @endif
+                                                                        </td>
+
+                                                                        <td>
+                                                                            @if ($nilaiketerampilan)
+                                                                                @if ($nilaiketerampilan->status == 0)
+                                                                                    <i data-lucide="x"
+                                                                                        class="text-danger"></i>
+                                                                                @elseif ($nilaiketerampilan->status == 1 || $nilaiketerampilan->status == 2)
+                                                                                    <i data-lucide="check"
+                                                                                        class="text-success"></i>
+                                                                                @endif
+                                                                            @else
+                                                                                <i data-lucide="x"
+                                                                                    class="text-danger"></i>
+                                                                            @endif
                                                                         </td>
                                                                     </tr>
 
                                                                 </tbody>
-                                                            @endforeach  --}}
+                                                            @endforeach
 
                                                         </table>
                                                     </div>
@@ -616,55 +592,6 @@
                     @endif
 
 
-                    {{--  // bagian  siswa //  --}}
-                    @if (Auth::user()->role == '6')
-                        @php
-                            $userId = Auth::user()->id;
-                            $siswa = App\Models\Siswa::where('id_user', $userId)->first();
-
-                            $rombelSiswaIds = App\Models\Rombelsiswa::where('id_siswa', $siswa->id)
-                                ->pluck('id')
-                                ->toArray();
-                           
-
-                            $jadwalmapelsiswa = App\Models\Jadwalmapel::join(
-                                'waktus',
-                                'jadwalmapels.id_waktu',
-                                '=',
-                                'waktus.id',
-                            )
-                                ->join('haris', 'jadwalmapels.id_hari', '=', 'haris.id')
-                                ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
-                                ->join('kelas', 'pengampus.kelas', '=', 'kelas.id')
-                                ->join('rombels', 'pengampus.kelas', '=', 'rombels.id_kelas')
-                                ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
-                                ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
-                                ->where('status', '=', '2')
-                                ->where('siswas.id_user', '=', $userId)
-                                ->orderBy('kelas.tingkat', 'asc')
-                                ->orderBy('kelas.nama', 'asc')
-                                ->orderBy('haris.kode_hari', 'asc')
-                                ->orderBy('waktus.range', 'asc')
-                                ->count();
-
-                        @endphp
-                        <div class="grid grid-cols-12 gap-6 mt-3">
-                            <div class="col-span-12 sm:col-span-6 xl:col-span-3 intro-y">
-                                <div class="report-box zoom-in">
-                                    <div class="box p-5">
-                                        <div class="flex">
-                                            <i data-lucide="file" class="report-box__icon text-pending"></i>
-
-                                        </div>
-                                        <div class="text-3xl font-medium leading-8 mt-6">{{ $jadwalmapelsiswa }}</div>
-                                        <div class="text-base text-slate-500 mt-1">Jadwal Mata Pelajaran</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                         
-                    @endif
-                    {{--  // end bagian  siswa //  --}}
 
                 </div>
                 <!-- END: General Report -->
@@ -674,6 +601,4 @@
 
     </div>
     </span>
-
-
 @endsection

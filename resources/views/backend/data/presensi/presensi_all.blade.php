@@ -27,6 +27,27 @@
         </a>
         <div class="ml-1">
             <form role="form" action="{{ route('presensi.all') }}" method="get" class="flex">
+                <div class="flex-1 mr-1">
+                    <div class="form-group">
+                        <input type="text" name="searchnama" class="form-control" placeholder="Nama"
+                            value="{{ request('searchnama') }}">
+
+                    </div>
+                </div>
+                <div class="flex-1 mr-1">
+                    <div class="form-group">
+                        <input type="text" name="searchnisn" class="form-control" placeholder="Nisn"
+                            value="{{ request('searchnisn') }}">
+
+                    </div>
+                </div>
+                <div class="flex-1 mr-1">
+                    <div class="form-group">
+                        <input type="text" name="searchjk" class="form-control" placeholder="Jk"
+                            value="{{ request('searchjk') }}">
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <select name="searchtahun" class="form-select w-full">
                         <option value="">Tahun Ajar</option>
@@ -49,9 +70,12 @@
 
     </div>
     <div class="mb-4 mt-4">
-        Semester {{ $datacttnwalas['tahun']['semester'] }}
-        Tahun Ajar {{ $datacttnwalas['tahun']['tahun'] }}
+        @if ($datacttnwalas && isset($datacttnwalas['tahun']))
+            Semester {{ $datacttnwalas['tahun']['semester'] }}
+            Tahun Ajar {{ $datacttnwalas['tahun']['tahun'] }}
+        @endif
     </div>
+
     <div class="page-content">
         <div class="container-fluid">
             <div class="row">
@@ -64,6 +88,7 @@
                                         <th class="whitespace-nowrap">No</th>
                                         <th class="whitespace-nowrap">NISN</th>
                                         <th class="whitespace-nowrap">Nama</th>
+                                        <th class="whitespace-nowrap">Jk</th>
                                         <th class="whitespace-nowrap">Kelas</th>
                                         <th class="whitespace-nowrap">Alfa</th>
                                         <th class="whitespace-nowrap">Izin</th>
@@ -80,6 +105,13 @@
                                             </td>
                                             <td style="white-space: nowrap; text-transform: capitalize;">
                                                 {{ $item->rombelsiswas->siswas->nama }}
+                                            </td>
+                                            <td class="whitespace-nowrap">
+                                                @if ($item->rombelsiswas->siswas->jk == 'L')
+                                                    L
+                                                @elseif ($item->rombelsiswas->siswas->jk == 'P')
+                                                    P
+                                                @endif
                                             </td>
                                             <td style="white-space: nowrap; text-transform: capitalize;">
                                                 {{ $item->rombelsiswas->rombels->kelass->tingkat }}
@@ -245,6 +277,7 @@
                                     <th class="whitespace-nowrap">No</th>
                                     <th class="whitespace-nowrap">NISN</th>
                                     <th class="whitespace-nowrap">Nama</th>
+                                    <th class="whitespace-nowrap">Jk</th>
                                     <th class="whitespace-nowrap">Kelas</th>
                                     <th class="whitespace-nowrap">Alfa <input id="alfaInput" style="width: 70px;"
                                             type="number"></th>
@@ -264,6 +297,13 @@
                                         </td>
                                         <td style="white-space: nowrap; text-transform: capitalize;">
                                             {{ $item->rombelsiswas->siswas->nama }}
+                                        </td>
+                                        <td class="whitespace-nowrap">
+                                            @if ($item->rombelsiswas->siswas->jk == 'L')
+                                                L
+                                            @elseif ($item->rombelsiswas->siswas->jk == 'P')
+                                                P
+                                            @endif
                                         </td>
                                         <td style="white-space: nowrap; text-transform: capitalize;">
                                             {{ $item->rombelsiswas->rombels->kelass->tingkat }}

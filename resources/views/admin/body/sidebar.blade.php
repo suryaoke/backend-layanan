@@ -121,6 +121,8 @@
 
      $ekstra = URL::route('ekstra.all');
      $sikap = URL::route('sikap.all');
+     $statusnilai = URL::route('status.nilai');
+      $raporsiswa = URL::route('rapor.siswa');
 
  @endphp
 
@@ -722,8 +724,12 @@
                                              <a href="javascript:;" class="side-menu side-menu--active">
                                              @elseif ($sikap == $url)
                                                  <a href="javascript:;" class="side-menu side-menu--active">
-                                                 @else
-                                                     <a href="javascript:;" class="side-menu ">
+                                                 @elseif ($statusnilai == $url)
+                                                     <a href="javascript:;" class="side-menu side-menu--active">
+                                                     @elseif ($raporsiswa == $url)
+                                                         <a href="javascript:;" class="side-menu side-menu--active">
+                                                         @else
+                                                             <a href="javascript:;" class="side-menu ">
                      @endif
                      <div class="side-menu__icon"> <svg xmlns="http://www.w3.org/2000/svg" width="24"
                              height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -779,11 +785,19 @@
                              </a>
                          </li>
                          <li>
-                             <a href="{{ route('siswa.guruwalas') }}" class="side-menu">
+                             <a href="{{ route('status.nilai') }}" class="side-menu">
                                  <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
-                                 <div class="side-menu__title">Rapor Siswa</div>
+                                 <div class="side-menu__title">Status Nilai</div>
                              </a>
                          </li>
+                         <li>
+                             <a href="{{ route('rapor.siswa') }}" class="side-menu">
+                                 <div class="side-menu__icon"> <i data-lucide="file"></i> </div>
+                                 <div class="side-menu__title">Rapor </div>
+                             </a>
+                         </li>
+
+
                      </ul>
                  </li>
              @endif

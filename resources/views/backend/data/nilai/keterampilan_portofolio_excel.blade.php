@@ -63,6 +63,7 @@
                                       ->where('type_nilai', 3)
                                       ->where('kd', $kdItem->kd)
                                       ->where('type_keterampilan', 1)
+                                      ->where('id_seksi', $id)
                                       ->first();
                               @endphp
                               @if ($nilai)
@@ -76,6 +77,7 @@
                                       ->where('type_nilai', 3)
                                       ->where('kd', $kdItem->kd)
                                       ->where('type_keterampilan', 1)
+                                      ->where('id_seksi', $id)
                                       ->first();
                               @endphp
                               @if ($nilai)

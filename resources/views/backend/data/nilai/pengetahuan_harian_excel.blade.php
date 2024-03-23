@@ -60,6 +60,7 @@
                                 $nilai = App\Models\Nilai::where('id_rombelsiswa', $item->id)
                                     ->where('type_nilai', 1)
                                     ->where('ph', $phItem->ph)
+                                    ->where('id_seksi', $id)
                                     ->first();
                             @endphp
                             @if ($nilai)
@@ -74,6 +75,7 @@
                                     ->where('id_rombelsiswa', $item->id)
                                     ->where('type_nilai', 1)
                                     ->where('ph', $phItem->ph)
+                                    ->where('id_seksi', $id)
                                     ->first();
                             @endphp
                             @if ($nilai1)

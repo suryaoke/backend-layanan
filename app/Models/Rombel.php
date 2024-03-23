@@ -47,4 +47,8 @@ class Rombel extends Model
     {
         return $this->belongsTo(Seksi::class, 'id_rombel', 'id');
     }
+    public function rombelsiswas()
+    {
+        return $this->hasMany(RombelSiswa::class, 'id_rombel', 'id');
+    }
 }

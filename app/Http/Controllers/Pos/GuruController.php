@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Imports\GuruImport;
 use App\Imports\UserImport;
 use App\Models\Guru;
+use App\Models\Kelas;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -17,11 +18,49 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class GuruController extends Controller
 {
-    public function GuruAll()
+    public function GuruAll(request $request)
     {
-        $guru = Guru::OrderBy('kode_gr')->get();
 
-        return view('backend.data.guru.guru_all', compact('guru'));
+        $searchKode = $request->input('searchkode');
+        $searchNama = $request->input('searchnama');
+        $searchNohp = $request->input('searchnohp');
+        $searchWalas = $request->input('searchwalas');
+        $searchUsername = $request->input('searchusername');
+
+
+        $query = Guru::query();
+        if (!empty($searchKode)) {
+            $query->where('kode_gr', '=', $searchKode);
+        }
+        if (!empty($searchNama)) {
+            $query->where('nama', '=', $searchNama);
+        }
+        if (!empty($searchNohp)) {
+            $query->where('no_hp', '=', $searchNohp);
+        }
+
+        if (!empty($searchWalas)) {
+            $query->whereHas('walass', function ($lecturerQuery) use ($searchWalas) {
+                $lecturerQuery->whereHas('kelass', function ($courseQuery) use ($searchWalas) {
+                    $courseQuery->where('id', 'LIKE', '%' .  $searchWalas . '%');
+                });
+            });
+        }
+        if (!empty($searchUsername)) {
+            $query->whereHas('users', function ($lecturerQuery) use ($searchUsername) {
+                $lecturerQuery->where('username', 'LIKE', '%' . $searchUsername . '%');
+            });
+        }
+        $guru = $query->OrderBy('kode_gr')->get();
+
+        $kelas = Kelas::whereIn('id', function ($query) {
+            $query->select('id_kelas')
+                ->from('walas');
+        })->orderBy('tingkat')
+            ->get();
+
+
+        return view('backend.data.guru.guru_all', compact('guru', 'kelas'));
     } // end method
 
     public function GuruAdd()

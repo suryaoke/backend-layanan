@@ -23,13 +23,19 @@
 
             <div class="flex-1 sm:mr-2">
                 <div class="form-group">
-                    <input type="text" name="searchguru" class="form-control" placeholder="Nama Guru"
-                        value="{{ request('searchguru') }}">
+                    <input type="text" name="searchkode" class="form-control" placeholder="Kode Pengampu"
+                        value="{{ request('searchkode') }}">
                 </div>
             </div>
             <div class="flex-1 sm:mr-2">
                 <div class="form-group">
-                    <input type="text" name="searchmapel" class="form-control" placeholder="Mata Pelajaran"
+                    <input type="text" name="searchguru" class="form-control" placeholder="Nama Guru"
+                        value="{{ request('searchguru') }}">
+                </div>
+            </div>
+            <div class="flex-2 sm:mr-2">
+                <div class="form-group">
+                    <input type="text" name="searchmapel" class="form-control" placeholder="Nama Mata Pelajaran"
                         value="{{ request('searchmapel') }}">
 
                 </div>

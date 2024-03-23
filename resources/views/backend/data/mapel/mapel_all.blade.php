@@ -18,6 +18,79 @@
 
     </div>
 
+    <form role="form" action="{{ route('mapel.all') }}" method="get" class="sm:flex">
+
+        <div class="flex-1 sm:mr-2">
+            <div class="form-group">
+                <input type="text" name="searchkode" class="form-control" placeholder="Kode Mapel"
+                    value="{{ request('searchkode') }}">
+            </div>
+        </div>
+        <div class="flex-1 sm:mr-2">
+            <div class="form-group">
+                <input type="text" name="searchinduk" class="form-control" placeholder="Induk"
+                    value="{{ request('searchinduk') }}">
+            </div>
+        </div>
+        <div class="flex-1 sm:mr-2">
+            <div class="form-group">
+                <input type="text" name="searchnama" class="form-control" placeholder="Nama Mata Pelajaran"
+                    value="{{ request('searchnama') }}">
+
+            </div>
+        </div>
+
+        <div class="flex-1 sm:mr-2">
+            <div class="form-group">
+                <input type="text" name="searchjp" class="form-control" placeholder="JP"
+                    value="{{ request('searchjp') }}">
+
+            </div>
+        </div>
+        <div class="flex-1 sm:mr-2">
+            <div class="form-group">
+                <select name="searchjurusan" class="form-select w-full">
+                    <option value="">Jurusan</option>
+                    @foreach ($jurusan as $item)
+                        <option value="{{ $item->id }}"> {{ $item->nama }}
+                        </option>
+                    @endforeach
+                    <select name="searchwalas" class="form-select w-full">
+            </div>
+        </div>
+        <div class="flex-1 sm:mr-2">
+            <div class="form-group">
+                <select name="searchkelompok" class="form-select w-full">
+                    <option value="">Kelompok</option>
+                    <option value="A">Kelompok A</option>
+                    <option value="B">Kelompok B</option>
+                    <option value="C">Kelompok C</option>
+
+                </select>
+
+            </div>
+        </div>
+        <div class="flex-1 sm:mr-2">
+            <div class="form-group">
+                <select name="searchtype" class="form-select w-full">
+                    <option value="">Type</option>
+                    <option value="Teori">Teori</option>
+                    <option value="Pratikum">Pratikum</option>
+
+                </select>
+
+            </div>
+        </div>
+        <div class="sm:ml-1">
+            <button type="submit" class="btn btn-default">Search</button>
+        </div>
+        <div class="sm:ml-2">
+
+            <a href="{{ route('mapel.all') }}" class="btn btn-danger">Clear</a>
+
+        </div>
+    </form>
+
     <div class="col-span-2 mb-4 mt-4">
 
         <a class="btn btn-pending btn-block" href="{{ route('mapel.excel') }} ">
@@ -77,7 +150,8 @@
                                                 {{ $item->nama }} </td>
                                             <td style="text-align: center;"> {{ $item->jp }} </td>
 
-                                            <td style="text-align: center;"> {{ $item['jurusans']['nama'] ?? 'Not Found' }}
+                                            <td style="text-align: center;">
+                                                {{ $item['jurusans']['nama'] ?? 'Not Found' }}
                                             </td>
 
                                             <td style="white-space: nowrap;">Kelompok {{ $item->jenis }} </td>

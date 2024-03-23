@@ -4,7 +4,57 @@
         <h1 class="text-lg font-medium mr-auto">
             Data Guru All
         </h1>
+    </div>
+    <div class="mb-4 intro-y flex flex-col sm:flex-row items-center mt-4">
 
+        <form role="form" action="{{ route('guru.all') }}" method="get" class="sm:flex">
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+                    <input type="text" name="searchkode" class="form-control" placeholder="Kode Guru"
+                        value="{{ request('searchkode') }}">
+                </div>
+            </div>
+
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+                    <input type="text" name="searchnama" class="form-control" placeholder="Nama"
+                        value="{{ request('searchnama') }}">
+
+                </div>
+            </div>
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+                    <input type="text" name="searchnohp" class="form-control" placeholder="No Hp"
+                        value="{{ request('searchnohp') }}">
+                </div>
+            </div>
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+
+                    <select name="searchwalas" class="form-select w-full">
+                        <option value="">Kelas</option>
+                        @foreach ($kelas as $item)
+                            <option value="{{ $item->id }}">{{ $item->tingkat }} {{ $item->nama }}
+                                {{ $item->jurusans->nama }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+                    <input type="text" name="searchusername" class="form-control" placeholder="Username"
+                        value="{{ request('searchusername') }}">
+                </div>
+            </div>
+            <div class="sm:ml-1">
+                <button type="submit" class="btn btn-default">Search</button>
+            </div>
+            <div class="sm:ml-2">
+
+                <a href="{{ route('guru.all') }}" class="btn btn-danger">Clear</a>
+
+            </div>
+        </form>
     </div>
 
     <div class="col-span-2 mb-4 mt-4">

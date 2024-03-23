@@ -12,15 +12,42 @@ use Illuminate\Support\Facades\Auth;
 
 class WalasController extends Controller
 {
-    public function WalasAll()
+    public function WalasAll(request $request)
     {
+        $searchNama = $request->input('searchnama');
+        $searchKode = $request->input('searchkode');
+        $searchKelas = $request->input('searchkelas');
 
-        $walas = Walas::join('kelas', 'walas.id_kelas', '=', 'kelas.id')
+
+        $query = Walas::query();
+        if (!empty($searchNama)) {
+            $query->whereHas('gurus', function ($lecturerQuery) use ($searchNama) {
+                $lecturerQuery->where('nama', 'LIKE', '%' . $searchNama . '%');
+            });
+        }
+        if (!empty($searchKode)) {
+            $query->whereHas('gurus', function ($lecturerQuery) use ($searchKode) {
+                $lecturerQuery->where('kode_gr', 'LIKE', '%' . $searchKode . '%');
+            });
+        }
+        if (!empty($searchKelas)) {
+            $query->whereHas('kelass', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
+            });
+        }
+
+        $walas = $query->join('kelas', 'walas.id_kelas', '=', 'kelas.id')
             ->select('walas.*', 'kelas.tingkat')
             ->orderBy('kelas.tingkat', 'asc')
             ->get();
 
-        return view('backend.data.walas.walas_all', compact('walas'));
+        $kelas = Kelas::whereIn('id', function ($query) {
+            $query->select('id_kelas')
+                ->from('walas');
+        })->orderBy('tingkat')
+            ->get();
+
+        return view('backend.data.walas.walas_all', compact('walas', 'kelas'));
     } // end method
 
     public function WalasAdd()

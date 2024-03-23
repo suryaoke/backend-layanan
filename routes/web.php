@@ -16,6 +16,7 @@ use App\Http\Controllers\Pos\OrangTuaController;
 use App\Http\Controllers\Pos\PengampuController;
 use App\Http\Controllers\Pos\PresensiController;
 use App\Http\Controllers\Pos\PrestasiController;
+use App\Http\Controllers\Pos\RaporController;
 use App\Http\Controllers\Pos\RombelController;
 use App\Http\Controllers\Pos\RuanganController;
 use App\Http\Controllers\Pos\SeksiController;
@@ -315,7 +316,6 @@ Route::controller(ExportController::class)->middleware(['auth'])->group(function
 
 
     Route::post('jadwalortu/pdf', 'Jadwalortupdf')->name('jadwalortu.pdf');
-
 });
 
 
@@ -450,9 +450,35 @@ Route::controller(NilaiController::class)->middleware(['auth'])->group(function 
     Route::post('keterampilan/proyek/excel', 'KeterampilanProyekExport')->name('keterampilan.proyek.excel');
 
     Route::post('keterampilan/unjukkerja/excel', 'KeterampilanUnjukkerjaExport')->name('keterampilan.unjukkerja.excel');
+
+    Route::post('kirim/nilai/pengetahuan', 'KirimNilaiPengetahuan')->name('kirim.nilai.pengetahuan');
+
+    Route::post('kirim/nilai/keterampilan', 'KirimNilaiKeterampilan')->name('kirim.nilai.keterampilan');
+
+    Route::post('batal/kirim/nilai/pengetahuan', 'BatalKirimNilaiPengetahuan')->name('batal.kirim.nilai.pengetahuan');
+
+    Route::post('batal/kirim/nilai/keterampilan', 'BatalKirimNilaiKeterampilan')->name('batal.kirim.nilai.keterampilan');
+
+    Route::get('status/nilai', 'StatusNilai')->name('status.nilai');
+
+    Route::get('/kunci/nilai/{id}', 'KunciNilai')->name('kunci.nilai');
+
+    Route::get('buka/kunci/nilai/{id}', 'BukaKunciNilai')->name('buka.kunci');
 });
 
 
+Route::controller(RaporController::class)->middleware(['auth'])->group(function () {
+    Route::get('/rapor/siswa', 'RaporSiswa')->name('rapor.siswa');
+
+    Route::get('identitas/siswa/{id}', 'IdentitasSiswaPdf')->name('identitas.siswa.pdf');
+    Route::get('sampul/siswa/{id}', 'SampulSiswaPdf')->name('sampul.siswa.pdf');
+
+    Route::post('legger/excel', 'LeggerExport')->name('legger.excel');
+
+    Route::post('legger/pdf/', 'LeggerPdf')->name('legger.pdf');
+
+    Route::get('nilai/siswa/{id}', 'NilaiSiswaPdf')->name('nilai.pdf');
+});
 
 Route::get('/', function () {
     return view('auth.login');

@@ -27,9 +27,37 @@ class UserController extends Controller
 {
 
 
-    public function UserAll()
+    public function UserAll(request $request)
     {
-        $users = User::orderBy('role')->orderby('name')->get();
+
+
+        $searchNama = $request->input('searchnama');
+        $searchUsername = $request->input('searchusername');
+        $searchEmail = $request->input('searchemail');
+        $searchRole = $request->input('searchrole');
+        $searchStatus = $request->input('searchstatus');
+
+        $query = User::query();
+
+        if (!empty($searchNama)) {
+            $query->where('name', '=', $searchNama);
+        }
+        if (!empty($searchUsername)) {
+            $query->where('username', '=', $searchUsername);
+        }
+        if (!empty($searchEmail)) {
+            $query->where('email', '=', $searchEmail);
+        }
+        if (!empty($searchRole)) {
+            $query->where('role', '=', $searchRole);
+        }
+        if ($searchStatus !== null) {
+            $query->where('status', $searchStatus);
+        }
+
+
+
+        $users = $query->orderBy('role')->orderby('name')->get();
 
         return view('backend.master.user.user_all', compact('users',));
     } // End Method

@@ -217,49 +217,45 @@
                     <!-- END: FAQ Content -->
                 </div>
             </div>
+            @php
+                $userId = Auth::user()->id;
+                $seksiid = App\Models\Seksi::join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                    ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                    ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                    ->join('kelas', 'kelas.id', '=', 'pengampus.kelas')
+                    ->join('mapels', 'mapels.id', '=', 'pengampus.id_mapel')
+                    ->where('mapels.id', '=', $dataseksi->jadwalmapels->pengampus->mapels->id)
+                    ->where('kelas.id', '=', $dataseksi->jadwalmapels->pengampus->kelass->id)
+                    ->where('gurus.id_user', '=', $userId)
+                    ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                    ->get();
+            @endphp
 
             {{--  Nilai Pengetahuan  --}}
             <div id="example-tab-6" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-6-tab">
-                <div class="flex mb-4 mt-4">
+                <div class="flex ml-1">
 
-                    <a class="btn btn-pending btn-block mr-1" data-tw-toggle="modal"
-                        data-tw-target="#excel-pengetahuan-modal-preview">
-                        <span class="glyphicon glyphicon-download"></span> <i data-lucide="download"
-                            class="w-5 h-5"></i>&nbsp;Export
-                    </a>
-                    <a href="{{ route('nilai.pengetahuan.harian', $dataseksi->id) }}"
-                        class="btn btn-warning btn-block mr-1"> <span class="glyphicon glyphicon-download mr-1"></span>
-                        </span>
-                        <i data-lucide="file" class="w-5 h-5"></i>&nbsp;Harian</a>
-                    <a href="{{ route('nilai.pengetahuan.akhir', $dataseksi->id) }}"
-                        class="btn btn-primary btn-block mr-1"> <span class="glyphicon glyphicon-download mr-1"></span>
-                        </span>
-                        <i data-lucide="file" class="w-5 h-5"></i>&nbsp;
-                        PAS</a>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnama" class="form-control" placeholder="Nama"
+                                value="{{ request('searchnama') }}">
 
-                    <a class="btn btn-success btn-block mr-1" data-tw-toggle="modal"
-                        data-tw-target="#header1-footer-modal-preview">
-                        <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="send"
-                            class="w-5 h-5"></i>&nbsp;Kirim</a>
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnisn" class="form-control" placeholder="Nisn"
+                                value="{{ request('searchnisn') }}">
 
-                    @php
-                        $userId = Auth::user()->id;
-                        $seksiid = App\Models\Seksi::join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
-                            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
-                            ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
-                            ->join('kelas', 'kelas.id', '=', 'pengampus.kelas')
-                            ->join('mapels', 'mapels.id', '=', 'pengampus.id_mapel')
-                            ->where('mapels.id', '=', $dataseksi->jadwalmapels->pengampus->mapels->id)
-                            ->where('kelas.id', '=', $dataseksi->jadwalmapels->pengampus->kelass->id)
-                            ->where('gurus.id_user', '=', $userId)
-                            ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
-                            ->get();
-                    @endphp
-
-
-
-                    <div class="ml-1">
-
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchjk" class="form-control" placeholder="Jk"
+                                value="{{ request('searchjk') }}">
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
                         <div class="form-group">
                             <select id="selectRoute" class="form-select w-full">
                                 <option value=""> Pilih Tahun Ajar
@@ -281,6 +277,45 @@
                             </script>
                         </div>
                     </div>
+                </div>
+
+                <div class="flex mb-4 mt-4">
+
+                    <a class="btn btn-pending btn-block mr-1" data-tw-toggle="modal"
+                        data-tw-target="#excel-pengetahuan-modal-preview">
+                        <span class="glyphicon glyphicon-download"></span> <i data-lucide="download"
+                            class="w-5 h-5"></i>&nbsp;Export
+                    </a>
+                    <a href="{{ route('nilai.pengetahuan.harian', $dataseksi->id) }}"
+                        class="btn btn-warning btn-block mr-1"> <span class="glyphicon glyphicon-download mr-1"></span>
+                        </span>
+                        <i data-lucide="file" class="w-5 h-5"></i>&nbsp;Harian</a>
+                    <a href="{{ route('nilai.pengetahuan.akhir', $dataseksi->id) }}"
+                        class="btn btn-primary btn-block mr-1"> <span class="glyphicon glyphicon-download mr-1"></span>
+                        </span>
+                        <i data-lucide="file" class="w-5 h-5"></i>&nbsp;
+                        PAS</a>
+                    @php
+                        $status = App\Models\Nilai::where('id_seksi', $dataseksi->id)
+                            ->whereIn('type_nilai', [1, 2])
+                            ->first();
+
+                    @endphp
+                    @if ($status == null || $status->status == '0')
+                        <a class="btn btn-success btn-block mr-1" data-tw-toggle="modal"
+                            data-tw-target="#kirim-pengetahuan-modal-preview">
+                            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="send"
+                                class="w-5 h-5"></i>&nbsp;Kirim</a>
+                    @elseif ($status->status == '1')
+                        <a class="btn btn-danger btn-block mr-1" data-tw-toggle="modal"
+                            data-tw-target="#batal-kirim-pengetahuan-modal-preview">
+                            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="x"
+                                class="w-5 h-5"></i>&nbsp;Batal Kirim</a>
+                    @elseif ($status->status == '2')
+                        <a class="btn btn-primary btn-block mr-1">
+                            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="lock"
+                                class="w-5 h-5"></i>&nbsp;Nilai Dikunci</a>
+                    @endif
 
 
                 </div>
@@ -315,6 +350,7 @@
                             @php
                                 $nilaiharian = App\Models\Nilai::where('id_rombelsiswa', $item->id)
                                     ->where('type_nilai', 1)
+                                    ->where('id_seksi', $dataseksi->id)
                                     ->avg('nilai_pengetahuan');
 
                                 $nilaiharian_bulat = round($nilaiharian);
@@ -323,6 +359,7 @@
 
                                 $nilaipas = App\Models\Nilai::where('id_rombelsiswa', $item->id)
                                     ->where('type_nilai', 2)
+                                    ->where('id_seksi', $dataseksi->id)
                                     ->first();
 
                                 $rapor = ($nilaiharian_bulat + optional($nilaipas)->nilai_pengetahuan_akhir) / 2;
@@ -374,11 +411,105 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const searchNamaInput = document.querySelector('input[name="searchnama"]');
+                        const searchNisnInput = document.querySelector('input[name="searchnisn"]');
+                        const searchJkInput = document.querySelector('input[name="searchjk"]');
+                        const tableRows = document.querySelectorAll("#datatable tbody tr");
+
+                        function filterTable() {
+                            const searchNama = searchNamaInput.value.toLowerCase();
+                            const searchNisn = searchNisnInput.value.toLowerCase();
+                            const searchJk = searchJkInput.value.toLowerCase();
+
+                            tableRows.forEach(row => {
+                                const nama = row.cells[2].textContent.toLowerCase();
+                                const nisn = row.cells[1].textContent.toLowerCase();
+                                const jk = row.cells[3].textContent.toLowerCase();
+
+                                const namaMatch = nama.includes(searchNama);
+                                const nisnMatch = nisn.includes(searchNisn);
+                                const jkMatch = jk.includes(searchJk);
+
+                                if (namaMatch && nisnMatch && jkMatch) {
+                                    row.style.display = "";
+                                } else {
+                                    row.style.display = "none";
+                                }
+                            });
+                        }
+
+                        searchNamaInput.addEventListener("input", filterTable);
+                        searchNisnInput.addEventListener("input", filterTable);
+                        searchJkInput.addEventListener("input", filterTable);
+                    });
+                </script>
             </div>
 
 
             {{--  Nilai Keterampilan  --}}
+            @php
+                $userId = Auth::user()->id;
+                $seksiid = App\Models\Seksi::join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                    ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                    ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                    ->join('kelas', 'kelas.id', '=', 'pengampus.kelas')
+                    ->join('mapels', 'mapels.id', '=', 'pengampus.id_mapel')
+                    ->where('mapels.id', '=', $dataseksi->jadwalmapels->pengampus->mapels->id)
+                    ->where('kelas.id', '=', $dataseksi->jadwalmapels->pengampus->kelass->id)
+                    ->where('gurus.id_user', '=', $userId)
+                    ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                    ->get();
+            @endphp
             <div id="example-tab-7" class="tab-pane leading-relaxed" role="tabpanel" aria-labelledby="example-7-tab">
+                <div class="flex ml-1">
+
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnama1" class="form-control" placeholder="Nama"
+                                value="{{ request('searchnama1') }}">
+
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchnisn1" class="form-control" placeholder="Nisn"
+                                value="{{ request('searchnisn1') }}">
+
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <input type="text" name="searchjk1" class="form-control" placeholder="Jk"
+                                value="{{ request('searchjk1') }}">
+                        </div>
+                    </div>
+                    <div class="flex-1 mr-1">
+                        <div class="form-group">
+                            <select id="selectRoutee" class="form-select w-full">
+                                <option value=""> Pilih Tahun Ajar
+                                </option>
+                                @foreach ($seksiid as $seksiid)
+                                    <option value="{{ route('nilai.alll', $seksiid->id) }}">
+                                        {{ $seksiid->semesters->semester }} - {{ $seksiid->semesters->tahun }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <script>
+                                document.getElementById("selectRoutee").addEventListener("change", function() {
+                                    var selectedRoutee = this.value;
+                                    if (selectedRoutee) {
+                                        window.location.href = selectedRoutee;
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex mb-4 mt-4">
 
                     <a class="btn btn-pending btn-block mr-1" data-tw-toggle="modal"
@@ -401,51 +532,27 @@
                         <i data-lucide="file" class="w-5 h-5"></i>&nbsp;
                         Unjuk Kerja</a>
 
-                    <a class="btn btn-success btn-block mr-1" data-tw-toggle="modal"
-                        data-tw-target="#header1-footer-modal-preview">
-                        <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="send"
-                            class="w-5 h-5"></i>&nbsp;Kirim</a>
-
                     @php
-                        $userId = Auth::user()->id;
-                        $seksiid = App\Models\Seksi::join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
-                            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
-                            ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
-                            ->join('kelas', 'kelas.id', '=', 'pengampus.kelas')
-                            ->join('mapels', 'mapels.id', '=', 'pengampus.id_mapel')
-                            ->where('mapels.id', '=', $dataseksi->jadwalmapels->pengampus->mapels->id)
-                            ->where('kelas.id', '=', $dataseksi->jadwalmapels->pengampus->kelass->id)
-                            ->where('gurus.id_user', '=', $userId)
-                            ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
-                            ->get();
+                        $statusketerampilan = App\Models\Nilai::where('id_seksi', $dataseksi->id)
+                            ->where('type_nilai', 3)
+                            ->first();
+
                     @endphp
-
-
-
-                    <div class="ml-1">
-
-                        <div class="form-group">
-                            <select id="selectRoutee" class="form-select w-full">
-                                <option value=""> Pilih Tahun Ajar
-                                </option>
-                                @foreach ($seksiid as $seksiid)
-                                    <option value="{{ route('nilai.alll', $seksiid->id) }}">
-                                        {{ $seksiid->semesters->semester }} - {{ $seksiid->semesters->tahun }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            <script>
-                                document.getElementById("selectRoutee").addEventListener("change", function() {
-                                    var selectedRoutee = this.value;
-                                    if (selectedRoutee) {
-                                        window.location.href = selectedRoutee;
-                                    }
-                                });
-                            </script>
-                        </div>
-                    </div>
-
+                    @if ($statusketerampilan == null || $statusketerampilan->status == '0')
+                        <a class="btn btn-success btn-block mr-1" data-tw-toggle="modal"
+                            data-tw-target="#kirim-keterampilan-modal-preview">
+                            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="send"
+                                class="w-5 h-5"></i>&nbsp;Kirim</a>
+                    @elseif ($statusketerampilan->status == '1')
+                        <a class="btn btn-danger btn-block mr-1" data-tw-toggle="modal"
+                            data-tw-target="#batal-kirim-keterampilan-modal-preview">
+                            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="x"
+                                class="w-5 h-5"></i>&nbsp;Batal Kirim</a>
+                    @elseif ($statusketerampilan->status == '2')
+                        <a class="btn btn-primary btn-block mr-1">
+                            <span class="glyphicon glyphicon-download"></span> </span> <i data-lucide="lock"
+                                class="w-5 h-5"></i>&nbsp;Nilai Dikunci</a>
+                    @endif
 
                 </div>
                 <div class="mt-4 mb-4">
@@ -454,7 +561,7 @@
                 </div>
 
 
-                <table id="datatable" class="table table-bordered">
+                <table id="datatable1" class="table table-bordered">
                     <thead>
                         <tr>
                             <th class="whitespace-nowrap">No</th>
@@ -476,6 +583,7 @@
 
                                 $nilaiketerampilan = App\Models\Nilai::where('id_rombelsiswa', $item->id)
                                     ->where('type_nilai', 3)
+                                    ->where('id_seksi', $dataseksi->id)
                                     ->avg('nilai_keterampilan');
 
                                 $nilaiketerampilan_bulat = round($nilaiketerampilan);
@@ -524,7 +632,40 @@
                     </tbody>
                 </table>
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    const searchnama1Input = document.querySelector('input[name="searchnama1"]');
+                    const searchnisn1Input = document.querySelector('input[name="searchnisn1"]');
+                    const searchjk1Input = document.querySelector('input[name="searchjk1"]');
+                    const tableRows = document.querySelectorAll("#datatable1 tbody tr");
 
+                    function filterTable() {
+                        const searchnama1 = searchnama1Input.value.toLowerCase();
+                        const searchnisn1 = searchnisn1Input.value.toLowerCase();
+                        const searchjk1 = searchjk1Input.value.toLowerCase();
+
+                        tableRows.forEach(row => {
+                            const nama = row.cells[2].textContent.toLowerCase();
+                            const nisn = row.cells[1].textContent.toLowerCase();
+                            const jk = row.cells[3].textContent.toLowerCase();
+
+                            const namaMatch = nama.includes(searchnama1);
+                            const nisnMatch = nisn.includes(searchnisn1);
+                            const jkMatch = jk.includes(searchjk1);
+
+                            if (namaMatch && nisnMatch && jkMatch) {
+                                row.style.display = "";
+                            } else {
+                                row.style.display = "none";
+                            }
+                        });
+                    }
+
+                    searchnama1Input.addEventListener("input", filterTable);
+                    searchnisn1Input.addEventListener("input", filterTable);
+                    searchjk1Input.addEventListener("input", filterTable);
+                });
+            </script>
 
         </div>
     </div>
@@ -678,6 +819,197 @@
                         <button type="submit" class="btn btn-primary w-20">Export</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+
+
+    <!-- BEGIN: Modal Kirim NIlai  Pengetahuan-->
+    <div id="kirim-pengetahuan-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{{ route('kirim.nilai.pengetahuan') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="p-5 text-center"> <i data-lucide="check-circle"
+                                class="w-16 h-16 text-success mx-auto mt-3"></i>
+                            <div class="text-3xl mt-5">Kirim Nilai Pengetahuan </div>
+
+                        </div>
+                        <input name="id" type="hidden" value="{{ $dataseksi->id }}">
+                        @php
+                            $phValues = App\Models\Nilai::select('ph')
+                                ->where('id_seksi', $dataseksi->id)
+                                ->where('type_nilai', 1)
+                                ->groupBy('ph')
+                                ->get();
+                            $pas = App\Models\Nilai::select('type_nilai')
+                                ->where('id_seksi', $dataseksi->id)
+                                ->where('type_nilai', 2)
+                                ->count();
+                        @endphp
+
+
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12 text-center"> <label for="modal-form-1"
+                                    class="form-label">Nilai Harian : @foreach ($phValues as $phItem)
+                                        Ph.{{ $phItem->ph }}
+                                    @endforeach
+                                </label> </div>
+                            <div class="col-span-12 sm:col-span-12 text-center"> <label for="modal-form-2"
+                                    class="form-label">Nilai PAS : {{ $pas > 0 ? '1' : '0' }} </label> </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <a href="{{ route('nilai.all', $dataseksi->id) }}"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</a>
+                            @if ($phValues->isNotEmpty() && $pas > 0)
+                                <button type="submit" class="btn btn-primary w-20">Kirim</button>
+                            @endif
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+
+    <!-- BEGIN: Modal Kirim Nilai  Keterampilan-->
+    <div id="kirim-keterampilan-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{{ route('kirim.nilai.keterampilan') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="p-5 text-center"> <i data-lucide="check-circle"
+                                class="w-16 h-16 text-success mx-auto mt-3"></i>
+                            <div class="text-3xl mt-5">Kirim Nilai Keterampilam </div>
+
+                        </div>
+                        <input name="id" type="hidden" value="{{ $dataseksi->id }}">
+                        @php
+
+                            $portofolio = App\Models\Nilai::select('kd')
+                                ->where('id_seksi', $dataseksi->id)
+                                ->where('type_nilai', 3)
+                                ->where('type_keterampilan', 1)
+                                ->groupBy('kd')
+                                ->get();
+
+                            $proyek = App\Models\Nilai::select('kd')
+                                ->where('id_seksi', $dataseksi->id)
+                                ->where('type_nilai', 3)
+                                ->where('type_keterampilan', 2)
+                                ->groupBy('kd')
+                                ->get();
+
+                            $unjukkerja = App\Models\Nilai::select('kd')
+                                ->where('id_seksi', $dataseksi->id)
+                                ->where('type_nilai', 3)
+                                ->where('type_keterampilan', 3)
+                                ->groupBy('kd')
+                                ->get();
+
+                        @endphp
+
+
+                        <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                            <div class="col-span-12 sm:col-span-12 text-center"> <label for="modal-form-1"
+                                    class="form-label">Nilai Portofolio : @foreach ($portofolio as $portofolioItem)
+                                        KD.{{ $portofolioItem->kd }}
+                                    @endforeach
+                                </label> </div>
+                            <div class="col-span-12 sm:col-span-12 text-center"> <label for="modal-form-2"
+                                    class="form-label">Nilai Proyek : @foreach ($proyek as $proyekItem)
+                                        KD.{{ $proyekItem->kd }}
+                                    @endforeach </label> </div>
+
+                            <div class="col-span-12 sm:col-span-12 text-center"> <label for="modal-form-2"
+                                    class="form-label">Nilai Unjuk Kerja : @foreach ($unjukkerja as $unjukkerjaItem)
+                                        KD.{{ $unjukkerjaItem->kd }}
+                                    @endforeach </label> </div>
+
+                        </div>
+
+                        <div class="modal-footer">
+                            <a href="{{ route('nilai.all', $dataseksi->id) }}"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</a>
+                            @if ($portofolio->isNotEmpty() || $proyek->isNotEmpty() || $unjukkerja->isNotEmpty())
+                                <button type="submit" class="btn btn-primary w-20">Kirim</button>
+                            @endif
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- BEGIN: Modal Batal Kirim NIlai  Pengetahuan-->
+    <div id="batal-kirim-pengetahuan-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{{ route('batal.kirim.nilai.pengetahuan') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="p-5 text-center"> <i data-lucide="x" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                            <div class="text-3xl mt-5">Batal Kirim Nilai Pengetahuan </div>
+
+                        </div>
+                        <input name="id" type="hidden" value="{{ $dataseksi->id }}">
+
+
+
+
+                        <div class="modal-footer">
+                            <a href="{{ route('nilai.all', $dataseksi->id) }}"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</a>
+
+                            <button type="submit" class="btn btn-primary w-30">Batal Kirim</button>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- BEGIN: Modal Batal Kirim NIlai  Keterampilan-->
+    <div id="batal-kirim-keterampilan-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" action="{{ route('batal.kirim.nilai.keterampilan') }}">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-body p-0">
+                        <div class="p-5 text-center"> <i data-lucide="x" class="w-16 h-16 text-danger mx-auto mt-3"></i>
+                            <div class="text-3xl mt-5">Batal Kirim Nilai Keterampilan </div>
+
+                        </div>
+                        <input name="id" type="hidden" value="{{ $dataseksi->id }}">
+
+
+                        <div class="modal-footer">
+                            <a href="{{ route('nilai.all', $dataseksi->id) }}"
+                                class="btn btn-outline-secondary w-20 mr-1">Cancel</a>
+
+                            <button type="submit" class="btn btn-primary w-30">Batal Kirim</button>
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </form>
         </div>
     </div>
 @endsection
