@@ -168,12 +168,14 @@ class RombelController extends Controller
 
             ]);
 
-            $nilai = array_fill(0, 7, "-"); // Membuat array dengan panjang 7 dan mengisi semua nilai dengan "-"
+            $nilai = array_fill(0, 7, "-");
+            $nilai2 = array_fill(0, 5, "-"); // Membuat array dengan panjang 7 dan mengisi semua nilai dengan "-"
             $rapor = Rapor::insert([
                 'id_tahunajar' => $request->id_tahunjar,
                 'id_rombelsiswa' => $rombelsiswa->id, // Menggunakan id siswa dari setiap iterasi
                 'nilai_sosial' => json_encode($nilai), // Menyimpan nilai sosial sebagai string JSON
-                'nilai_spiritual' => json_encode($nilai),
+                'nilai_spiritual' => json_encode($nilai2),
+                'naik_kelas' => 0
             ]);
         }
 

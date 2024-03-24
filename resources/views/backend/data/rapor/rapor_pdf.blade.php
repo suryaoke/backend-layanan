@@ -72,6 +72,14 @@
         ul {
             margin-bottom: 0cm;
         }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        .uppercase-text {
+            text-transform: capitalize;
+        }
         -->
     </style>
 
@@ -235,6 +243,318 @@
                         style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
             </p>
 
+
+        </table>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+
+            <p class=MsoNoSpacing><b><span
+                        style='font-size:12.0pt;font-family:"Times New Roman",serif'>A.SIKAP</span></b>
+            </p>
+
+            <p class=MsoNoSpacing><b><span
+                        style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+            </p>
+
+            <p class=MsoNoSpacing><b><span style='font-family:"Times New Roman",serif'>1. SIKAP
+                        SPIRITUAL</span></b></p>
+        </table>
+
+        <p class=MsoNoSpacing><b><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+        </p>
+
+        @php
+
+            $rapor = App\Models\Rapor::where('id_rombelsiswa', $rombelsiswa->id)->first();
+            $nilaispiritual = json_decode($rapor->nilai_spiritual, true);
+            $nilaisosial = json_decode($rapor->nilai_sosial, true);
+
+            $countspiritual = array_count_values($nilaispiritual);
+            $nilai_terbanyak_spiritual = '';
+            $jumlah_terbanyak_spiritual = 0;
+
+            foreach ($countspiritual as $nilai => $jumlah) {
+                if ($jumlah > $jumlah_terbanyak_spiritual) {
+                    $nilai_terbanyak_spiritual = $nilai;
+                    $jumlah_terbanyak_spiritual = $jumlah;
+                }
+            }
+
+            $countsosial = array_count_values($nilaisosial);
+            $nilai_terbanyak_sosial = '';
+            $jumlah_terbanyak_sosial = 0;
+
+            foreach ($countsosial as $nilai => $jumlah) {
+                if ($jumlah > $jumlah_terbanyak_sosial) {
+                    $nilai_terbanyak_sosial = $nilai;
+                    $jumlah_terbanyak_sosial = $jumlah;
+                }
+            }
+        @endphp
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr>
+                <td width=141 valign=top
+                    style='width:106.1pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center'><b><span
+                                style='font-size:12.0pt;font-family:"Times New Roman",serif'>Predikat</span></b></p>
+                </td>
+                <td width=529 valign=top
+                    style='width:14.0cm;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-size:12.0pt;line-height:150%;font-family:"Times New Roman",serif'>Deskirpsi</span></b>
+                    </p>
+                </td>
+            </tr>
+            <tr style='height:47.3pt'>
+                <td width=141 valign=top
+                    style='width:106.1pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:47.3pt'>
+                    <p class=MsoNoSpacing><span
+                            style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    <p class=MsoNoSpacing align=center style='text-align:center'><span
+                            style='font-size:12.0pt;font-family:"Times New Roman",serif'>{{ $nilai_terbanyak_spiritual }}
+                        </span></p>
+                </td>
+                <td width=529 valign=top
+                    style='width:14.0cm;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:47.3pt'>
+                    <p class=MsoNoSpacing style='text-align:justify'><span
+                            style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>
+                            Sikap spiritual yang ditunjukkan {{ $nilai_terbanyak_spiritual }} dalam menghargai
+                            perilaku beriman dan bertaqwa kepada Tuhan YME dan berakhlak mulia dalam kehidupan di
+                            madrasah dan masyarakat,
+                            @if ($nilaispiritual[0] == 'Sangat Baik')
+                                sangat rajin
+                            @elseif ($nilaispiritual[0] == ' Baik')
+                                rajin
+                            @elseif ($nilaispiritual[0] == 'Cukup')
+                                cukup rajin
+                            @elseif ($nilaispiritual[0] == 'Kurang')
+                                kurang rajin
+                            @endif
+                            berdoa,
+                            @if ($nilaispiritual[1] == 'Sangat Baik')
+                                sangat rajin
+                            @elseif ($nilaispiritual[1] == ' Baik')
+                                rajin
+                            @elseif ($nilaispiritual[1] == 'Cukup')
+                                cukup rajin
+                            @elseif ($nilaispiritual[1] == 'Kurang')
+                                kurang rajin
+                            @endif
+                            memberi salam,
+                            @if ($nilaispiritual[2] == 'Sangat Baik')
+                                sangat rajin
+                            @elseif ($nilaispiritual[2] == ' Baik')
+                                rajin
+                            @elseif ($nilaispiritual[2] == 'Cukup')
+                                cukup rajin
+                            @elseif ($nilaispiritual[2] == 'Kurang')
+                                kurang rajin
+                            @endif
+                            mengikuti shalat berjamaah dan
+                            @if ($nilaispiritual[3] == 'Sangat Baik')
+                                sangat pandai
+                            @elseif ($nilaispiritual[3] == ' Baik')
+                                pandai
+                            @elseif ($nilaispiritual[3] == 'Cukup')
+                                cukup pandai
+                            @elseif ($nilaispiritual[3] == 'Kurang')
+                                kurang pandai
+                            @endif
+                            besyukur.
+                        </span></p>
+                </td>
+            </tr>
+        </table>
+
+        <p class=MsoNoSpacing><b><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+        </p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+
+            <p class=MsoNoSpacing><b><span style='font-family:"Times New Roman",serif'>2. SIKAP
+                        SOSIAL</span></b></p>
+        </table>
+
+        <p class=MsoNoSpacing><b><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+        </p>
+
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr>
+                <td width=141 valign=top
+                    style='width:106.1pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center'><b><span
+                                style='font-size:12.0pt;font-family:"Times New Roman",serif'>Predikat</span></b></p>
+                </td>
+                <td width=529 valign=top
+                    style='width:14.0cm;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-size:12.0pt;line-height:150%;font-family:"Times New Roman",serif'>Deskirpsi</span></b>
+                    </p>
+                </td>
+            </tr>
+            <tr style='height:47.3pt'>
+                <td width=141 valign=top
+                    style='width:106.1pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt;height:47.3pt'>
+                    <p class=MsoNoSpacing><span
+                            style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    <p class=MsoNoSpacing align=center style='text-align:center'><span
+                            style='font-size:12.0pt;font-family:"Times New Roman",serif'>{{ $nilai_terbanyak_sosial }}</span>
+                    </p>
+                </td>
+                <td width=529 valign=top
+                    style='width:14.0cm;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:47.3pt'>
+                    <p class=MsoNoSpacing style='text-align:justify'><span
+                            style='font-size:12.0pt;
+  font-family:"Times New Roman",serif'>
+                            Sikapnya {{ $nilai_terbanyak_sosial }} dalam menghargai keluhuran nilai - nilai Pancasila
+                            sebagai
+                            pandangan
+                            hidup bangsa dengan selalu memperhatikan tata tertib madrasah memiliki kejujuran
+                            {{ $nilaisosial[0] }}, memiliki kedisiplinan {{ $nilaisosial[1] }}, memiliki tanggung
+                            jawab {{ $nilaisosial[2] }}, memiliki
+                            toleransi {{ $nilaisosial[3] }}, memiliki sikap gotong {{ $nilaisosial[4] }}, memiliki
+                            kesantunan {{ $nilaisosial[5] }} dan memiliki kepercayaan diri yang {{ $nilaisosial[6] }}.
+                        </span></p>
+                </td>
+            </tr>
+        </table>
+
+        <div class="page-break"></div>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=671
+            style='width:503.25pt;border-collapse:collapse;border:none'>
+            <tr>
+                <td width=93 valign=top
+                    style='width:50.4pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Nama</span>
+                    </p>
+                </td>
+                <td width=342 valign=top
+                    style='width:256.65pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'
+                            style="text-transform: capitalize;">:
+                            {{ $rombelsiswa->siswas->nama }}</span>
+                    </p>
+                </td>
+                <td width=132 valign=top
+                    style='width:80.2pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Madrasah</span>
+                    </p>
+                </td>
+                <td width=104 valign=top
+                    style='width:115.0pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>: MAN 1
+                            Kota Padang</span>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td width=93 valign=top style='width:50.4pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>NIS</span>
+                    </p>
+                </td>
+                <td width=342 valign=top style='width:256.65pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->siswas->nis }}</span>
+                    </p>
+                </td>
+                <td width=132 valign=top style='width:80.2pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Kelas/Semester</span>
+                    </p>
+                </td>
+                <td width=104 valign=top style='width:115.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->rombels->kelass->tingkat }}{{ $rombelsiswa->rombels->kelass->nama }}
+                            {{ $rombelsiswa->rombels->kelass->jurusans->nama }}/{{ $rombelsiswa->rombels->tahuns->semester }}
+                        </span>
+                    </p>
+                </td>
+            </tr>
+            <tr style='height:12.65pt'>
+                <td width=93 valign=top
+                    style='width:50.4pt;border:none;border-bottom:solid black 2.25pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>NISN</span>
+                    </p>
+                </td>
+                <td width=342 valign=top
+                    style='width:256.65pt;border:none;border-bottom:
+  solid black 2.25pt;padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->siswas->nisn }}</span>
+                    </p>
+                </td>
+                <td width=132 valign=top
+                    style='width:80.2pt;border:none;border-bottom:solid black 2.25pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Tahun
+                            Pelajaran</span></p>
+                </td>
+                <td width=104 valign=top
+                    style='width:115.0pt;border:none;border-bottom:solid black 2.25pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->rombels->tahuns->tahun }} </span>
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <p class=MsoNoSpacing><b><span style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+        </p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+
+            <p class=MsoNoSpacing><b><span style='font-size:12.0pt;font-family:"Times New Roman",serif'>B. PENGETAHUAN
+                        DAN KETERAMPILAN</span></b>
+            </p>
+
+            <p class=MsoNoSpacing><b><span
+                        style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+            </p>
+
+
+        </table>
+
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
             <p class=MsoNoSpacing><b><span style='font-size:12.0pt;font-family:"Times New Roman",serif'>Kriteria
                         Ketuntasan Minimal = @php
                             $kkm = App\Models\Kkm::where('id_kelas', $rombelsiswa->rombels->kelass->tingkat)->first();
@@ -251,13 +571,15 @@
                     style='width:269.1pt;border:
   solid windowtext 1.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
 
-                    <p class=MsoNoSpacing align=center style='margin-left:36.0pt;text-align:center;
+                    <p class=MsoNoSpacing align=center
+                        style='margin-left:36.0pt;text-align:center;
   line-height:150%'>
                         <b><span
                                 style='font-size:10.0pt;line-height:150%;
   font-family:"Times New Roman",serif'>&nbsp;</span></b>
                     </p>
-                    <p class=MsoNoSpacing align=center style='margin-left:36.0pt;text-align:center;
+                    <p class=MsoNoSpacing align=center
+                        style='margin-left:36.0pt;text-align:center;
   line-height:150%'>
                         <b><span style='font-size:10.0pt;line-height:150%;
   font-family:"Times New Roman",serif'>Mata
@@ -1018,13 +1340,546 @@
                 </td>
             </tr>
         </table>
-        <p class=MsoNoSpacing style='line-height:150%'><span
-                style='font-size:12.0pt;
-  line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span>
+
+        <div class="page-break"></div>
+
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=671
+            style='width:503.25pt;border-collapse:collapse;border:none'>
+            <tr>
+                <td width=93 valign=top
+                    style='width:50.4pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Nama</span>
+                    </p>
+                </td>
+                <td width=342 valign=top
+                    style='width:256.65pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'
+                            style="text-transform: capitalize;">:
+                            {{ $rombelsiswa->siswas->nama }}</span>
+                    </p>
+                </td>
+                <td width=132 valign=top
+                    style='width:80.2pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Madrasah</span>
+                    </p>
+                </td>
+                <td width=104 valign=top
+                    style='width:115.0pt;padding:0cm 5.4pt 0cm 5.4pt;border-top:
+  solid black 2.25pt;'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>: MAN 1
+                            Kota Padang</span>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td width=93 valign=top style='width:50.4pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>NIS</span>
+                    </p>
+                </td>
+                <td width=342 valign=top style='width:256.65pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->siswas->nis }}</span>
+                    </p>
+                </td>
+                <td width=132 valign=top style='width:80.2pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Kelas/Semester</span>
+                    </p>
+                </td>
+                <td width=104 valign=top style='width:115.0pt;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->rombels->kelass->tingkat }}{{ $rombelsiswa->rombels->kelass->nama }}
+                            {{ $rombelsiswa->rombels->kelass->jurusans->nama }}/{{ $rombelsiswa->rombels->tahuns->semester }}
+                        </span>
+                    </p>
+                </td>
+            </tr>
+            <tr style='height:12.65pt'>
+                <td width=93 valign=top
+                    style='width:50.4pt;border:none;border-bottom:solid black 2.25pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>NISN</span>
+                    </p>
+                </td>
+                <td width=342 valign=top
+                    style='width:256.65pt;border:none;border-bottom:
+  solid black 2.25pt;padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->siswas->nisn }}</span>
+                    </p>
+                </td>
+                <td width=132 valign=top
+                    style='width:80.2pt;border:none;border-bottom:solid black 2.25pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>Tahun
+                            Pelajaran</span></p>
+                </td>
+                <td width=104 valign=top
+                    style='width:115.0pt;border:none;border-bottom:solid black 2.25pt;
+  padding:0cm 5.4pt 0cm 5.4pt;height:12.65pt'>
+                    <p class=MsoNoSpacing style='line-height:115%'><span
+                            style='font-size:12.0pt;
+  line-height:115%;font-family:"Times New Roman",serif'>:
+                            {{ $rombelsiswa->rombels->tahuns->tahun }} </span>
+                    </p>
+                </td>
+            </tr>
+        </table>
+        <p class=MsoNoSpacing><b><span style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
         </p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+
+            <p class=MsoNoSpacing><b><span style='font-size:12.0pt;font-family:"Times New Roman",serif'>DESKRIPSI
+                        PENGETAHUAN
+                        DAN KETERAMPILAN</span></b>
+            </p>
+
+            <p class=MsoNoSpacing><b><span
+                        style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+            </p>
 
 
+        </table>
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr>
+                <td width=276 colspan=2 valign=top
+                    style='width:206.75pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>Mata Pelajaran</span></b></p>
+                </td>
+                <td width=198 valign=top
+                    style='width:148.85pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>Pengetahuan (KI 3)</span></b></p>
+                </td>
+                <td width=196 valign=top
+                    style='width:147.15pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>Keterampilan (KI 4)</span></b></p>
+                </td>
+            </tr>
+            <tr>
+                <td width=670 colspan=4 valign=top
+                    style='width:502.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><b><span
+                                style='font-family:
+  "Times New Roman",serif'>Kelompok A</span></b></p>
+                </td>
+            </tr>
+            @foreach ($seksiA as $key => $itemA)
+                <tr>
+                    <td width=39 valign=top
+                        style='width:29.55pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif;margin-left:8;'>&nbsp; {{ $key + 1 }}
+                            </span></p>
+                    </td>
+                    <td width=236 valign=top
+                        style='width:177.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;
+                                {{ $itemA->jadwalmapels->pengampus->mapels->nama }}</span></p>
+                    </td>
+                    <td width=198 valign=top
+                        style='width:148.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    </td>
+                    <td width=196 valign=top
+                        style='width:147.15pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    </td>
+                </tr>
+            @endforeach
 
+            <tr>
+                <td width=670 colspan=4 valign=top
+                    style='width:502.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><b><span
+                                style='font-family:
+  "Times New Roman",serif'>Kelompok B</span></b></p>
+                </td>
+            </tr>
+            @foreach ($seksiB as $key => $itemB)
+                <tr>
+                    <td width=39 valign=top
+                        style='width:29.55pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif;margin-left:8;'>&nbsp; {{ $key + 1 }}
+                            </span></p>
+                    </td>
+                    <td width=236 valign=top
+                        style='width:177.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;
+                                {{ $itemB->jadwalmapels->pengampus->mapels->nama }}</span></p>
+                    </td>
+                    <td width=198 valign=top
+                        style='width:148.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    </td>
+                    <td width=196 valign=top
+                        style='width:147.15pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    </td>
+                </tr>
+            @endforeach
+            <tr>
+                <td width=670 colspan=4 valign=top
+                    style='width:502.75pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><b><span
+                                style='font-family:
+  "Times New Roman",serif'>Kelompok C</span></b></p>
+                </td>
+            </tr>
+            @foreach ($seksiC as $key => $itemC)
+                <tr>
+                    <td width=39 valign=top
+                        style='width:29.55pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif;margin-left:8;'>&nbsp; {{ $key + 1 }}
+                            </span></p>
+                    </td>
+                    <td width=236 valign=top
+                        style='width:177.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;
+                                {{ $itemC->jadwalmapels->pengampus->mapels->nama }} </span></p>
+                    </td>
+                    <td width=198 valign=top
+                        style='width:148.85pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    </td>
+                    <td width=196 valign=top
+                        style='width:147.15pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                    </td>
+                </tr>
+            @endforeach
+        </table>
+        <div class="page-break"></div>
+        @php
+            $catatanwalas = App\Models\CatataWalas::where('id_rombelsiswa', $rombelsiswa->id)->first();
+        @endphp
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+            <p class=MsoNoSpacing style='line-height:150%'><b><span
+                        style='font-size:
+  12.0pt;line-height:150%;font-family:"Times New Roman",serif'>C.
+                        Ekstrakulikuler</span></b></p>
+        </table>
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr>
+                <td width=32 valign=top
+                    style='width:24.25pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>No</span></b></p>
+                </td>
+                <td width=304 valign=top
+                    style='width:228.0pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>Kegiatan Ekstrakulikuler</span></b></p>
+                </td>
+                <td width=336 valign=top
+                    style='width:230.2pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>Nilai</span></b></p>
+                </td>
+            </tr>
+            <tr>
+                <td width=32 valign=top
+                    style='width:24.25pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:"Times New Roman",serif;margin-left:2;'>&nbsp; 1 </span></p>
+                </td>
+                <td width=304 valign=top
+                    style='width:228.0pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:"Times New Roman",serif;margin-left:100;' class="uppercase-text">&nbsp;
+                            {{ $catatanwalas->ekstra }}</span></p>
+                </td>
+                <td width=336 valign=top
+                    style='width:230.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:"Times New Roman",serif;margin-left:105;'>&nbsp;
+                            {{ $catatanwalas->nilai_ekstra }}</span></p>
+                </td>
+            </tr>
+        </table>
+
+
+        <p class=MsoNoSpacing style='line-height:150%'><b><span
+                    style='font-size:
+  12.0pt;line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+        </p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+            <p class=MsoNoSpacing style='line-height:150%'><b><span
+                        style='font-size:
+  12.0pt;line-height:150%;font-family:"Times New Roman",serif'>D.
+                        Prestasi</span></b></p>
+        </table>
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr>
+                <td width=32 valign=top
+                    style='width:24.25pt;border:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>No</span></b></p>
+                </td>
+                <td width=640 valign=top
+                    style='width:468.2pt;border:solid windowtext 1.0pt;
+  border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                                style='font-family:"Times New Roman",serif'>Prestasi</span></b></p>
+                </td>
+            </tr>
+            <tr>
+                <td width=32 valign=top
+                    style='width:24.25pt;border:solid windowtext 1.0pt;
+  border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:"Times New Roman",serif;margin-left:2;'>&nbsp; 1 </span></p>
+                </td>
+                <td width=640 valign=top
+                    style='width:468.2pt;border-top:none;border-left:
+  none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+  padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:"Times New Roman",serif'class="uppercase-text">&nbsp;
+                            {{ $catatanwalas->prestasi }} </span></p>
+                </td>
+            </tr>
+        </table>
+        <p class=MsoNoSpacing style='line-height:150%'><b><span
+                    style='font-family:
+  "Times New Roman",serif'>&nbsp;</span></b></p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+            <p class=MsoNoSpacing style='line-height:150%'><b><span
+                        style='font-size:
+  12.0pt;line-height:150%;font-family:"Times New Roman",serif'>E.
+                        Ketidakhadiran</span></b></p>
+        </table>
+
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr>
+                <td width=332 valign=top
+                    style='width:249.3pt;border:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><b><span
+                                style='font-family:
+    "Times New Roman",serif'>Sakit</span></b></p>
+                </td>
+                <td width=86 valign=top
+                    style='width:64.15pt;border:solid windowtext 1.0pt;
+    border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:
+    150%'><span
+                            style='font-family:"Times New Roman",serif'> {{ $catatanwalas->sakit }} </span></p>
+                </td>
+                <td width=255 valign=top
+                    style='width:167.0pt;border:solid windowtext 1.0pt;
+    border-left:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:
+    "Times New Roman",serif'>Hari</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td width=332 valign=top
+                    style='width:249.3pt;border:solid windowtext 1.0pt;
+    border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><b><span
+                                style='font-family:
+    "Times New Roman",serif'>Izin</span></b></p>
+                </td>
+                <td width=86 valign=top
+                    style='width:64.15pt;border-top:none;border-left:
+    none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:
+    150%'><span
+                            style='font-family:"Times New Roman",serif'>{{ $catatanwalas->izin }}</span></p>
+                </td>
+                <td width=255 valign=top
+                    style='width:167.0pt;border-top:none;border-left:
+    none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:
+    "Times New Roman",serif'>Hari </span></p>
+                </td>
+            </tr>
+            <tr>
+                <td width=332 valign=top
+                    style='width:249.3pt;border:solid windowtext 1.0pt;
+    border-top:none;padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><b><span
+                                style='font-family:
+    "Times New Roman",serif'>Alfa</span></b></p>
+                </td>
+                <td width=86 valign=top
+                    style='width:64.15pt;border-top:none;border-left:
+    none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing align=center style='text-align:center;line-height:
+    150%'><span
+                            style='font-family:"Times New Roman",serif'>{{ $catatanwalas->alfa }}</span></p>
+                </td>
+                <td width=255 valign=top
+                    style='width:167.0pt;border-top:none;border-left:
+    none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:
+    "Times New Roman",serif'>Hari</span></p>
+                </td>
+            </tr>
+        </table>
+        <p class=MsoNoSpacing style='line-height:150%'><b><span
+                    style='font-family:
+  "Times New Roman",serif'>&nbsp;</span></b></p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+            <p class=MsoNoSpacing style='line-height:150%'><b><span
+                        style='font-size:
+  12.0pt;line-height:150%;font-family:"Times New Roman",serif'>F. Catatan
+                        Wali
+                        Kelas</span></b></p>
+        </table>
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr style='height:74.8pt'>
+                <td width=673 valign=top
+                    style='width:504.5pt;border:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt;height:74.8pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><span
+                            style='font-family:
+    "Times New Roman",serif'>&nbsp; {{ $catatanwalas->catatan }}
+                        </span></p>
+                </td>
+            </tr>
+        </table>
+        <p class=MsoNoSpacing style='line-height:150%'><b><span
+                    style='font-family:
+  "Times New Roman",serif'>&nbsp;</span></b></p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
+            style='width:514.85pt;border-collapse:collapse;border:none'>
+            <p class=MsoNoSpacing style='line-height:150%'><b><span
+                        style='font-size:
+  12.0pt;line-height:150%;font-family:"Times New Roman",serif'>G. Tanggapan
+                        Oranga Tua/Wali</span></b></p>
+        </table>
+        <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0 style='border-collapse:collapse;border:none'>
+            <tr style='height:74.8pt'>
+                <td width=673 valign=top
+                    style='width:504.5pt;border:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt;height:74.8pt'>
+                    <p class=MsoNoSpacing style='line-height:150%'><b><span
+                                style='font-family:
+    "Times New Roman",serif'>&nbsp;</span></b></p>
+                </td>
+            </tr>
+        </table>
+        <p class=MsoNoSpacing style='line-height:150%'><b><span
+                    style='font-family:
+  "Times New Roman",serif'>&nbsp;</span></b></p>
+
+        @if ($rombelsiswa->rombels->tahuns->semester == 'Genap' || $rombelsiswa->rombels->kelass->tingkat == ['x', 'xi'])
+            <table class=MsoTableGrid border=1 cellspacing=0 cellpadding=0
+                style='border-collapse:collapse;border:none'>
+                <tr>
+                    <td width=673 valign=top
+                        style='width:504.5pt;border:solid windowtext 1.0pt;
+    padding:0cm 5.4pt 0cm 5.4pt'>
+                        <p class=MsoNoSpacing style='line-height:150%'><span
+                                style='font-family:
+    "Times New Roman",serif'>Keterangan Kenaikan Kelas:
+                                @php
+                                    $rapor = App\Models\Rapor::where('id_rombelsiswa', $rombelsiswa->id)->first();
+                                @endphp
+                                @if ($rapor->naik_kelas == '1')
+                                    <b>NAIK</b>
+                                    ke
+                                    kelas
+                                    {{ $rombelsiswa->rombels->kelass->tingkat }}I
+                                @elseif ($rapor->naik_kelas == '0')
+                                    <b>TIDAK NAIK KELAS</b>
+                                @endif
+
+                            </span></p>
+                    </td>
+                </tr>
+            </table>
+        @endif
+
+        <p class=MsoNoSpacing><b><span style='font-size:10.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b>
+        </p>
 
         <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
             style='margin-left:-7.1pt;border-collapse:collapse;border:none'>
@@ -1035,7 +1890,7 @@
                     <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'><span
                             style='font-size:12.0pt;font-family:"Times New Roman",serif'>Mengetahui </span></p>
                     <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'><span
-                            style='font-size:12.0pt;font-family:"Times New Roman",serif'>Kepala Madrasah</span></p>
+                            style='font-size:12.0pt;font-family:"Times New Roman",serif'>Orang Tua</span></p>
                     <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'><span
                             style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></p>
                     <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'><span
@@ -1047,10 +1902,16 @@
                     <p class=MsoNormal style='margin-bottom:0cm;line-height:normal'
                         style="text-transform: capitalize;"><span
                             style='font-size:12.0pt;font-family:"Times New Roman",serif'> @php
-                                $user = App\Models\User::where('role', '2')->first();
+
+                                $orangtua = App\Models\Orangtua::where('id_siswa', $rombelsiswa->siswas->id)->first();
 
                             @endphp
-                            {{ $user->name }}</span></p>
+                            @if ($orangtua)
+                                {{ $orangtua->nama }}
+                            @else
+                                {{ $rombelsiswa->siswas->nama_ayah }}
+                            @endif
+                        </span></p>
                 </td>
                 <td width=195 colspan=2 valign=top style='width:146.5pt;padding:0cm 5.4pt 0cm 5.4pt;
   height:93.75pt'>

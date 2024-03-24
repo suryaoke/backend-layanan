@@ -6,6 +6,7 @@ use App\Exports\LeggerExport;
 use App\Http\Controllers\Controller;
 use App\Models\Jurusan;
 use App\Models\Kelas;
+use App\Models\Rapor;
 use App\Models\Rombel;
 use App\Models\Rombelsiswa;
 use App\Models\Seksi;
@@ -206,11 +207,129 @@ class RaporController extends Controller
     {
         $rombelsiswa = Rombelsiswa::where('id', $id)->first();
 
-        $fileName = 'Nilai Siswa ' . $rombelsiswa->nama . ' Nisn ' . $rombelsiswa->nisn . '.pdf';
+        $seksiA = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->where('mapels.jenis', 'A')
+            ->orderby('mapels.nama')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
 
-        // Menggunakan kelas PDF dari paket Barryvdh\DomPDF\PDF
-        $pdf = PDF::loadView('backend.data.rapor.nilai_pdf', compact('rombelsiswa'));
+        $seksiB = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->where('mapels.jenis', 'B')
+            ->orderby('mapels.nama')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
+
+        $seksiC = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->where('mapels.jenis', 'C')
+            ->orderby('mapels.nama')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
+
+        $seksiall = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
+
+        $fileName = 'Nilai Siswa ' . $rombelsiswa->siswas->nama . ' Nisn ' . $rombelsiswa->siswas->nisn . '.pdf';
+
+
+        $pdf = PDF::loadView('backend.data.rapor.nilai_pdf', compact('seksiall', 'rombelsiswa', 'seksiA', 'seksiB', 'seksiC', 'id'));
 
         return $pdf->download($fileName);
+    }
+
+    public function RaporSiswaPdf($id)
+    {
+        $rombelsiswa = Rombelsiswa::where('id', $id)->first();
+
+        $seksiA = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->where('mapels.jenis', 'A')
+            ->orderby('mapels.nama')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
+
+        $seksiB = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->where('mapels.jenis', 'B')
+            ->orderby('mapels.nama')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
+
+        $seksiC = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->join('jadwalmapels', 'seksis.id_jadwal', '=', 'jadwalmapels.id')
+            ->join('pengampus', 'jadwalmapels.id_pengampu', '=', 'pengampus.id')
+            ->join('mapels', 'pengampus.id_mapel', '=', 'mapels.id')
+            ->where('mapels.jenis', 'C')
+            ->orderby('mapels.nama')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
+
+        $seksiall = Seksi::join('rombels', 'seksis.id_rombel', '=', 'rombels.id')
+            ->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+            ->where('rombelsiswas.id', $id)
+            ->select('seksis.*') // 
+            ->get();
+
+        $fileName = 'Rapor Siswa ' . $rombelsiswa->siswas->nama . ' Nisn ' . $rombelsiswa->siswas->nisn . '.pdf';
+
+
+        $pdf = PDF::loadView('backend.data.rapor.rapor_pdf', compact('seksiall', 'rombelsiswa', 'seksiA', 'seksiB', 'seksiC', 'id'));
+
+        return $pdf->download($fileName);
+    }
+
+    public function NaikKelas($id)
+    {
+
+        Rapor::where('id_rombelsiswa', $id)
+
+            ->update(['naik_kelas' => 1]);
+
+        $notification = array(
+            'message' => 'Siswa Naik Kelas',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
+    }
+
+    public function TinggalKelas($id)
+    {
+
+        Rapor::where('id_rombelsiswa', $id)
+
+            ->update(['naik_kelas' => 0]);
+
+        $notification = array(
+            'message' => 'Siswa Tinggal Kelas',
+            'alert-type' => 'success'
+        );
+        return redirect()->back()->with($notification);
     }
 }

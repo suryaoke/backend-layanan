@@ -96,6 +96,9 @@
                                         <th class="whitespace-nowrap">JK</th>
                                         <th class="whitespace-nowrap">Kelas</th>
                                         <th class="whitespace-nowrap">TTL</th>
+                                        @if ($datarombelsiswa->rombels->tahuns->semester == 'Genap')
+                                            <th class="whitespace-nowrap">Naik Kelas</th>
+                                        @endif
                                         <th class="whitespace-nowrap">Action</th>
 
                                 </thead>
@@ -123,13 +126,38 @@
                                             <td class="whitespace-nowrap" style="text-transform: capitalize;">
                                                 {{ $item->siswas->tempat }},
                                                 {{ $item->siswas->tanggal }} </td>
+                                            @if ($item->rombels->tahuns->semester == 'Genap')
+                                                <td class="whitespace-nowrap" style="text-transform: capitalize;">
+                                                    <div class="ml-4">
+                                                        @php
+                                                            $rapor = App\Models\Rapor::where(
+                                                                'id_rombelsiswa',
+                                                                $item->id,
+                                                            )->first();
+                                                        @endphp
+
+                                                        @if ($rapor->naik_kelas == 1)
+                                                            <a href="{{ route('tinggal.kelas', $item->id) }}"
+                                                                class="text-success  mr-1 mb-2">
+                                                                <i data-lucide="check" class="w-6 h-6"></i>
+                                                            </a>
+                                                        @elseif ($rapor->naik_kelas == 0)
+                                                            <a href="{{ route('naik.kelas', $item->id) }}"
+                                                                class=" text-danger mr-1 mb-2">
+                                                                <i data-lucide="x" class="w-6 h-6"></i>
+                                                            </a>
+                                                        @endif
+
+                                                    </div>
+                                            @endif
+                                            </td>
                                             <td class="whitespace-nowrap">
 
                                                 <a href="{{ route('nilai.pdf', $item->id) }}"
                                                     class="btn btn-primary mr-1 mb-2">
                                                     <i data-lucide="printer" class="w-4 h-4"></i>&nbsp;Nilai
                                                 </a>
-                                                <a href="{{ route('siswa.walas.edit', $item->siswas->id) }}"
+                                                <a href="{{ route('rapor.pdf', $item->id) }}"
                                                     class="btn btn-success mr-1 mb-2">
                                                     <i data-lucide="printer" class="w-4 h-4"></i>&nbsp;Rapor
                                                 </a>

@@ -16,6 +16,17 @@
             panose-1: 2 15 5 2 2 2 4 3 2 4;
         }
 
+        body {
+            background-image: url('{{ asset('backend/dist/images/kemenag.png') }}');
+
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+            background-size: 30%;
+            opacity: 0.1;
+            /* Ubah opasitas sesuai kebutuhan */
+        }
+
         /* Style Definitions */
         p.MsoNormal,
         li.MsoNormal,
@@ -63,6 +74,10 @@
 
         .uppercase-text {
             text-transform: capitalize;
+        }
+
+        .page-break {
+            page-break-before: always;
         }
         -->
     </style>
@@ -187,21 +202,26 @@
                 style='font-size:12.0pt;
 line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span></p>
 
-        <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
-                    style='font-size:16.0pt;line-height:150%;font-family:"Times New Roman",serif'>Legger
-                    Nilai</span></b></p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=983
+            style='width:26.0cm;border-collapse:collapse;border:none'>
+            <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                        style='font-size:16.0pt;line-height:150%;font-family:"Times New Roman",serif'>Legger
+                        Nilai</span></b></p>
 
-        <p class=MsoNormal><span
-                style='font-size:12.0pt;line-height:107%;font-family:
-"Times New Roman",serif'>A.Pengetahuan</span></p>
+            <p class=MsoNormal><span
+                    style='font-size:12.0pt;line-height:107%;font-family:
+"Times New Roman",serif'>A.Pengetahuan</span>
+            </p>
 
-        <p class=MsoNormal><span style='font-size:12.0pt;line-height:107%;font-family:
+            <p class=MsoNormal><span
+                    style='font-size:12.0pt;line-height:107%;font-family:
 "Times New Roman",serif'>Kriteria
-                Ketuntasan Minimal = @php
-                    $kkm = App\Models\Kkm::where('id_kelas', $dataseksi->rombels->kelass->tingkat)->first();
-                @endphp
+                    Ketuntasan Minimal = @php
+                        $kkm = App\Models\Kkm::where('id_kelas', $dataseksi->rombels->kelass->tingkat)->first();
+                    @endphp
 
-                {{ $kkm->kkm }}</span></p>
+                    {{ $kkm->kkm }}</span></p>
+        </table>
 
         <table id="datatable" class="table table-sm" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
             <thead>
@@ -345,7 +365,7 @@ line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span></p>
             </tr>
         </table>
 
-        <p class=MsoNormal>&nbsp;</p>
+        <div class="page-break"></div>
 
         <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=992
             style='width:744.2pt;border-collapse:collapse;border:none'>
@@ -462,22 +482,23 @@ line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span></p>
         <p class=MsoNoSpacing style='line-height:150%'><span
                 style='font-size:12.0pt;
 line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span></p>
+        <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=983
+            style='width:26.0cm;border-collapse:collapse;border:none'>
+            <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
+                        style='font-size:16.0pt;line-height:150%;font-family:"Times New Roman",serif'>Legger
+                        Nilai</span></b></p>
 
-        <p class=MsoNoSpacing align=center style='text-align:center;line-height:150%'><b><span
-                    style='font-size:16.0pt;line-height:150%;font-family:"Times New Roman",serif'>Legger
-                    Nilai</span></b></p>
-
-        <p class=MsoNormal><span
-                style='font-size:12.0pt;line-height:107%;font-family:
+            <p class=MsoNormal><span
+                    style='font-size:12.0pt;line-height:107%;font-family:
 "Times New Roman",serif'>B.Keterampilan</span>
-        </p>
+            </p>
 
-        <p class=MsoNormal><span
-                style='font-size:12.0pt;line-height:107%;font-family:
+            <p class=MsoNormal><span
+                    style='font-size:12.0pt;line-height:107%;font-family:
 "Times New Roman",serif'>Kriteria Ketuntasan
-                Minimal = {{ $kkm->kkm }}</span></p>
+                    Minimal = {{ $kkm->kkm }}</span></p>
 
-
+        </table>
 
         <table id="datatable1" class="table table-sm"
             style="border-collapse: collapse; border-spacing: 0; width: 100%;">

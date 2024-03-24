@@ -478,6 +478,12 @@ Route::controller(RaporController::class)->middleware(['auth'])->group(function 
     Route::post('legger/pdf/', 'LeggerPdf')->name('legger.pdf');
 
     Route::get('nilai/siswa/{id}', 'NilaiSiswaPdf')->name('nilai.pdf');
+
+    Route::get('rapor/siswa/{id}', 'RaporSiswaPdf')->name('rapor.pdf');
+
+    Route::get('siswa/naik/kelas/{id}', 'NaikKelas')->name('naik.kelas');
+
+    Route::get('siswa/tinggal/kelas/{id}', 'TinggalKelas')->name('tinggal.kelas');
 });
 
 Route::get('/', function () {
