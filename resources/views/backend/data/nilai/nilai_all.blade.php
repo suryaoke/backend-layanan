@@ -353,6 +353,13 @@
                                     ->where('id_seksi', $dataseksi->id)
                                     ->avg('nilai_pengetahuan');
 
+                                $nilaiTertinggi = App\Models\Nilai::select('catatan_pengetahuan', 'nilai_pengetahuan')
+                                    ->where('id_rombelsiswa', $item->id)
+                                    ->where('type_nilai', 1)
+                                    ->where('id_seksi', $dataseksi->id)
+                                    ->orderByDesc('nilai_pengetahuan')
+                                    ->first();
+
                                 $nilaiharian_bulat = round($nilaiharian);
 
                                 // Gunakan nilaiharian_bulat untuk penggunaan selanjutnya
@@ -406,7 +413,31 @@
                                 </td>
                                 <td class="whitespace-nowrap"> {{ $rapor_bulat }} </td>
                                 <td class="whitespace-nowrap"> {{ $predikat }} </td>
-                                <td class="whitespace-nowrap"> {{ $item->siswas->jk }} </td>
+                                <td class="whitespace-nowrap">
+
+
+                                    @if ($nilaiharian && $nilaipas)
+                                        Memiliki kemampuan
+                                        @if ($predikat == 'A')
+                                            sangat baik
+                                        @elseif ($predikat == 'B')
+                                            baik
+                                        @elseif ($predikat == 'C')
+                                            cukup
+                                        @elseif ($predikat == 'D')
+                                            kurang
+                                        @endif
+                                        terutama kemampuan dalam
+                                        {{ $nilaiTertinggi->catatan_pengetahuan }}.
+                                    @elseif ($nilaiharian)
+                                        Memiliki kemampuan belum optimal pada seluruh materi.
+                                    @elseif ($nilaipas)
+                                        Memiliki kemampuan belum optimal pada seluruh materi.
+                                    @else
+                                        Memiliki kemampuan belum optimal pada seluruh materi.
+                                    @endif
+
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -586,6 +617,16 @@
                                     ->where('id_seksi', $dataseksi->id)
                                     ->avg('nilai_keterampilan');
 
+                                $nilaiTertinggiketerampilan = App\Models\Nilai::select(
+                                    'catatan_keterampilan',
+                                    'nilai_keterampilan',
+                                )
+                                    ->where('id_rombelsiswa', $item->id)
+                                    ->where('type_nilai', 3)
+                                    ->where('id_seksi', $dataseksi->id)
+                                    ->orderByDesc('nilai_keterampilan')
+                                    ->first();
+
                                 $nilaiketerampilan_bulat = round($nilaiketerampilan);
                                 $kkm1 = App\Models\Kkm::where('id_kelas', $item->rombels->kelass->tingkat)->first();
 
@@ -624,7 +665,23 @@
                                     {{ $predikat1 }}
                                 </td>
                                 <td class="whitespace-nowrap">
-                                    -
+
+                                    @if ($nilaiTertinggiketerampilan)
+                                        Memiliki kemampuan
+                                        @if ($predikat1 == 'A')
+                                            sangat baik
+                                        @elseif ($predikat1 == 'B')
+                                            baik
+                                        @elseif ($predikat1 == 'C')
+                                            cukup
+                                        @elseif ($predikat1 == 'D')
+                                            kurang
+                                        @endif
+                                        terutama kemampuan dalam
+                                        {{ $nilaiTertinggiketerampilan->catatan_keterampilan }}.
+                                    @else
+                                        Memiliki kemampuan belum optimal pada seluruh materi.
+                                    @endif
                                 </td>
 
                             </tr>

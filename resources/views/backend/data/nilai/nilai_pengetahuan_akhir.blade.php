@@ -30,7 +30,7 @@
 
             <div class="flex mb-4 mt-4">
 
-                <a class="btn btn-danger btn-block mr-1" href="{{ route('nilai.all', $dataseksi->id) }}">
+                <a class="btn btn-danger btn-block mr-1" href="{{ route('nilai.alll', $dataseksi->id) }}">
                     <span class="glyphicon glyphicon-download"></span> <i data-lucide="arrow-left"
                         class="w-4 h-4"></i>&nbsp;Kembali
                 </a>
@@ -473,4 +473,83 @@
             </div>
         </div>
     </div>
+
+
+
+    <!-- Upload Nlia Pas --> <!-- BEGIN: Modal Content -->
+    <div id="header1-footer-modal-preview" class="modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content"> <!-- BEGIN: Modal Header -->
+                <div class="modal-header">
+                    <h2 class="font-medium text-base mr-auto">Upload Data Nilai PAS</h2>
+
+                    <form method="post" action="{{ route('nilai.pas.template') }}">
+                        @csrf
+
+                        <select name="id" id="tahun" class="form-select w-full" required>
+
+                            @php
+                                $userId = Auth::user()->id;
+                                $seksiids = App\Models\Seksi::join(
+                                    'jadwalmapels',
+                                    'jadwalmapels.id',
+                                    '=',
+                                    'seksis.id_jadwal',
+                                )
+                                    ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                                    ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                                    ->join('kelas', 'kelas.id', '=', 'pengampus.kelas')
+                                    ->join('mapels', 'mapels.id', '=', 'pengampus.id_mapel')
+                                    ->where('mapels.id', '=', $dataseksi->jadwalmapels->pengampus->mapels->id)
+                                    ->where('kelas.id', '=', $dataseksi->jadwalmapels->pengampus->kelass->id)
+                                    ->where('gurus.id_user', '=', $userId)
+                                    ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                                    ->get();
+                            @endphp
+
+                            @foreach ($seksiids as $item)
+                                <option value="{{ $item->id }}">
+                                    {{ $item->semesters->semester }} - {{ $item->semesters->tahun }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        <!-- BEGIN: Modal Footer -->
+                        <div class="mt-1">
+                            <button type="submit" class="btn btn-outline-secondary hidden sm:flex"> <i
+                                    data-lucide="download" class="w-4 h-4 mr-2"></i> Template</button>
+                        </div>
+                    </form>
+
+
+                </div> <!-- END: Modal Header --> <!-- BEGIN: Modal Body -->
+                <div class="modal-body grid grid-cols-12 gap-4 gap-y-3">
+                    <div class="col-span-12 sm:col-span-12">
+                        <form
+                            data-file-types="application/vnd.ms-excel|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            class="dropzone flex justify-center items-center" action="{{ route('pas.upload') }}"
+                            method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" value="{{ $dataseksi->id }}" name="id_seksi">
+                            <input type="hidden" value="{{ $dataseksi->semester }}" name="id_tahunajar">
+
+                            <div class="fallback"> <input name="file" type="file" /> </div>
+
+                            <div class="dz-message" data-dz-message>
+                                <div class="text-center">
+                                    <img alt="Midone - HTML Admin Template" class="w-10 mx-auto"
+                                        src="{{ asset('backend/dist/images/excel.png') }}">
+                                    <div class="text-lg font-medium">Drop files here or click to upload.</div>
+                                </div>
+                            </div>
+                    </div>
+
+                </div> <!-- END: Modal Body --> <!-- BEGIN: Modal Footer -->
+                <div class="modal-footer"> <a href="{{ route('nilai.pengetahuan.akhir', $dataseksi->id) }}"
+                        data-tw-dismiss="modal" class="btn btn-danger w-20 mr-1">Cancel</a> <button type="submit"
+                        class="btn btn-primary w-20">Save</button> </div> <!-- END: Modal Footer -->
+                </form>
+            </div>
+        </div>
+    </div> <!-- END: Modal Content -->
 @endsection

@@ -122,7 +122,9 @@
      $ekstra = URL::route('ekstra.all');
      $sikap = URL::route('sikap.all');
      $statusnilai = URL::route('status.nilai');
-      $raporsiswa = URL::route('rapor.siswa');
+     $raporsiswa = URL::route('rapor.siswa');
+     $rapordatasiswa = URL::route('rapor.data.siswa');
+      $rapordatasiswaorangtua = URL::route('rapor.data.siswa.orangtua');
 
  @endphp
 
@@ -845,12 +847,26 @@
 
              </li>
 
+             <li>
+                 @if ($url == $rapordatasiswa)
+                     <a href="{{ route('rapor.data.siswa') }}" class="side-menu  side-menu--active">
+                     @else
+                         <a href="{{ route('rapor.data.siswa') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+                 <div class="side-menu__title">
+                     Rapor
+                 </div>
+                 </a>
+
+             </li>
+
 
 
 
 
          @endif
-         {{--  // end bagian Siswa//  --}}
+         {{--  // end bagian orang tua//  --}}
 
 
          {{--  // bagian  Orang tua//  --}}
@@ -870,12 +886,25 @@
 
              </li>
 
+             <li>
+                 @if ($url == $rapordatasiswaorangtua)
+                     <a href="{{ route('rapor.data.siswa.orangtua') }}" class="side-menu  side-menu--active">
+                     @else
+                         <a href="{{ route('rapor.data.siswa.orangtua') }}" class="side-menu ">
+                 @endif
+                 <div class="side-menu__icon"> <i data-lucide="file-text"></i> </div>
+                 <div class="side-menu__title">
+                     Rapor
+                 </div>
+                 </a>
+
+             </li>
 
 
 
 
          @endif
-         {{--  // end bagian Siswa//  --}}
+
      </ul>
 
  </nav>

@@ -1509,22 +1509,139 @@
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;
+                                style='font-family:"Times New Roman",serif'>
                                 {{ $itemA->jadwalmapels->pengampus->mapels->nama }}</span></p>
                     </td>
+
+
+                    @php
+                        $nilaiharian = App\Models\Nilai::where('id_seksi', $itemA->id)
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 1)
+                            ->avg('nilai_pengetahuan');
+
+                        $nilaiTertinggi = App\Models\Nilai::select('catatan_pengetahuan', 'nilai_pengetahuan')
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 1)
+                            ->where('id_seksi', $itemA->id)
+                            ->orderByDesc('nilai_pengetahuan')
+                            ->first();
+
+                        $nilaiharian_bulat = round($nilaiharian);
+                        $nilaipas = App\Models\Nilai::where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 2)
+                            ->where('id_seksi', $itemA->id)
+                            ->first();
+
+                        $rapor = ($nilaiharian_bulat + optional($nilaipas)->nilai_pengetahuan_akhir) / 2;
+
+                        $pengetahuan = round($rapor);
+
+                        $c = $kkm->kkm + 6;
+                        $b = $c + 6;
+                        $a = $b + 6;
+
+                        if ($pengetahuan < $kkm->kkm) {
+                            $predikatpengetahuanA = 'D';
+                        } elseif ($pengetahuan < $c) {
+                            $predikatpengetahuanA = 'C';
+                        } elseif ($pengetahuan < $b) {
+                            $predikatpengetahuanA = 'B';
+                        } elseif ($pengetahuan < $a) {
+                            $predikatpengetahuanA = 'A';
+                        } else {
+                            $predikatpengetahuanA = '-';
+                        }
+                    @endphp
                     <td width=198 valign=top
                         style='width:148.85pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                                style='font-family:"Times New Roman",serif'>
+
+                                @if ($nilaiharian && $nilaipas)
+                                    Memiliki kemampuan
+                                    @if ($predikatpengetahuanA == 'A')
+                                        sangat baik
+                                    @elseif ($predikatpengetahuanA == 'B')
+                                        baik
+                                    @elseif ($predikatpengetahuanA == 'C')
+                                        cukup
+                                    @elseif ($predikatpengetahuanA == 'D')
+                                        kurang
+                                    @endif
+                                    terutama kemampuan dalam
+                                    {{ $nilaiTertinggi->catatan_pengetahuan }}.
+                                @elseif ($nilaiharian)
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @elseif ($nilaipas)
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @else
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @endif
+
+                            </span></p>
                     </td>
+
+
+
+                    @php
+                        $nilaiketerampilan = App\Models\Nilai::where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 3)
+                            ->where('id_seksi', $itemA->id)
+                            ->avg('nilai_keterampilan');
+
+                        $nilaiTertinggiketerampilan = App\Models\Nilai::select(
+                            'catatan_keterampilan',
+                            'nilai_keterampilan',
+                        )
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 3)
+                            ->where('id_seksi', $itemA->id)
+                            ->orderByDesc('nilai_keterampilan')
+                            ->first();
+
+                        $nilaiketerampilan_bulat = round($nilaiketerampilan);
+
+                        if ($nilaiketerampilan_bulat < $kkm->kkm) {
+                            $predikatketerampilanA = 'D';
+                        } elseif ($nilaiketerampilan_bulat < $c) {
+                            $predikatketerampilanA = 'C';
+                        } elseif ($nilaiketerampilan_bulat < $b) {
+                            $predikatketerampilanA = 'B';
+                        } elseif ($nilaiketerampilan_bulat < $a) {
+                            $predikatketerampilanA = 'A';
+                        } else {
+                            $predikatketerampilanA = '-';
+                        }
+                    @endphp
+
+
                     <td width=196 valign=top
                         style='width:147.15pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                                style='font-family:"Times New Roman",serif'>
+
+                                @if ($nilaiTertinggiketerampilan)
+                                    Memiliki kemampuan
+                                    @if ($predikatketerampilanA == 'A')
+                                        sangat baik
+                                    @elseif ($predikatketerampilanA == 'B')
+                                        baik
+                                    @elseif ($predikatketerampilanA == 'C')
+                                        cukup
+                                    @elseif ($predikatketerampilanA == 'D')
+                                        kurang
+                                    @endif
+                                    terutama kemampuan dalam
+                                    {{ $nilaiTertinggiketerampilan->catatan_keterampilan }}.
+                                @else
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @endif
+                            </span></p>
                     </td>
                 </tr>
             @endforeach
@@ -1552,25 +1669,136 @@
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;
+                                style='font-family:"Times New Roman",serif'>
                                 {{ $itemB->jadwalmapels->pengampus->mapels->nama }}</span></p>
                     </td>
+
+                    @php
+                        $nilaiharianB = App\Models\Nilai::where('id_seksi', $itemB->id)
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 1)
+                            ->avg('nilai_pengetahuan');
+                        $nilaiharian_bulatB = round($nilaiharianB);
+
+                        $nilaiTertinggi = App\Models\Nilai::select('catatan_pengetahuan', 'nilai_pengetahuan')
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 1)
+                            ->where('id_seksi', $itemB->id)
+                            ->orderByDesc('nilai_pengetahuan')
+                            ->first();
+
+                        $nilaipasB = App\Models\Nilai::where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 2)
+                            ->where('id_seksi', $itemB->id)
+                            ->first();
+
+                        $raporB = ($nilaiharian_bulatB + optional($nilaipasB)->nilai_pengetahuan_akhir) / 2;
+
+                        $pengetahuanB = round($raporB);
+
+                        if ($pengetahuanB < $kkm->kkm) {
+                            $predikatpengetahuanB = 'D';
+                        } elseif ($pengetahuanB < $c) {
+                            $predikatpengetahuanB = 'C';
+                        } elseif ($pengetahuanB < $b) {
+                            $predikatpengetahuanB = 'B';
+                        } elseif ($pengetahuanB < $a) {
+                            $predikatpengetahuanB = 'A';
+                        } else {
+                            $predikatpengetahuanB = '-';
+                        }
+                    @endphp
                     <td width=198 valign=top
                         style='width:148.85pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                                style='font-family:"Times New Roman",serif'>
+
+                                @if ($nilaiharian && $nilaipas)
+                                    Memiliki kemampuan
+                                    @if ($predikatpengetahuanB == 'A')
+                                        sangat baik
+                                    @elseif ($predikatpengetahuanB == 'B')
+                                        baik
+                                    @elseif ($predikatpengetahuanB == 'C')
+                                        cukup
+                                    @elseif ($predikatpengetahuanB == 'D')
+                                        kurang
+                                    @endif
+                                    terutama kemampuan dalam
+                                    {{ $nilaiTertinggi->catatan_pengetahuan }}.
+                                @elseif ($nilaiharian)
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @elseif ($nilaipas)
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @else
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @endif
+                            </span></p>
                     </td>
+
+                    @php
+                        $nilaiketerampilanB = App\Models\Nilai::where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 3)
+                            ->where('id_seksi', $itemB->id)
+                            ->avg('nilai_keterampilan');
+
+                        $nilaiTertinggiketerampilan = App\Models\Nilai::select(
+                            'catatan_keterampilan',
+                            'nilai_keterampilan',
+                        )
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 3)
+                            ->where('id_seksi', $itemB->id)
+                            ->orderByDesc('nilai_keterampilan')
+                            ->first();
+
+                        $nilaiketerampilan_bulatB = round($nilaiketerampilanB);
+
+                        if ($nilaiketerampilan_bulatB < $kkm->kkm) {
+                            $predikatketerampilanB = 'D';
+                        } elseif ($nilaiketerampilan_bulatB < $c) {
+                            $predikatketerampilanB = 'C';
+                        } elseif ($nilaiketerampilan_bulatB < $b) {
+                            $predikatketerampilanB = 'B';
+                        } elseif ($nilaiketerampilan_bulatB < $a) {
+                            $predikatketerampilanB = 'A';
+                        } else {
+                            $predikatketerampilanB = '-';
+                        }
+                    @endphp
+
                     <td width=196 valign=top
                         style='width:147.15pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                                style='font-family:"Times New Roman",serif'>
+                                @if ($nilaiTertinggiketerampilan)
+                                    Memiliki kemampuan
+                                    @if ($predikatketerampilanB == 'A')
+                                        sangat baik
+                                    @elseif ($predikatketerampilanB == 'B')
+                                        baik
+                                    @elseif ($predikatketerampilanB == 'C')
+                                        cukup
+                                    @elseif ($predikatketerampilanB == 'D')
+                                        kurang
+                                    @endif
+                                    terutama kemampuan dalam
+                                    {{ $nilaiTertinggiketerampilan->catatan_keterampilan }}.
+                                @else
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @endif
+                            </span></p>
                     </td>
                 </tr>
             @endforeach
+
+
+
+
             <tr>
                 <td width=670 colspan=4 valign=top
                     style='width:502.75pt;border:solid windowtext 1.0pt;
@@ -1594,26 +1822,142 @@
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;
+                                style='font-family:"Times New Roman",serif'>
                                 {{ $itemC->jadwalmapels->pengampus->mapels->nama }} </span></p>
                     </td>
+
+
+                    @php
+                        $nilaiharianC = App\Models\Nilai::where('id_seksi', $itemC->id)
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 1)
+                            ->avg('nilai_pengetahuan');
+
+                        $nilaiTertinggi = App\Models\Nilai::select('catatan_pengetahuan', 'nilai_pengetahuan')
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 1)
+                            ->where('id_seksi', $itemC->id)
+                            ->orderByDesc('nilai_pengetahuan')
+                            ->first();
+
+                        $nilaiharian_bulatC = round($nilaiharianC);
+
+                        $nilaipasC = App\Models\Nilai::where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 2)
+                            ->where('id_seksi', $itemC->id)
+                            ->first();
+
+                        $raporC = ($nilaiharian_bulatC + optional($nilaipasC)->nilai_pengetahuan_akhir) / 2;
+
+                        $pengetahuanC = round($raporC);
+
+                        if ($pengetahuanC < $kkm->kkm) {
+                            $predikatpengetahuanC = 'D';
+                        } elseif ($pengetahuanC < $c) {
+                            $predikatpengetahuanC = 'C';
+                        } elseif ($pengetahuanC < $b) {
+                            $predikatpengetahuanC = 'B';
+                        } elseif ($pengetahuanC < $a) {
+                            $predikatpengetahuanC = 'A';
+                        } else {
+                            $predikatpengetahuanC = '-';
+                        }
+                    @endphp
+
+
                     <td width=198 valign=top
                         style='width:148.85pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                                style='font-family:"Times New Roman",serif'>
+
+                                @if ($nilaiharian && $nilaipas)
+                                    Memiliki kemampuan
+                                    @if ($predikatpengetahuanC == 'A')
+                                        sangat baik
+                                    @elseif ($predikatpengetahuanC == 'B')
+                                        baik
+                                    @elseif ($predikatpengetahuanC == 'C')
+                                        cukup
+                                    @elseif ($predikatpengetahuanC == 'D')
+                                        kurang
+                                    @endif
+                                    terutama kemampuan dalam
+                                    {{ $nilaiTertinggi->catatan_pengetahuan }}.
+                                @elseif ($nilaiharian)
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @elseif ($nilaipas)
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @else
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @endif
+                            </span></p>
                     </td>
+
+
+                    @php
+                        $nilaiketerampilanC = App\Models\Nilai::where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 3)
+                            ->where('id_seksi', $itemC->id)
+                            ->avg('nilai_keterampilan');
+
+                        $nilaiTertinggiketerampilan = App\Models\Nilai::select(
+                            'catatan_keterampilan',
+                            'nilai_keterampilan',
+                        )
+                            ->where('id_rombelsiswa', $id)
+                            ->where('type_nilai', 3)
+                            ->where('id_seksi', $itemC->id)
+                            ->orderByDesc('nilai_keterampilan')
+                            ->first();
+
+                        $nilaiketerampilan_bulatC = round($nilaiketerampilanC);
+                        if ($nilaiketerampilan_bulatC < $kkm->kkm) {
+                            $predikatketerampilanC = 'D';
+                        } elseif ($nilaiketerampilan_bulatC < $c) {
+                            $predikatketerampilanC = 'C';
+                        } elseif ($nilaiketerampilan_bulatC < $b) {
+                            $predikatketerampilanC = 'B';
+                        } elseif ($nilaiketerampilan_bulatC < $a) {
+                            $predikatketerampilanC = 'A';
+                        } else {
+                            $predikatketerampilanC = '-';
+                        }
+
+                    @endphp
                     <td width=196 valign=top
                         style='width:147.15pt;border-top:none;border-left:
   none;border-bottom:solid windowtext 1.0pt;border-right:solid windowtext 1.0pt;
   padding:0cm 5.4pt 0cm 5.4pt'>
                         <p class=MsoNoSpacing style='line-height:150%'><span
-                                style='font-family:"Times New Roman",serif'>&nbsp;</span></p>
+                                style='font-family:"Times New Roman",serif'>
+                                @if ($nilaiTertinggiketerampilan)
+                                    Memiliki kemampuan
+                                    @if ($predikatketerampilanC == 'A')
+                                        sangat baik
+                                    @elseif ($predikatketerampilanC == 'B')
+                                        baik
+                                    @elseif ($predikatketerampilanC == 'C')
+                                        cukup
+                                    @elseif ($predikatketerampilanC == 'D')
+                                        kurang
+                                    @endif
+                                    terutama kemampuan dalam
+                                    {{ $nilaiTertinggiketerampilan->catatan_keterampilan }}.
+                                @else
+                                    Memiliki kemampuan belum optimal pada seluruh materi.
+                                @endif
+
+                            </span></p>
                     </td>
                 </tr>
             @endforeach
         </table>
+
+
+
+
         <div class="page-break"></div>
         @php
             $catatanwalas = App\Models\CatataWalas::where('id_rombelsiswa', $rombelsiswa->id)->first();

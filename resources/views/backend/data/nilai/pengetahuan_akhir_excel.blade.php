@@ -48,7 +48,7 @@
                       @if ($nilai)
                           {{ $nilai->nilai_pengetahuan_akhir }}
                       @else
-                          -
+                          0
                       @endif
 
 

@@ -464,6 +464,27 @@ Route::controller(NilaiController::class)->middleware(['auth'])->group(function 
     Route::get('/kunci/nilai/{id}', 'KunciNilai')->name('kunci.nilai');
 
     Route::get('buka/kunci/nilai/{id}', 'BukaKunciNilai')->name('buka.kunci');
+
+    Route::post('/nilai/pas/template', 'NilaiPasTemplate')->name('nilai.pas.template');
+
+    Route::post('/nilai/pas/upload', 'PasImport')->name('pas.upload');
+
+    Route::post('/nilai/harian/template', 'NilaiHarianTemplate')->name('nilai.harian.template');
+
+    Route::post('/nilai/harian/upload', 'HarianImport')->name('harian.upload');
+
+    Route::post('/nilai/portofolio/template', 'NilaiPortofolioTemplate')->name('nilai.portofolio.template');
+
+    Route::post('/nilai/portofolio/upload', 'PortofolioImport')->name('portofolio.upload');
+
+    Route::post('/nilai/proyek/template', 'NilaiProyekTemplate')->name('nilai.proyek.template');
+
+    Route::post('/nilai/proyek/upload', 'ProyekImport')->name('proyek.upload');
+
+
+    Route::post('/nilai/unjukkerja/template', 'NilaiUnjukkerjaTemplate')->name('nilai.unjukkerja.template');
+
+    Route::post('/nilai/unjukkerja/upload', 'UnjukkerjaImport')->name('unjukkerja.upload');
 });
 
 
@@ -484,6 +505,10 @@ Route::controller(RaporController::class)->middleware(['auth'])->group(function 
     Route::get('siswa/naik/kelas/{id}', 'NaikKelas')->name('naik.kelas');
 
     Route::get('siswa/tinggal/kelas/{id}', 'TinggalKelas')->name('tinggal.kelas');
+
+    Route::get('/rapor/data/siswa', 'RaporDataSiswa')->name('rapor.data.siswa');
+
+    Route::get('/rapor/data/siswa/orangtua', 'RaporDataSiswaOrangtua')->name('rapor.data.siswa.orangtua');
 });
 
 Route::get('/', function () {

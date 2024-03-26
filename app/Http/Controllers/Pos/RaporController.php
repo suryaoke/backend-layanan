@@ -332,4 +332,168 @@ class RaporController extends Controller
         );
         return redirect()->back()->with($notification);
     }
+
+
+    public function RaporDataSiswa(request $request)
+    {
+
+        $searchTahun = $request->input('searchtahun');
+        $query = Rombelsiswa::query();
+
+        if (!empty($searchTahun)) {
+            $query->whereHas('rombels', function ($teachQuery) use ($searchTahun) {
+                $teachQuery->whereHas('tahuns', function ($courseQuery) use ($searchTahun) {
+                    $courseQuery->where('id', 'LIKE', '%' .   $searchTahun . '%');
+                });
+            });
+        }
+
+        $tanggalSaatIni = Carbon::now();
+
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
+
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
+
+
+            $userId = Auth::user()->id;
+
+            $rombelsiswa = $query
+                ->join('siswas', 'siswas.id', '=', 'rombelsiswas.id_siswa')
+                ->where('siswas.id_user', '=', $userId)
+                ->select('rombelsiswas.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $datarombelsiswa =
+                $rombelsiswa->first();
+        } elseif ($searchTahun) {
+
+            $userId = Auth::user()->id;
+
+            $rombelsiswa = $query->join('siswas', 'siswas.id', '=', 'rombelsiswas.id_siswa')
+                ->where('siswas.id_user', '=', $userId)
+                ->select('rombelsiswas.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $datarombelsiswa =
+                $rombelsiswa->first();
+        } else {
+
+            $userId = Auth::user()->id;
+
+            $rombelsiswa = $query->join('rombels', 'rombelsiswas.id_rombel', '=', 'rombels.id')
+                ->join('siswas', 'siswas.id', '=', 'rombelsiswas.id_siswa')
+                ->where('siswas.id_user', '=', $userId)
+                ->where('rombels.id_tahunjar', $tahunAjarSaatIni->id)
+
+                ->select('rombelsiswas.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $datarombelsiswa =
+                $rombelsiswa->first();
+        }
+
+        $datatahun = Tahunajar::whereHas('rombels', function ($query) use ($userId) {
+            $query->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+                ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+                ->where('siswas.id_user', '=', $userId);
+        })->orderBy('id', 'desc')
+            ->get();
+
+        return view('backend.data.rapor.rapor_siswa', compact('datarombelsiswa', 'datatahun', 'rombelsiswa'));
+    }
+
+    public function RaporDataSiswaOrangtua(request $request)
+    {
+
+        $searchTahun = $request->input('searchtahun');
+        $query = Rombelsiswa::query();
+
+        if (!empty($searchTahun)) {
+            $query->whereHas('rombels', function ($teachQuery) use ($searchTahun) {
+                $teachQuery->whereHas('tahuns', function ($courseQuery) use ($searchTahun) {
+                    $courseQuery->where('id', 'LIKE', '%' .   $searchTahun . '%');
+                });
+            });
+        }
+
+        $tanggalSaatIni = Carbon::now();
+
+        // Mendapatkan semester saat ini berdasarkan bulan
+        $semesterSaatIni = ($tanggalSaatIni->month >= 1 && $tanggalSaatIni->month <= 6) ? 'Genap' : 'Ganjil';
+
+        // Mendapatkan tahun saat ini
+        $tahunSaatIni = $tanggalSaatIni->format('Y');
+
+        // Mendapatkan data tahun ajar yang sesuai dengan tahun dan semester saat ini
+        $tahunAjarSaatIni = Tahunajar::where('tahun', 'like', '%' . $tahunSaatIni . '%')
+            ->where('semester', $semesterSaatIni)
+            ->first();
+        $tahunAjartidakSaatIni = Tahunajar::whereNotIn('tahun', [$tahunSaatIni])
+            ->where('semester', $semesterSaatIni)
+            ->first();
+
+        if (
+            $searchTahun ==  $tahunAjartidakSaatIni->id
+        ) {
+
+
+            $userId = Auth::user()->id;
+
+            $rombelsiswa = $query
+                ->join('siswas', 'siswas.id', '=', 'rombelsiswas.id_siswa')
+                ->join('orang_tuas', 'siswas.id', '=', 'orang_tuas.id_siswa')
+                ->where('orang_tuas.id_user', '=', $userId)
+                ->select('rombelsiswas.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $datarombelsiswa =
+                $rombelsiswa->first();
+        } elseif ($searchTahun) {
+
+            $userId = Auth::user()->id;
+
+            $rombelsiswa = $query
+                ->join('siswas', 'siswas.id', '=', 'rombelsiswas.id_siswa')
+                ->join('orang_tuas', 'siswas.id', '=', 'orang_tuas.id_siswa')
+                ->where('orang_tuas.id_user', '=', $userId)
+                ->select('rombelsiswas.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $datarombelsiswa =
+                $rombelsiswa->first();
+        } else {
+
+            $userId = Auth::user()->id;
+
+            $rombelsiswa = $query->join('rombels', 'rombelsiswas.id_rombel', '=', 'rombels.id')
+                ->join('siswas', 'siswas.id', '=', 'rombelsiswas.id_siswa')
+                ->join('orang_tuas', 'siswas.id', '=', 'orang_tuas.id_siswa')
+                ->where('orang_tuas.id_user', '=', $userId)
+                ->where('rombels.id_tahunjar', $tahunAjarSaatIni->id)
+
+                ->select('rombelsiswas.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $datarombelsiswa =
+                $rombelsiswa->first();
+        }
+
+        $datatahun = Tahunajar::whereHas('rombels', function ($query) use ($userId) {
+            $query->join('rombelsiswas', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+                ->join('siswas', 'rombelsiswas.id_siswa', '=', 'siswas.id')
+                ->join('orang_tuas', 'siswas.id', '=', 'orang_tuas.id_siswa')
+                ->where('orang_tuas.id_user', '=', $userId);
+        })->orderBy('id', 'desc')
+            ->get();
+
+        return view('backend.data.rapor.rapor_siswa', compact('datarombelsiswa', 'datatahun', 'rombelsiswa'));
+    }
 }

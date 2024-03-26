@@ -4,13 +4,24 @@ namespace App\Http\Controllers\Pos;
 
 use App\Exports\KeterampilanExport;
 use App\Exports\KeterampilanPortofolioExport;
+use App\Exports\KeterampilanPortofolioTemplateExport;
 use App\Exports\KeterampilanProyekExport;
+use App\Exports\KeterampilanProyekTemplateExport;
 use App\Exports\KeterampilanUnjukkerjaExport;
+use App\Exports\KeterampilanUnjukkerjaTemplateExport;
 use App\Exports\PengetahuanAakhirExport;
 use App\Exports\PengetahuanAkhirExport;
+use App\Exports\PengetahuanAkhirUploadExport;
 use App\Exports\PengetahuanExport;
 use App\Exports\PengetahuanHarianExport;
+use App\Exports\PengetahuanHarianUploadExport;
 use App\Http\Controllers\Controller;
+use App\Imports\HarianImport;
+use App\Imports\PasImport;
+use App\Imports\PorotofolioImport;
+use App\Imports\PortofolioImport;
+use App\Imports\ProyekImport;
+use App\Imports\UnjukkerjaImport;
 use App\Models\Jurusan;
 use App\Models\Kelas;
 use App\Models\Nilai;
@@ -22,6 +33,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Facades\Excel;
 
 class NilaiController extends Controller
@@ -136,21 +148,38 @@ class NilaiController extends Controller
 
         $userId = Auth::user()->id;
 
+        $route = URL::route('nilai.pengetahuan.harian', ['id' => 33]);
+
+        if ($route) {
 
 
-        $seksi = $query
+            $seksi = $query
 
-            ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
-            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
-            ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
 
-            ->where('seksis.semester', $tahunAjarSaatIni->id)
-            ->where('seksis.id', $id)
-            ->where('gurus.id_user', '=', $userId)
-            ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
-            ->get();
-        $dataseksi = $seksi->first();
 
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        } else {
+
+            $seksi = $query
+
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+
+                ->where('seksis.semester', $tahunAjarSaatIni->id)
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        }
 
         $datatahun = Tahunajar::whereExists(function ($query) {
             $query->select(DB::raw(1))
@@ -194,21 +223,35 @@ class NilaiController extends Controller
             ->first();
 
         $userId = Auth::user()->id;
+        $route = URL::route('nilai.pengetahuan.harian', ['id' => 33]);
+
+        if ($route) {
 
 
-        $seksi = $query
+            $seksi = $query
 
-            ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
-            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
-            ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        } else {
+            $seksi = $query
 
-            ->where('seksis.semester', $tahunAjarSaatIni->id)
-            ->where('seksis.id', $id)
-            ->where('gurus.id_user', '=', $userId)
-            ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
-            ->get();
-        $dataseksi = $seksi->first();
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
 
+                ->where('seksis.semester', $tahunAjarSaatIni->id)
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        }
 
         $datatahun = Tahunajar::whereExists(function ($query) {
             $query->select(DB::raw(1))
@@ -396,22 +439,34 @@ class NilaiController extends Controller
 
         $userId = Auth::user()->id;
 
+        $route = URL::route('nilai.pengetahuan.harian', ['id' => 33]);
 
+        if ($route) {
 
+            $seksi = $query
 
-        $seksi = $query
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        } else {
+            $seksi = $query
 
-            ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
-            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
-            ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
 
-            ->where('seksis.semester', $tahunAjarSaatIni->id)
-            ->where('seksis.id', $id)
-            ->where('gurus.id_user', '=', $userId)
-            ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
-            ->get();
-        $dataseksi = $seksi->first();
-
+                ->where('seksis.semester', $tahunAjarSaatIni->id)
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        }
 
         $datatahun = Tahunajar::whereExists(function ($query) {
             $query->select(DB::raw(1))
@@ -543,20 +598,35 @@ class NilaiController extends Controller
         $userId = Auth::user()->id;
 
 
+        $route = URL::route('nilai.pengetahuan.harian', ['id' => 33]);
 
-        $seksi = $query
+        if ($route) {
 
-            ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
-            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
-            ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+            $seksi = $query
 
-            ->where('seksis.semester', $tahunAjarSaatIni->id)
-            ->where('seksis.id', $id)
-            ->where('gurus.id_user', '=', $userId)
-            ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
-            ->get();
-        $dataseksi = $seksi->first();
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
 
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        } else {
+            $seksi = $query
+
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+
+                ->where('seksis.semester', $tahunAjarSaatIni->id)
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        }
 
         $datatahun = Tahunajar::whereExists(function ($query) {
             $query->select(DB::raw(1))
@@ -681,21 +751,34 @@ class NilaiController extends Controller
 
         $userId = Auth::user()->id;
 
+        $route = URL::route('nilai.pengetahuan.harian', ['id' => 33]);
 
+        if ($route) {
 
-        $seksi = $query
+            $seksi = $query
 
-            ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
-            ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
-            ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        } else {
+            $seksi = $query
 
-            ->where('seksis.semester', $tahunAjarSaatIni->id)
-            ->where('seksis.id', $id)
-            ->where('gurus.id_user', '=', $userId)
-            ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
-            ->get();
-        $dataseksi = $seksi->first();
+                ->join('jadwalmapels', 'jadwalmapels.id', '=', 'seksis.id_jadwal')
+                ->join('pengampus', 'pengampus.id', '=', 'jadwalmapels.id_pengampu')
+                ->join('gurus', 'gurus.id', '=', 'pengampus.id_guru')
 
+                ->where('seksis.semester', $tahunAjarSaatIni->id)
+                ->where('seksis.id', $id)
+                ->where('gurus.id_user', '=', $userId)
+                ->select('seksis.*') // Memilih semua kolom dari tabel catata_walas
+                ->get();
+            $dataseksi = $seksi->first();
+        }
 
         $datatahun = Tahunajar::whereExists(function ($query) {
             $query->select(DB::raw(1))
@@ -1154,6 +1237,238 @@ class NilaiController extends Controller
             'message' => 'Nilai Berhasil Dibuka',
             'alert-type' => 'success'
         );
+        return redirect()->back()->with($notification);
+    }
+
+    public function NilaiPasTemplate(Request $request)
+    {
+        $id = $request->input('id');
+
+        $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+
+            ->join('seksis', 'seksis.id_rombel', '=', 'rombels.id')
+            ->where('seksis.id', $id)
+            ->select('rombelsiswas.*')
+            ->get();
+
+
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+        return Excel::download(new PengetahuanAkhirUploadExport($rombelsiswa, $id, $tahun), 'Template Nilai PAS.xlsx');
+    }
+
+
+    public function PasImport(Request $request)
+    {
+        $id_seksi = $request->input('id_seksi');
+        $id_tahunajar = $request->input('id_tahunajar');
+
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataNilai', $namfile);
+            Excel::import(new PasImport($id_seksi, $id_tahunajar), public_path('/DataNilai/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Nilai PAS Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->back()->with($notification);
+    }
+
+    public function NilaiHarianTemplate(Request $request)
+    {
+        $id = $request->input('id');
+
+        $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+
+            ->join('seksis', 'seksis.id_rombel', '=', 'rombels.id')
+            ->where('seksis.id', $id)
+            ->select('rombelsiswas.*')
+            ->get();
+
+
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $ph = Nilai::where('id_seksi', $id)->where('type_nilai', 1)->max('ph');
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+        return Excel::download(new PengetahuanHarianUploadExport($rombelsiswa, $id, $tahun, $ph), 'Template Nilai Harian.xlsx');
+    }
+
+
+    public function HarianImport(Request $request)
+    {
+        $id_seksi = $request->input('id_seksi');
+        $id_tahunajar = $request->input('id_tahunajar');
+        $ph = Nilai::where('id_seksi', $id_seksi)->where('type_nilai', 1)->max('ph');
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataNilai', $namfile);
+            Excel::import(new HarianImport($id_seksi, $id_tahunajar, $ph), public_path('/DataNilai/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Nilai Harian Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->back()->with($notification);
+    }
+
+
+    public function NilaiPortofolioTemplate(Request $request)
+    {
+        $id = $request->input('id');
+
+        $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+
+            ->join('seksis', 'seksis.id_rombel', '=', 'rombels.id')
+            ->where('seksis.id', $id)
+            ->select('rombelsiswas.*')
+            ->get();
+
+
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $kd = Nilai::where('id_seksi', $id)->where('type_nilai', 3)->where('type_keterampilan', 1)->max('kd');
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+        return Excel::download(new KeterampilanPortofolioTemplateExport($rombelsiswa, $id, $tahun, $kd), 'Template Nilai Portofolio.xlsx');
+    }
+
+    public function PortofolioImport(Request $request)
+    {
+        $id_seksi = $request->input('id_seksi');
+        $id_tahunajar = $request->input('id_tahunajar');
+        $kd = Nilai::where('id_seksi', $id_seksi)->where('type_nilai', 3)->where('type_keterampilan', 1)->max('kd');
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataNilai', $namfile);
+            Excel::import(new PortofolioImport($id_seksi, $id_tahunajar, $kd), public_path('/DataNilai/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Nilai Portofolio Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->back()->with($notification);
+    }
+
+    public function NilaiProyekTemplate(Request $request)
+    {
+        $id = $request->input('id');
+
+        $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+
+            ->join('seksis', 'seksis.id_rombel', '=', 'rombels.id')
+            ->where('seksis.id', $id)
+            ->select('rombelsiswas.*')
+            ->get();
+
+
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $kd = Nilai::where('id_seksi', $id)->where('type_nilai', 3)->where('type_keterampilan', 2)->max('kd');
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+        return Excel::download(new KeterampilanProyekTemplateExport($rombelsiswa, $id, $tahun, $kd), 'Template Nilai Proyek.xlsx');
+    }
+
+    public function ProyekImport(Request $request)
+    {
+        $id_seksi = $request->input('id_seksi');
+        $id_tahunajar = $request->input('id_tahunajar');
+        $kd = Nilai::where('id_seksi', $id_seksi)->where('type_nilai', 3)->where('type_keterampilan', 2)->max('kd');
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataNilai', $namfile);
+            Excel::import(new ProyekImport($id_seksi, $id_tahunajar, $kd), public_path('/DataNilai/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Nilai Proyek Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
+        return redirect()->back()->with($notification);
+    }
+
+
+    public function NilaiUnjukkerjaTemplate(Request $request)
+    {
+        $id = $request->input('id');
+
+        $rombelsiswa = Rombelsiswa::join('rombels', 'rombels.id', '=', 'rombelsiswas.id_rombel')
+
+        ->join('seksis', 'seksis.id_rombel', '=', 'rombels.id')
+        ->where('seksis.id', $id)
+            ->select('rombelsiswas.*')
+            ->get();
+
+
+        $data = $rombelsiswa->first();
+        $rombel = Rombel::where('id', $data->id_rombel)->first();
+        $kelas = Kelas::where('id', $rombel->id_kelas)->first();
+        $jurusan = Jurusan::where('id', $kelas->id_jurusan)->first();
+        $dataseksi = Seksi::where('id', $id)->first();
+
+        $kd = Nilai::where('id_seksi', $id)->where('type_nilai', 3)->where('type_keterampilan', 3)->max('kd');
+
+        $tahun = Tahunajar::where('id', $dataseksi->semester)->first();
+        return Excel::download(new KeterampilanUnjukkerjaTemplateExport($rombelsiswa, $id, $tahun, $kd), 'Template Nilai Unjuk Kerja.xlsx');
+    }
+
+    public function UnjukkerjaImport(Request $request)
+    {
+        $id_seksi = $request->input('id_seksi');
+        $id_tahunajar = $request->input('id_tahunajar');
+        $kd = Nilai::where('id_seksi', $id_seksi)->where('type_nilai', 3)->where('type_keterampilan', 3)->max('kd');
+        // Pastikan file telah diunggah sebelum melanjutkan
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            $file = $request->file('file');
+            $namfile = date('YmdHi') . $file->getClientOriginalName();
+            $file->move('DataNilai', $namfile);
+            Excel::import(new UnjukkerjaImport($id_seksi, $id_tahunajar, $kd), public_path('/DataNilai/' . $namfile));
+        } else {
+            // File tidak diunggah atau tidak valid
+            $notification = [
+                'message' => 'Nilai Unjuk Kerja Upload Successfully',
+                'alert-type' => 'success'
+            ];
+        }
+
         return redirect()->back()->with($notification);
     }
 }
