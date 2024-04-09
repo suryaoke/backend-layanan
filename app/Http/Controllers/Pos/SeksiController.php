@@ -12,6 +12,7 @@ use App\Models\Kd4;
 use App\Models\Kelas;
 use App\Models\Ki3;
 use App\Models\Ki4;
+use App\Models\Nilai;
 use App\Models\NilaiKd3;
 use App\Models\NilaiKd4;
 use App\Models\NilaisiswaKd3;
@@ -256,7 +257,7 @@ class SeksiController extends Controller
             return redirect()->back()->with($notification);
         }
 
-
+        $nilai = Nilai::where('id_seksi', $id)->delete();
 
         // Delete related entries
         $seksi->delete();

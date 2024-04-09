@@ -52,7 +52,7 @@
         div.MsoNormal {
             margin-top: 0cm;
             margin-right: 0cm;
-            margin-bottom: 8.0pt;
+            margin-bottom: 0pt;
             margin-left: 0cm;
             line-height: 107%;
             font-size: 11.0pt;
@@ -104,8 +104,7 @@
 </head>
 
 <body>
-    <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
-        style='width:514.85pt;border-collapse:collapse;border:none'>
+    <table border=0 cellspacing=0 cellpadding=0 width=686 style='width:514.85pt;border-collapse:collapse;border:none'>
         <tr style='height:70.55pt'>
             <td width=123 valign=top
                 style='width:92.15pt;border:none;border-bottom:solid black 2.25pt;
@@ -144,10 +143,10 @@
     </table>
     <table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0 width=686
         style='width:514.85pt;border-collapse:collapse;border:none'>
-        <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;">JADWAL MATA PELAJARAN
+        <h3 style="text-align: center; margin-bottom: 5px; font-family: Calibri, sans-serif;">JADWAL MATA PELAJARAN
         </h3>
 
-        <h3 style="text-align: center; margin-bottom: 11px; font-family: Calibri, sans-serif;">Tahun Pelajaran
+        <h3 style="text-align: center; margin-bottom: 5px; font-family: Calibri, sans-serif;">Tahun Pelajaran
             {{ $datajadwal->tahun->tahun }} Semester {{ $datajadwal->tahun->semester }}
         </h3>
     </table>
@@ -201,92 +200,120 @@
             </tr>
         </thead>
         <tbody>
-
             @php
-                $hariGroups = collect();
+                // Filter dan urutkan jadwalmapel berdasarkan id_hari dan id_waktu
+                $jadwalmapelSorted = $jadwalmapel->sortBy(['id_hari', 'id_waktu']);
             @endphp
-            @foreach ($jadwalmapel as $key => $jadwal)
-                @php
-                    // Mengelompokkan data berdasarkan hari
 
-                    $hari1 = $jadwal->id_hari;
-                    if (!$hariGroups->has($hari1)) {
-                        $hariGroups->put($hari1, collect());
-                    }
-                    $hariGroups[$hari1]->push($jadwal);
+            <!-- Tampilkan jadwal untuk id_hari 1 -->
+            @php
+                $lastDay = ''; // variabel untuk menyimpan nama hari sebelumnya
+            @endphp
 
-                @endphp
+            @foreach ($jadwalmapelSorted->where('id_hari', 1) as $key => $jadwal)
+                <tr>
+                    @if ($lastDay != $jadwal->haris->nama)
+                        <td style="width:100px; border: 1px solid black;"
+                            rowspan="{{ $jadwalmapelSorted->where('id_hari', 1)->count() }}">
+                            {{ $jadwal->haris->nama }}
+                        </td>
+                        @php
+                            $lastDay = $jadwal->haris->nama;
+                        @endphp
+                    @else
+                    @endif
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->id_waktu }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->gurus->kode_gr }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->mapels->kode_mapel }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->ruangans->kode_ruangan }}</td>
+                </tr>
             @endforeach
-            @foreach ($hariGroups as $hari1 => $jadwalByDay)
-                @php
-                    $haridata = App\Models\Hari::find($hari1);
-                    $harijumlah = count($jadwalByDay);
-                    $printedTimeSlots = []; // Initialize array to keep track of printed time slots
-                    $uniqueTimes = $jadwalByDay->unique('id_waktu');
-                    $harijumlah = count($uniqueTimes);
-                @endphp
-                @foreach ($jadwalByDay as $index => $jadwal)
-                    @php
-                        $timeSlot = $jadwal->waktus->range; // Get the time slot
-                    @endphp
-                    {{-- Check if the time slot has been printed already --}}
-                    @if (!in_array($timeSlot, $printedTimeSlots))
-                        <tr>
-                            @if ($index === 0)
-                                <td style="width:100px  ; border: 1px solid black;" rowspan="{{ $harijumlah }}"
-                                    class="btn-secondary">
-                                    {{ $haridata->nama }}
-                                </td>
-                            @endif
-                            <td style="width:100px  ; border: 1px solid black;" class="bg-warning">
-                                {{ $timeSlot }}
-                            </td>
-                            {{-- Loop through kelasGroups to display kode guru for each class --}}
-                            @foreach ($kelasGroups as $kelas => $jadwalByClass)
-                                @php
-                                    $kode_guru = ''; // Initialize kode guru as empty string
-                                    $kode_mapel = ''; // Initialize kode mapel as empty string
-                                    $kode_ruangan = ''; // Initialize kode ruangan as empty string
-                                @endphp
-                                @foreach ($jadwalByClass as $jadwalKelas)
-                                    {{-- Check if the jadwal belongs to the current iteration's class and time slot --}}
-                                    @if ($jadwalKelas->waktus->range === $timeSlot && $jadwalKelas->id_hari === $jadwal->id_hari)
-                                        {{-- Assign the kode guru if the jadwal belongs to the current iteration's class and time slot --}}
-                                        @php
-                                            $kode_guru = $jadwalKelas->pengampus->gurus->kode_gr;
-                                            $kode_mapel = $jadwalKelas->pengampus->mapels->kode_mapel;
-                                            $kode_ruangan = $jadwalKelas->ruangans->kode_ruangan;
 
-                                        @endphp
-                                        {{-- Break the inner loop --}}
-                                    @break
-                                @endif
-                            @endforeach
-                            {{-- Display the kode guru --}}
-                            <td style="width:100px  ; border: 1px solid black;">{{ $kode_guru }}
-                            </td>
-                            <td style="width:100px  ; border: 1px solid black;">{{ $kode_mapel }}</td>
-                            <td style="width:100px  ; border: 1px solid black;">{{ $kode_ruangan }}</td>
-                        @endforeach
-                    </tr>
-                    {{-- Add the printed time slot to the printedTimeSlots array --}}
-                    @php
-                        $printedTimeSlots[] = $timeSlot;
-                    @endphp
-                @endif
+            @foreach ($jadwalmapelSorted->where('id_hari', 2) as $key => $jadwal)
+                <tr>
+                    @if ($lastDay != $jadwal->haris->nama)
+                        <td style="width:100px; border: 1px solid black;"
+                            rowspan="{{ $jadwalmapelSorted->where('id_hari', 2)->count() }}">
+                            {{ $jadwal->haris->nama }}
+                        </td>
+                        @php
+                            $lastDay = $jadwal->haris->nama;
+                        @endphp
+                    @else
+                    @endif
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->id_waktu }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->gurus->kode_gr }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->mapels->kode_mapel }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->ruangans->kode_ruangan }}</td>
+                </tr>
             @endforeach
-        @endforeach
+
+            @foreach ($jadwalmapelSorted->where('id_hari', 3) as $key => $jadwal)
+                <tr>
+                    @if ($lastDay != $jadwal->haris->nama)
+                        <td style="width:100px; border: 1px solid black;"
+                            rowspan="{{ $jadwalmapelSorted->where('id_hari', 3)->count() }}">
+                            {{ $jadwal->haris->nama }}
+                        </td>
+                        @php
+                            $lastDay = $jadwal->haris->nama;
+                        @endphp
+                    @else
+                    @endif
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->id_waktu }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->gurus->kode_gr }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->mapels->kode_mapel }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->ruangans->kode_ruangan }}</td>
+                </tr>
+            @endforeach
+
+            @foreach ($jadwalmapelSorted->where('id_hari', 4) as $key => $jadwal)
+                <tr>
+                    @if ($lastDay != $jadwal->haris->nama)
+                        <td style="width:100px; border: 1px solid black;"
+                            rowspan="{{ $jadwalmapelSorted->where('id_hari', 4)->count() }}">
+                            {{ $jadwal->haris->nama }}
+                        </td>
+                        @php
+                            $lastDay = $jadwal->haris->nama;
+                        @endphp
+                    @else
+                    @endif
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->id_waktu }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->gurus->kode_gr }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->mapels->kode_mapel }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->ruangans->kode_ruangan }}</td>
+                </tr>
+            @endforeach
+
+            @foreach ($jadwalmapelSorted->where('id_hari', 5) as $key => $jadwal)
+                <tr>
+                    @if ($lastDay != $jadwal->haris->nama)
+                        <td style="width:100px; border: 1px solid black;"
+                            rowspan="{{ $jadwalmapelSorted->where('id_hari', 5)->count() }}">
+                            {{ $jadwal->haris->nama }}
+                        </td>
+                        @php
+                            $lastDay = $jadwal->haris->nama;
+                        @endphp
+                    @else
+                    @endif
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->id_waktu }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->gurus->kode_gr }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->pengampus->mapels->kode_mapel }}</td>
+                    <td style="width:100px; border: 1px solid black;">{{ $jadwal->ruangans->kode_ruangan }}</td>
+                </tr>
+            @endforeach
 
 
-    </tbody>
-</table>
-<p class=MsoNoSpacing align=center style='text-align:center'><b><span
-            style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b></p>
-<p class=MsoNoSpacing align=center style='text-align:center'><b><span
-            style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b></p>
 
-<table class=MsoTableGrid border=0 cellspacing=0 cellpadding=0
-    style='margin-left:49.65pt;border-collapse:collapse;border:none' ">
+        </tbody>
+
+    </table>
+    <p class=MsoNoSpacing align=center style='text-align:center'><b><span
+                style='font-size:12.0pt;font-family:"Times New Roman",serif'>&nbsp;</span></b></p>
+
+    <table border=0 cellspacing=0 cellpadding=0 style='margin-left:49.65pt;border-collapse:collapse;border:none' ">
 <tr style='height:103.2pt'>
 <td width=206 valign=top style='width:300.4pt;padding:0cm 5.4pt 0cm 5.4pt;
   height:103.2pt'>
@@ -313,10 +340,7 @@
 
 <p class=MsoNoSpacing><span style='font-size:12.0pt;font-family:"Times New Roman",serif'>Kepala
 Madrasah</span></p>
-<p class=MsoNoSpacing style='line-height:150%'><span
-style='font-size:12.0pt;
-  line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span>
-</p>
+
 <p class=MsoNoSpacing style='line-height:150%'><span
 style='font-size:12.0pt;
   line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span>
@@ -353,10 +377,7 @@ Padang, {{ $tanggalSaatIni->format('d ') . $bulanIndonesia[$tanggalSaatIni->mont
 </span>
 </p>
 <p class=MsoNoSpacing><span style='font-size:12.0pt;font-family:"Times New Roman",serif'>Wali Kelas</span></p>
-<p class=MsoNoSpacing style='line-height:150%'><span
-style='font-size:12.0pt;
-  line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span>
-</p>
+
 <p class=MsoNoSpacing style='line-height:150%'><span
 style='font-size:12.0pt;
   line-height:150%;font-family:"Times New Roman",serif'>&nbsp;</span>

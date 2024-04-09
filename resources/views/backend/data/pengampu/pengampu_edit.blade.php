@@ -79,12 +79,33 @@
         </div>
 
 
+        <div class="mt-4">
+            <label for="kelas">Kelas</label>
 
+            <div class="mt-1 flex">
+                <div
+                    class="z-30 rounded-l w-10 flex items-center justify-center
+             bg-slate-100 border text-slate-500 dark:bg-darkmode-700 dark:border-darkmode-800
+              dark:text-slate-400 -mr-1">
+                    <i data-lucide="home"></i>
+                </div>
+                <select name="id_tahunajar" id="id_tahunajar" class="tom-select w-full mt-1" required>
+                    <option value="{{ $pengampu->id_tahunajar }}">
+                        {{ $pengampu['tahuns']['semester'] }} - {{ $pengampu['tahuns']['tahun'] }}
+                    </option>
+                    @foreach ($tahun as $item)
+                        <option value="{{ $item->id }}">{{ $item->semester }} - {{ $item->tahun }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <span id="error-kelas" class="text-sm text-red-600"></span>
+        </div>
         <div class="mt-4">
             <a href="{{ route('pengampu.all') }}" class="btn btn-danger w-full h-10 xl:w-32 xl:mr-2 align-top"
                 type="submit">Cancel</a>
             <button class="btn btn-primary  w-full  h-10 xl:w-32 xl:mr-3 align-top" type="submit">Save </button>
-            
+
         </div>
 
     </form>
@@ -107,7 +128,10 @@
                     kelas: {
                         required: true,
                     },
-                    
+
+                    id_tahunajar: {
+                        required: true,
+                    },
                 },
                 messages: {
                     // Your form validation messages
@@ -120,7 +144,10 @@
                     kelas: {
                         required: 'Please Enter Your Kelas',
                     },
-                   
+                    id_tahunajar: {
+                        required: 'Please Enter Your Kelas',
+                    },
+
                 },
                 errorElement: 'span',
                 errorClass: 'invalid-feedback',

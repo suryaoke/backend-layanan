@@ -24,4 +24,8 @@ class Pengampu extends Model
     {
         return $this->belongsTo(Kelas::class, 'kelas', 'id');
     }
+    public function tahuns()
+    {
+        return $this->belongsTo(Tahunajar::class, 'id_tahunajar', 'id');
+    }
 }

@@ -14,18 +14,23 @@ class JadwalmapelskepsekExport implements FromView, WithDrawings
 {
     protected $jadwalmapel;
     protected $jadwal;
+    protected $hari;
 
-    public function __construct($jadwalmapel, $jadwal)
+    public function __construct($jadwalmapel, $jadwal, $hari)
     {
         $this->jadwalmapel = $jadwalmapel;
         $this->jadwal = $jadwal;
+        $this->hari = $hari;
+
     }
 
     public function view(): View
     {
         return view('backend.data.jadwalmapel.excel', [
             'jadwalmapel' => $this->jadwalmapel,
-            'jadwal' => $this->jadwal
+            'jadwal' => $this->jadwal,
+            'hari' => $this->hari
+
         ]);
     }
 

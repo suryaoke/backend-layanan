@@ -13,6 +13,7 @@ use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Pengampu;
 use App\Models\Siswa;
+use App\Models\Tahunajar;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class PengampuController extends Controller
         $searchMapel = $request->input('searchmapel');
         $searchKelas = $request->input('searchkelas');
         $searchKode = $request->input('searchkode');
-
+        $searchTahun = $request->input('searchtahun');
         $query = Pengampu::query();
 
         if (!empty($searchGuru)) {
@@ -48,10 +49,16 @@ class PengampuController extends Controller
                 $lecturerQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
             });
         }
+
+
         if (!empty($searchKode)) {
             $query->where('kode_pengampu', '=', $searchKode);
         }
-
+        if (!empty($searchTahun)) {
+            $query->whereHas('tahuns', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
         //$suppliers = Supplier::all();
         $pengampu = $query->latest()->get();
 
@@ -63,7 +70,13 @@ class PengampuController extends Controller
         })->orderBy('tingkat')
             ->get();
 
-        return view('backend.data.pengampu.pengampu_all', compact('pengampu', 'kelas'));
+        $tahun = Tahunajar::whereIn('id', function ($query) {
+            $query->select('id_tahunajar')
+                ->from('pengampus');
+        })->orderBy('id')
+            ->get();
+
+        return view('backend.data.pengampu.pengampu_all', compact('pengampu', 'kelas', 'tahun'));
     } // end method
 
     public function PengampuAdd()
@@ -79,7 +92,8 @@ class PengampuController extends Controller
             ->orderBy('kode_gr', 'asc')->get();
 
         $mapel = Mapel::orderBy('kode_mapel', 'asc')->get();
-        return view('backend.data.pengampu.pengampu_add', compact('kelas', 'mapel', 'guru'));
+        $tahun = Tahunajar::all();
+        return view('backend.data.pengampu.pengampu_add', compact('tahun', 'kelas', 'mapel', 'guru'));
     } // end method
     public function PengampuStore(Request $request)
     {
@@ -116,7 +130,7 @@ class PengampuController extends Controller
             'id_guru' => $request->id_guru,
             'id_mapel' => $request->id_mapel,
             'kelas' => $request->kelas,
-
+            'id_tahunajar' => $request->id_tahunajar,
             'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
         ]);
@@ -141,7 +155,8 @@ class PengampuController extends Controller
         })->orderBy('kode_gr', 'asc')->get();
 
         $mapel = Mapel::orderBy('kode_mapel', 'asc')->get();
-        return view('backend.data.pengampu.pengampu_edit', compact('kelas', 'pengampu', 'mapel', 'guru'));
+        $tahun = Tahunajar::all();
+        return view('backend.data.pengampu.pengampu_edit', compact('tahun', 'kelas', 'pengampu', 'mapel', 'guru'));
     }
     public function PengampuUpdate(Request $request)
     {
@@ -151,7 +166,7 @@ class PengampuController extends Controller
             'id_guru' => $request->id_guru,
             'id_mapel' => $request->id_mapel,
             'kelas' => $request->kelas,
-
+            'id_tahunajar' => $request->id_tahunajar,
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now(),
 

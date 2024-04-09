@@ -6,6 +6,7 @@ use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Mapel;
 use App\Models\Pengampu;
+use App\Models\Tahunajar;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -43,6 +44,13 @@ class PengampuImport implements ToModel, WithHeadingRow
                     $kelas = $kelas->id;
                 }
             }
+            $tahun = null;
+            if (isset($row['template_id_tahun_ajar'])) {
+                $tahun = Tahunajar::where('id', $row['template_id_tahun_ajar'])->first();
+                if ($tahun) {
+                    $tahun = $tahun->id;
+                }
+            }
 
             // Return instance of Mapel model
             do {
@@ -56,6 +64,7 @@ class PengampuImport implements ToModel, WithHeadingRow
                 'id_guru' => $kode_gr,
                 'id_mapel' => $kode_mapel,
                 'kelas' => $kelas,
+                'id_tahunajar' => $tahun
             ]);
         }
 

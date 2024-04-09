@@ -5170,9 +5170,11 @@
                                                                                 <option value="">----Senin----
                                                                                 </option>
                                                                                 {{--  // jp 2 //  --}}
-                                                                                 @if ($datajp->jp == 2)
+                                                                               @if ($datajp->jp == 2)
+                                                                                   
+                                                                               
                                                                                     <option value="08:00-09:20">
-                                                                                        08:00-09:20
+                                                                                        08:00-09:20 -{{$datajp->jp}}
                                                                                     </option>
                                                                                     <option value="09:20-11:00">
                                                                                         09:20-11:00
@@ -5189,66 +5191,47 @@
                                                                                     <option value="14:20-15:40">
                                                                                         14:20-15:40
                                                                                     </option>
-                                                                                    @elseif ($datajp->jp == 3)
+                                                                                    @endif
+                                                                               
 
+                                                                                {{--  // jp 3 //  --}}
+                                                                                <option value="08:00-10:10"> 08:00-09:20
+                                                                                </option>
+                                                                                <option value="09:20-11:40"> 09:20-11:40
+                                                                                </option>
+                                                                                <option value="10:20-12:20"> 10:20-12:20
+                                                                                </option>
+                                                                                <option value="11:00-13:40"> 11:00-13:40
+                                                                                </option>
+                                                                                <option value="11:40-14:20"> 11:40-14:20
+                                                                                </option>
+                                                                                <option value="13:40-15:40"> 13:40-15:40
+                                                                                </option>
 
+                                                                                {{--  // jp 4 //  --}}
+                                                                                <option value="08:00-11:00"> 08:00-11:00
+                                                                                </option>
+                                                                                <option value="09:20-12:20"> 09:20-12:20
+                                                                                </option>
+                                                                                <option value="10:20-13:40"> 10:20-13:40
+                                                                                </option>
+                                                                                <option value="11:00-14:20">11:00-14:20
+                                                                                </option>
+                                                                                <option value="12:20-15:40">12:20-15:40
+                                                                                </option>
+                                                                                <option value="13:00-15:40">13:00-15:40
+                                                                                </option>
 
-                                                                                    {{--  // jp 3 //  --}}
-                                                                                    <option value="08:00-10:10">
-                                                                                        08:00-09:20
-                                                                                    </option>
-                                                                                    <option value="09:20-11:40">
-                                                                                        09:20-11:40
-                                                                                    </option>
-                                                                                    <option value="10:20-12:20">
-                                                                                        10:20-12:20
-                                                                                    </option>
-                                                                                    <option value="11:00-13:40">
-                                                                                        11:00-13:40
-                                                                                    </option>
-                                                                                    <option value="11:40-14:20">
-                                                                                        11:40-14:20
-                                                                                    </option>
-                                                                                    <option value="13:40-15:40">
-                                                                                        13:40-15:40
-                                                                                    </option>
-                                                                                    @elseif ($datajp->jp == 4)
-
-                                                                                    {{--  // jp 4 //  --}}
-                                                                                    <option value="08:00-11:00">
-                                                                                        08:00-11:00
-                                                                                    </option>
-                                                                                    <option value="09:20-12:20">
-                                                                                        09:20-12:20
-                                                                                    </option>
-                                                                                    <option value="10:20-13:40">
-                                                                                        10:20-13:40
-                                                                                    </option>
-                                                                                    <option value="11:00-14:20">11:00-14:20
-                                                                                    </option>
-                                                                                    <option value="12:20-15:40">12:20-15:40
-                                                                                    </option>
-                                                                                    <option value="13:00-15:40">13:00-15:40
-                                                                                    </option>
-                                                                                    @elseif ($datajp->jp == 6)
-
-                                                                                    {{--  // jp 6 //  --}}
-                                                                                    <option value="08:00-12:20">08:00-12:20
-                                                                                    </option>
-                                                                                    <option value="09:20-14:20">09:20-14:20
-                                                                                    </option>
-                                                                                    <option value="11:00-15:40">11:00-15:40
-                                                                                    </option>
-                                                                              
-                                                                               @endif
-
-                                                                              
-
-                                                    
+                                                                                {{--  // jp 6 //  --}}
+                                                                                <option value="08:00-12:20">08:00-12:20
+                                                                                </option>
+                                                                                <option value="09:20-14:20">09:20-14:20
+                                                                                </option>
+                                                                                <option value="11:00-15:40">11:00-15:40
+                                                                                </option>
 
                                                                                 <option value="">----Selasa----
                                                                                 </option>
-                                                                                 @if ($datajp->jp == 2)
 
                                                                                 {{--  // jp 2 //  --}}
                                                                                 <option value="07:00-08:20">07:00-08:20
@@ -5267,7 +5250,6 @@
                                                                                 </option>
                                                                                 <option value="14:00-15:20">14:00-15:20
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 3)
 
                                                                                 {{--  // jp 3 //  --}}
                                                                                 <option value="07:00-09:00">07:00-09:00
@@ -5284,7 +5266,6 @@
                                                                                 </option>
                                                                                 <option value="13:20-15:20">13:20-15:20
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 4)
 
                                                                                 {{--  // jp 4 //  --}}
                                                                                 <option value="07:00-09:40">07:00-09:40
@@ -5297,7 +5278,6 @@
                                                                                 </option>
                                                                                 <option value="12:00-15:20">12:00-15:20
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 6)
 
                                                                                 {{--  // jp 6 //  --}}
                                                                                 <option value="07:00-11:20">07:00-11:20
@@ -5306,12 +5286,10 @@
                                                                                 </option>
                                                                                 <option value="09:00-14:00">09:00-14:00
                                                                                 </option>
-                                                                                @endif
 
 
                                                                                 <option value="">----Rabu----
                                                                                 </option>
-                                                                                @if ($datajp->jp == 2)
 
                                                                                 {{--  // jp 2 //  --}}
                                                                                 <option value="07:00-08:20">07:00-08:20
@@ -5328,7 +5306,6 @@
                                                                                 </option>
                                                                                 <option value="13:20-14:40">14:20-14:40
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 3)
 
                                                                                 {{--  // jp 3 //  --}}
                                                                                 <option value="07:00-09:00">07:00-09:00
@@ -5341,7 +5318,6 @@
                                                                                 </option>
                                                                                 <option value="12:00-14:40">12:00-14:40
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 4)
 
                                                                                 {{--  // jp 4 //  --}}
                                                                                 <option value="07:00-09:40">07:00-09:40
@@ -5354,7 +5330,6 @@
                                                                                 </option>
                                                                                 <option value="11:20-14:40">11:20-14:40
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 6)
 
                                                                                 {{--  // jp 6 //  --}}
                                                                                 <option value="07:00-11:20">07:00-11:20
@@ -5363,12 +5338,10 @@
                                                                                 </option>
                                                                                 <option value="09:00-14:40">09:00-14:40
                                                                                 </option>
-                                                                                @endif
 
 
                                                                                 <option value="">----Kamis----
                                                                                 </option>
-                                                                                @if ($datajp->jp == 2)
 
                                                                                 {{--  // jp 2 //  --}}
                                                                                 <option value="07:00-08:20">07:00-08:20
@@ -5385,7 +5358,6 @@
                                                                                 </option>
                                                                                 <option value="13:20-14:40">14:20-14:40
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 3)
 
                                                                                 {{--  // jp 3 //  --}}
                                                                                 <option value="07:00-09:00">07:00-09:00
@@ -5398,7 +5370,6 @@
                                                                                 </option>
                                                                                 <option value="12:00-14:40">12:00-14:40
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 4)
 
                                                                                 {{--  // jp 4 //  --}}
                                                                                 <option value="07:00-09:40">07:00-09:40
@@ -5411,7 +5382,6 @@
                                                                                 </option>
                                                                                 <option value="11:20-14:40">11:20-14:40
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 6)
 
                                                                                 {{--  // jp 6 //  --}}
                                                                                 <option value="07:00-11:20">07:00-11:20
@@ -5420,11 +5390,9 @@
                                                                                 </option>
                                                                                 <option value="09:00-14:40">09:00-14:40
                                                                                 </option>
-                                                                                @endif
 
                                                                                 <option value="">----Jumat----
                                                                                 </option>
-                                                                                @if ($datajp->jp == 2)
                                                                                 {{--  // jp 2 //  --}}
                                                                                 <option value="08:00-09:20"> 08:00-09:20
                                                                                 </option>
@@ -5438,7 +5406,6 @@
                                                                                 </option>
                                                                                 <option value="14:40-16:00"> 14:40-16:00
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 3)
 
                                                                                 {{--  // jp 3 //  --}}
                                                                                 <option value="08:00-10:10"> 08:00-09:20
@@ -5451,7 +5418,6 @@
                                                                                 </option>
                                                                                 <option value="14:00-16:00"> 14:00-16:00
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 4)
 
                                                                                 {{--  // jp 4 //  --}}
                                                                                 <option value="08:00-11:00"> 08:00-11:00
@@ -5464,7 +5430,6 @@
                                                                                 </option>
                                                                                 <option value="13:20-16:00">13:20-16:00
                                                                                 </option>
-                                                                                @elseif ($datajp->jp == 6)
 
 
                                                                                 {{--  // jp 6 //  --}}
@@ -5472,7 +5437,6 @@
                                                                                 </option>
                                                                                 <option value="10:20-16:00">10:20-16:00
                                                                                 </option>
-                                                                                  @endif
 
 
                                                                             </select>
@@ -5616,15 +5580,15 @@
 
         <!-- BEGIN: Modal Kirim Jadwal Satuan-->
         @foreach ($jadwalmapel as $item)
-            <div id="kirim-jadwalmapels-modal-{{ $item->id }}" class="modal" tabindex="-1" aria-hidden="true"
-                aria-labelledby="kirim-jadwalmapels-modal-label-{{ $item->id }}">
+            <div id="kirim-jadwalmapels-modal-{{ $item->id }}" class="modal" tabindex="-1"
+                aria-hidden="true" aria-labelledby="kirim-jadwalmapels-modal-label-{{ $item->id }}">
                 <div class="modal-dialog">
 
                     <form method="post" action="{{ route('jadwalmapelstatusone.update', $item->id) }}">
                         @csrf
                         <input type="hidden" value="1" name="status">
-                        <div class="modal-content"> <a data-tw-dismiss="modal" href="javascript:;"> <i data-lucide="x"
-                                    class="w-8 h-8 text-slate-400"></i> </a>
+                        <div class="modal-content"> <a data-tw-dismiss="modal" href="javascript:;"> <i
+                                    data-lucide="x" class="w-8 h-8 text-slate-400"></i> </a>
                             <div class="modal-body p-0">
                                 <div class="p-5 text-center"> <i data-lucide="check-circle"
                                         class="w-16 h-16 text-success mx-auto mt-3"></i>

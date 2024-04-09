@@ -8,9 +8,11 @@ use App\Models\CatataWalas;
 use App\Models\Guru;
 use App\Models\Jurusan;
 use App\Models\Kelas;
+use App\Models\Nilai;
 use App\Models\Rapor;
 use App\Models\Rombel;
 use App\Models\Rombelsiswa;
+use App\Models\Seksi;
 use App\Models\Siswa;
 use App\Models\Tahunajar;
 use App\Models\Walas;
@@ -26,8 +28,10 @@ class RombelController extends Controller
     {
         $searchKelas = $request->input('searchkelas');
         $searchTahun = $request->input('searchtahun');
+        $searchWalas = $request->input('searchwalas');
 
         $query = Rombelsiswa::query();
+        $query2 = Rombel::query();
 
         if (!empty($searchKelas)) {
             $query->whereHas('rombels', function ($teachQuery) use ($searchKelas) {
@@ -35,12 +39,41 @@ class RombelController extends Controller
                     $courseQuery->where('id', 'LIKE', '%' .   $searchKelas . '%');
                 });
             });
+
+
+            $query2->whereHas('kelass', function ($lecturerQuery) use ($searchKelas) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchKelas . '%');
+            });
         }
 
         if (!empty($searchTahun)) {
             $query->whereHas('rombels', function ($teachQuery) use ($searchTahun) {
                 $teachQuery->whereHas('tahuns', function ($courseQuery) use ($searchTahun) {
                     $courseQuery->where('id', 'LIKE', '%' .   $searchTahun . '%');
+                });
+            });
+
+
+            $query2->whereHas('tahuns', function ($lecturerQuery) use ($searchTahun) {
+                $lecturerQuery->where('id', 'LIKE', '%' . $searchTahun . '%');
+            });
+        }
+
+        if (!empty($searchWalas)) {
+            $query->whereHas('rombels', function ($teachQuery) use ($searchWalas) {
+                $teachQuery->whereHas('walass', function ($courseQuery) use ($searchWalas) {
+
+                    $courseQuery->whereHas('gurus', function ($course1Query) use ($searchWalas) {
+
+                        $course1Query->where('id', 'LIKE', '%' .   $searchWalas . '%');
+                    });
+                });
+            });
+
+
+            $query2->whereHas('walass', function ($teachQuery) use ($searchWalas) {
+                $teachQuery->whereHas('gurus', function ($courseQuery) use ($searchWalas) {
+                    $courseQuery->where('id', 'LIKE', '%' .   $searchWalas . '%');
                 });
             });
         }
@@ -68,6 +101,7 @@ class RombelController extends Controller
                 ->get();
             $rombelsiswa = $rombelsiswaa
                 ->first();
+            $rombel = $query2->get();
         } elseif ($searchTahun) {
             $rombelsiswaa = $query
                 ->join('rombels', 'rombelsiswas.id_rombel', '=', 'rombels.id')
@@ -77,6 +111,7 @@ class RombelController extends Controller
 
             $rombelsiswa =
                 $rombelsiswaa->first();
+            $rombel = $query2->get();
         } else {
             $rombelsiswaa = $query
                 ->join('rombels', 'rombelsiswas.id_rombel', '=', 'rombels.id')
@@ -92,6 +127,7 @@ class RombelController extends Controller
             }
             $rombelsiswa =
                 $rombelsiswaa->first();
+            $rombel = $query2->get();
         }
 
 
@@ -108,9 +144,18 @@ class RombelController extends Controller
                 ->whereRaw('rombels.id_kelas = kelas.id');
         })->orderby('tingkat', 'desc')
             ->get();
+        $guru = Guru::whereExists(function ($query) {
+            $query->select(DB::raw(1))
+                ->from('walas')
+                ->join('rombels', 'rombels.id_walas', '=', 'walas.id')
+                ->whereRaw('walas.id = gurus.id');
+        })->orderBy('nama')
+            ->get();
+
+      
 
 
-        return view('backend.data.rombel.rombel_all', compact('datatahun', 'kelas', 'rombelsiswaa', 'rombelsiswa'));
+        return view('backend.data.rombel.rombel_all', compact('datatahun', 'kelas', 'rombelsiswaa', 'rombelsiswa', 'rombel', 'guru'));
     } // end method
 
     public function RombelAdd()
@@ -304,8 +349,15 @@ class RombelController extends Controller
     {
         $rombel = Rombel::findOrFail($id);
         if ($rombel) {
-            $rombel->delete();
+            $seksi =  Seksi::where('id_rombel', $id)->first(); // Mengambil data seksi sebelum dihapus
+            if ($seksi) {
+                $nilai = Nilai::where('id_seksi', $seksi->id)->delete();
+                $seksi->delete();
+            }
+
             RombelSiswa::where('id_rombel', $id)->delete();
+
+            $rombel->delete();
             $notification = array(
                 'message' => 'Rombel Deleted Successfully',
                 'alert-type' => 'success'

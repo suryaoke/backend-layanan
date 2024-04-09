@@ -5,6 +5,7 @@ namespace App\Exports;
 use App\Models\Guru;
 use App\Models\Kelas;
 use App\Models\Mapel;
+use App\Models\Tahunajar;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
@@ -42,6 +43,7 @@ class TabelDuaSheet implements FromView, WithTitle
         $data['guru'] = Guru::latest()->get();
         $data['mapel'] = Mapel::latest()->get();
         $data['kelas'] = Kelas::latest()->get();
+        $data['tahun'] = Tahunajar::latest()->get();
 
         return view('backend.data.pengampu.excel2', $data);
     }

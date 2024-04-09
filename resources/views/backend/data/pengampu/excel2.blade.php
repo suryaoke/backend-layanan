@@ -16,6 +16,11 @@
             <th style="background-color: yellow; white-space: nowrap; width: 150px; border: 2px solid black;">Kelas</th>
             <th style="background-color: yellow; white-space: nowrap; width: 150px; border: 2px solid black;">Id Kelas
             </th>
+            <th style="background-color: yellow; white-space: nowrap; width: 150px; border: 2px solid black;">Tahun Ajar
+            </th>
+            <th style="background-color: yellow; white-space: nowrap; width: 150px; border: 2px solid black;">Id Tahun
+                Ajar
+            </th>
         </tr>
 
     </thead>
@@ -59,6 +64,16 @@
                 <td style="white-space: nowrap; width: 150px; border: 2px solid black;">
                     @if (isset($kelas[$i]))
                         {{ $kelas[$i]['id'] }}
+                    @endif
+                </td>
+                <td style="white-space: nowrap; width: 150px; border: 2px solid black;">
+                    @if (isset($tahun[$i]))
+                        {{ $tahun[$i]['semester'] }} - {{ $tahun[$i]['tahun'] }}
+                    @endif
+                </td>
+                <td style="white-space: nowrap; width: 150px; border: 2px solid black;">
+                    @if (isset($tahun[$i]))
+                        {{ $tahun[$i]['id'] }}
                     @endif
                 </td>
 

@@ -52,6 +52,19 @@
                     </select>
                 </div>
             </div>
+            <div class="flex-1 sm:mr-2">
+                <div class="form-group">
+
+                    <select name="searchtahun" class="form-select w-full">
+                        <option value="">Tahun Ajar</option>
+                        @foreach ($tahun as $item)
+                            <option value="{{ $item->id }}"> {{ $item->semester }} /
+                                {{ $item->tahun }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
             <div class="sm:ml-1">
                 <button type="submit" class="btn btn-default">Search</button>
             </div>
@@ -100,8 +113,8 @@
                                         <th style="white-space: nowrap;">Kode Guru</th>
                                         <th style="white-space: nowrap;">Mata Pelajaran</th>
                                         <th style="white-space: nowrap;">Kode Mapel</th>
-                                        <th>Kelas</th>
-
+                                        <th style="white-space: nowrap;">Kelas</th>
+                                        <th style="white-space: nowrap;">Tahun Ajar</th>
                                         <th>Action</th>
                                 </thead>
                                 <tbody>
@@ -118,7 +131,8 @@
                                             <td style="white-space: nowrap;"> {{ $item['kelass']['tingkat'] }}
                                                 {{ $item['kelass']['nama'] }}
                                                 {{ $item['kelass']['jurusans']['nama'] }} </td>
-
+                                            <td style="white-space: nowrap;">
+                                                {{ $item->tahuns->semester }} / {{ $item->tahuns->tahun }} </td>
                                             <td style="white-space: nowrap;">
                                                 <a id="delete" href="{{ route('pengampu.delete', $item->id) }}"
                                                     class="btn btn-danger mr-1 mb-2">

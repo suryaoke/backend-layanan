@@ -28,6 +28,7 @@ use App\Http\Controllers\Pos\UserController;
 use App\Http\Controllers\Pos\WaktuController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\vendor\Chatify\MessagesController;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -279,6 +280,10 @@ Route::controller(JadwalmapelController::class)->middleware(['auth'])->group(fun
     Route::get('jadwalmapels/ortu/excel', 'JadwalmapelortuExport')->name('jadwalmapels.ortu.excel');
 
     Route::post('jadwalmapels/kepsek/excel', 'JadwalmapelskepsekExport')->name('jadal.mapels.kepsek');
+
+    Route::post('jadwalmapels/generate', 'JadwalmapelsGenerate')->name('jadwal.mapel.generate');
+
+    Route::post('/jadwalmapel/tukar/{id}', 'JadwalmapelTukar')->name('jadwalmapel.tukar');
 });
 
 
@@ -304,19 +309,18 @@ Route::controller(OrangTuaController::class)->middleware(['auth'])->group(functi
 
 
 
+Route::post('/updateData', function (Request $request) {
+    $data = $request->input('data');
 
+    // Menyimpan data ke dalam variabel sesi Laravel
+    session(['data' => $data]);
 
-
-// Export All Route
-Route::controller(ExportController::class)->middleware(['auth'])->group(function () {
-
-
-    Route::post('jadwalsiswa/pdf', 'Jadwalsiswapdf')->name('jadwalsiswa.pdf');
-
-
-
-    Route::post('jadwalortu/pdf', 'Jadwalortupdf')->name('jadwalortu.pdf');
+    return response()->json(['status' => 'success']);
 });
+
+
+
+
 
 
 // Presensi All Route

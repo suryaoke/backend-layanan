@@ -64,7 +64,7 @@
                             )
                                 ->join('rombels', 'rombels.id_kelas', '=', 'pengampus.kelas')
                                 ->where('rombels.id', $item->id)
-                                ->where('id_tahunajar', $item->id_tahunjar)
+                                ->where('jadwalmapels.id_tahunajar', $item->id_tahunjar)
                                 ->where('status', '2')
                                 ->select('jadwalmapels.*')
                                 ->whereNotExists(function ($query) {

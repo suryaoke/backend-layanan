@@ -16,6 +16,7 @@ use App\Exports\UserExport;
 use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\Guru;
+use App\Models\Hari;
 use App\Models\Jadwalmapel;
 use App\Models\Mapel;
 use App\Models\NilaiKd3;
@@ -55,7 +56,8 @@ class ExportController extends Controller
             ->where('siswas.id_user', '=', $userId)
             ->orderBy('id_hari')
             ->orderBy('id_Waktu', 'desc')
-            ->where('id_tahunajar', $tahunId)
+            ->where('jadwalmapels.id_tahunajar', $tahunId)
+
             ->select('jadwalmapels.*')
             ->get();
 
@@ -63,9 +65,11 @@ class ExportController extends Controller
 
         $tahun = Tahunajar::where('id', $tahunId)->first();
 
+        $hari = Hari::orderby('kode_hari', 'asc')->get();
+
         $fileName = 'Jadwal Mata Pelajaran MAN 1 Kota Padang Tahun Ajar ' . $tahun->tahun . ' Semester ' . $tahun->semester . '.pdf';
 
-        $pdf = PDF::loadView('backend.data.export.export_pdf_jadwalmapel', ['jadwalmapel' => $jadwalmapel, 'datajadwal' => $datajadwal]); // Mengirimkan $datajadwal ke tampilan PDF
+        $pdf = PDF::loadView('backend.data.export.export_pdf_jadwalmapel', ['jadwalmapel' => $jadwalmapel, 'datajadwal' => $datajadwal, 'hari' => $hari]); // Mengirimkan $datajadwal ke tampilan PDF
         return $pdf->download($fileName);
     }
 
@@ -90,7 +94,7 @@ class ExportController extends Controller
             ->where('status', '=', '2')
             ->orderBy('id_hari')
             ->orderBy('id_Waktu', 'desc')
-            ->where('id_tahunajar', $tahunId)
+            ->where('jadwalmapels.id_tahunajar', $tahunId)
             ->select('jadwalmapels.*')
             ->get();
         $datajadwal = $jadwalmapel->first();
@@ -103,4 +107,5 @@ class ExportController extends Controller
         $pdf = PDF::loadView('backend.data.export.export_pdf_jadwalmapel', ['jadwalmapel' => $jadwalmapel, 'datajadwal' => $datajadwal]); // Mengirimkan $datajadwal ke tampilan PDF
         return $pdf->download($fileName);
     }
+  
 }
